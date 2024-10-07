@@ -1,5 +1,5 @@
 {
-  "name": "03.codeit-resources",
+  "name": "codeit-resources",
   "private": true,
   "scripts": {
     "build": "turbo build",

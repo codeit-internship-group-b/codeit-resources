@@ -1,4 +1,4 @@
-export function Card({
+export default function Card({
   className,
   title,
   children,

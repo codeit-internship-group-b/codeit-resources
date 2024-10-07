@@ -7,4 +7,5 @@ module.exports = {
     project: "./tsconfig.lint.json",
     tsconfigRootDir: __dirname,
   },
+  ignorePatterns: ["index.tsx", "postcss.config.js", "tailwind.config.ts"],
 };

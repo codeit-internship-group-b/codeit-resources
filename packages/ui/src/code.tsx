@@ -1,4 +1,4 @@
-export function Code({
+export default function Code({
   children,
   className,
 }: {
