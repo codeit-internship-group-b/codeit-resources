@@ -1,0 +1,15 @@
+{
+  "name": "@repo/tailwind-config",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./tailwind.config": "./tailwind.config.ts",
+    "./postcss.config": "./postcss.config.js"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "tailwindcss": "^3.4.0",
+    "postcss": "^8.4.47",
+    "autoprefixer": "^10.4.20"
+  }
+}
