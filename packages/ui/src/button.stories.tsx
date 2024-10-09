@@ -23,7 +23,14 @@ type Story = StoryObj<typeof Button>;
 export const Primary: Story = {
   args: {
     appName: 'MyApp',
-    // className: 'primary-button',
     children: 'Primary Button',
+  },
+};
+
+export const Example: Story = {
+  args: {
+    appName: 'MyApp',
+    className: 'bg-blue-500',
+    children: 'Example Button',
   },
 };

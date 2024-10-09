@@ -1,0 +1,44 @@
+name: 'Chromatic Deployment'
+
+on:
+  pull_request:
+    branches: [develop]
+    paths:
+      - '**.stories.ts'
+      - '**.stories.tsx'
+
+jobs:
+  chromatic-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.16.0'
+
+      - name: Install pnpm
+        run: |
+          npm install -g pnpm
+
+      - name: Install Dependency
+        run: pnpm install --no-frozen-lockfile
+        working-directory: packages/web-ui
+
+      - name: Publish Chromatic
+        id: chromatic
+        uses: chromaui/action@v1
+        with:
+          workingDir: apps/storybook/
+          projectToken: ${{ secrets.CHROMATIC_TOKEN }}
+
+      - name: Create comment PR
+        uses: thollander/actions-comment-pull-request@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          message: '🚀 Storybook: ${{ steps.chromatic.outputs.storybookUrl }}'
