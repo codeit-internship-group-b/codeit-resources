@@ -4,8 +4,7 @@ on:
   pull_request:
     branches: [develop]
     paths:
-      - '**.stories.ts'
-      - '**.stories.tsx'
+      - apps/storybook/
 
 jobs:
   chromatic-deploy:
