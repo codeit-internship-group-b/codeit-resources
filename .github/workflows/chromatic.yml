@@ -27,7 +27,7 @@ jobs:
 
       - name: Install Dependency
         run: pnpm install --no-frozen-lockfile
-        working-directory: packages/web-ui
+        working-directory: apps/storybook/
 
       - name: Publish Chromatic
         id: chromatic
