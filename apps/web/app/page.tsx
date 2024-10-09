@@ -7,6 +7,9 @@ export default function Home() {
       <button type="button" className="bg-primary">
         tailwind 확인용
       </button>
+      <button type="button" className="bg-primary">
+        husky 확인용
+      </button>
       <main>
         <Image src="/next.svg" alt="Next.js logo" width={180} height={38} priority />
         <ol>
