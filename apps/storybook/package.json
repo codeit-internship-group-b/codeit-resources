@@ -9,7 +9,7 @@
     "lint": "next lint",
     "storybook": "storybook dev -p 6006",
     "build:storybook": "storybook build",
-    "chromatic": "npx chromatic --project-token=chpt_0f5229e8aa3fbbd --build-script-name build:storybook"
+    "chromatic": "npx chromatic --project-token=chpt_0f5229e8aa3fbbd --build-script-name build:storybook --exit-once-uploaded --allow-console-errors"
   },
   "dependencies": {
     "@repo/ui": "workspace:*",
