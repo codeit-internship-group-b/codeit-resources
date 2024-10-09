@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: [develop]
     paths:
-      - apps/storybook/
+      - packages/ui/src/**
 
 jobs:
   chromatic-deploy:
@@ -32,7 +32,7 @@ jobs:
         id: chromatic
         uses: chromaui/action@v1
         with:
-          workingDir: apps/storybook/
+          workingDir: packages/ui/src/**
           projectToken: ${{ secrets.CHROMATIC_TOKEN }}
           buildScriptName: build:storybook
 
