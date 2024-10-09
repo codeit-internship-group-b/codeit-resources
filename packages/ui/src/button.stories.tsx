@@ -26,11 +26,3 @@ export const Primary: Story = {
     children: 'Primary Button',
   },
 };
-
-export const Example: Story = {
-  args: {
-    appName: 'MyApp',
-    className: 'bg-blue-500',
-    children: 'Example Button',
-  },
-};
