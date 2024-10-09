@@ -32,7 +32,7 @@ jobs:
         id: chromatic
         uses: chromaui/action@v1
         with:
-          workingDir: packages/ui/src/**
+          workingDir: apps/storybook/**
           projectToken: ${{ secrets.CHROMATIC_TOKEN }}
           buildScriptName: build:storybook
 
