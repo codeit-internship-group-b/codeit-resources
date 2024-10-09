@@ -36,8 +36,6 @@ jobs:
           workingDir: apps/storybook/
           projectToken: ${{ secrets.CHROMATIC_TOKEN }}
           buildScriptName: build:storybook
-          exitOnceUploaded: true
-          allowConsoleErrors: true
 
       - name: Create comment PR
         uses: thollander/actions-comment-pull-request@v1
