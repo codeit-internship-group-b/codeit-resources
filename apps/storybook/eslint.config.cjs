@@ -7,7 +7,13 @@ import tseslint from "typescript-eslint";
 export default tseslint.config(
   { ignores: ["dist"] },
   {
-    extends: [js.configs.recommended, ...tseslint.configs.recommended, "plugin:storybook/recommended", "eslint:recommended", "plugin:@typescript-eslint/recommended"],
+    extends: [
+      "plugin:storybook/recommended",
+      "eslint:recommended",
+      "plugin:@typescript-eslint/recommended",
+      js.configs.recommended,
+      ...tseslint.configs.recommended,
+    ],
     parser: "@typescript-eslint/parser",
     parserOptions: {
       ecmaFeatures: {
@@ -24,7 +30,7 @@ export default tseslint.config(
     plugins: {
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
-      "@typescript-eslint"
+      "@typescript-eslint": typescriptEslint,
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
