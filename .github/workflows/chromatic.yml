@@ -33,7 +33,7 @@ jobs:
         uses: chromaui/action@v1
         with:
           workingDir: apps/storybook/
-          projectToken: ${{ secrets.CHROMATIC_TOKEN }}
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           buildScriptName: build:storybook
 
       - name: Create comment PR
