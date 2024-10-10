@@ -1,8 +1,10 @@
+// {
+//   "files": [],
+//   "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }]
+// }
+
 {
-  "extends": "@repo/typescript-config/vite.json",
-  "compilerOptions": {
-    "module": "NodeNext"
-  },
-  "include": ["src", "**/*.ts", "**/*.tsx", "vite.config.ts"],
+  "extends": "@repo/typescript-config/storybook.json",
+  "include": ["**/*.ts", "**/*.tsx", ".storybook/**/*.ts", ".storybook/**/*.tsx"],
   "exclude": ["node_modules"]
 }
