@@ -58,5 +58,25 @@
     "name": "✅ Test",
     "color": "ccffc4",
     "description": "test 관련(storybook, jest...)"
+  },
+  {
+    "name": "📱 Mobile",
+    "color": "FF9A8B",
+    "description": "모바일 관련 작업"
+  },
+  {
+    "name": "🖥 Web",
+    "color": "6E7BFF",
+    "description": "웹 관련 작업"
+  },
+  {
+    "name": "👽 BE",
+    "color": "9E768F",
+    "description": "백엔드 관련 작업"
+  },
+  {
+    "name": "👾 FE",
+    "color": "FFB6C1",
+    "description": "프론트엔드 관련 작업"
   }
 ]

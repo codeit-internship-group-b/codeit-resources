@@ -1,0 +1,12 @@
+echo "✨ Running build... ✨"
+if ! pnpm run build; 
+  then
+    echo "❌ Build failed. Push aborted. ❌"
+    exit 1
+fi
+
+echo "✅ Build succeeded. Proceeding with push. ✅"
+
+exit 0
+
+pnpm run build
