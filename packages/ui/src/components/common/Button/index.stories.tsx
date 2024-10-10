@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import Button from './button';
+import Button from './';
 
 // 스토리 기본 설정
 const meta: Meta<typeof Button> = {
