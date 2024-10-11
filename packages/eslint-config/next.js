@@ -56,6 +56,7 @@ module.exports = {
 
   // rules 추가 설정
   rules: {
+    "unicorn/filename-case": "off",
     "import/no-default-export": "off", // 기본 내보내기 사용 허용 규칙 끄기
     "@typescript-eslint/explicit-function-return-type": "off", // 함수 반환 타입 강제 규칙 끄기
   },
