@@ -23,7 +23,7 @@
   },
   "prettier": "@org/prettier-config",
   "lint-staged": {
-    "*.{ts,tsx}": [
+    "*.{tsx}": [
       "prettier --write",
       "eslint --fix"
     ]
