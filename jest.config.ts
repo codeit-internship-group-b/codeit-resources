@@ -1,3 +1,4 @@
+// !!! 루트 설정 파일 !!!
 import type { Config } from "jest";
 
 const config: Config = {
