@@ -3,6 +3,7 @@ import rootConfig from "@/../../jest.config";
 
 export const config: Config = {
   ...rootConfig,
+  collectCoverageFrom: ["<rootDir>/apps/web/components/**/*.{ts,tsx}"],
   setupFilesAfterEnv: ["<rootDir>/apps/web/setupTests.ts"],
   testEnvironment: "jsdom",
   moduleNameMapper: {
