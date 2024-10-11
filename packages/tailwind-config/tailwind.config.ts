@@ -20,7 +20,7 @@ const config: Omit<Config, "content"> = {
       width: px0_2000,
       height: px0_2000,
       colors: {
-        "custom-purple": {
+        purple: {
           100: "#F8ECFF",
           200: "#E9CCFF",
           400: "#8F00FF",
@@ -30,11 +30,11 @@ const config: Omit<Config, "content"> = {
           600: "#54009E",
         },
         "custom-black": "#333236",
-        "custom-gray": {
+        gray: {
           100: "#DDDEE4",
           200: "#413B54",
         },
-        "custom-magenta": {
+        magenta: {
           100: "##EB008D",
         },
       },
