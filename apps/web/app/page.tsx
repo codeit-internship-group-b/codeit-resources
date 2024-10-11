@@ -1,13 +1,22 @@
+"use client";
+
+import Toast, { notify } from "@ui/src/components/common/Toast";
+
 export default function Home() {
+  const handleSuccessToast = () => {
+    notify("success", "자리 예약 성공!");
+  };
+
   return (
     <div>
-      <button type="button" className="bg-primary">
+      <button type="button" onClick={handleSuccessToast} className="bg-purple-400">
         tailwind 확인용
       </button>
       <button type="button" className="bg-primary">
         husky 확인용
       </button>
       <div className="w-10">px 확인용</div>
+      <Toast />
     </div>
   );
 }
