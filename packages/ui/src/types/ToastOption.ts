@@ -2,7 +2,7 @@ import { ToastOptions } from "react-toastify";
 
 export const CustomToastOptions: ToastOptions = {
   position: "top-center",
-  autoClose: 4000,
+  autoClose: 3000,
   hideProgressBar: true,
   closeOnClick: true,
   pauseOnHover: true,
