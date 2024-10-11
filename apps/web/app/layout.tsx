@@ -1,7 +1,7 @@
 import "@repo/ui/styles/globals.css";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { Providers } from "./providers";
 import NavBar from "@/components/NavBar";
 
