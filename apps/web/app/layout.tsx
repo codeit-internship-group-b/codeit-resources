@@ -1,6 +1,7 @@
 import "@repo/ui/styles/globals.css";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { type ReactNode } from "react";
 import { Providers } from "./providers";
 
 const spoqaHanSansNeo = localFont({
@@ -22,8 +23,8 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
-}>) {
+  children: ReactNode;
+}>): JSX.Element {
   return (
     <html lang="ko">
       <body className={spoqaHanSansNeo.variable}>
