@@ -12,6 +12,7 @@
     "@repo/eslint-config": "workspace:*",
     "@repo/tailwind-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
+    "@storybook/react": "^8.3.5",
     "@svgr/webpack": "^8.1.0",
     "@turbo/gen": "^1.12.4",
     "@types/eslint": "^8.56.5",
