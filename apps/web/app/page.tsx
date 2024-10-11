@@ -7,12 +7,16 @@ export default function Home() {
     notify("success", "자리 예약 성공!");
   };
 
+  const handleErrorToast = () => {
+    notify("error", "자리 예약 실패!");
+  };
+
   return (
     <div>
       <button type="button" onClick={handleSuccessToast} className="bg-purple-400">
         tailwind 확인용
       </button>
-      <button type="button" className="bg-primary">
+      <button type="button" onClick={handleErrorToast} className="bg-primary">
         husky 확인용
       </button>
       <div className="w-10">px 확인용</div>

@@ -23,10 +23,9 @@ export const CustomToastContainer = styled(ToastContainer)`
     color: #ffffff;
   }
   .Toastify__toast--error {
-    background-color: #fbeded;
-    border: 1px solid #d14343;
-    font-weight: bold;
-    color: #d14343;
-    min-width: 384px;
+    background-color: #413b54;
+    border: 1px solid #413b54;
+    font-weight: 500;
+    color: #ffffff;
   }
 `;
