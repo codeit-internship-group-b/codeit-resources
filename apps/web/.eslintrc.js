@@ -7,4 +7,7 @@ module.exports = {
     project: true,
   },
   ignorePatterns: ["postcss.config.cjs", "tailwind.config.ts"],
+  env: {
+    jest: true,
+  },
 };
