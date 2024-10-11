@@ -1,7 +1,7 @@
 import Button from "@repo/ui/src/button";
 import Image from "next/image";
 
-export default function Home() {
+export default function Home(): JSX.Element {
   return (
     <div>
       <button type="button" className="bg-primary">
