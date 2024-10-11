@@ -39,3 +39,6 @@ yarn-error.log*
 
 # VSCode
 .vscode
+
+# storybook
+storybook-static

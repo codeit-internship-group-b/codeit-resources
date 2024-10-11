@@ -8,8 +8,11 @@
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
-    "tailwindcss": "^3.4.0",
+    "autoprefixer": "^10.4.20",
     "postcss": "^8.4.47",
-    "autoprefixer": "^10.4.20"
+    "tailwindcss": "^3.4.0"
+  },
+  "dependencies": {
+    "tailwindcss-rem-to-px": "^0.1.1"
   }
 }
