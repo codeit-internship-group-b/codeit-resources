@@ -30,7 +30,7 @@ export default function RootLayout({
       <body className={spoqaHanSansNeo.variable}>
         <NavBar />
         <Providers>
-          <div className="ml-200">{children}</div>
+          <div className="md:ml-200">{children}</div>
         </Providers>
       </body>
     </html>
