@@ -2,6 +2,7 @@ import "@repo/ui/styles/globals.css";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Providers } from "./providers";
+import NavBar from "@/components/NavBar";
 
 const spoqaHanSansNeo = localFont({
   src: [
@@ -27,7 +28,10 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className={spoqaHanSansNeo.variable}>
-        <Providers>{children}</Providers>
+        <NavBar />
+        <Providers>
+          <div className="ml-200">{children}</div>
+        </Providers>
       </body>
     </html>
   );
