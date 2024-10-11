@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* 폰트 설정 */
+:root {
+  font-family: var(--font-spoqa), sans-serif;
+}
+
+/* 모든 요소에 적용 */
+*,
+button {
+  font-family: var(--font-spoqa), sans-serif;
+}

@@ -1,13 +1,14 @@
-
 branch_name=$(git branch --show-current)
 
-if [[ "$branch_name" =~ -fe$ ]]; then
+if [[ "$branch_name" =~ ^[0-9]+-fe$ ]]; then
   default_message="FE-"
-elif [[ "$branch_name" =~ -be$ ]]; then
+elif [[ "$branch_name" =~ ^[0-9]+-be$ ]]; then
   default_message="BE-"
 else
   default_message=""
 fi
+
+commit_message=$(cat "$1" | xargs)
 
 if [ -n "$default_message" ]; then
   message=$(cat "$1" | xargs)
