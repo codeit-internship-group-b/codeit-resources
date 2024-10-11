@@ -28,7 +28,7 @@ function getQueryClient() {
   return browserQueryClient;
 }
 
-export function Providers({ children }: ProvidersProps) {
+export function Providers({ children }: ProvidersProps): JSX.Element {
   const queryClient = getQueryClient();
 
   return (
