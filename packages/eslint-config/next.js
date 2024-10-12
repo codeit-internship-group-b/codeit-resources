@@ -59,6 +59,5 @@ module.exports = {
     "eslint-comments/require-description": "off", // 린트 무시하는 주석 달았을 때 설명 요구하는 끄기
     "unicorn/filename-case": "off", // 파일명 케밥케이스로 요구하는 규칙 끄기
     "import/no-default-export": "off", // 기본 내보내기 사용 허용 규칙 끄기
-    "@typescript-eslint/explicit-function-return-type": "off", // 함수 반환 타입 강제 규칙 끄기
   },
 };

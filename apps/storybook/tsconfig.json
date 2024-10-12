@@ -1,0 +1,10 @@
+// {
+//   "files": [],
+//   "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }]
+// }
+
+{
+  "extends": "@repo/typescript-config/storybook.json",
+  "include": ["**/*.ts", "**/*.tsx", ".storybook/**/*.ts", ".storybook/**/*.tsx"],
+  "exclude": ["node_modules"]
+}
