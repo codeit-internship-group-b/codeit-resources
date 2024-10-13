@@ -59,7 +59,7 @@ export default function Input({
         name={name || id}
         type={type}
         className={cn(
-          "peer border-custom-black/40 placeholder-transparent w-full border border-solid rounded-lg p-14 transition-all duration-300 hover:bg-custom-black/5 focus:hover:bg-purple-700/5",
+          "trasition-linear peer border-custom-black/40 placeholder-transparent w-full border border-solid rounded-lg p-14 hover:bg-custom-black/5 focus:hover:bg-purple-700/5",
           {
             "border-error focus:hover:bg-custom-black/5": isError,
             "focus:border-purple-400": !isError,
@@ -76,7 +76,7 @@ export default function Input({
       <label
         htmlFor={id}
         className={cn(
-          "relative z-10 leading-none bg-transparent left-16 bottom-39 transition-all ease-in-out duration-300 transform text-custom-black/80 p-0 peer-placeholder-shown:translate-y-0 peer-focus:-translate-y-27 peer-focus:bg-white peer-focus:!text-13 peer-focus:px-3",
+          "relative z-10 leading-none bg-transparent left-16 bottom-39 trasition-linear text-custom-black/80 p-0 peer-placeholder-shown:translate-y-0 peer-focus:-translate-y-27 peer-focus:bg-white peer-focus:!text-13 peer-focus:px-3",
           {
             "peer-focus:text-purple-400 peer-focus:bg-transparent": !isError,
             "peer-focus:text-error peer-focus:bg-transparent": isError,
@@ -88,7 +88,7 @@ export default function Input({
       >
         <span className="relative z-10">{placeholder}</span>
         <span
-          className={cn("absolute bottom-6 left-0 right-0 group-focus-within:bg-white h-2 z-0", {
+          className={cn("absolute bottom-6 left-0 right-0 group-focus-within:bg-white h-4 z-0", {
             "bottom-6 bg-white": hasValue,
           })}
         />
