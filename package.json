@@ -8,7 +8,8 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint:fix": "turbo run lint -- --fix",
     "prepare": "husky install",
-    "build:storybook": "turbo build-storybook --filter=storybook"
+    "build:storybook": "turbo --filter storybook build:storybook ",
+    "chromatic": "pnpm --filter storybook run chromatic"
   },
   "devDependencies": {
     "dotenv-cli": "^7.4.2",
