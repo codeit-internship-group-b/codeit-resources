@@ -9,6 +9,7 @@ const config: Omit<Config, "content"> = {
   darkMode: ["selector"],
   theme: {
     extend: {
+      borderRadius: px0_10,
       borderWidth: px0_10,
       fontSize: px0_100,
       lineHeight: px0_100,
@@ -30,12 +31,13 @@ const config: Omit<Config, "content"> = {
           600: "#54009E",
         },
         "custom-black": "#333236",
+        error: "#D6173A",
         gray: {
           100: "#DDDEE4",
           200: "#413B54",
         },
         magenta: {
-          100: "##EB008D",
+          100: "#EB008D",
         },
       },
     },
