@@ -41,5 +41,5 @@ jobs:
           # ⚠️ Make sure to configure a `CHROMATIC_PROJECT_TOKEN` repository secret
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           # token: ${{ secrets.GITHUB_TOKEN }}
-          workingDir: packages/ui
+          # workingDir: packages/ui
           onlyChanged: true
