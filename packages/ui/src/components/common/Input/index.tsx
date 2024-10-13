@@ -52,19 +52,20 @@ export default function Input({
   };
 
   return (
-    <div className={className}>
+    <div className={cn("relative group", className)}>
       <input
         id={id}
         defaultValue={value}
         name={name || id}
         type={type}
         className={cn(
-          "peer border-custom-black/40 placeholder-transparent w-full border border-solid rounded-lg p-14 focus:outline-none",
+          "peer border-custom-black/40 placeholder-transparent w-full border border-solid rounded-lg p-14 transition-all duration-300 hover:bg-custom-black/5 focus:hover:bg-purple-700/5",
           {
-            "border-error": isError,
+            "border-error focus:hover:bg-custom-black/5": isError,
             "focus:border-purple-400": !isError,
           },
         )}
+        style={{ outline: "none" }}
         placeholder={placeholder}
         onBlur={onBlur}
         onChange={handleChange}
@@ -75,18 +76,24 @@ export default function Input({
       <label
         htmlFor={id}
         className={cn(
-          "absolute left-30 top-31 transition-all duration-500 transform text-custom-black/80 p-0 peer-placeholder-shown:translate-y-0 peer-focus:-translate-y-25 peer-focus:bg-white peer-focus:!text-13 peer-focus:p-3",
+          "relative z-10 leading-none bg-transparent left-16 bottom-39 transition-all ease-in-out duration-300 transform text-custom-black/80 p-0 peer-placeholder-shown:translate-y-0 peer-focus:-translate-y-27 peer-focus:bg-white peer-focus:!text-13 peer-focus:px-3",
           {
-            "peer-focus:text-purple-400": !isError,
-            "peer-focus:text-error": isError,
-            "-translate-y-25 bg-white !text-13 p-3": !isError && hasValue,
-            "-translate-y-25 bg-white !text-13 p-3 text-error": isError && hasValue,
+            "peer-focus:text-purple-400 peer-focus:bg-transparent": !isError,
+            "peer-focus:text-error peer-focus:bg-transparent": isError,
+            "-translate-y-27 bg-transparent !text-13 px-3": !isError && hasValue,
+            "-translate-y-27 bg-transparent !text-13 px-3 text-error": isError && hasValue,
           },
         )}
+        style={{ display: "inline-block" }}
       >
-        {placeholder}
+        <span className="relative z-10">{placeholder}</span>
+        <span
+          className={cn("absolute bottom-6 left-0 right-0 group-focus-within:bg-white h-2 z-0", {
+            "bottom-6 bg-white": hasValue,
+          })}
+        />
       </label>
-      {isError && <span className="block text-13 text-error pl-20 pt-9">{errorMessage}</span>}
+      {isError && <span className="absolute bottom-0 block text-13 text-error pl-20 pt-9">{errorMessage}</span>}
     </div>
   );
 }
