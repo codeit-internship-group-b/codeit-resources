@@ -4,7 +4,7 @@ name: "Chromatic Deployment"
 # Event for the workflow
 on:
   pull_request:
-    branches: [develop, main]
+    branches: [develop]
 
 # List of jobs
 jobs:
@@ -33,7 +33,7 @@ jobs:
 
       - name: ⬇️ 의존성 설치 (Install Dependencies)
         # ⚠️ See your package manager's documentation for the correct command to install dependencies in a CI environment.
-        run: pnpm install
+        run: pnpm install --no-frozen-lockfile
 
       - name: 🚀 Storybook 배포 (Run Chromatic)
         uses: chromaui/action@latest
@@ -41,5 +41,13 @@ jobs:
           # ⚠️ Make sure to configure a `CHROMATIC_PROJECT_TOKEN` repository secret
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           # token: ${{ secrets.GITHUB_TOKEN }}
-          # workingDir: packages/ui
+          workingDir: apps/storybook/
+          # buildScriptName: build:storybook
           # onlyChanged: true
+
+      - name: Create comment PR
+        uses: thollander/actions-comment-pull-request@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          message: "🚀 Storybook: ${{ steps.chromatic.outputs.storybookUrl }}"
