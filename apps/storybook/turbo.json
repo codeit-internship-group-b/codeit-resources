@@ -3,7 +3,8 @@
   "tasks": {
     "build:storybook": {
       "dependsOn": ["^build:storybook"],
-      "outputs": ["storybook-static/**"]
+      "outputs": ["storybook-static/**"],
+      "env": ["CHROMATIC_TOKEN"]
     }
   }
 }

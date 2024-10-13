@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "storybook dev -p 6006",
     "build:storybook": "storybook build",
-    "preview": "vite preview"
+    "build-storybook": "storybook build",
+    "preview": "vite preview",
+    "chromatic": "bash ./scripts/chromatic_publish.sh"
   },
   "dependencies": {
     "@repo/ui": "workspace:*",
@@ -15,6 +17,7 @@
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^1.9.0",
+    "chromatic": "^11.12.5",
     "@eslint/js": "^9.11.1",
     "@repo/eslint-config": "workspace:*",
     "@repo/tailwind-config": "workspace:*",
