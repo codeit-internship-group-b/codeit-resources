@@ -262,9 +262,6 @@ importers:
       react-hook-form:
         specifier: ^7.53.0
         version: 7.53.0(react@18.2.0)
-      tailwind-merge:
-        specifier: ^2.5.3
-        version: 2.5.3
     devDependencies:
       '@repo/eslint-config':
         specifier: workspace:*
@@ -308,6 +305,9 @@ importers:
       postcss:
         specifier: ^8.4.47
         version: 8.4.47
+      tailwind-merge:
+        specifier: ^2.5.3
+        version: 2.5.3
       tailwindcss:
         specifier: ^3.4.13
         version: 3.4.13(ts-node@10.9.1(@types/node@20.11.24)(typescript@5.3.3))
@@ -9993,7 +9993,7 @@ snapshots:
 
   gopd@1.0.1:
     dependencies:
-      get-intrinsic: 1.2.2
+      get-intrinsic: 1.2.4
 
   graceful-fs@4.2.11: {}
 
@@ -10253,7 +10253,7 @@ snapshots:
 
   is-generator-function@1.0.10:
     dependencies:
-      has-tostringtag: 1.0.0
+      has-tostringtag: 1.0.2
 
   is-glob@4.0.3:
     dependencies:
