@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import type { ReactNode } from "react";
 import { Providers } from "./providers";
-import Gnb from "@/components/Gnb";
+import Gnb from "@/components/GlobalNavigationBar";
 
 const spoqaHanSansNeo = localFont({
   src: [
