@@ -21,14 +21,16 @@ const config: Config = {
   coverageProvider: "v8",
 
   // An array of file extensions your modules use
-  moduleFileExtensions: ["js", "mjs", "cjs", "jsx", "ts", "tsx", "json", "node"],
+  moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
 
   // The paths to modules that run some code to configure or set up the testing environment before each test
   // setupFiles: [],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
-  // todo
-  setupFilesAfterEnv: [],
+  // setupFilesAfterEnv: [],
+
+  // todo : 백엔드 설정 시 오버라이딩 필요
+  testEnvironment: "jest-environment-jsdom",
 
   // The glob patterns Jest uses to detect test files
   testMatch: ["**/?(*.)+(test).[tj]s?(x)"],
