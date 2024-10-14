@@ -9,7 +9,6 @@ const config: Omit<Config, "content"> = {
   darkMode: ["selector"],
   theme: {
     extend: {
-      borderRadius: px0_10,
       borderWidth: px0_10,
       fontSize: px0_100,
       borderRadius: px0_100,
