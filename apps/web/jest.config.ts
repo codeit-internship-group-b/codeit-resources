@@ -1,5 +1,5 @@
 import type { Config } from "jest";
-import rootConfig from "@/../../jest.config";
+import rootConfig from "@/jest.config";
 
 export const config: Config = {
   ...rootConfig,
