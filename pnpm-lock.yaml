@@ -198,7 +198,7 @@ importers:
         version: 5.59.0(react@18.3.1)
       next:
         specifier: 14.2.6
-        version: 14.2.6(@babel/core@7.25.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 14.2.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react:
         specifier: 18.3.1
         version: 18.3.1
@@ -360,6 +360,9 @@ importers:
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
+      framer-motion:
+        specifier: ^11.11.8
+        version: 11.11.8(react-dom@18.3.1(react@18.2.0))(react@18.2.0)
       postcss:
         specifier: ^8.4.47
         version: 8.4.47
@@ -3779,6 +3782,20 @@ packages:
 
   fraction.js@4.3.7:
     resolution: {integrity: sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==}
+
+  framer-motion@11.11.8:
+    resolution: {integrity: sha512-mnGQNEoz99GtFXBBPw+Ag5K4FcfP5XrXxrxHz+iE4Lmg7W3sf2gKmGuvfkZCW/yIfcdv5vJd6KiSPETH1Pw68Q==}
+    peerDependencies:
+      '@emotion/is-prop-valid': '*'
+      react: ^18.0.0
+      react-dom: ^18.0.0
+    peerDependenciesMeta:
+      '@emotion/is-prop-valid':
+        optional: true
+      react:
+        optional: true
+      react-dom:
+        optional: true
 
   fresh@0.5.2:
     resolution: {integrity: sha512-zJ2mQYM18rEFOudeV4GShTGIQ7RbzA7ozbU9I/XBpm7kqgMywgmylMwXHxZJmkVoYkna9d2pVXVXPdYTP9ej8Q==}
@@ -7953,8 +7970,8 @@ snapshots:
       '@types/express': 4.17.21
       better-opn: 3.0.2
       browser-assert: 1.2.1
-      esbuild: 0.20.2
-      esbuild-register: 3.6.0(esbuild@0.20.2)
+      esbuild: 0.21.5
+      esbuild-register: 3.6.0(esbuild@0.21.5)
       express: 4.21.1
       jsdoc-type-pratt-parser: 4.1.0
       process: 0.11.10
@@ -10045,6 +10062,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  esbuild-register@3.6.0(esbuild@0.21.5):
+    dependencies:
+      debug: 4.3.7(supports-color@5.5.0)
+      esbuild: 0.21.5
+    transitivePeerDependencies:
+      - supports-color
+
   esbuild@0.20.2:
     optionalDependencies:
       '@esbuild/aix-ppc64': 0.20.2
@@ -10809,6 +10833,13 @@ snapshots:
 
   fraction.js@4.3.7: {}
 
+  framer-motion@11.11.8(react-dom@18.3.1(react@18.2.0))(react@18.2.0):
+    dependencies:
+      tslib: 2.6.2
+    optionalDependencies:
+      react: 18.2.0
+      react-dom: 18.3.1(react@18.2.0)
+
   fresh@0.5.2: {}
 
   fs-extra@10.1.0:
@@ -10978,7 +11009,7 @@ snapshots:
 
   gopd@1.0.1:
     dependencies:
-      get-intrinsic: 1.2.2
+      get-intrinsic: 1.2.4
 
   graceful-fs@4.2.11: {}
 
@@ -11249,7 +11280,7 @@ snapshots:
 
   is-generator-function@1.0.10:
     dependencies:
-      has-tostringtag: 1.0.0
+      has-tostringtag: 1.0.2
 
   is-glob@4.0.3:
     dependencies:
@@ -12084,7 +12115,7 @@ snapshots:
 
   netmask@2.0.2: {}
 
-  next@14.2.6(@babel/core@7.25.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  next@14.2.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@next/env': 14.2.6
       '@swc/helpers': 0.5.5
@@ -12094,7 +12125,7 @@ snapshots:
       postcss: 8.4.31
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-      styled-jsx: 5.1.1(@babel/core@7.25.7)(react@18.3.1)
+      styled-jsx: 5.1.1(react@18.3.1)
     optionalDependencies:
       '@next/swc-darwin-arm64': 14.2.6
       '@next/swc-darwin-x64': 14.2.6
@@ -13204,12 +13235,10 @@ snapshots:
 
   strip-json-comments@3.1.1: {}
 
-  styled-jsx@5.1.1(@babel/core@7.25.7)(react@18.3.1):
+  styled-jsx@5.1.1(react@18.3.1):
     dependencies:
       client-only: 0.0.1
       react: 18.3.1
-    optionalDependencies:
-      '@babel/core': 7.25.7
 
   sucrase@3.35.0:
     dependencies:
