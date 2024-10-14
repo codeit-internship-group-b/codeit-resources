@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "build": "turbo build",
+    "clean": "turbo run clean",
     "dev": "turbo dev",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
@@ -23,7 +24,7 @@
   },
   "prettier": "@org/prettier-config",
   "lint-staged": {
-    "*.{tsx}": [
+    "*.tsx": [
       "prettier --write",
       "eslint --fix"
     ]
