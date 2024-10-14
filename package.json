@@ -9,7 +9,9 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint:fix": "turbo run lint -- --fix",
     "prepare": "husky install",
-    "test": "pnpm --filter=web test"
+    "test:web": "pnpm test --filter=web",
+    "test:docs": "pnpm test --filter=docs",
+    "test:ui": "pnpm test --filter=ui"
   },
   "devDependencies": {
     "eslint": "^8.50.0",
@@ -29,6 +31,5 @@
       "prettier --write",
       "eslint --fix"
     ]
-  },
-  "jest": "@org/jest-config"
+  }
 }
