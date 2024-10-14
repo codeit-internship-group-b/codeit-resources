@@ -317,6 +317,9 @@ importers:
       react:
         specifier: ^18.2.0
         version: 18.2.0
+      react-hook-form:
+        specifier: ^7.53.0
+        version: 7.53.0(react@18.2.0)
     devDependencies:
       '@repo/eslint-config':
         specifier: workspace:*
@@ -351,12 +354,18 @@ importers:
       autoprefixer:
         specifier: ^10.4.20
         version: 10.4.20(postcss@8.4.47)
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
       postcss:
         specifier: ^8.4.47
         version: 8.4.47
+      tailwind-merge:
+        specifier: ^2.5.3
+        version: 2.5.3
       tailwindcss:
         specifier: ^3.4.13
         version: 3.4.13(ts-node@10.9.1(@types/node@20.11.24)(typescript@5.3.3))
@@ -5219,6 +5228,12 @@ packages:
       react: ^0.14.8 || ^15.0.1 || ^16.0.0 || ^17.0.1 || ^18.0.0
       react-dom: ^0.14.8 || ^15.0.1 || ^16.0.0 || ^17.0.1 || ^18.0.0
 
+  react-hook-form@7.53.0:
+    resolution: {integrity: sha512-M1n3HhqCww6S2hxLxciEXy2oISPnAzxY7gvwVPrtlczTM/1dDadXgUxDpHMrMTblDOcm/AXtXxHwZ3jpg1mqKQ==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18 || ^19
+
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
@@ -5734,6 +5749,9 @@ packages:
   synckit@0.9.1:
     resolution: {integrity: sha512-7gr8p9TQP6RAHusBOSLs46F4564ZrjV8xFmw5zCmgmhGUcw2hxsShhJ6CEiHQMgPDwAQ1fWHPM0ypc4RMAig4A==}
     engines: {node: ^14.18.0 || >=16.0.0}
+
+  tailwind-merge@2.5.3:
+    resolution: {integrity: sha512-d9ZolCAIzom1nf/5p4LdD5zvjmgSxY0BGgdSvmXIoMYAiPdAW/dSpP7joCDYFY7r/HkEa2qmPtkgsu0xjQeQtw==}
 
   tailwindcss-rem-to-px@0.1.1:
     resolution: {integrity: sha512-xTUV9CyiUsNEN2szde/cwf6AejmIJ27w00yAoQ7y0i3ilxMff3K8TKiBi1kUO4vGpcPS8ia1MV5xcH6njldTvw==}
@@ -12600,6 +12618,10 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       react-is: 18.1.0
 
+  react-hook-form@7.53.0(react@18.2.0):
+    dependencies:
+      react: 18.2.0
+
   react-is@16.13.1: {}
 
   react-is@17.0.2: {}
@@ -13234,6 +13256,8 @@ snapshots:
     dependencies:
       '@pkgr/core': 0.1.1
       tslib: 2.6.2
+
+  tailwind-merge@2.5.3: {}
 
   tailwindcss-rem-to-px@0.1.1(ts-node@10.9.1(@types/node@22.7.5)(typescript@5.6.3)):
     dependencies:

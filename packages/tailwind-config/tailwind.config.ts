@@ -31,13 +31,14 @@ const config: Omit<Config, "content"> = {
           600: "#54009E",
         },
         "custom-black": "#333236",
+        error: "#D6173A",
         gray: {
           100: "#DDDEE4",
           200: "#413B54",
           300: "#3C3B40",
         },
         magenta: {
-          100: "##EB008D",
+          100: "#EB008D",
         },
       },
     },

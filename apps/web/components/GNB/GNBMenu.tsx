@@ -46,7 +46,8 @@ export default function GNBMenu({ isAdmin }: GNBMenu) {
           </Link>
         );
       })}
-      {isAdmin ? <>
+      {isAdmin ? (
+        <>
           <hr className="border-white/10 pb-10 hidden md:block" />
           <div className="text-white/30 text-sm-bold px-16 pt-8 hidden md:block">어드민 기능</div>
           {ADMIN_ITEM.map(({ href, name, icon: Icon }) => {
@@ -71,7 +72,8 @@ export default function GNBMenu({ isAdmin }: GNBMenu) {
               </Link>
             );
           })}
-        </> : null}
+        </>
+      ) : null}
     </menu>
   );
 }
