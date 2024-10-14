@@ -12,7 +12,18 @@ const NAV_ITEMS = [
   { href: "/equipment", name: "장비", icon: EquipmentIcon },
 ];
 
-export default function NavMenu() {
+const ADMIN_ITEM = [
+  { href: "/admin/dashboard", name: "멤버 관리", icon: PersonIcon },
+  { href: "/admin/meeting-room", name: "회의실 설정", icon: MeetingIcon },
+  { href: "/admin/seats", name: "좌석 설정", icon: SeatsIcon },
+  { href: "/admin/equipment", name: "장비 설정", icon: EquipmentIcon },
+];
+
+interface GNBMenu {
+  isAdmin: boolean;
+}
+
+export default function GNBMenu({ isAdmin }: GNBMenu) {
   const pathname = usePathname();
 
   return (
@@ -35,6 +46,32 @@ export default function NavMenu() {
           </Link>
         );
       })}
+      {isAdmin ? <>
+          <hr className="border-white/10 pb-10 hidden md:block" />
+          <div className="text-white/30 text-sm-bold px-16 pt-8 hidden md:block">어드민 기능</div>
+          {ADMIN_ITEM.map(({ href, name, icon: Icon }) => {
+            const isActive = pathname === href;
+            return (
+              <Link key={name} href={href} className="hidden md:block">
+                <div
+                  className={clsx(
+                    "w-48 flex flex-col md:w-full md:flex-row md:gap-10 items-center md:px-16 md:py-8 size-full rounded-10",
+                    isActive ? "md:bg-gray-300" : "md:hover:bg-gray-300",
+                  )}
+                >
+                  <Icon
+                    className={clsx("md:text-white/60 stroke-current", isActive ? "text-white" : "text-white/60")}
+                  />
+                  <div
+                    className={clsx("md:text-white/60 md:text-16 text-12", isActive ? "text-white" : "text-white/60")}
+                  >
+                    {name}
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
+        </> : null}
     </menu>
   );
 }
