@@ -1,5 +1,3 @@
-"use client";
-
 import Input from "@ui/src/components/common/Input";
 
 export default function Home(): JSX.Element {
