@@ -1,5 +1,5 @@
 import type { Config } from "jest";
-import rootConfig from "@/jest.config";
+import rootConfig from "@/../../packages/jest-config/jest.config";
 
 export const config: Config = {
   ...rootConfig,
@@ -9,6 +9,11 @@ export const config: Config = {
   moduleNameMapper: {
     "\\.(css|less|scss|sass)$": "identity-obj-proxy",
     "\\.(jpg|jpeg|png|gif|svg)$": "<rootDir>/apps/web/__mocks__/fileMock.ts",
+  },
+  globals: {
+    "ts-jest": {
+      tsconfig: "./tsconfig.json",
+    },
   },
 };
 
