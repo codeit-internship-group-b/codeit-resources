@@ -23,7 +23,7 @@
     "@tanstack/react-query-devtools": "^5.59.0",
     "@typescript-eslint/parser": "^7.1.0",
     "@types/node": "^20",
-    "@types/react": "^18",
+    "@types/react": "^18.3.1",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.4.20",
     "clsx": "^2.1.1",
