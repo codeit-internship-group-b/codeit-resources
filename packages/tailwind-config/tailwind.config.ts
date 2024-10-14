@@ -23,11 +23,12 @@ const config: Omit<Config, "content"> = {
         purple: {
           100: "#F8ECFF",
           200: "#E9CCFF",
-          400: "#8F00FF",
-          700: "#9933FF",
           300: "#A64EFF",
+          400: "#8F00FF",
           500: "#6500C2",
           600: "#54009E",
+          700: "#9933FF",
+          800: "#7200CC",
         },
         "custom-black": "#333236",
         gray: {
