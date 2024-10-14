@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes, useState } from "react";
+import { ChangeEvent, InputHTMLAttributes, useState } from "react";
 import cn from "@ui/src/utils/cn";
 import { UseFormRegisterReturn } from "react-hook-form";
 
@@ -46,7 +46,7 @@ export default function Input({
   const [hasValue, setHasValue] = useState(!!value);
   const { onChange, onBlur, ref, disabled, name } = register;
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setHasValue(!!e.target.value);
     onChange(e);
   };
