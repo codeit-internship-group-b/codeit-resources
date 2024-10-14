@@ -4,7 +4,7 @@ import Profile from "../common/Profile";
 import GnbMenu from "./GnbMenu";
 import GnbLogo from "./GnbLogo";
 
-export default function Gnb() {
+export default function Gnb(): JSX.Element {
   const name = "강영훈"; // mockData
   const isAdmin = true;
   return (
