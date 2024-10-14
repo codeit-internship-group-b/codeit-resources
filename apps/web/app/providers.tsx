@@ -8,7 +8,7 @@ interface ProvidersProps {
   children: ReactNode;
 }
 
-function makeQueryClient() {
+function makeQueryClient(): QueryClient {
   return new QueryClient({
     defaultOptions: {
       queries: {
@@ -20,7 +20,7 @@ function makeQueryClient() {
 
 let browserQueryClient: QueryClient | undefined;
 
-function getQueryClient() {
+function getQueryClient(): QueryClient {
   if (isServer) {
     return makeQueryClient();
   }
@@ -28,7 +28,7 @@ function getQueryClient() {
   return browserQueryClient;
 }
 
-export function Providers({ children }: ProvidersProps) {
+export function Providers({ children }: ProvidersProps): JSX.Element {
   const queryClient = getQueryClient();
 
   return (
