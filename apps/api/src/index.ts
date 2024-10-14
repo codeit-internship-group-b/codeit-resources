@@ -13,7 +13,10 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.use(express.json());
 app.set("port", process.env.PORT || 8080);
+
+// app.use("/users", adminOnly, userRouter);
 
 app.listen(app.get("port"), () => {
   console.log(app.get("port"), "Server Started!");
