@@ -2,12 +2,12 @@
 
 import Toast, { notify } from "@ui/src/components/common/Toast";
 
-export default function Home() {
-  const handleSuccessToast = () => {
+export default function Home(): JSX.Element {
+  const handleSuccessToast = (): void => {
     notify("success", "자리 예약 성공!");
   };
 
-  const handleErrorToast = () => {
+  const handleErrorToast = (): void => {
     notify("error", "자리 예약 실패!");
   };
 
