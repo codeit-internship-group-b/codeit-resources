@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import type { ReactNode } from "react";
 import { Providers } from "./providers";
-import NavBar from "@/components/NavBar";
+import GNB from "@/components/GNB";
 
 const spoqaHanSansNeo = localFont({
   src: [
@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className={spoqaHanSansNeo.variable}>
-        <NavBar />
+        <GNB />
         <Providers>
           <div className="md:ml-200">{children}</div>
         </Providers>

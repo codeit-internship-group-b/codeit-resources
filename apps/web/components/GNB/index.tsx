@@ -1,10 +1,10 @@
 "use client";
 
 import Profile from "../common/Profile";
-import NavMenu from "./NavMenu";
-import NavLogo from "./NavLogo";
+import GNBMenu from "./GNBMenu";
+import GNBLogo from "./GNBLogo";
 
-export default function NavBar() {
+export default function GNB() {
   const name = "강영훈"; // mockData
   return (
     <nav
@@ -12,9 +12,9 @@ export default function NavBar() {
       aria-label="Navigation Bar"
     >
       <div>
-        <NavLogo />
+        <GNBLogo />
         <hr className="border-white/10 pb-10 hidden md:block" />
-        <NavMenu />
+        <GNBMenu />
       </div>
       <div className="py-10 px-16 hidden md:block">
         <Profile name={name} />
