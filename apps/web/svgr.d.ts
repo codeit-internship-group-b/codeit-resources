@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 declare module "*.svg" {
   import type { FC, SVGProps } from "react";
 
@@ -6,6 +8,6 @@ declare module "*.svg" {
 }
 
 declare module "*.svg?url" {
-  const content: string;
+  const content: any;
   export default content;
 }
