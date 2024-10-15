@@ -1,3 +1,5 @@
+// !! 기본 설정 파일
+
 const config = {
   // Stop running tests after `n` failures
   bail: 1,
