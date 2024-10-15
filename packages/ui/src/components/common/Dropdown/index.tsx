@@ -147,10 +147,8 @@ function Item({ children, value }: { children: ReactNode; value: string }) {
 
   return (
     <button
-      className={`relative w-full px-12 py-6 hover:bg-gray-hover focus:bg-purple-700/5 focus:text-purple-800 rounded-8 ${
-        isSelected
-          ? "bg-purple-700/5 text-purple-800 hover:bg-purple-700/5" // 선택된 아이템에 대한 스타일
-          : "" // 선택되지 않은 아이템에 대한 스타일
+      className={`relative w-full px-12 py-6 trasition-linear hover:bg-gray-hover focus:bg-purple-700/5 focus:text-purple-800 rounded-8 ${
+        isSelected && "bg-purple-700/5 text-purple-800 hover:bg-purple-700/5"
       }`}
       onClick={() => selectedItem(value)}
       onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && selectedItem(value)}
@@ -158,7 +156,7 @@ function Item({ children, value }: { children: ReactNode; value: string }) {
       tabIndex={0}
     >
       {children}
-      {isSelected && <RightIcon className="absolute right-0 transform -translate-y-1/2" />}
+      {isSelected && <RightIcon className="absolute right-8 transform -translate-y-1/2 top-1/2" />}
     </button>
   );
 }
