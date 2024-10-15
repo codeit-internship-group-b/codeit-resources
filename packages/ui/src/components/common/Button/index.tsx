@@ -1,6 +1,4 @@
 import React, { ComponentProps } from "react";
-// 기존의 clsx 임포트를 제거하고 cn 함수를 임포트합니다.
-// import clsx from "clsx";
 import cn from "@ui/src/utils/cn";
 
 interface ButtonProps extends ComponentProps<"button"> {
@@ -9,6 +7,29 @@ interface ButtonProps extends ComponentProps<"button"> {
   className?: string;
   children: React.ReactNode;
 }
+
+/**
+ * `Button` 컴포넌트는 다양한 스타일 변형(variant)을 가진 버튼을 생성합니다.
+ * 사용자가 전달한 props에 따라 버튼의 스타일과 동작을 정의합니다.
+ *
+ * @param {ButtonProps} props - 버튼 컴포넌트의 속성들
+ * @param {"Action" | "primary" | "secondary" | "Tertiary" | "TertiaryColor" | "Text" | "TextColor"} props.variant - 버튼의 변형 스타일을 지정합니다.
+ * @param {boolean} [props.isActive=true] - 버튼의 활성화 여부를 지정합니다. 비활성화 시 특정 스타일이 적용됩니다.
+ * @param {string} [props.className] - 추가적인 사용자 정의 클래스 이름을 지정할 수 있습니다.
+ * @param {React.ReactNode} props.children - 버튼 내부에 렌더링할 콘텐츠를 지정합니다.
+ * @param {...ComponentProps<"button">} rest - 기본 HTML 버튼 요소에 적용 가능한 나머지 속성들입니다.
+ *
+ *
+ * @example
+ * // 기본 사용 예시
+ * <Button variant="primary">Primary Button</Button>
+ *
+ * @example
+ * // 비활성화된 secondary 버튼
+ * <Button variant="secondary" isActive={false}>Disabled Secondary Button</Button>
+ *
+ * @author 배영준
+ */
 
 export default function Button(props: ButtonProps) {
   const { variant, isActive = true, className = "", children, ...rest } = props;
