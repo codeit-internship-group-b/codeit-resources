@@ -11,6 +11,7 @@ const config: Omit<Config, "content"> = {
     extend: {
       borderWidth: px0_10,
       fontSize: px0_100,
+      borderRadius: px0_100,
       lineHeight: px0_100,
       minWidth: px0_2000,
       minHeight: px0_2000,
@@ -33,6 +34,7 @@ const config: Omit<Config, "content"> = {
         gray: {
           100: "#DDDEE4",
           200: "#413B54",
+          300: "#3C3B40",
         },
         magenta: {
           100: "##EB008D",
@@ -72,6 +74,7 @@ const config: Omit<Config, "content"> = {
       "md-medium": ["14px", { lineHeight: "24px", fontWeight: "500" }],
       "md-regular": ["14px", { lineHeight: "24px", fontWeight: "400" }],
 
+      "sm-bold": ["13px", { lineHeight: "22px", fontWeight: "700" }],
       "sm-semibold": ["13px", { lineHeight: "22px", fontWeight: "600" }],
       "sm-medium": ["13px", { lineHeight: "22px", fontWeight: "500" }],
 
