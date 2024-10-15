@@ -24,14 +24,17 @@ const config: Omit<Config, "content"> = {
         purple: {
           100: "#F8ECFF",
           200: "#E9CCFF",
-          400: "#8F00FF",
-          700: "#9933FF",
           300: "#A64EFF",
+          400: "#8F00FF",
+          800: "#760DDE",
           500: "#6500C2",
           600: "#54009E",
+          700: "#9933FF",
         },
         "custom-black": "#333236",
         error: "#D6173A",
+        "gray-hover": "#EDEDF0", // 수정필요
+        "gray-border": "#E5E5EA", // 수정필요
         gray: {
           100: "#DDDEE4",
           200: "#413B54",
