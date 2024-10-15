@@ -3,6 +3,6 @@
   "compilerOptions": {
     "outDir": "dist"
   },
-  "include": ["src", "turbo", "jest.config.ts"],
+  "include": ["src", "turbo"],
   "exclude": ["node_modules", "dist"]
 }
