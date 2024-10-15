@@ -1,6 +1,39 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
 import Button from "@ui/src/components/common/Button";
 
 export default function Home(): JSX.Element {
+  const [isPending, setIsPending] = useState(false);
+  const [startPending, setStartPending] = useState(false);
+  const [stopPending, setStopPending] = useState(false);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (startPending) {
+      timer = setTimeout(() => {
+        setIsPending(true);
+        setStartPending(false);
+      }, 1000);
+    }
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [startPending]);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (stopPending) {
+      timer = setTimeout(() => {
+        setIsPending(false);
+        setStopPending(false);
+      }, 1000);
+    }
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [stopPending]);
+
   return (
     <div className="space-y-4 p-8">
       {/* 기본 primary 버튼 */}
@@ -33,6 +66,33 @@ export default function Home(): JSX.Element {
           ✅
         </span>{" "}
         Icon Button
+      </Button>
+
+      {/* isPending 상태를 가진 버튼 */}
+      <Button variant="primary" isPending={isPending} className="w-500">
+        Save
+      </Button>
+
+      {/* Test 버튼 */}
+      <Button
+        variant="primary"
+        onClick={() => {
+          setStartPending(true);
+        }}
+        className="w-500"
+      >
+        Test
+      </Button>
+
+      {/* Stop 버튼 */}
+      <Button
+        variant="secondary"
+        onClick={() => {
+          setStopPending(true);
+        }}
+        className="w-500"
+      >
+        Stop
       </Button>
     </div>
   );

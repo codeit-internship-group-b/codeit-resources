@@ -13,6 +13,6 @@ button {
   font-family: var(--font-spoqa), sans-serif;
 }
 
-.trasition-linear {
+.transition-linear {
   @apply transition-all duration-300 ease-linear transform;
 }

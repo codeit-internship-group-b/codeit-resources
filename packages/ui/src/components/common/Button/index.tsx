@@ -1,20 +1,22 @@
-import React from "react";
+import React, { ComponentPropsWithoutRef, ElementType } from "react";
 import cn from "@ui/src/utils/cn";
+import { LogoCodeit } from "@ui/public";
 
-interface ButtonOwnProps {
+interface ButtonProps {
   variant: "Action" | "primary" | "secondary" | "Tertiary" | "TertiaryColor" | "Text" | "TextColor";
   isActive?: boolean;
+  isPending?: boolean;
   className?: string;
   children: React.ReactNode;
 }
 
-type PolymorphicButtonProps<C extends React.ElementType> = ButtonOwnProps & {
+type PolymorphicButtonProps<C extends ElementType> = ButtonProps & {
   as?: C;
-} & Omit<React.ComponentPropsWithoutRef<C>, keyof ButtonOwnProps>;
+} & Omit<ComponentPropsWithoutRef<C>, keyof ButtonProps>;
 
 /**
- * `Button` 컴포넌트는 다양한 스타일 변형(variant)을 가진 다형성(polymorphic) 컴포넌트입니다.
- * `as` prop을 통해 렌더링할 요소를 지정할 수 있으며, 사용자가 전달한 props에 따라 버튼의 스타일과 동작을 정의합니다.
+ * Button 컴포넌트는 다양한 스타일 변형(variant)을 가진 다형성(polymorphic) 컴포넌트입니다.
+ * as prop을 통해 렌더링할 요소를 지정할 수 있으며, 사용자가 전달한 props에 따라 버튼의 스타일과 동작을 정의합니다.
  *
  * @template C - 렌더링할 요소의 타입 (React.ElementType)
  *
@@ -22,6 +24,7 @@ type PolymorphicButtonProps<C extends React.ElementType> = ButtonOwnProps & {
  * @param {C} [props.as='button'] - 렌더링할 요소를 지정합니다.
  * @param {"Action" | "primary" | "secondary" | "Tertiary" | "TertiaryColor" | "Text" | "TextColor"} props.variant - 버튼의 변형 스타일을 지정합니다.
  * @param {boolean} [props.isActive=true] - 버튼의 활성화 여부를 지정합니다. 비활성화 시 특정 스타일이 적용됩니다.
+ * @param {boolean} [props.isPending=false] - 버튼의 로딩(수정 중) 상태를 지정합니다.
  * @param {string} [props.className] - 추가적인 사용자 정의 클래스 이름을 지정할 수 있습니다.
  * @param {React.ReactNode} props.children - 버튼 내부에 렌더링할 콘텐츠를 지정합니다.
  * @param {...*} rest - 렌더링할 요소에 적용 가능한 나머지 속성들입니다.
@@ -38,12 +41,24 @@ type PolymorphicButtonProps<C extends React.ElementType> = ButtonOwnProps & {
  * // 비활성화된 secondary 버튼
  * <Button variant="secondary" isActive={false}>Disabled Secondary Button</Button>
  *
+ * @example
+ * // 수정 중 상태의 버튼
+ * <Button variant="primary" isPending={true}>Save</Button>
+ *
  * @author
  * 배영준
  */
 
-export default function Button<C extends React.ElementType = "button">(props: PolymorphicButtonProps<C>) {
-  const { as: Component = "button", variant, isActive = true, className = "", children, ...rest } = props;
+export default function Button<C extends ElementType = "button">(props: PolymorphicButtonProps<C>) {
+  const {
+    as: Component = "button",
+    variant,
+    isActive = true,
+    isPending = false,
+    className = "",
+    children,
+    ...rest
+  } = props;
 
   // 공통 스타일
   const baseStyles = "center flex items-center justify-center transition-all duration-300 ease-linear transform";
@@ -52,7 +67,7 @@ export default function Button<C extends React.ElementType = "button">(props: Po
   const inactiveStyles = "bg-gray-200/10 text-custom-black/30 cursor-not-allowed hover:bg-gray-200/10";
 
   // 변형별 기본 스타일
-  const variantStyles: Record<ButtonOwnProps["variant"], string> = {
+  const variantStyles: Record<ButtonProps["variant"], string> = {
     Action:
       "text-lg-bold md:text-2lg-bold h-40 w-full rounded-lg border-2 px-20 py-8 text-center md:h-48 md:px-32 md:py-10 md:w-auto border-custom-black",
     primary:
@@ -68,7 +83,7 @@ export default function Button<C extends React.ElementType = "button">(props: Po
   };
 
   // 변형별 활성화 상태일 때 스타일
-  const activeStyles: Record<ButtonOwnProps["variant"], string> = {
+  const activeStyles: Record<ButtonProps["variant"], string> = {
     Action: "bg-purple-400 text-white/90 hover:bg-purple-800 hover:text-white",
     primary: "bg-purple-400 text-white hover:bg-purple-800",
     secondary: "bg-white/40 text-custom-black/80 hover:bg-custom-black/5 hover:text-custom-black",
@@ -78,12 +93,26 @@ export default function Button<C extends React.ElementType = "button">(props: Po
     TextColor: "bg-white/0 text-purple-900 hover:text-purple-600 hover:bg-purple-700/10",
   };
 
+  // 스피너 아이콘 스타일
+  const spinnerStyles = "animate-spin mr-2 text-current transition-opacity duration-300 w-16 h-16";
+
+  // 버튼의 실제 활성화 상태를 결정
+  const isButtonActive = isActive && !isPending;
+
   // 최종 클래스 이름 조합
-  const classes = cn(baseStyles, variantStyles[variant], isActive ? activeStyles[variant] : inactiveStyles, className);
+  const classes = cn(
+    baseStyles,
+    variantStyles[variant],
+    isButtonActive ? activeStyles[variant] : inactiveStyles,
+    className,
+  );
 
   return (
-    <Component className={classes} {...rest}>
-      {children}
+    <Component className={classes} {...rest} disabled={!isActive || isPending}>
+      <div className={cn("flex items-center transition-all duration-300", isPending ? "gap-10" : "gap-0")}>
+        {isPending && <LogoCodeit className={spinnerStyles} />}
+        <span className="transition-all duration-300">{isPending ? "수정 중..." : children}</span>
+      </div>
     </Component>
   );
 }
