@@ -83,6 +83,10 @@ const config: Omit<Config, "content"> = {
       "xs-semibold": ["12px", { lineHeight: "20px", fontWeight: "600" }],
       "xs-medium": ["12px", { lineHeight: "20px", fontWeight: "500" }],
       "xs-regular": ["12px", { lineHeight: "20px", fontWeight: "400" }],
+      
+      "xxs-semibold": ["11px", { lineHeight: "18px", fontWeight: "600" }],
+      "xxs-medium": ["11px", { lineHeight: "18px", fontWeight: "500" }],
+      "xxs-regular": ["11px", { lineHeight: "18px", fontWeight: "400" }],
     },
   },
   plugins: [],
