@@ -10,7 +10,7 @@
     "lint:fix": "turbo run lint -- --fix",
     "prepare": "husky install",
     "test:web": "pnpm test --filter=web",
-    "test:docs": "pnpm test --filter=docs",
+    "test:api": "pnpm test --filter=api",
     "test:ui": "pnpm test --filter=ui"
   },
   "devDependencies": {
