@@ -1,6 +1,7 @@
 import { ChangeEvent, InputHTMLAttributes, useState } from "react";
 import cn from "@ui/src/utils/cn";
 import { UseFormRegisterReturn } from "react-hook-form";
+import ErrorMessage from "../../ErrorMessage";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   id: string;
@@ -76,7 +77,7 @@ export default function Input({
       <label
         htmlFor={id}
         className={cn(
-          "relative z-10 leading-none bg-transparent left-16 bottom-39 trasition-linear text-custom-black/80 p-0 peer-placeholder-shown:translate-y-0 peer-focus:-translate-y-27 peer-focus:bg-white peer-focus:!text-13 peer-focus:px-3",
+          "relative z-10 leading-none bg-transparent left-16 bottom-39 trasition-linear text-custom-black/80 p-0 peer-focus:-translate-y-27 peer-focus:bg-white peer-focus:!text-13 peer-focus:px-3",
           {
             "peer-focus:text-purple-400 peer-focus:bg-transparent": !isError,
             "peer-focus:text-error peer-focus:bg-transparent": isError,
@@ -93,7 +94,7 @@ export default function Input({
           })}
         />
       </label>
-      {isError && <span className="absolute bottom-0 block text-13 text-error pl-20 pt-9">{errorMessage}</span>}
+      {isError && <ErrorMessage className="-bottom-6 left-20" message={errorMessage} />}
     </div>
   );
 }
