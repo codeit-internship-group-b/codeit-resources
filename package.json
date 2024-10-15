@@ -8,10 +8,13 @@
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint:fix": "turbo run lint -- --fix",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "test:web": "pnpm test --filter=web",
+    "test:api": "pnpm test --filter=api",
+    "test:ui": "pnpm test --filter=ui"
   },
   "devDependencies": {
-    "eslint": "^8",
+    "eslint": "^8.50.0",
     "husky": "^9.1.6",
     "lint-staged": "^15.2.10",
     "prettier": "^3.2.5",
@@ -28,5 +31,9 @@
       "prettier --write",
       "eslint --fix"
     ]
-  }
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ]
 }
