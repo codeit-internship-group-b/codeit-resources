@@ -1,7 +1,4 @@
-// !!! 루트 설정 파일 !!!
-import type { Config } from "jest";
-
-const config: Config = {
+const config = {
   // Stop running tests after `n` failures
   bail: 1,
 
@@ -47,4 +44,4 @@ const config: Config = {
   verbose: true,
 };
 
-export default config;
+module.exports = config;

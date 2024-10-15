@@ -1,8 +1,8 @@
 {
-  "name": "jest-config",
+  "name": "@repo/jest-config",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "jest.config.base.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,9 +10,13 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@jest/globals": "^29.7.0",
+    "@testing-library/jest-dom": "^6.5.0",
+    "@testing-library/react": "^16.0.1",
     "@types/jest": "^29.5.12",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
+    "react-test-renderer": "^18.3.1",
     "ts-jest": "^29.2.5",
     "typescript": "5.2.2"
   }

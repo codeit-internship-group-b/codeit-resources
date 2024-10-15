@@ -3,6 +3,7 @@
   "include": [".", "./index.tsx", "svgr.d.ts"],
   "exclude": ["node_modules", "dist"],
   "compilerOptions": {
+    "jsx": "react-jsx",
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {

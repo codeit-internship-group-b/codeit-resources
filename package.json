@@ -26,11 +26,14 @@
     "node": ">=18"
   },
   "prettier": "@org/prettier-config",
-  "jest": "jest-config",
   "lint-staged": {
     "*.tsx": [
       "prettier --write",
       "eslint --fix"
     ]
-  }
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ]
 }

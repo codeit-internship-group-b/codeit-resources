@@ -1,9 +1,17 @@
 {
   "extends": "@repo/typescript-config/nextjs.json",
-  "include": ["svgr.d.ts", "next-env.d.ts", "next.config.mjs", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": [
+    "svgr.d.ts",
+    "next-env.d.ts",
+    "next.config.mjs",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "jest.config.js"
+  ],
   "exclude": ["node_modules"],
   "compilerOptions": {
-    "jsx": "react-jsx",
+    "jsx": "preserve",
     "plugins": [
       {
         "name": "next"
