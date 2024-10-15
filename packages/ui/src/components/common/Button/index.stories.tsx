@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import Button from "./index";
+import Button from ".";
 
 const meta = {
   title: "Components/Button",
@@ -18,6 +18,15 @@ const meta = {
     children: {
       control: "text",
     },
+    as: {
+      control: {
+        type: "select",
+        options: ["button", "a", "div"],
+      },
+    },
+    className: {
+      control: "text",
+    },
   },
 } satisfies Meta<typeof Button>;
 
@@ -33,7 +42,7 @@ export const Primary: Story = {
   },
 };
 
-export const secondary: Story = {
+export const Secondary: Story = {
   args: {
     variant: "secondary",
     isActive: true,
@@ -86,5 +95,39 @@ export const Disabled: Story = {
     variant: "primary",
     isActive: false,
     children: "Disabled Button",
+  },
+};
+
+export const LinkButton: Story = {
+  args: {
+    as: "a",
+    href: "#",
+    variant: "primary",
+    isActive: true,
+    children: "Link Button",
+  },
+};
+
+export const CustomStyled: Story = {
+  args: {
+    variant: "primary",
+    className: "my-custom-class",
+    isActive: true,
+    children: "Custom Styled Button",
+  },
+};
+
+export const IconButton: Story = {
+  args: {
+    variant: "primary",
+    isActive: true,
+    children: (
+      <>
+        <span role="img" aria-label="check">
+          ✅
+        </span>{" "}
+        Icon Button
+      </>
+    ),
   },
 };
