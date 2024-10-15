@@ -30,6 +30,7 @@ const config: Omit<Config, "content"> = {
           600: "#54009E",
           700: "#9933FF",
           800: "#7200CC",
+          900: "#760DDE"
         },
         "custom-black": "#333236",
         error: "#D6173A",
