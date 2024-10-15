@@ -1,6 +1,6 @@
 import { LogoCodeit, LogoText } from "@repo/ui/public";
 
-export default function NavLogo() {
+export default function GnbLogo(): JSX.Element {
   return (
     <div className="hidden md:flex gap-8 items-center p-8 mb-10">
       <LogoCodeit className="w-26 h-26" />
