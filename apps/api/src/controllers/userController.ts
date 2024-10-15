@@ -133,3 +133,5 @@ const updateProfileImage = async (req: Request, res: Response, next: NextFunctio
     next(error);
   }
 };
+
+export { getUsers, getUser, createUser, updateUser, deleteUser, updatePassword, updateProfileImage };

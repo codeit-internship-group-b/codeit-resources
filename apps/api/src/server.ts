@@ -16,6 +16,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.set("port", PORT);
 
+// 여기서 middleware 추가?
 // app.use("/users", adminOnly, userRouter);
 
 app.listen(PORT, () => {
