@@ -1,3 +1,5 @@
+"use client";
+
 import cn from "@ui/src/utils/cn";
 import { ChangeEvent, InputHTMLAttributes, useState } from "react";
 import { UseFormRegisterReturn } from "react-hook-form";

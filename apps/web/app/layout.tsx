@@ -1,9 +1,9 @@
-import GNB from "@/components/GNB";
 import "@repo/ui/styles/globals.css";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import type { ReactNode } from "react";
 import { Providers } from "./providers";
+import Gnb from "@/components/GlobalNavigationBar";
 
 const spoqaHanSansNeo = localFont({
   src: [
@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className={spoqaHanSansNeo.variable}>
-        <GNB />
+        <Gnb />
         <Providers>
           <div className="md:ml-200">{children}</div>
         </Providers>

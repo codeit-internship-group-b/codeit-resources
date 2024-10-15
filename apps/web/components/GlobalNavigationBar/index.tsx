@@ -1,10 +1,10 @@
 "use client";
 
 import Profile from "../common/Profile";
-import GNBMenu from "./GNBMenu";
-import GNBLogo from "./GNBLogo";
+import GnbMenu from "./GnbMenu";
+import GnbLogo from "./GnbLogo";
 
-export default function GNB() {
+export default function Gnb(): JSX.Element {
   const name = "강영훈"; // mockData
   const isAdmin = true;
   return (
@@ -13,9 +13,9 @@ export default function GNB() {
       aria-label="Navigation Bar"
     >
       <div>
-        <GNBLogo />
+        <GnbLogo />
         <hr className="border-white/10 pb-10 hidden md:block" />
-        <GNBMenu isAdmin={isAdmin} />
+        <GnbMenu isAdmin={isAdmin} />
       </div>
       <div className="py-10 px-16 hidden md:block">
         <Profile name={name} />
