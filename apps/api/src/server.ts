@@ -1,23 +1,23 @@
 import cors from "cors";
 import * as dotenv from "dotenv";
 import express from "express";
+import { connectDatabase } from "./database";
 
 dotenv.config();
-
-// mongoose.connect(process.env.DATABASE_URL).then(() => console.log("Connented to DB"));
+connectDatabase();
 
 const app = express();
-
+const PORT = process.env.PORT || 8080;
 const corsOptions = {
   origin: ["http://localhost:3000/"],
 };
 
 app.use(cors(corsOptions));
 app.use(express.json());
-app.set("port", process.env.PORT || 8080);
+app.set("port", PORT);
 
 // app.use("/users", adminOnly, userRouter);
 
-app.listen(app.get("port"), () => {
-  console.log(app.get("port"), "Server Started!");
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
