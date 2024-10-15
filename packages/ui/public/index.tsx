@@ -15,8 +15,14 @@ import SeatsIcon from "./svgs/ic_seats.svg";
 import SortIcon from "./svgs/ic_sort.svg";
 import TextBalloonIcon from "./svgs/ic_textBalloon.svg";
 import Triangle from "./svgs/ic_triangle.svg";
+import LogoText from "./svgs/ic_logo-text.svg";
+import LogoCodeit from "./svgs/ic_logo-codeit.svg";
+import ProfileEmpty from "./svgs/ic_profile-empty.svg";
 
 export {
+  ProfileEmpty,
+  LogoText,
+  LogoCodeit,
   BurgerIcon,
   CancelIcon,
   CheckBoldIcon,
