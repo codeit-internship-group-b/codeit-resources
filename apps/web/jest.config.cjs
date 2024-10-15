@@ -1,5 +1,5 @@
 const nextJest = require("next/jest");
-const rootConfig = require("jest-config/jest.config.base");
+const rootConfig = require("@repo/jest-config/jest.config.base");
 
 const createJestConfig = nextJest({
   // Next.js 앱의 경로 지정
