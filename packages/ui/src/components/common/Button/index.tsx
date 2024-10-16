@@ -1,13 +1,13 @@
-import React, { ComponentPropsWithoutRef, ElementType } from "react";
+import React, { ComponentPropsWithoutRef, ElementType, ReactNode } from "react";
 import cn from "@ui/src/utils/cn";
 import { LogoCodeit } from "@ui/public";
 
 interface ButtonProps {
-  variant: "Action" | "primary" | "secondary" | "Tertiary" | "TertiaryColor" | "Text" | "TextColor";
+  variant: "Action" | "Primary" | "Secondary" | "Tertiary" | "TertiaryColor" | "Text" | "TextColor";
   isActive?: boolean;
   isPending?: boolean;
   className?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 type PolymorphicButtonProps<C extends ElementType> = ButtonProps & {
@@ -94,7 +94,7 @@ export default function Button<C extends ElementType = "button">(props: Polymorp
   };
 
   // 스피너 아이콘 스타일
-  const spinnerStyles = "animate-spin mr-2 text-current transition-opacity duration-300 w-16 h-16";
+  const spinnerStyles = "animate-spin text-current transition-opacity duration-300 w-16 h-16";
 
   // 버튼의 실제 활성화 상태를 결정
   const isButtonActive = isActive && !isPending;
