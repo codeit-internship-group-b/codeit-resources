@@ -1,4 +1,4 @@
-import { ToastOptions } from "react-toastify";
+import type { ToastOptions } from "react-toastify";
 
 export const CustomToastOptions: ToastOptions = {
   position: "top-center",
