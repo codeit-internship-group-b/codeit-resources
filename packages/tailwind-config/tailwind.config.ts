@@ -24,11 +24,13 @@ const config: Omit<Config, "content"> = {
         purple: {
           100: "#F8ECFF",
           200: "#E9CCFF",
-          400: "#8F00FF",
-          700: "#9933FF",
           300: "#A64EFF",
+          400: "#8F00FF",
           500: "#6500C2",
           600: "#54009E",
+          700: "#9933FF",
+          800: "#7200CC",
+          900: "#760DDE"
         },
         "custom-black": "#333236",
         error: "#D6173A",
@@ -82,6 +84,10 @@ const config: Omit<Config, "content"> = {
       "xs-semibold": ["12px", { lineHeight: "20px", fontWeight: "600" }],
       "xs-medium": ["12px", { lineHeight: "20px", fontWeight: "500" }],
       "xs-regular": ["12px", { lineHeight: "20px", fontWeight: "400" }],
+      
+      "xxs-semibold": ["11px", { lineHeight: "18px", fontWeight: "600" }],
+      "xxs-medium": ["11px", { lineHeight: "18px", fontWeight: "500" }],
+      "xxs-regular": ["11px", { lineHeight: "18px", fontWeight: "400" }],
     },
   },
   plugins: [],

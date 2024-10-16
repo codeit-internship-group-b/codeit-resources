@@ -11,4 +11,5 @@ module.exports = {
   quoteProps: "as-needed",
   jsxSingleQuote: false,
   jsxBracketSameLine: false,
+  plugins: ["prettier-plugin-tailwindcss"],
 };

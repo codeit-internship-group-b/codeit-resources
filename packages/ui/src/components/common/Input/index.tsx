@@ -54,14 +54,14 @@ export default function Input({
   };
 
   return (
-    <div className={cn("relative group", className)}>
+    <div className={cn("group relative", className)}>
       <input
         id={id}
         defaultValue={value}
         name={name || id}
         type={type}
         className={cn(
-          "trasition-linear peer border-custom-black/40 placeholder-transparent w-full border border-solid rounded-lg p-14 hover:bg-custom-black/5 focus:hover:bg-purple-700/5",
+          "trasition-linear border-custom-black/40 hover:bg-custom-black/5 peer w-full rounded-lg border border-solid p-14 placeholder-transparent focus:hover:bg-purple-700/5",
           {
             "border-error focus:hover:bg-custom-black/5": isError,
             "focus:border-purple-400": !isError,
@@ -78,24 +78,24 @@ export default function Input({
       <label
         htmlFor={id}
         className={cn(
-          "relative z-10 leading-none bg-transparent left-16 bottom-39 trasition-linear text-custom-black/80 p-0 peer-placeholder-shown:translate-y-0 peer-focus:-translate-y-27 peer-focus:bg-white peer-focus:!text-13 peer-focus:px-3",
+          "bottom-39 trasition-linear text-custom-black/80 peer-focus:-translate-y-27 peer-focus:!text-13 relative left-16 z-10 bg-transparent p-0 leading-none peer-placeholder-shown:translate-y-0 peer-focus:bg-white peer-focus:px-3",
           {
-            "peer-focus:text-purple-400 peer-focus:bg-transparent": !isError,
+            "peer-focus:bg-transparent peer-focus:text-purple-400": !isError,
             "peer-focus:text-error peer-focus:bg-transparent": isError,
-            "-translate-y-27 bg-transparent !text-13 px-3": !isError && hasValue,
-            "-translate-y-27 bg-transparent !text-13 px-3 text-error": isError && hasValue,
+            "-translate-y-27 !text-13 bg-transparent px-3": !isError && hasValue,
+            "-translate-y-27 !text-13 text-error bg-transparent px-3": isError && hasValue,
           },
         )}
         style={{ display: "inline-block" }}
       >
         <span className="relative z-10">{placeholder}</span>
         <span
-          className={cn("absolute bottom-6 left-0 right-0 group-focus-within:bg-white h-4 z-0", {
+          className={cn("absolute bottom-6 left-0 right-0 z-0 h-4 group-focus-within:bg-white", {
             "bottom-6 bg-white": hasValue,
           })}
         />
       </label>
-      {isError && <span className="absolute bottom-0 block text-13 text-error pl-20 pt-9">{errorMessage}</span>}
+      {isError && <span className="text-13 text-error absolute bottom-0 block pl-20 pt-9">{errorMessage}</span>}
     </div>
   );
 }
