@@ -1,20 +1,17 @@
-import bcrypt from "bcryptjs";
-import * as dotenv from "dotenv";
 import { Router } from "express";
-import jwt from "jsonwebtoken";
 import * as userController from "../controllers/userController";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
 const userRouter: Router = Router();
 
-userRouter.route("/").get(userController.getUsers);
+// userRouter.route("/").get(userController.getUsers);
 
-userRouter.route("/:id").get(userController.getUser).patch(userController.updateUser);
+// userRouter.route("/:id").get(userController.getUser).patch(userController.updateUser);
 
-userRouter.route("/:id/password").patch(userController.updatePassword);
+// userRouter.route("/:id/password").patch(userController.updatePassword);
 
-userRouter.route("/:id/profile-image").patch(userController.updateProfileImage);
+// userRouter.route("/:id/profile-image").patch(userController.updateProfileImage);
 
 // userRouter
 //   .route("/")
