@@ -1,6 +1,6 @@
 export type Role = "admin" | "member";
 
-export interface TUser extends Document {
+export interface TUser {
   username: string;
   email: string;
   password: string;
