@@ -37,15 +37,15 @@ export default function Home(): JSX.Element {
   return (
     <div className="space-y-4 p-8">
       {/* 기본 primary 버튼 */}
-      <Button variant="primary">Primary Button</Button>
+      <Button variant="Primary">Primary Button</Button>
 
       {/* 링크로 사용되는 버튼 (a 요소로 렌더링) */}
-      <Button as="a" href="#" variant="primary">
+      <Button as="a" href="#" variant="Primary">
         Link Button
       </Button>
 
       {/* 비활성화된 secondary 버튼 */}
-      <Button variant="secondary" isActive={false}>
+      <Button variant="Secondary" isActive={false}>
         Disabled Secondary Button
       </Button>
 
@@ -56,12 +56,12 @@ export default function Home(): JSX.Element {
       <Button variant="Text">Text Button</Button>
 
       {/* 사용자 정의 클래스 이름을 추가한 primary 버튼 */}
-      <Button variant="primary" className="my-custom-class">
+      <Button variant="Primary" className="my-custom-class">
         Custom Styled Button
       </Button>
 
       {/* 아이콘을 포함하는 버튼 */}
-      <Button variant="primary">
+      <Button variant="Primary">
         <span role="img" aria-label="check">
           ✅
         </span>{" "}
@@ -69,13 +69,13 @@ export default function Home(): JSX.Element {
       </Button>
 
       {/* isPending 상태를 가진 버튼 */}
-      <Button variant="primary" isPending={isPending} className="w-500">
+      <Button variant="Primary" isPending={isPending} className="w-500">
         Save
       </Button>
 
       {/* Test 버튼 */}
       <Button
-        variant="primary"
+        variant="Primary"
         onClick={() => {
           setStartPending(true);
         }}
@@ -86,7 +86,7 @@ export default function Home(): JSX.Element {
 
       {/* Stop 버튼 */}
       <Button
-        variant="secondary"
+        variant="Secondary"
         onClick={() => {
           setStopPending(true);
         }}
