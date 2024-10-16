@@ -1,13 +1,14 @@
 "use client";
 
-import { type DetailedHTMLProps, useEffect, useRef } from "react";
+import { type DetailedHTMLProps, type HTMLAttributes, type ReactNode, useEffect, useRef } from "react";
 import { type ModalProps } from "@ui/src/types/ModalType";
 import { useModalContext } from "./Root";
 
 export interface ModalTriggerProps
-  extends ModalProps,
-    DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
+  extends Omit<ModalProps, "children">,
+    Omit<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "children"> {
   disabled?: boolean;
+  children: ReactNode;
 }
 
 export default function ModalTrigger(props: ModalTriggerProps): JSX.Element {
