@@ -5,6 +5,7 @@ module.exports = {
   parser: "@typescript-eslint/parser",
   parserOptions: {
     project: "./tsconfig.json",
+    tsconfigRootDir: __dirname,
   },
   ignorePatterns: ["postcss.config.cjs", "tailwind.config.ts", "out/", ".next/"],
 };

@@ -1,23 +1,30 @@
-import React, { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+"use client";
+
+import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { div } from "framer-motion/client";
 import cn from "@ui/src/utils/cn";
 import ErrorMessage from "../../ErrorMessage";
-import { RightIcon } from "@ui/public";
+import { KebabIcon, RightIcon, SortIcon, Triangle } from "@ui/public";
 
 const DropdownContext = createContext({
   isOpen: false,
   isError: false,
   errorMessage: "",
   selectedValue: "",
+  size: "md",
+  select: "single",
   toggleDropdown: () => {},
   closeDropdown: () => {},
+  // eslint-disable-next-line no-unused-vars
   selectedItem: (value: string) => {},
 });
 
 interface DropdownProps {
   children: ReactNode;
   selectedValue: string;
+  size?: "sm" | "md";
+  select?: "single" | "multi";
+  // eslint-disable-next-line no-unused-vars
   onSelect: (value: string) => void;
   isError?: boolean;
   errorMessage?: string;
@@ -29,7 +36,8 @@ export default function Dropdown({
   onSelect,
   isError = false,
   errorMessage = "",
-}: DropdownProps) {
+  size = "md",
+}: DropdownProps): JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -45,8 +53,8 @@ export default function Dropdown({
   );
 
   const providerValue = useMemo(
-    () => ({ isOpen, isError, errorMessage, selectedValue, toggleDropdown, closeDropdown, selectedItem }),
-    [isOpen, selectedValue, isError, errorMessage],
+    () => ({ isOpen, isError, errorMessage, selectedValue, size, toggleDropdown, closeDropdown, selectedItem }),
+    [isOpen, selectedValue, isError, errorMessage, size],
   );
 
   useEffect(() => {
@@ -83,52 +91,92 @@ export default function Dropdown({
 }
 
 interface ToggleProps {
-  children: ReactNode;
+  children?: ReactNode;
   title?: string;
+  iconType?: "none" | "kebab" | "sort";
 }
 
-function Toggle({ children, title }: ToggleProps) {
-  const { toggleDropdown, selectedValue, isOpen, isError, errorMessage } = useContext(DropdownContext);
+function Toggle({ children, title, iconType = "none" }: ToggleProps): JSX.Element {
+  const { toggleDropdown, selectedValue, isOpen, isError, errorMessage, size } = useContext(DropdownContext);
 
   return (
     <div className="relative group">
+      {iconType === "kebab" && (
+        <KebabIcon
+          className="cursor-pointer"
+          onClick={toggleDropdown}
+          onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && toggleDropdown()}
+        />
+      )}
+      {iconType === "sort" && (
+        <button
+          onClick={toggleDropdown}
+          onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && toggleDropdown()}
+          className="rounded-6 flex items-center gap-2 px-6 py-4 bg-gray-hover"
+        >
+          <SortIcon />
+          <span className="font-medium text-custom-black/60 text-12">{selectedValue}</span>
+        </button>
+      )}
       {title && (
         <span
           className={cn(
-            "!text-custom-black/80 absolute w-fit text-13 font-normal -top-8 left-16 z-20 bg-white px-4 transition-colors duration-300",
-            isOpen && "!text-purple-400 text-13",
-            isError && "!text-error text-13",
+            "absolute w-fit text-13 font-normal -top-10 left-16 z-20 bg-white px-4 transition-colors duration-300",
+            "text-custom-black/80",
+            {
+              "text-purple-400": isOpen,
+              "text-error": isError,
+            },
           )}
         >
           {title}
         </span>
       )}
-
-      <button
-        type="button"
-        className={cn(
-          "text-custom-black border-custom-black/40 w-full px-20 py-15 rounded-lg transition-colors duration-300 border border-solid",
-          isOpen && "border-purple-400",
-          isError && "border-error",
-        )}
-        onClick={toggleDropdown}
-        onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && toggleDropdown()}
-      >
-        {selectedValue ? selectedValue : <span>{children}</span>}
-      </button>
-      {isError && !isOpen && <ErrorMessage className="-bottom-30 left-20" message={errorMessage} />}
+      {iconType === "none" && (
+        <>
+          <button
+            type="button"
+            className={cn(
+              "bg-white flex justify-between items-center text-custom-black border-custom-black/40 rounded-lg transition-colors duration-300 border border-solid",
+              isOpen && "border-purple-400",
+              isError && "border-error",
+              size === "md" ? "w-full px-20 py-15" : "w-96 gap-6 px-12 py-6",
+            )}
+            onClick={toggleDropdown}
+            onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && toggleDropdown()}
+          >
+            {selectedValue ? selectedValue : <span>{children}</span>}
+            <Triangle
+              className={cn(
+                "transition-linear size-12",
+                isOpen ? "animate-rotate-in rotate-180" : "animate-rotate-out",
+              )}
+            />
+          </button>
+          {isError && !isOpen && <ErrorMessage className="-bottom-30 left-20" message={errorMessage} />}
+        </>
+      )}
     </div>
   );
 }
 
-function Wrapper({ children }: { children: ReactNode }) {
-  const { isOpen } = useContext(DropdownContext);
+interface WrapperProps {
+  children: ReactNode;
+  className?: string;
+}
+
+function Wrapper({ children, className }: WrapperProps): JSX.Element {
+  const { isOpen, size } = useContext(DropdownContext);
 
   return (
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="relative top-8 p-8 border border-solid border-gray-border rounded-8"
+          className={cn(
+            "z-50 bg-white absolute p-8 border border-solid border-gray-border rounded-8 shadow-custom",
+            size === "md" ? "w-full top-64" : "w-96",
+            className,
+          )}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -141,22 +189,33 @@ function Wrapper({ children }: { children: ReactNode }) {
   );
 }
 
-function Item({ children, value }: { children: ReactNode; value: string }) {
-  const { selectedItem, selectedValue } = useContext(DropdownContext);
+interface ItemProps {
+  children: ReactNode;
+  value: string;
+  position?: "left" | "center";
+}
+
+function Item({ children, value, position = "center" }: ItemProps): JSX.Element {
+  const { selectedItem, selectedValue, size } = useContext(DropdownContext);
   const isSelected = selectedValue === value;
 
   return (
     <button
-      className={`relative w-full px-12 py-6 trasition-linear hover:bg-gray-hover focus:bg-purple-700/5 focus:text-purple-800 rounded-8 ${
-        isSelected && "bg-purple-700/5 text-purple-800 hover:bg-purple-700/5"
-      }`}
+      className={cn(
+        "text-custom-black/80 w-full relative px-12 py-6 transition-linear hover:bg-gray-hover focus:bg-purple-700/5 focus:text-purple-900 rounded-8",
+        {
+          "bg-purple-700/5 !text-purple-900 hover:bg-purple-700/5": isSelected,
+          "text-left": position === "left",
+        },
+        size === "md" ? "px-12 py-6" : "px-16 py-6 text-14",
+      )}
       onClick={() => selectedItem(value)}
       onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && selectedItem(value)}
       role="button"
       tabIndex={0}
     >
       {children}
-      {isSelected && <RightIcon className="absolute right-8 transform -translate-y-1/2 top-1/2" />}
+      {isSelected && size === "md" && <RightIcon className="absolute right-8 transform -translate-y-1/2 top-1/2" />}
     </button>
   );
 }

@@ -41,7 +41,9 @@ export default function Input({
   register = {
     onChange: async () => {},
     onBlur: async () => {},
-    ref: (e: HTMLInputElement | null) => {},
+    ref: (e: HTMLInputElement | null) => {
+      e;
+    },
     name: "",
   },
   ...args

@@ -5,7 +5,7 @@ import Chevron from "./svgs/ic_chevron.svg";
 import DoubleChevron from "./svgs/ic_doubleChevron.svg";
 import EquipmentIcon from "./svgs/ic_equipment.svg";
 import GearIcon from "./svgs/ic_gear.svg";
-import MeatBallIcon from "./svgs/ic_meatball.svg";
+import KebabIcon from "./svgs/ic_kebab.svg";
 import MeetingIcon from "./svgs/ic_meeting.svg";
 import ModalAlertIcon from "./svgs/ic_modal_alret.svg";
 import PersonIcon from "./svgs/ic_person.svg";
@@ -30,7 +30,7 @@ export {
   DoubleChevron,
   EquipmentIcon,
   GearIcon,
-  MeatBallIcon,
+  KebabIcon,
   MeetingIcon,
   ModalAlertIcon,
   PersonIcon,
