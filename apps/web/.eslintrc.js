@@ -7,5 +7,17 @@ module.exports = {
     project: "./tsconfig.json",
     tsconfigRootDir: __dirname,
   },
-  ignorePatterns: ["postcss.config.cjs", "tailwind.config.ts", "out/", ".next/"],
+  ignorePatterns: [
+    "postcss.config.cjs",
+    "tailwind.config.ts",
+    "out/",
+    ".next/",
+    "__mocks__/**",
+    "jest.config.ts",
+    "out/",
+    ".next/",
+  ],
+  env: {
+    jest: true,
+  },
 };

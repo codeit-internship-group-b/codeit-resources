@@ -1,7 +1,7 @@
 "use client";
 
-import Dropdown from "@ui/src/components/common/Dropdown";
 import { useState } from "react";
+import Dropdown from "@ui/src/components/common/Dropdown";
 
 export default function DropdownTest(): JSX.Element {
   const [selectedValue, setSelectedValue] = useState("");
@@ -11,7 +11,7 @@ export default function DropdownTest(): JSX.Element {
   const [selectedValue5, setSelectedValue5] = useState("최신순");
 
   return (
-    <div className="flex flex-col gap-30">
+    <div className="gap-30 flex flex-col">
       <Dropdown
         selectedValue={selectedValue}
         onSelect={(value: string) => {
@@ -81,6 +81,22 @@ export default function DropdownTest(): JSX.Element {
         }}
         size="sm"
         errorMessage="에러다 이것아"
+      >
+        <Dropdown.Toggle iconType="sort" />
+        <Dropdown.Wrapper className="-left-34 top-30">
+          <Dropdown.Item value="최신순">멤버</Dropdown.Item>
+          <Dropdown.Item value="오래된순">어드민</Dropdown.Item>
+        </Dropdown.Wrapper>
+      </Dropdown>
+
+      <Dropdown
+        selectedValue={selectedValue5}
+        onSelect={(value: string) => {
+          setSelectedValue5(value);
+        }}
+        size="sm"
+        errorMessage="에러다 이것아"
+        select="multi"
       >
         <Dropdown.Toggle iconType="sort" />
         <Dropdown.Wrapper className="-left-34 top-30">

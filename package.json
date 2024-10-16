@@ -8,15 +8,19 @@
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint:fix": "turbo run lint -- --fix",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "test:web": "pnpm test --filter=web",
+    "test:api": "pnpm test --filter=api",
+    "test:ui": "pnpm test --filter=ui"
   },
   "devDependencies": {
-    "eslint": "^8",
+    "eslint": "^8.50.0",
     "husky": "^9.1.6",
     "lint-staged": "^15.2.10",
-    "prettier": "^3.2.5",
+    "prettier": "^3.3.3",
+    "prettier-plugin-tailwindcss": "^0.6.8",
     "turbo": "^2.1.3",
-    "typescript": "^5.2.2"
+    "typescript": "5.2.2"
   },
   "packageManager": "pnpm@8.15.6",
   "engines": {
@@ -29,9 +33,8 @@
       "eslint --fix"
     ]
   },
-  "pnpm": {
-    "overrides": {
-      "typescript":"^5.2.2"
-    }
-  }
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ]
 }
