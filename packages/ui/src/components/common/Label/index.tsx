@@ -42,6 +42,22 @@ const colorShades: Record<
   },
 };
 
+/**
+ * `Label` 컴포넌트는 다양한 스타일과 모양을 가진 라벨을 렌더링합니다.
+ *
+ * @param {"purple" | "green" | "pink" | "yellow" | "gray" | "blue"} color - 라벨의 색상입니다.
+ * @param {"font" | "background"} colorApplyTo - 색상이 폰트에 적용될지 배경에 적용될지 결정합니다.
+ * @param {ReactNode} children - 라벨 컴포넌트 내부에 표시될 내용입니다.
+ * @returns {JSX.Element} 스타일이 적용된 라벨 요소를 반환합니다.
+ *
+ * @example
+ * <Label color="purple" shape="round" colorApplyTo="font">
+ *   Example Label
+ * </Label>
+ *
+ * @author 배영준
+ */
+
 export default function Label(props: LabelProps): JSX.Element {
   const { color, shape, colorApplyTo, children } = props;
   const baseClasses =
