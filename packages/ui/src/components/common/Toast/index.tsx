@@ -10,13 +10,12 @@ import { CheckBoldIcon, CancelIcon } from "@ui/public";
 /**
  * 토스트 알림을 표시합니다.
  *
- * @param {"success" | "error"} type - 알림의 유형 (성공 또는 오류).
- * @param {string} message - 토스트에 표시될 메시지.
+ * @param {NotifyOptions} options - 알림의 옵션 (유형 및 메시지).
  * 
  * @example
  * 
  * const handleSuccessToast = () => {
-    notify('success', 'success');
+    notify({ type: 'success', message: 'success' });
   };
 
  * <button onClick={handleSuccessToast}>
@@ -26,7 +25,14 @@ import { CheckBoldIcon, CancelIcon } from "@ui/public";
  * @author 배영준
  */
 
-export function notify(type: "success" | "error", message: string) {
+interface NotifyOptions {
+  type: "success" | "error";
+  message: string;
+}
+
+export function notify(options: NotifyOptions) {
+  const { type, message } = options;
+
   switch (type) {
     case "success":
       toast.success(message, {
