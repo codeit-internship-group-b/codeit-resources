@@ -22,6 +22,7 @@ const config: Omit<Config, "content"> = {
       height: px0_2000,
       colors: {
         purple: {
+          50: "#FDFAFF",
           100: "#F8ECFF",
           200: "#E9CCFF",
           300: "#A64EFF",
@@ -30,17 +31,46 @@ const config: Omit<Config, "content"> = {
           600: "#54009E",
           700: "#9933FF",
           800: "#7200CC",
-          900: "#760DDE"
+          900: "#760DDE",
+          1000: "#B363FD",
         },
         "custom-black": "#333236",
         error: "#D6173A",
         gray: {
+          15: "#EDEDF0",
+          60: "#ADAEB8",
+          70: "#888893",
+          80: "#999CAC",
           100: "#DDDEE4",
           200: "#413B54",
           300: "#3C3B40",
+          400: "#181B28",
         },
         magenta: {
           100: "#EB008D",
+        },
+        green: {
+          10: "#EBFFEB",
+          60: "#00BE2F",
+          70: "#80F188",
+          100: "#025918",
+        },
+        pink: {
+          10: "#FFEBF7",
+          40: "#FF52B7",
+          100: "#72004B",
+        },
+        yellow: {
+          10: "#FFF7E5",
+          70: "#FF9100",
+          80: "#FFE057",
+          100: "#A34900",
+        },
+        blue: {
+          10: "#EBF3FF",
+          50: "#1790FF",
+          100: "#003078",
+          500: "#85C2FF",
         },
       },
     },
@@ -84,7 +114,7 @@ const config: Omit<Config, "content"> = {
       "xs-semibold": ["12px", { lineHeight: "20px", fontWeight: "600" }],
       "xs-medium": ["12px", { lineHeight: "20px", fontWeight: "500" }],
       "xs-regular": ["12px", { lineHeight: "20px", fontWeight: "400" }],
-      
+
       "xxs-semibold": ["11px", { lineHeight: "18px", fontWeight: "600" }],
       "xxs-medium": ["11px", { lineHeight: "18px", fontWeight: "500" }],
       "xxs-regular": ["11px", { lineHeight: "18px", fontWeight: "400" }],
