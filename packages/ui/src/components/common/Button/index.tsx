@@ -70,9 +70,9 @@ export default function Button<C extends ElementType = "button">(props: Polymorp
   const variantStyles: Record<ButtonProps["variant"], string> = {
     Action:
       "text-lg-bold md:text-2lg-bold h-40 w-full rounded-lg border-2 px-20 py-8 text-center md:h-48 md:px-32 md:py-10 md:w-auto border-custom-black",
-    primary:
+    Primary:
       "min-w-68 h-32 text-sm-medium md:min-w-84 md:h-40 md:text-md-medium lg:min-w-100 lg:h-42 gap-4 rounded-8 px-12 py-6 md:rounded-lg md:px-16 md:py-8 lg:px-24 lg:py-8",
-    secondary:
+    Secondary:
       "min-w-68 h-32 text-sm-medium md:min-w-84 md:h-40 md:text-md-medium lg:min-w-100 lg:h-42 gap-4 rounded-8 border-1 border-custom-black/20 px-12 py-6 md:rounded-lg md:px-16 md:py-8 lg:px-24 lg:py-8",
     Tertiary:
       "h-24 px-10 py-4 rounded-full gap-4 md:h-28 md:px-12 md:py-4 md:gap-4 lg:h-32 lg:px-16 lg:py-5 border-1 border-custom-black/20 text-xxs-medium md:text-xs-medium lg:text-md-medium",
@@ -85,8 +85,8 @@ export default function Button<C extends ElementType = "button">(props: Polymorp
   // 변형별 활성화 상태일 때 스타일
   const activeStyles: Record<ButtonProps["variant"], string> = {
     Action: "bg-purple-400 text-white/90 hover:bg-purple-800 hover:text-white",
-    primary: "bg-purple-400 text-white hover:bg-purple-800",
-    secondary: "bg-white/40 text-custom-black/80 hover:bg-custom-black/5 hover:text-custom-black",
+    Primary: "bg-purple-400 text-white hover:bg-purple-800",
+    Secondary: "bg-white/40 text-custom-black/80 hover:bg-custom-black/5 hover:text-custom-black",
     Tertiary: "bg-white/40 text-custom-black/80 hover:bg-custom-black/5 hover:text-custom-black",
     TertiaryColor: "bg-white/40 text-purple-700 hover:bg-purple-700/40 hover:text-purple-900",
     Text: "bg-white/0 text-custom-black/80 hover:text-custom-black hover:bg-custom-black/5",
