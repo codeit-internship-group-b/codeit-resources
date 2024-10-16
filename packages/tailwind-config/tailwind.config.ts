@@ -66,6 +66,7 @@ const config: Omit<Config, "content"> = {
           20: "#FF9100",
           30: "#FFE057",
           40: "#A34900",
+          50: "#FFB200",
         },
         blue: {
           10: "#EBF3FF",
@@ -124,7 +125,7 @@ const config: Omit<Config, "content"> = {
   plugins: [],
   safelist: [
     {
-      pattern: /(bg|text)-(purple|green|red|yellow|gray|blue)-(50|100|200|300|400|500|600|700|800|900)/,
+      pattern: /(bg|text)-(purple|green|pink|yellow|gray|blue)-(10|20|30|40|50|100|200|300)/,
     },
   ],
 };

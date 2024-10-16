@@ -3,7 +3,7 @@
 import { type ReactNode } from "react";
 
 export interface LabelProps {
-  color: "purple" | "green" | "red" | "yellow" | "gray" | "blue";
+  color: "purple" | "green" | "pink" | "yellow" | "gray" | "blue";
   shape: "square" | "round";
   colorApplyTo: "font" | "background";
   children: ReactNode;
@@ -17,28 +17,28 @@ const colorShades: Record<
   }
 > = {
   purple: {
-    font: { text: "purple-50", bg: "purple-800" },
-    background: { text: "purple-800", bg: "purple-50" },
+    font: { text: "purple-300", bg: "purple-100" },
+    background: { text: "purple-100", bg: "purple-300" },
   },
   green: {
-    font: { text: "green-100", bg: "green-700" },
-    background: { text: "green-700", bg: "green-100" },
+    font: { text: "green-20", bg: "green-10" },
+    background: { text: "green-10", bg: "green-20" },
   },
-  red: {
-    font: { text: "red-200", bg: "red-600" },
-    background: { text: "red-600", bg: "red-200" },
+  pink: {
+    font: { text: "pink-20", bg: "pink-10" },
+    background: { text: "pink-10", bg: "pink-20" },
   },
   yellow: {
-    font: { text: "yellow-300", bg: "yellow-500" },
-    background: { text: "yellow-500", bg: "yellow-300" },
+    font: { text: "yellow-20", bg: "yellow-10" },
+    background: { text: "yellow-10", bg: "yellow-50" },
   },
   gray: {
-    font: { text: "gray-400", bg: "gray-900" },
-    background: { text: "gray-900", bg: "gray-400" },
+    font: { text: "gray-30", bg: "gray-10" },
+    background: { text: "gray-10/100", bg: "gray-20" },
   },
   blue: {
-    font: { text: "blue-50", bg: "blue-800" },
-    background: { text: "blue-800", bg: "blue-50" },
+    font: { text: "blue-20", bg: "blue-10" },
+    background: { text: "blue-10", bg: "blue-20" },
   },
 };
 
