@@ -40,6 +40,8 @@
   "dependencies": {
     "clsx": "^2.1.1",
     "react": "^18.2.0",
+    "react-toastify": "^10.0.5",
+    "styled-components": "^6.1.13",
     "react-hook-form": "^7.53.0"
   }
 }
