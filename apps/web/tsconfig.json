@@ -1,7 +1,16 @@
 {
   "extends": "@repo/typescript-config/nextjs.json",
-  "include": ["svgr.d.ts", "next-env.d.ts", "next.config.mjs", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"],
+  "include": [
+    "svgr.d.ts",
+    "next-env.d.ts",
+    "next.config.mjs",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
   "compilerOptions": {
     "jsx": "preserve",
     "plugins": [
@@ -11,10 +20,19 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"],
-      "@ui/*": ["../../packages/ui/*"],
-      "@/public/*": ["./public/*"]
+      "@/*": [
+        "./*"
+      ],
+      "@ui/*": [
+        "../../packages/ui/*"
+      ],
+      "@/public/*": [
+        "./public/*"
+      ]
     },
-    "typeRoots": ["../packages/ui", "./node_modules/@types"]
+    "typeRoots": [
+      "../packages/ui",
+      "./node_modules/@types"
+    ]
   }
 }
