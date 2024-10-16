@@ -19,11 +19,11 @@ const ADMIN_ITEM = [
   { href: "/admin/equipment", name: "장비 설정", icon: EquipmentIcon },
 ];
 
-interface GNBMenu {
+interface GnbMenuProps {
   isAdmin: boolean;
 }
 
-export default function GNBMenu({ isAdmin }: GNBMenu) {
+export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element {
   const pathname = usePathname();
 
   return (

@@ -1,3 +1,5 @@
 !.storybook
 apps/storybook/**
 test.tsx
+out/_next/static/
+.next/

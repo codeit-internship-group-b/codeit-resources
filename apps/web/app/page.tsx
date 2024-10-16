@@ -1,26 +1,12 @@
-"use client";
-
-import Toast, { notify } from "@ui/src/components/common/Toast";
+import Input from "@ui/src/components/common/Input";
 
 export default function Home(): JSX.Element {
-  const handleSuccessToast = (): void => {
-    notify("success", "자리 예약 성공!");
-  };
-
-  const handleErrorToast = (): void => {
-    notify("error", "자리 예약 실패!");
-  };
-
   return (
     <div>
-      <button type="button" onClick={handleSuccessToast} className="bg-purple-400">
-        tailwind 확인용
-      </button>
-      <button type="button" onClick={handleErrorToast} className="bg-primary">
-        husky 확인용
-      </button>
-      <div className="w-10">px 확인용</div>
-      <Toast />
+      <div className="flex flex-col gap-20 m-30">
+        <Input id="name" placeholder="참여자" />
+        <Input id="name" placeholder="참여자" isError errorMessage="에러 예시" />
+      </div>
     </div>
   );
 }
