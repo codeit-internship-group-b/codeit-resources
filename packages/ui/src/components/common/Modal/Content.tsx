@@ -1,3 +1,5 @@
+"use client";
+
 import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
 import { type ReactNode, useRef } from "react";

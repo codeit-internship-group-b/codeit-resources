@@ -1,3 +1,5 @@
+"use client";
+
 import { type ModalProps } from "@ui/src/types/ModalType";
 import Button from "../Button";
 import { useModalContext } from "./Root";

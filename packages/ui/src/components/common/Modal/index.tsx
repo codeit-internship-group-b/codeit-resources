@@ -1,3 +1,5 @@
+"use client";
+
 import Close from "./Close";
 import Content from "./Content";
 import Description from "./Description";

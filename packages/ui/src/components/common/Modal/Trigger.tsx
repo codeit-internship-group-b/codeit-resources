@@ -1,3 +1,5 @@
+"use client";
+
 import { type DetailedHTMLProps, useEffect, useRef } from "react";
 import { type ModalProps } from "@ui/src/types/ModalType";
 import { useModalContext } from "./Root";
