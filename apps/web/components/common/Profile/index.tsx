@@ -21,7 +21,7 @@ interface ProfileProps {
 
 export default function Profile({ size = "size-32", src, name, className }: ProfileProps): JSX.Element {
   return (
-    <div className={clsx(name && "flex gap-10 items-center", className)}>
+    <div className={clsx(name && "flex items-center gap-10", className)}>
       {src ? (
         <div className={`relative ${size}`}>
           <Image src={src} fill alt="프로필 이미지" />
@@ -29,7 +29,7 @@ export default function Profile({ size = "size-32", src, name, className }: Prof
       ) : (
         <ProfileEmpty width={32} height={32} />
       )}
-      {name ? <div className="text-white font-medium">{name}</div> : null}
+      {name ? <div className="font-medium text-white">{name}</div> : null}
     </div>
   );
 }
