@@ -27,7 +27,7 @@ export default function ModalTrigger(props: ModalTriggerProps): JSX.Element {
     if (triggerRef.current) {
       setTrigger(triggerRef);
     }
-  }, [triggerRef, setTrigger]);
+  }, [setTrigger]);
 
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
