@@ -18,8 +18,10 @@ import Triangle from "./svgs/ic_triangle.svg";
 import LogoText from "./svgs/ic_logo-text.svg";
 import LogoCodeit from "./svgs/ic_logo-codeit.svg";
 import ProfileEmpty from "./svgs/ic_profile-empty.svg";
+import SearchIcon from "./svgs/ic_search.svg";
 
 export {
+  SearchIcon,
   ProfileEmpty,
   LogoText,
   LogoCodeit,

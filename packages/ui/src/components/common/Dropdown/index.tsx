@@ -12,7 +12,6 @@ const DropdownContext = createContext({
   errorMessage: "",
   selectedValue: "",
   size: "md",
-  select: "single",
   toggleDropdown: () => {},
   closeDropdown: () => {},
   // eslint-disable-next-line no-unused-vars
@@ -23,7 +22,6 @@ interface DropdownProps {
   children: ReactNode;
   selectedValue: string;
   size?: "sm" | "md";
-  select?: "single" | "multi";
   // eslint-disable-next-line no-unused-vars
   onSelect: (value: string) => void;
   isError?: boolean;
@@ -100,7 +98,7 @@ function Toggle({ children, title, iconType = "none" }: ToggleProps): JSX.Elemen
   const { toggleDropdown, selectedValue, isOpen, isError, errorMessage, size } = useContext(DropdownContext);
 
   return (
-    <div className="relative group">
+    <div className="group relative">
       {iconType === "kebab" && (
         <KebabIcon
           className="cursor-pointer"
@@ -112,16 +110,16 @@ function Toggle({ children, title, iconType = "none" }: ToggleProps): JSX.Elemen
         <button
           onClick={toggleDropdown}
           onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && toggleDropdown()}
-          className="rounded-6 flex items-center gap-2 px-6 py-4 bg-gray-hover"
+          className="rounded-6 bg-gray-hover flex items-center gap-2 px-6 py-4"
         >
           <SortIcon />
-          <span className="font-medium text-custom-black/60 text-12">{selectedValue}</span>
+          <span className="text-custom-black/60 text-12 font-medium">{selectedValue}</span>
         </button>
       )}
       {title && (
         <span
           className={cn(
-            "absolute w-fit text-13 font-normal -top-10 left-16 z-20 bg-white px-4 transition-colors duration-300",
+            "!text-13 absolute -top-8 left-16 z-20 w-fit bg-white px-4 font-normal transition-colors duration-300",
             "text-custom-black/80",
             {
               "text-purple-400": isOpen,
@@ -137,10 +135,10 @@ function Toggle({ children, title, iconType = "none" }: ToggleProps): JSX.Elemen
           <button
             type="button"
             className={cn(
-              "bg-white flex justify-between items-center text-custom-black border-custom-black/40 rounded-lg transition-colors duration-300 border border-solid",
+              "text-custom-black border-custom-black/40 flex items-center justify-between rounded-lg border border-solid bg-white transition-colors duration-300",
               isOpen && "border-purple-400",
               isError && "border-error",
-              size === "md" ? "w-full px-20 py-15" : "w-96 gap-6 px-12 py-6",
+              size === "md" ? "py-15 w-full px-20" : "w-96 gap-6 px-12 py-6",
             )}
             onClick={toggleDropdown}
             onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && toggleDropdown()}
@@ -173,8 +171,8 @@ function Wrapper({ children, className }: WrapperProps): JSX.Element {
       {isOpen && (
         <motion.div
           className={cn(
-            "z-50 bg-white absolute p-8 border border-solid border-gray-border rounded-8 shadow-custom",
-            size === "md" ? "w-full top-64" : "w-96",
+            "border-gray-border rounded-8 shadow-custom absolute z-50 border border-solid bg-white p-8",
+            size === "md" ? "top-64 w-full" : "w-96",
             className,
           )}
           initial={{ opacity: 0 }}
@@ -202,12 +200,12 @@ function Item({ children, value, position = "center" }: ItemProps): JSX.Element 
   return (
     <button
       className={cn(
-        "text-custom-black/80 w-full relative px-12 py-6 transition-linear hover:bg-gray-hover focus:bg-purple-700/5 focus:text-purple-900 rounded-8",
+        "text-custom-black/80 transition-linear hover:bg-gray-hover rounded-8 relative w-full px-12 py-6 focus:bg-purple-700/5 focus:text-purple-900",
         {
           "bg-purple-700/5 !text-purple-900 hover:bg-purple-700/5": isSelected,
           "text-left": position === "left",
         },
-        size === "md" ? "px-12 py-6" : "px-16 py-6 text-14",
+        size === "md" ? "px-12 py-6" : "text-14 px-16 py-6",
       )}
       onClick={() => selectedItem(value)}
       onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && selectedItem(value)}
@@ -215,7 +213,9 @@ function Item({ children, value, position = "center" }: ItemProps): JSX.Element 
       tabIndex={0}
     >
       {children}
-      {isSelected && size === "md" && <RightIcon className="absolute right-8 transform -translate-y-1/2 top-1/2" />}
+      {isSelected && size === "md" && (
+        <RightIcon className="absolute right-8 top-1/2 -translate-y-1/2 transform fill-purple-700" />
+      )}
     </button>
   );
 }

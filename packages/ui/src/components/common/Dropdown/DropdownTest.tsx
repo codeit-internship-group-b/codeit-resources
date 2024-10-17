@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import Dropdown from "@ui/src/components/common/Dropdown";
+import MultiSelectDropdown from "./MulitiSelectDropdown";
+import Profile from "./Profile";
 
 export default function DropdownTest(): JSX.Element {
   const [selectedValue, setSelectedValue] = useState("");
@@ -9,9 +11,12 @@ export default function DropdownTest(): JSX.Element {
   const [selectedValue3, setSelectedValue3] = useState("어드민");
   const [selectedValue4, setSelectedValue4] = useState("");
   const [selectedValue5, setSelectedValue5] = useState("최신순");
+  const [selectedValue6, setSelectedValue6] = useState<string[]>([]);
+  const name = ["강형욱", "이영훈", "강동원", "조현지", "한상우", "채종민", "이승현", "이지현"];
+  const [customTime, setCustomTime] = useState(""); // 사용자가 입력한 시간
 
   return (
-    <div className="gap-30 flex flex-col">
+    <div className="gap-30 pb-100 flex flex-col">
       <Dropdown
         selectedValue={selectedValue}
         onSelect={(value: string) => {
@@ -36,8 +41,27 @@ export default function DropdownTest(): JSX.Element {
         isError={false}
         errorMessage="에러다 이것아"
       >
-        <Dropdown.Toggle title="종료시간">종료시간</Dropdown.Toggle>
+        <Dropdown.Toggle title="종료시간">
+          {selectedValue2 === "" ? (
+            <input
+              type="text"
+              value={customTime}
+              onChange={(e) => {
+                setCustomTime(e.target.value);
+              }}
+              onBlur={() => {
+                setSelectedValue2(customTime);
+              }}
+              className="w-full focus:outline-none"
+            />
+          ) : (
+            selectedValue2 || "종료시간"
+          )}
+        </Dropdown.Toggle>
         <Dropdown.Wrapper>
+          <Dropdown.Item position="left" value="">
+            직접입력
+          </Dropdown.Item>
           <Dropdown.Item value="11:30">11:30</Dropdown.Item>
           <Dropdown.Item value="12:30">12:30</Dropdown.Item>
           <Dropdown.Item value="13:30">13:30</Dropdown.Item>
@@ -96,7 +120,6 @@ export default function DropdownTest(): JSX.Element {
         }}
         size="sm"
         errorMessage="에러다 이것아"
-        select="multi"
       >
         <Dropdown.Toggle iconType="sort" />
         <Dropdown.Wrapper className="-left-34 top-30">
@@ -104,6 +127,41 @@ export default function DropdownTest(): JSX.Element {
           <Dropdown.Item value="오래된순">어드민</Dropdown.Item>
         </Dropdown.Wrapper>
       </Dropdown>
+
+      <MultiSelectDropdown
+        selectedValue={selectedValue6}
+        onSelect={(value: string[]) => {
+          setSelectedValue6(value);
+        }}
+      >
+        <MultiSelectDropdown.Toggle title="멤버">
+          {selectedValue6.length > 0 ? (
+            <div className="max-w-250 md:max-w-310 flex gap-10 overflow-auto whitespace-nowrap">
+              {selectedValue6.map((profile) => (
+                <Profile size="size-27" key={profile} name={profile} textColor="black" />
+              ))}
+            </div>
+          ) : (
+            "멤버 선택하기"
+          )}
+        </MultiSelectDropdown.Toggle>
+        <MultiSelectDropdown.Wrapper>
+          {[...name]
+            .sort((a, b) => {
+              const isASelected = selectedValue6.includes(a);
+              const isBSelected = selectedValue6.includes(b);
+
+              if (isASelected && !isBSelected) return -1;
+              if (!isASelected && isBSelected) return 1;
+              return 0;
+            })
+            .map((profile) => (
+              <MultiSelectDropdown.Item key={profile} value={profile}>
+                <Profile name={profile} size="size-27" textColor="black" />
+              </MultiSelectDropdown.Item>
+            ))}
+        </MultiSelectDropdown.Wrapper>
+      </MultiSelectDropdown>
     </div>
   );
 }

@@ -37,6 +37,7 @@ const config: Omit<Config, "content"> = {
         "gray-hover": "#EDEDF0", // 수정필요
         "gray-border": "#E5E5EA", // 수정필요
         gray: {
+          10: "#F6F6F8",
           100: "#DDDEE4",
           200: "#413B54",
           300: "#3C3B40",

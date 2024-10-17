@@ -1,5 +1,3 @@
-"use client";
-
 import Input from "@ui/src/components/common/Input";
 import DropdownTest from "@ui/src/components/common/Dropdown/DropdownTest";
 
