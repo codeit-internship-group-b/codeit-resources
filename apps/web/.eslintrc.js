@@ -6,7 +6,16 @@ module.exports = {
   parserOptions: {
     project: true,
   },
-  ignorePatterns: ["postcss.config.cjs", "tailwind.config.ts", "__mocks__/**", "jest.config.ts", "out/", ".next/"],
+  ignorePatterns: [
+    "postcss.config.js",
+    "tailwind.config.ts",
+    "__mocks__/**",
+    "jest.config.cjs",
+    "out/_next/**",
+    "**/*.buildManifest.js",
+    "**/*.ssgManifest.js",
+    "**/*.chunks/**/*.js",
+  ],
   env: {
     jest: true,
   },
