@@ -7,7 +7,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "../../packages/types/**/*.ts"
+    "../../packages/types/src/*.ts"
   ],
   "exclude": ["node_modules"],
   "compilerOptions": {
@@ -22,7 +22,7 @@
       "@/*": ["./*"],
       "@ui/*": ["../../packages/ui/*"],
       "@/public/*": ["./public/*"],
-      "@/types/*": ["../../packages/types/*"]
+      "@repo/types/*": ["../../packages/types/src/*"]
     },
     "typeRoots": ["./node_modules/@types"]
   }

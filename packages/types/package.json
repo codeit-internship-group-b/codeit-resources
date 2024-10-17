@@ -7,7 +7,7 @@
     "build": "tsc -p tsconfig.json"
   },
   "devDependencies": {
-    "typescript": "^5.2.2"
+    "typescript": "5.2.2"
   },
   "dependencies": {
     "@repo/typescript-config": "workspace:*"
