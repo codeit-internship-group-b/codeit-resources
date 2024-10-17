@@ -33,14 +33,12 @@ export default function notify(options: NotifyOptions): void {
 
   switch (type) {
     case "success":
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       toast.success(message, {
         ...CustomToastOptions,
         icon: <CheckBoldIcon className="h-20 w-20" />,
       });
       break;
     case "error":
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       toast.error(message, {
         ...CustomToastOptions,
         icon: <CancelIcon className="h-20 w-20" />,
