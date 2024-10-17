@@ -7,14 +7,14 @@ import { clsx } from "clsx";
 
 const NAV_ITEMS = [
   { href: "/dashboard", name: "대시보드", icon: PersonIcon },
-  { href: "/meeting-room", name: "회의실", icon: MeetingIcon },
+  { href: "/meetings", name: "회의실", icon: MeetingIcon },
   { href: "/seats", name: "좌석", icon: SeatsIcon },
   { href: "/equipment", name: "장비", icon: EquipmentIcon },
 ];
 
 const ADMIN_ITEM = [
   { href: "/admin/dashboard", name: "멤버 관리", icon: PersonIcon },
-  { href: "/admin/meeting-room", name: "회의실 설정", icon: MeetingIcon },
+  { href: "/admin/meetings", name: "회의실 설정", icon: MeetingIcon },
   { href: "/admin/seats", name: "좌석 설정", icon: SeatsIcon },
   { href: "/admin/equipment", name: "장비 설정", icon: EquipmentIcon },
 ];
@@ -39,7 +39,7 @@ export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element {
               )}
             >
               <Icon className={clsx("stroke-current md:text-white/60", isActive ? "text-white" : "text-white/60")} />
-              <div className={clsx("md:text-16 text-12 md:text-white/60", isActive ? "text-white" : "text-white/60")}>
+              <div className={clsx("text-12 md:text-16 md:text-white/60", isActive ? "text-white" : "text-white/60")}>
                 {name}
               </div>
             </div>
