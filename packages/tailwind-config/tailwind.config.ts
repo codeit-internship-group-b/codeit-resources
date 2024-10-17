@@ -60,6 +60,7 @@ const config: Omit<Config, "content"> = {
           10: "#FFEBF7",
           20: "#FF52B7",
           30: "#72004B",
+          40: "#EB008D",
         },
         yellow: {
           10: "#FFF7E5",

@@ -25,8 +25,8 @@ const colorShades: Record<
     background: { text: "green-10", bg: "green-20" },
   },
   pink: {
-    font: { text: "pink-20", bg: "pink-10" },
-    background: { text: "pink-10", bg: "pink-20" },
+    font: { text: "pink-10", bg: "pink-40" },
+    background: { text: "pink-40", bg: "pink-10" },
   },
   yellow: {
     font: { text: "yellow-20", bg: "yellow-10" },
