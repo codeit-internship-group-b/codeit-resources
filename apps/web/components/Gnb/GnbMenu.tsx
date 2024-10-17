@@ -39,7 +39,7 @@ export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element {
               )}
             >
               <Icon className={clsx("stroke-current md:text-white/60", isActive ? "text-white" : "text-white/60")} />
-              <div className={clsx("md:text-16 text-12 md:text-white/60", isActive ? "text-white" : "text-white/60")}>
+              <div className={clsx("text-12 md:text-16 md:text-white/60", isActive ? "text-white" : "text-white/60")}>
                 {name}
               </div>
             </div>

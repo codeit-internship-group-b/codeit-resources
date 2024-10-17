@@ -8,7 +8,7 @@ module.exports = {
     tsconfigRootDir: __dirname,
   },
   ignorePatterns: [
-    "postcss.config.cjs",
+    "postcss.config.js",
     "tailwind.config.ts",
     "out/",
     ".next/",

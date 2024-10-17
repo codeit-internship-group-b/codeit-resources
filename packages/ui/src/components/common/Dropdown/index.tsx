@@ -171,7 +171,7 @@ function Wrapper({ children, className }: WrapperProps): JSX.Element {
       {isOpen && (
         <motion.div
           className={cn(
-            "border-gray-border rounded-8 shadow-custom absolute z-50 border border-solid bg-white p-8",
+            "rounded-8 border-gray-border shadow-custom absolute z-50 border border-solid bg-white p-8",
             size === "md" ? "top-64 w-full" : "w-96",
             className,
           )}
@@ -200,7 +200,7 @@ function Item({ children, value, position = "center" }: ItemProps): JSX.Element 
   return (
     <button
       className={cn(
-        "text-custom-black/80 transition-linear hover:bg-gray-hover rounded-8 relative w-full px-12 py-6 focus:bg-purple-700/5 focus:text-purple-900",
+        "transition-linear text-custom-black/80 hover:bg-gray-hover rounded-8 relative w-full px-12 py-6 focus:bg-purple-700/5 focus:text-purple-900",
         {
           "bg-purple-700/5 !text-purple-900 hover:bg-purple-700/5": isSelected,
           "text-left": position === "left",
