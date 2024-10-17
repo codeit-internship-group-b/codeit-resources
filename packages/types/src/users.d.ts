@@ -1,7 +1,7 @@
 export type Role = "admin" | "member";
 
 export interface TUser {
-  _id: string;
+  id: string;
   username: string;
   email: string;
   password: string;
