@@ -36,7 +36,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
-    variant: "primary",
+    variant: "Primary",
     isActive: true,
     children: "Primary Button",
   },
@@ -44,7 +44,7 @@ export const Primary: Story = {
 
 export const Secondary: Story = {
   args: {
-    variant: "secondary",
+    variant: "Secondary",
     isActive: true,
     children: "Secondary Button",
   },
@@ -92,7 +92,7 @@ export const TextColor: Story = {
 
 export const Disabled: Story = {
   args: {
-    variant: "primary",
+    variant: "Primary",
     isActive: false,
     children: "Disabled Button",
   },
@@ -102,7 +102,7 @@ export const LinkButton: Story = {
   args: {
     as: "a",
     href: "#",
-    variant: "primary",
+    variant: "Primary",
     isActive: true,
     children: "Link Button",
   },
@@ -110,7 +110,7 @@ export const LinkButton: Story = {
 
 export const CustomStyled: Story = {
   args: {
-    variant: "primary",
+    variant: "Primary",
     className: "my-custom-class",
     isActive: true,
     children: "Custom Styled Button",
@@ -119,7 +119,7 @@ export const CustomStyled: Story = {
 
 export const IconButton: Story = {
   args: {
-    variant: "primary",
+    variant: "Primary",
     isActive: true,
     children: (
       <>
