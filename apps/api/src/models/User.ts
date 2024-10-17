@@ -1,7 +1,9 @@
 import { Role, type IUser } from "@repo/types/users";
-import { Schema, model } from "mongoose";
+import { Schema, model, Document } from "mongoose";
 
-const UserSchema = new Schema<IUser>(
+interface UserDocument extends IUser, Document {}
+
+const UserSchema = new Schema<UserDocument>(
   {
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
@@ -17,4 +19,4 @@ const UserSchema = new Schema<IUser>(
   },
 );
 
-export const User = model<IUser>("User", UserSchema);
+export const User = model<UserDocument>("User", UserSchema);
