@@ -5,11 +5,13 @@ import { createContext, useState, type ReactNode } from "react";
 export interface RadioGroupProps {
   children: ReactNode;
   defaultValue?: string;
+  // eslint-disable-next-line no-unused-vars
   onChange?: (value: string) => void;
 }
 
 interface RadioContextProps {
   selectedValue: string;
+  // eslint-disable-next-line no-unused-vars
   selectOption: (value: string) => void;
 }
 

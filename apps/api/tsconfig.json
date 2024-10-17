@@ -8,8 +8,11 @@
     "skipLibCheck": true,
     "lib": ["ES2023"],
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "../../",
+    "paths": {
+      "@repo/types/*": ["../../packages/types/src/*"]
+    }
   },
   "exclude": ["node_modules"],
-  "include": ["src"]
+  "include": ["src", "../../packages/types/src/*.ts"]
 }
