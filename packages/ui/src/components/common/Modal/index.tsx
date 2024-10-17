@@ -18,11 +18,15 @@ import Trigger from "./Trigger";
  *    <>
       <Modal.Root>
         <Modal.Trigger>modal trigger</Modal.Trigger>
-        <Modal.Content popover icon>
+        <Modal.Content>
           <Modal.Title>제목</Modal.Title>
           <Modal.Description>내용</Modal.Description>
           <Modal.Close
-            onConfirm={() => console.log('Button Clicked!')}
+            onConfirm={() => {
+              console.log("Button Clicked!");
+            }}
+            confirmText="확인"
+            cancelText="취소"
           >
             예
           </Modal.Close>

@@ -10,5 +10,11 @@ interface ModalDescriptionProps extends ModalProps {
 export default function ModalDescription(props: ModalDescriptionProps): JSX.Element {
   const { children, className } = props;
 
-  return <p className={`text-2lg-medium my-16 ${String(className)}`}>{children}</p>;
+  return (
+    <p
+      className={`text-md-regular text-custom-black/80 my-16 break-words px-32 text-center md:px-0 ${String(className)}`}
+    >
+      {children}
+    </p>
+  );
 }

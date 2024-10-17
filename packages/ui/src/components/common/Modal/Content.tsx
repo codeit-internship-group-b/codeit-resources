@@ -44,7 +44,7 @@ export default function ModalContent(props: ModaContentProps): JSX.Element {
             }}
           >
             <div
-              className={`min-w-300 relative z-50 h-auto w-auto flex-col rounded-lg bg-white p-20 ${String(className)}`}
+              className={`max-w-340 md:max-w-370 rounded-16 relative z-50 h-auto w-auto flex-col bg-white px-32 py-24 ${String(className)}`}
             >
               {children}
             </div>

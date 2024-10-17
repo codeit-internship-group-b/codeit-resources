@@ -6,10 +6,12 @@ import { useModalContext } from "./Root";
 
 interface ModalCloseProps extends ModalProps {
   onConfirm?: () => void;
+  confirmText?: string;
+  cancelText?: string;
 }
 
 export default function ModalClose(props: ModalCloseProps): JSX.Element {
-  const { children, onConfirm, className } = props;
+  const { onConfirm, confirmText = "예", cancelText = "아니오", className } = props;
   const { handleOpenChange } = useModalContext();
 
   const handleCloseClick = (): void => {
@@ -22,20 +24,20 @@ export default function ModalClose(props: ModalCloseProps): JSX.Element {
   };
 
   return (
-    <div className="flex justify-end gap-10 pt-10">
+    <div className="text-md-medium flex items-center justify-center gap-14">
       <Button
         variant="Secondary"
-        className={`flex-center h-40 w-full rounded-md ${String(className)}`}
+        className={`flex-center text-custom-black/80 h-40 w-auto rounded-lg ${String(className)}`}
         onClick={handleCloseClick}
       >
-        아니오
+        {cancelText}
       </Button>
       <Button
         variant="Primary"
-        className={`flex-center h-40 w-full rounded-md ${String(className)}`}
+        className={`flex-center h-40 w-auto rounded-lg text-white ${String(className)}`}
         onClick={handleConfirmClick}
       >
-        {children}
+        {confirmText}
       </Button>
     </div>
   );
