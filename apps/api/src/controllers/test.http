@@ -13,11 +13,11 @@ Content-Type: application/json
 }
 
 ### PATCH /rooms/:itemId
-PATCH http://localhost:8080/rooms/1
+PATCH http://localhost:8080/rooms/3
 Content-Type: application/json
 
 {
-  "description": "업데이트된 큰 회의실"
+  "description": "회의실의 요정이 되"
 }
 
 ### DELETE /rooms/:itemId

@@ -18,6 +18,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.set("port", process.env.PORT || 8080);
 
+// todo 이거 경로 여기다 쓸지 각 파일에 전부 적어줄지 정해야댐
 app.use("/rooms", roomsRouter);
 app.use("/reservations", reservationsRouter);
 

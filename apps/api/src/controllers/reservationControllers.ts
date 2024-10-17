@@ -28,12 +28,12 @@ export let reservations = [
 ];
 
 // 예약 전체 조회
-router.get("/reservations", (req, res) => {
+router.get("/", (req, res) => {
   res.status(200).json(reservations);
 });
 
 // 내 예약 조회
-router.get("/reservations/me", (req, res) => {
+router.get("/me", (req, res) => {
   // todo 현재 로그인된 사용자의 userId 필요, 타입 어떻게 할건지..
   const userId = "2";
   const userReservations = reservations.filter((r) => r.userId === userId);
@@ -41,7 +41,7 @@ router.get("/reservations/me", (req, res) => {
 });
 
 // 아이템 타입 및 날짜에 대한 예약 조회
-router.get("/reservations/:itemType", (req, res) => {
+router.get("/:itemType", (req, res) => {
   const { itemType } = req.params;
   const { date } = req.query;
 
@@ -58,7 +58,7 @@ router.get("/reservations/:itemType", (req, res) => {
 });
 
 // 특정 아이템에 대한 예약 생성
-router.post("/reservations/:itemId", (req, res) => {
+router.post("/:itemId", (req, res) => {
   const { itemId } = req.params;
   const newReservation = {
     ...req.body,
@@ -72,7 +72,7 @@ router.post("/reservations/:itemId", (req, res) => {
 });
 
 // 특정 예약 수정
-router.patch("/reservations/:reservationId", (req, res) => {
+router.patch("/:reservationId", (req, res) => {
   const { reservationId } = req.params;
   const reservation = reservations.find((r) => r.id === reservationId);
   if (!reservation) return res.status(404).send("Reservation not found");
@@ -81,7 +81,7 @@ router.patch("/reservations/:reservationId", (req, res) => {
 });
 
 // 특정 예약 삭제
-router.delete("/reservations/:reservationId", (req, res) => {
+router.delete("/:reservationId", (req, res) => {
   const { reservationId } = req.params;
   reservations = reservations.filter((r) => r.id !== reservationId);
   res.status(200).send("Reservation deleted");
