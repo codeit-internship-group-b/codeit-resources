@@ -14,17 +14,17 @@ import RightIcon from "./svgs/ic_right.svg";
 import SeatsIcon from "./svgs/ic_seats.svg";
 import SortIcon from "./svgs/ic_sort.svg";
 import TextBalloonIcon from "./svgs/ic_textBalloon.svg";
-import Triangle from "./svgs/ic_triangle.svg";
-import LogoText from "./svgs/ic_logo-text.svg";
-import LogoCodeit from "./svgs/ic_logo-codeit.svg";
-import ProfileEmpty from "./svgs/ic_profile-empty.svg";
+import TriangleIcon from "./svgs/ic_triangle.svg";
+import LogoTextIcon from "./svgs/ic_logo-text.svg";
+import LogoCodeitIcon from "./svgs/ic_logo-codeit.svg";
+import ProfileEmptyIcon from "./svgs/ic_profile-empty.svg";
 import SearchIcon from "./svgs/ic_search.svg";
 
 export {
   SearchIcon,
-  ProfileEmpty,
-  LogoText,
-  LogoCodeit,
+  ProfileEmptyIcon,
+  LogoTextIcon,
+  LogoCodeitIcon,
   BurgerIcon,
   CancelIcon,
   CheckBoldIcon,
@@ -41,5 +41,5 @@ export {
   SeatsIcon,
   SortIcon,
   TextBalloonIcon,
-  Triangle,
+  TriangleIcon,
 };

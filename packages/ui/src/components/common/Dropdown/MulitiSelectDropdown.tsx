@@ -18,7 +18,7 @@ import React, {
 } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import cn from "@ui/src/utils/cn";
-import { RightIcon, Triangle, SearchIcon } from "@ui/public";
+import { RightIcon, TriangleIcon, SearchIcon } from "@ui/public";
 
 interface DropdownContextType {
   isOpen: boolean;
@@ -144,7 +144,7 @@ function Toggle({ children, title }: ToggleProps): JSX.Element {
         }}
       >
         <span>{children}</span>
-        <Triangle
+        <TriangleIcon
           className={cn("transition-linear size-12", isOpen ? "animate-rotate-in rotate-180" : "animate-rotate-out")}
         />
       </button>

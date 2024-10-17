@@ -1,5 +1,5 @@
 import { clsx } from "clsx";
-import { ProfileEmpty } from "@ui/public";
+import { ProfileEmptyIcon } from "@ui/public";
 
 interface ProfileProps {
   size?: string;
@@ -34,7 +34,7 @@ export default function Profile({
           <img src={src} alt="프로필 이미지" className="fill" />
         </div>
       ) : (
-        <ProfileEmpty className={size} />
+        <ProfileEmptyIcon className={size} />
       )}
       {name ? (
         <div

@@ -4,7 +4,7 @@ import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, 
 import { AnimatePresence, motion } from "framer-motion";
 import cn from "@ui/src/utils/cn";
 import ErrorMessage from "../../ErrorMessage";
-import { KebabIcon, RightIcon, SortIcon, Triangle } from "@ui/public";
+import { KebabIcon, RightIcon, SortIcon, TriangleIcon } from "@ui/public";
 
 const DropdownContext = createContext({
   isOpen: false,
@@ -144,7 +144,7 @@ function Toggle({ children, title, iconType = "none" }: ToggleProps): JSX.Elemen
             onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && toggleDropdown()}
           >
             {selectedValue ? selectedValue : <span>{children}</span>}
-            <Triangle
+            <TriangleIcon
               className={cn(
                 "transition-linear size-12",
                 isOpen ? "animate-rotate-in rotate-180" : "animate-rotate-out",
