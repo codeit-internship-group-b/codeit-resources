@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express";
-import { User } from "../models/User";
+
 import jwt from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
-export const isAdmin = async (req: Request, res: Response, next: NextFunction) => {
+export const adminCheckMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) {

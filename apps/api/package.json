@@ -5,9 +5,9 @@
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf dist",
-    "dev": "nodemon --exec \"node -r esbuild-register ./src/index.ts\" -e .ts",
+    "dev": "nodemon --exec \"node -r esbuild-register ./src/server.ts\" -e .ts",
     "lint": "eslint .",
-    "start": "node -r esbuild-register ./src/index.ts",
+    "start": "node -r esbuild-register ./src/server.ts",
     "test": "jest --detectOpenHandles"
   },
   "dependencies": {

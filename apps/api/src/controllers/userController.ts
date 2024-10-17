@@ -1,6 +1,7 @@
 import { NextFunction, Request as ExpressRequest, Response } from "express";
 import { TUser, User } from "../models/User";
 import bcrypt from "bcryptjs";
+import usersMock from "../mocks/usersMock";
 
 interface Request extends ExpressRequest {
   user?: TUser;
@@ -9,12 +10,22 @@ interface Request extends ExpressRequest {
 // Get all users
 const getUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const users = await User.find().select("-password");
+    // Use usersMock instead of querying the database
+    const users = usersMock.map(({ password, ...user }) => user as Partial<TUser>);
     res.status(200).send(users);
   } catch (error) {
     next(error);
   }
 };
+
+// const getUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+//   try {
+//     const users = await User.find().select("-password");
+//     res.status(200).send(users);
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
 // Get a user by id
 const getUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
