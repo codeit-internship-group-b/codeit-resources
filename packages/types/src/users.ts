@@ -1,11 +1,12 @@
-export type Role = "admin" | "member";
+export const Role = ["admin", "member"] as const;
+export type TRole = (typeof Role)[number];
 
 export interface TUser {
   id: string;
   username: string;
   email: string;
   password: string;
-  role: Role;
+  role: TRole;
   profileImage?: string;
   department?: string;
   createdAt: Date;

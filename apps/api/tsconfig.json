@@ -14,5 +14,5 @@
     }
   },
   "exclude": ["node_modules"],
-  "include": ["src", "../../packages/types/**/*.d.ts"]
+  "include": ["src", "../../packages/types/**/*.ts"]
 }
