@@ -5,7 +5,7 @@ import { connectDatabase } from "./database";
 import userRouter from "./routes/userRoutes";
 
 dotenv.config();
-// connectDatabase();
+connectDatabase();
 
 const app = express();
 const PORT = process.env.PORT || 8080;
