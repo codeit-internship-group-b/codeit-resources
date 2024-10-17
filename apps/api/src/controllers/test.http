@@ -1,0 +1,38 @@
+### GET /rooms
+GET http://localhost:8080/rooms
+
+### POST /rooms
+POST http://localhost:8080/rooms
+Content-Type: application/json
+
+{
+  "name": "회의실3",
+  "description": "중간 크기 회의실",
+  "location": "4층",
+  "status": "available"
+}
+
+### PATCH /rooms/:itemId
+PATCH http://localhost:8080/rooms/1
+Content-Type: application/json
+
+{
+  "description": "업데이트된 큰 회의실"
+}
+
+### DELETE /rooms/:itemId
+DELETE http://localhost:8080/rooms/1
+
+### GET /reservations
+GET http://localhost:8080/reservations
+
+### POST /reservations/:itemId
+POST http://localhost:8080/reservations/2
+Content-Type: application/json
+
+{
+  "userId": "user3",
+  "startDate": "2024-10-25T10:00:00",
+  "endDate": "2024-10-25T11:00:00",
+  "status": "reserved"
+}
