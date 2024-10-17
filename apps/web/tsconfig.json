@@ -1,7 +1,15 @@
 {
   "extends": "@repo/typescript-config/nextjs.json",
-  "include": ["svgr.d.ts", "next-env.d.ts", "next.config.mjs", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", "out/_next/**"],
+  "include": [
+    "svgr.d.ts",
+    "next-env.d.ts",
+    "next.config.mjs",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "../../packages/types/src/*.ts"
+  ],
+  "exclude": ["node_modules"],
   "compilerOptions": {
     "jsx": "preserve",
     "plugins": [
