@@ -1,24 +1,12 @@
-import { Document, Schema, model } from "mongoose";
+import { Role, type IUser } from "@repo/types/users";
+import { Schema, model } from "mongoose";
 
-const ROLES = ["admin", "member"] as const;
-type Role = (typeof ROLES)[number];
-
-export interface TUser extends Document {
-  username: string;
-  email: string;
-  password: string;
-  role: Role;
-  profileImage: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-const UserSchema = new Schema<TUser>(
+const UserSchema = new Schema<IUser>(
   {
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    role: { type: String, enum: ROLES, default: "member" },
+    role: { type: String, enum: Role, default: "member" },
     profileImage: { type: String, default: "" },
   },
   {
@@ -29,4 +17,4 @@ const UserSchema = new Schema<TUser>(
   },
 );
 
-export const User = model<TUser>("User", UserSchema);
+export const User = model<IUser>("User", UserSchema);
