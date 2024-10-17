@@ -9,15 +9,15 @@ export default function Gnb(): JSX.Element {
   const isAdmin = true;
   return (
     <nav
-      className="bottom-0 w-screen md:flex md:flex-col justify-between md:w-200 md:h-screen md:p-16 fixed z-50 bg-custom-black"
+      className="md:w-200 bg-custom-black fixed bottom-0 z-50 w-screen justify-between md:flex md:h-screen md:flex-col md:p-16"
       aria-label="Navigation Bar"
     >
       <div>
         <GnbLogo />
-        <hr className="border-white/10 pb-10 hidden md:block" />
+        <hr className="hidden border-white/10 pb-10 md:block" />
         <GnbMenu isAdmin={isAdmin} />
       </div>
-      <div className="py-10 px-16 hidden md:block">
+      <div className="hidden px-16 py-10 md:block">
         <Profile name={name} />
       </div>
     </nav>

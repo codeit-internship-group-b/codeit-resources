@@ -27,19 +27,19 @@ export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element {
   const pathname = usePathname();
 
   return (
-    <menu className="w-full p-16 md:p-0 md:w-168 justify-around flex md:flex-col gap-12">
+    <menu className="md:w-168 flex w-full justify-around gap-12 p-16 md:flex-col md:p-0">
       {NAV_ITEMS.map(({ href, name, icon: Icon }) => {
         const isActive = pathname === href;
         return (
           <Link key={name} href={href}>
             <div
               className={clsx(
-                "w-48 flex flex-col md:w-full md:flex-row md:gap-10 items-center md:px-16 md:py-8 size-full rounded-10",
+                "rounded-10 flex size-full w-48 flex-col items-center md:w-full md:flex-row md:gap-10 md:px-16 md:py-8",
                 isActive ? "md:bg-gray-300" : "md:hover:bg-gray-300",
               )}
             >
-              <Icon className={clsx("md:text-white/60 stroke-current", isActive ? "text-white" : "text-white/60")} />
-              <div className={clsx("md:text-white/60 md:text-16 text-12", isActive ? "text-white" : "text-white/60")}>
+              <Icon className={clsx("stroke-current md:text-white/60", isActive ? "text-white" : "text-white/60")} />
+              <div className={clsx("md:text-16 text-12 md:text-white/60", isActive ? "text-white" : "text-white/60")}>
                 {name}
               </div>
             </div>
@@ -48,23 +48,23 @@ export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element {
       })}
       {isAdmin ? (
         <>
-          <hr className="border-white/10 pb-10 hidden md:block" />
-          <div className="text-white/30 text-sm-bold px-16 pt-8 hidden md:block">어드민 기능</div>
+          <hr className="hidden border-white/10 pb-10 md:block" />
+          <div className="text-sm-bold hidden px-16 pt-8 text-white/30 md:block">어드민 기능</div>
           {ADMIN_ITEM.map(({ href, name, icon: Icon }) => {
             const isActive = pathname === href;
             return (
               <Link key={name} href={href} className="hidden md:block">
                 <div
                   className={clsx(
-                    "w-48 flex flex-col md:w-full md:flex-row md:gap-10 items-center md:px-16 md:py-8 size-full rounded-10",
+                    "rounded-10 flex size-full w-48 flex-col items-center md:w-full md:flex-row md:gap-10 md:px-16 md:py-8",
                     isActive ? "md:bg-gray-300" : "md:hover:bg-gray-300",
                   )}
                 >
                   <Icon
-                    className={clsx("md:text-white/60 stroke-current", isActive ? "text-white" : "text-white/60")}
+                    className={clsx("stroke-current md:text-white/60", isActive ? "text-white" : "text-white/60")}
                   />
                   <div
-                    className={clsx("md:text-white/60 md:text-16 text-12", isActive ? "text-white" : "text-white/60")}
+                    className={clsx("md:text-16 text-12 md:text-white/60", isActive ? "text-white" : "text-white/60")}
                   >
                     {name}
                   </div>
