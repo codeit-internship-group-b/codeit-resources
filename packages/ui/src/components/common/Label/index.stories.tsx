@@ -3,7 +3,6 @@ import Label from "@ui/src/components/common/Label/index";
 
 const meta: Meta<typeof Label> = {
   title: "Components/Label",
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   component: Label,
   tags: ["autodocs"],
   argTypes: {
