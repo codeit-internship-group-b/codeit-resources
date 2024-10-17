@@ -19,9 +19,9 @@
   "devDependencies": {
     "@jest/globals": "^29.7.0",
     "@repo/eslint-config": "workspace:*",
+    "@repo/jest-config": "workspace:*",
     "@repo/tailwind-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
-    "@repo/jest-config": "workspace:*",
     "@svgr/webpack": "^8.1.0",
     "@tanstack/react-query-devtools": "^5.59.0",
     "@testing-library/jest-dom": "^6.5.0",

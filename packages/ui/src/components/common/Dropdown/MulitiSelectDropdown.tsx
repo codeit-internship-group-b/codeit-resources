@@ -54,8 +54,8 @@ export default function MultiSelectDropdown({ children, selectedValue, onSelect 
   const selectedItem = useCallback(
     (value: string) => {
       const newValue = selectedValue.includes(value)
-        ? selectedValue.filter((item) => item !== value) // 이미 선택된 항목 해제
-        : [...selectedValue, value]; // 선택되지 않은 항목 추가
+        ? selectedValue.filter((item) => item !== value)
+        : [...selectedValue, value];
       onSelect(newValue);
     },
     [onSelect, selectedValue],
@@ -152,7 +152,7 @@ interface WrapperProps {
 
 function Wrapper({ children }: WrapperProps): JSX.Element {
   const { isOpen } = useContext(DropdownContext);
-  const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태
+  const [searchTerm, setSearchTerm] = useState("");
 
   const filteredChildren =
     Children.map(children, (child) => {

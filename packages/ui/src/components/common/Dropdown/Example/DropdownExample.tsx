@@ -5,7 +5,7 @@ import Dropdown from "@ui/src/components/common/Dropdown";
 import MultiSelectDropdown from "../MulitiSelectDropdown";
 import Profile from "./Profile";
 
-const name = ["강형욱", "이영훈", "강동원", "조현지", "한상우", "채종민", "이승현", "이지현"];
+const name = ["강형욱", "이영훈", "강동원", "조현지"];
 
 export default function DropdownExample(): JSX.Element {
   const [selectedValue, setSelectedValue] = useState("");
@@ -14,7 +14,7 @@ export default function DropdownExample(): JSX.Element {
   const [selectedValue4, setSelectedValue4] = useState("");
   const [selectedValue5, setSelectedValue5] = useState("최신순");
   const [selectedValue6, setSelectedValue6] = useState<string[]>([]);
-  const [customTime, setCustomTime] = useState(""); // 사용자가 입력한 시간
+  const [customTime, setCustomTime] = useState("");
 
   return (
     <div className="gap-30 pb-100 flex flex-col">
