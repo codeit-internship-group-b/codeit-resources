@@ -5,6 +5,8 @@ import Dropdown from "@ui/src/components/common/Dropdown";
 import MultiSelectDropdown from "../MulitiSelectDropdown";
 import Profile from "./Profile";
 
+const name = ["강형욱", "이영훈", "강동원", "조현지", "한상우", "채종민", "이승현", "이지현"];
+
 export default function DropdownExample(): JSX.Element {
   const [selectedValue, setSelectedValue] = useState("");
   const [selectedValue2, setSelectedValue2] = useState("");
@@ -12,7 +14,6 @@ export default function DropdownExample(): JSX.Element {
   const [selectedValue4, setSelectedValue4] = useState("");
   const [selectedValue5, setSelectedValue5] = useState("최신순");
   const [selectedValue6, setSelectedValue6] = useState<string[]>([]);
-  const name = ["강형욱", "이영훈", "강동원", "조현지", "한상우", "채종민", "이승현", "이지현"];
   const [customTime, setCustomTime] = useState(""); // 사용자가 입력한 시간
 
   return (
@@ -108,23 +109,8 @@ export default function DropdownExample(): JSX.Element {
       >
         <Dropdown.Toggle iconType="sort" />
         <Dropdown.Wrapper className="-left-34 top-30">
-          <Dropdown.Item value="최신순">멤버</Dropdown.Item>
-          <Dropdown.Item value="오래된순">어드민</Dropdown.Item>
-        </Dropdown.Wrapper>
-      </Dropdown>
-
-      <Dropdown
-        selectedValue={selectedValue5}
-        onSelect={(value: string) => {
-          setSelectedValue5(value);
-        }}
-        size="sm"
-        errorMessage="에러다 이것아"
-      >
-        <Dropdown.Toggle iconType="sort" />
-        <Dropdown.Wrapper className="-left-34 top-30">
-          <Dropdown.Item value="최신순">멤버</Dropdown.Item>
-          <Dropdown.Item value="오래된순">어드민</Dropdown.Item>
+          <Dropdown.Item value="최신순">최신순</Dropdown.Item>
+          <Dropdown.Item value="오래된순">오래된순</Dropdown.Item>
         </Dropdown.Wrapper>
       </Dropdown>
 
@@ -136,10 +122,22 @@ export default function DropdownExample(): JSX.Element {
       >
         <MultiSelectDropdown.Toggle title="멤버">
           {selectedValue6.length > 0 ? (
-            <div className="max-w-250 md:max-w-310 flex gap-10 overflow-auto whitespace-nowrap">
-              {selectedValue6.map((profile) => (
-                <Profile size="size-27" key={profile} name={profile} textColor="black" />
-              ))}
+            <div>
+              <div className="max-h-100 flex flex-wrap gap-10 overflow-y-auto">
+                {selectedValue6.slice(0, 4).map((profile) => (
+                  <Profile size="size-27" key={profile} name={profile} textColor="black" />
+                ))}
+                {selectedValue6.length > 4 && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      /* 모든 선택된 항목을 보여주는 모달 오픈 이런식으로도 사용 가능*/
+                    }}
+                  >
+                    +{selectedValue6.length - 4}명 더보기
+                  </button>
+                )}
+              </div>
             </div>
           ) : (
             "멤버 선택하기"

@@ -135,6 +135,7 @@ function Toggle({ children, title }: ToggleProps): JSX.Element {
         onKeyDown={(e) => {
           (e.key === "Enter" || e.key === " ") && toggleDropdown();
         }}
+        aria-expanded={isOpen}
       >
         <span>{children}</span>
         <TriangleIcon
@@ -171,7 +172,7 @@ function Wrapper({ children }: WrapperProps): JSX.Element {
       {isOpen ? (
         <motion.div
           className={cn(
-            "border-gray-border rounded-8 shadow-custom absolute top-64 z-50 w-full border border-solid bg-white p-8",
+            "rounded-8 shadow-custom absolute top-64 z-50 w-full border border-solid border-gray-500 bg-white p-8",
           )}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -185,6 +186,7 @@ function Wrapper({ children }: WrapperProps): JSX.Element {
                 setSearchTerm(e.target.value);
               }}
               className="rounded-8 pl-42 bg-gray-10 h-40 w-full border border-solid border-gray-100/30 focus:outline-none"
+              aria-label="검색"
             />
             <SearchIcon className="absolute left-20 top-1/2 -translate-y-1/2 transform" />
           </div>
@@ -210,7 +212,7 @@ function Item({ children, value }: ItemProps): JSX.Element {
   return (
     <button
       type="button"
-      className="text-custom-black/80 transition-linear hover:bg-gray-hover rounded-8 relative flex w-full items-center gap-8 px-12 py-6 focus:bg-transparent"
+      className="text-custom-black/80 transition-linear rounded-8 relative flex w-full items-center gap-8 px-12 py-6 hover:bg-gray-400 focus:bg-transparent"
       onClick={() => {
         selectedItem(value);
       }}

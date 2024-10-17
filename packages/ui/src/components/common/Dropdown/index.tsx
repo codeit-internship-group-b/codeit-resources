@@ -52,7 +52,7 @@ export default function Dropdown({
 
   const providerValue = useMemo(
     () => ({ isOpen, isError, errorMessage, selectedValue, size, toggleDropdown, closeDropdown, selectedItem }),
-    [isOpen, selectedValue, isError, errorMessage, size],
+    [isOpen, selectedValue, isError, errorMessage, size, toggleDropdown, closeDropdown, selectedItem],
   );
 
   useEffect(() => {
@@ -63,7 +63,7 @@ export default function Dropdown({
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [dropdownRef]);
+  }, [dropdownRef, closeDropdown]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -110,7 +110,7 @@ function Toggle({ children, title, iconType = "none" }: ToggleProps): JSX.Elemen
         <button
           onClick={toggleDropdown}
           onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && toggleDropdown()}
-          className="rounded-6 bg-gray-hover flex items-center gap-2 px-6 py-4"
+          className="rounded-6 flex items-center gap-2 bg-gray-400 px-6 py-4"
         >
           <SortIcon />
           <span className="text-custom-black/60 text-12 font-medium">{selectedValue}</span>
@@ -142,6 +142,7 @@ function Toggle({ children, title, iconType = "none" }: ToggleProps): JSX.Elemen
             )}
             onClick={toggleDropdown}
             onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && toggleDropdown()}
+            aria-expanded={isOpen}
           >
             {selectedValue ? selectedValue : <span>{children}</span>}
             <TriangleIcon
@@ -171,7 +172,7 @@ function Wrapper({ children, className }: WrapperProps): JSX.Element {
       {isOpen && (
         <motion.div
           className={cn(
-            "rounded-8 border-gray-border shadow-custom absolute z-50 border border-solid bg-white p-8",
+            "rounded-8 shadow-custom absolute z-50 border border-solid border-gray-500 bg-white p-8",
             size === "md" ? "top-64 w-full" : "w-96",
             className,
           )}
@@ -200,7 +201,7 @@ function Item({ children, value, position = "center" }: ItemProps): JSX.Element 
   return (
     <button
       className={cn(
-        "transition-linear text-custom-black/80 hover:bg-gray-hover rounded-8 relative w-full px-12 py-6 focus:bg-purple-700/5 focus:text-purple-900",
+        "transition-linear text-custom-black/80 rounded-8 relative w-full px-12 py-6 hover:bg-gray-400 focus:bg-purple-700/5 focus:text-purple-900",
         {
           "bg-purple-700/5 !text-purple-900 hover:bg-purple-700/5": isSelected,
           "text-left": position === "left",

@@ -34,13 +34,13 @@ const config: Omit<Config, "content"> = {
         },
         "custom-black": "#333236",
         error: "#D6173A",
-        "gray-hover": "#EDEDF0", // 수정필요
-        "gray-border": "#E5E5EA", // 수정필요
         gray: {
-          10: "#F6F6F8",
+          50: "#F6F6F8",
           100: "#DDDEE4",
           200: "#413B54",
           300: "#3C3B40",
+          400: "#EDEDF0",
+          500: "#E5E5EA",
         },
         magenta: {
           100: "#EB008D",
