@@ -4,7 +4,7 @@ export type TItemStatus = (typeof ItemStatus)[number];
 export const ItemType = ["seat", "room", "equipment"] as const;
 export type TItem = (typeof ItemType)[number];
 
-export interface IItems {
+export interface IItem {
   _id: string;
   name: string;
   type: TItem;

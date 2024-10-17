@@ -1,7 +1,7 @@
-import { IItems } from "@repo/types/items";
+import { IItem } from "@repo/types/items";
 import mongoose, { Schema, Document } from "mongoose";
 
-interface IRoom extends Omit<IItems, "_id">, Document {}
+interface IRoom extends Omit<IItem, "_id">, Document {}
 
 const RoomSchema: Schema = new Schema({
   name: { type: String, required: true },
