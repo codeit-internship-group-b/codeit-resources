@@ -2,6 +2,7 @@ import cors from "cors";
 import * as dotenv from "dotenv";
 import express, { Application } from "express";
 import roomsRouter from "./controllers/roomController";
+import reservationsRouter from "./controllers/reservationControllers";
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.use(express.json());
 app.set("port", process.env.PORT || 8080);
 
 app.use("/rooms", roomsRouter);
+app.use("/reservations", reservationsRouter);
 
 app.listen(app.get("port"), () => {
   console.log(app.get("port"), "Server Started!");

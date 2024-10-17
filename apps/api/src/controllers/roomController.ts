@@ -1,7 +1,9 @@
 import express, { Router } from "express";
+
 const router: Router = express.Router();
 
-let rooms = [
+// mock
+export let rooms = [
   {
     id: "1",
     name: "회의실1",
