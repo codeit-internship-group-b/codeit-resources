@@ -3,7 +3,7 @@
 import { ChangeEvent, InputHTMLAttributes, useState } from "react";
 import cn from "@ui/src/utils/cn";
 import { UseFormRegisterReturn } from "react-hook-form";
-import ErrorMessage from "../../ErrorMessage";
+import ErrorMessage from "../ErrorMessage";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   id: string;
