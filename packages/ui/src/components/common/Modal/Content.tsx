@@ -2,21 +2,28 @@
 
 import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
-import { type ReactNode, useRef } from "react";
+import { type ReactNode, useRef, type MouseEvent, type KeyboardEvent } from "react";
 import { type ModalProps } from "@ui/src/types/ModalType";
 import { useModalContext } from "./Root";
 
-interface ModaContentProps extends ModalProps {
+interface ModalContentProps extends ModalProps {
   children: ReactNode;
+  className?: string;
 }
 
-export default function ModalContent(props: ModaContentProps): JSX.Element {
+export default function ModalContent(props: ModalContentProps): JSX.Element {
   const { children, className } = props;
   const { open: currentOpenState, handleOpenChange } = useModalContext();
   const overlayRef = useRef<HTMLDivElement>(null);
 
-  const handleClickOverlay = (event: React.MouseEvent<HTMLDivElement>): void => {
+  const handleClickOverlay = (event: MouseEvent<HTMLDivElement>): void => {
     if (overlayRef.current && overlayRef.current === event.target) {
+      handleOpenChange(false);
+    }
+  };
+
+  const handleKeyDownOverlay = (event: KeyboardEvent<HTMLDivElement>): void => {
+    if (event.key === "Escape" || event.key === " ") {
       handleOpenChange(false);
     }
   };
@@ -37,11 +44,7 @@ export default function ModalContent(props: ModaContentProps): JSX.Element {
             tabIndex={0}
             className="bg-custom-black/70 fixed inset-0 flex items-center justify-center"
             onClick={handleClickOverlay}
-            onKeyDown={(e) => {
-              if (e.key === "Escape" || e.key === " ") {
-                handleClickOverlay(e as unknown as React.MouseEvent<HTMLDivElement>);
-              }
-            }}
+            onKeyDown={handleKeyDownOverlay}
           >
             <div
               className={`max-w-340 md:max-w-370 rounded-16 relative z-50 h-auto w-auto flex-col bg-white px-32 py-24 ${String(className)}`}
