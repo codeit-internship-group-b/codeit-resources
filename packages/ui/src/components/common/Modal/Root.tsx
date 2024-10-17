@@ -23,18 +23,10 @@ interface ModalContextProps extends Pick<ModalRootProps, "open"> {
   setTrigger: Dispatch<SetStateAction<RefObject<HTMLDivElement> | undefined>>;
 }
 
-const ModalContext = createContext<ModalContextProps>({
-  open: false,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  handleOpenChange: () => {},
-  trigger: undefined,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setTrigger: () => {},
-});
+const ModalContext = createContext<ModalContextProps | undefined>(undefined);
 
 export const useModalContext = (): ModalContextProps => {
   const context = useContext(ModalContext);
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!context) {
     throw new Error("(!) Modal 컨텍스트를 호출할 수 없는 범위 입니다.");
   }
@@ -56,7 +48,7 @@ export default function ModalRoot(props: ModalRootProps): JSX.Element {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent): void => {
-      if (event.key === "Enter" && open) {
+      if (event.key === "Escape" && open) {
         handleOpenChange(false); // 엔터 키를 눌렀을 때 모달 닫기
       }
     };
