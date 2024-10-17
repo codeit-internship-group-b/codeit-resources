@@ -10,7 +10,7 @@ module.exports = {
     "postcss.config.cjs",
     "tailwind.config.ts",
     "__mocks__/**",
-    "jest.config.ts",
+    "jest.config.cjs",
     "out/_next/**",
     "**/*.buildManifest.js",
     "**/*.ssgManifest.js",
