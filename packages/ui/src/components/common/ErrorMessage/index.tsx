@@ -6,5 +6,5 @@ interface ErrorMessageProps {
 }
 
 export default function ErrorMessage({ message, className }: ErrorMessageProps) {
-  return <span className={cn("absolute !text-13 text-error", className)}>{message}</span>;
+  return <span className={cn("!text-13 text-error absolute", className)}>{message}</span>;
 }

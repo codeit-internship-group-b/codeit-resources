@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import Dropdown from "@ui/src/components/common/Dropdown";
-import MultiSelectDropdown from "./MulitiSelectDropdown";
+import MultiSelectDropdown from "../MulitiSelectDropdown";
 import Profile from "./Profile";
 
-export default function DropdownTest(): JSX.Element {
+export default function DropdownExample(): JSX.Element {
   const [selectedValue, setSelectedValue] = useState("");
   const [selectedValue2, setSelectedValue2] = useState("");
   const [selectedValue3, setSelectedValue3] = useState("어드민");

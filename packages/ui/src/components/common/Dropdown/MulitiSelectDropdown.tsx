@@ -20,15 +20,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import cn from "@ui/src/utils/cn";
 import { RightIcon, TriangleIcon, SearchIcon } from "@ui/public";
 
-interface DropdownContextType {
-  isOpen: boolean;
-  selectedValue: string[];
-  toggleDropdown: () => void;
-  closeDropdown: () => void;
-  selectedItem: (value: string) => void;
-}
-
-const DropdownContext = createContext<DropdownContextType>({
+const DropdownContext = createContext({
   isOpen: false,
   selectedValue: [] as string[],
   toggleDropdown: () => {
@@ -115,6 +107,7 @@ interface ToggleProps {
   children?: ReactNode;
   title?: string;
 }
+
 function Toggle({ children, title }: ToggleProps): JSX.Element {
   const { toggleDropdown, isOpen } = useContext(DropdownContext);
 

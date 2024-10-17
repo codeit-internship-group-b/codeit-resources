@@ -3,7 +3,7 @@
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import cn from "@ui/src/utils/cn";
-import ErrorMessage from "../../ErrorMessage";
+import ErrorMessage from "../ErrorMessage";
 import { KebabIcon, RightIcon, SortIcon, TriangleIcon } from "@ui/public";
 
 const DropdownContext = createContext({
