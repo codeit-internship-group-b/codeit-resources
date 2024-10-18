@@ -1,19 +1,7 @@
 "use client";
 
-import { createContext, useState, type ReactNode } from "react";
-
-export interface RadioGroupProps {
-  children: ReactNode;
-  defaultValue?: string;
-  // eslint-disable-next-line no-unused-vars
-  onChange?: (value: string) => void;
-}
-
-interface RadioContextProps {
-  selectedValue: string;
-  // eslint-disable-next-line no-unused-vars
-  selectOption: (value: string) => void;
-}
+import { createContext, useState } from "react";
+import { RadioGroupProps, RadioContextProps } from "@ui/src/types/RadioButtonTypes";
 
 export const RadioContext = createContext<RadioContextProps | null>(null);
 
@@ -24,7 +12,7 @@ export function RadioGroup(props: RadioGroupProps): JSX.Element {
 
   const selectOption = (value: string): void => {
     setSelectedValue(value);
-    onChange && onChange(value);
+    onChange?.(value);
   };
 
   return (
