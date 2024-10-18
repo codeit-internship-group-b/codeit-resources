@@ -542,6 +542,9 @@ importers:
       eslint:
         specifier: ^8.57.0
         version: 8.57.1
+      framer-motion:
+        specifier: ^11.11.8
+        version: 11.11.9(@emotion/is-prop-valid@1.2.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@20.16.12)(ts-node@10.9.2(@types/node@20.16.12)(typescript@5.6.3))
