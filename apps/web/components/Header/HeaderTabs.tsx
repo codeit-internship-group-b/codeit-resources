@@ -1,22 +1,19 @@
 "use client";
 
 import cn from "@ui/src/utils/cn";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { getDatesFromToday } from "@ui/src/utils/date";
 
 interface HeaderProps {
   page: "meetings" | "seats";
+  year: number;
+  month: number;
 }
 
-export default function HeaderTabs({ page }: HeaderProps): JSX.Element {
+export default function HeaderTabs({ page, year, month }: HeaderProps): JSX.Element {
   const [activeTabIndex, setActiveTabIndex] = useState(0);
-  const [dates, setDates] = useState<string[]>([]);
-
-  useEffect(() => {
-    const calculatedDates = getDatesFromToday(page);
-    setDates(calculatedDates);
-  }, [page]);
+  const dates = getDatesFromToday(year, month, page);
 
   const handleActiveTab = (index: number): void => {
     setActiveTabIndex(index);
