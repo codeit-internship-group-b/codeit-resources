@@ -80,7 +80,7 @@ export function RadioOption({ value, children, description, disabled = false }: 
       </span>
       <div className="flex flex-col">
         <span className={textClassName}>{children}</span>
-        {description !== null && <span className={descriptionClassName}>{description}</span>}
+        {description != null && <span className={descriptionClassName}>{description}</span>}
       </div>
     </label>
   );
