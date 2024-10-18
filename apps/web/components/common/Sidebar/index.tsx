@@ -8,6 +8,23 @@ interface SidebarProps {
   onClose: () => void;
 }
 
+/**
+ * 사이드바 컴포넌트입니다.
+ *
+ * @param props - 컴포넌트의 props
+ * @returns JSX.Element 사이드바 컴포넌트 요소
+ * 
+ * const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+ *
+      \<Sidebar
+        isOpen=\{isSidebarOpen\}
+        onClose=\{() =\> \{
+          setIsSidebarOpen(false);
+        \}\}
+      /\>
+ * 
+ */
+
 function Sidebar(props: SidebarProps): JSX.Element {
   const { isOpen, onClose } = props;
   return (
