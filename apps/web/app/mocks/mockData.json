@@ -1,0 +1,209 @@
+{
+  "rooms": [
+    {
+      "id": "roomA",
+      "title": "회의실 A",
+      "schedules": [
+        {
+          "id": "scheduleA1",
+          "date": "2024-10-16",
+          "start_time": "09:00",
+          "end_time": "09:30",
+          "title": "팀 미팅"
+        },
+        {
+          "id": "scheduleA2",
+          "date": "2024-10-17",
+          "start_time": "10:00",
+          "end_time": "10:30",
+          "title": "프로젝트 회의"
+        },
+        {
+          "id": "scheduleA3",
+          "date": "2024-10-18",
+          "start_time": "11:00",
+          "end_time": "11:30",
+          "title": "개발 회의"
+        },
+        {
+          "id": "scheduleA4",
+          "date": "2024-10-19",
+          "start_time": "14:00",
+          "end_time": "14:30",
+          "title": "디자인 리뷰"
+        },
+        {
+          "id": "scheduleA5",
+          "date": "2024-10-20",
+          "start_time": "15:00",
+          "end_time": "15:30",
+          "title": "고객 미팅"
+        }
+      ]
+    },
+    {
+      "id": "roomB",
+      "title": "회의실 B",
+      "schedules": [
+        {
+          "id": "scheduleB1",
+          "date": "2024-10-16",
+          "start_time": "10:00",
+          "end_time": "10:30",
+          "title": "기획 회의"
+        },
+        {
+          "id": "scheduleB2",
+          "date": "2024-10-17",
+          "start_time": "13:00",
+          "end_time": "13:30",
+          "title": "마케팅 회의"
+        },
+        {
+          "id": "scheduleB3",
+          "date": "2024-10-18",
+          "start_time": "15:00",
+          "end_time": "15:30",
+          "title": "고객 지원 회의"
+        },
+        {
+          "id": "scheduleB4",
+          "date": "2024-10-19",
+          "start_time": "09:00",
+          "end_time": "09:30",
+          "title": "운영 회의"
+        },
+        {
+          "id": "scheduleB5",
+          "date": "2024-10-20",
+          "start_time": "16:00",
+          "end_time": "16:30",
+          "title": "결산 회의"
+        }
+      ]
+    },
+    {
+      "id": "roomC",
+      "title": "회의실 C",
+      "schedules": [
+        {
+          "id": "scheduleC1",
+          "date": "2024-10-16",
+          "start_time": "11:00",
+          "end_time": "11:30",
+          "title": "인사 회의"
+        },
+        {
+          "id": "scheduleC2",
+          "date": "2024-10-17",
+          "start_time": "09:00",
+          "end_time": "09:30",
+          "title": "프로젝트 시작 회의"
+        },
+        {
+          "id": "scheduleC3",
+          "date": "2024-10-18",
+          "start_time": "10:00",
+          "end_time": "10:30",
+          "title": "파트너 미팅"
+        },
+        {
+          "id": "scheduleC4",
+          "date": "2024-10-19",
+          "start_time": "14:00",
+          "end_time": "14:30",
+          "title": "업데이트 회의"
+        },
+        {
+          "id": "scheduleC5",
+          "date": "2024-10-20",
+          "start_time": "13:00",
+          "end_time": "13:30",
+          "title": "기술 공유"
+        }
+      ]
+    },
+    {
+      "id": "roomD",
+      "title": "회의실 D",
+      "schedules": [
+        {
+          "id": "scheduleD1",
+          "date": "2024-10-16",
+          "start_time": "14:00",
+          "end_time": "14:30",
+          "title": "교육 세션"
+        },
+        {
+          "id": "scheduleD2",
+          "date": "2024-10-17",
+          "start_time": "15:00",
+          "end_time": "15:30",
+          "title": "외부 컨설팅"
+        },
+        {
+          "id": "scheduleD3",
+          "date": "2024-10-18",
+          "start_time": "16:00",
+          "end_time": "16:30",
+          "title": "제품 발표 준비"
+        },
+        {
+          "id": "scheduleD4",
+          "date": "2024-10-19",
+          "start_time": "11:00",
+          "end_time": "11:30",
+          "title": "재무 검토"
+        },
+        {
+          "id": "scheduleD5",
+          "date": "2024-10-20",
+          "start_time": "10:00",
+          "end_time": "10:30",
+          "title": "서비스 검토"
+        }
+      ]
+    },
+    {
+      "id": "roomE",
+      "title": "회의실 E",
+      "schedules": [
+        {
+          "id": "scheduleE1",
+          "date": "2024-10-16",
+          "start_time": "13:00",
+          "end_time": "13:30",
+          "title": "내부 리뷰"
+        },
+        {
+          "id": "scheduleE2",
+          "date": "2024-10-17",
+          "start_time": "14:00",
+          "end_time": "14:30",
+          "title": "브레인스토밍"
+        },
+        {
+          "id": "scheduleE3",
+          "date": "2024-10-18",
+          "start_time": "09:00",
+          "end_time": "09:30",
+          "title": "프로토타입 테스트"
+        },
+        {
+          "id": "scheduleE4",
+          "date": "2024-10-19",
+          "start_time": "15:00",
+          "end_time": "15:30",
+          "title": "팀 빌딩"
+        },
+        {
+          "id": "scheduleE5",
+          "date": "2024-10-20",
+          "start_time": "16:00",
+          "end_time": "16:30",
+          "title": "프로젝트 리뷰"
+        }
+      ]
+    }
+  ]
+}
