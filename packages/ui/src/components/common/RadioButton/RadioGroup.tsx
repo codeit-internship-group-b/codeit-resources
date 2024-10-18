@@ -6,7 +6,7 @@ import { RadioGroupProps, RadioContextProps } from "@ui/src/types/RadioButtonTyp
 export const RadioContext = createContext<RadioContextProps | null>(null);
 
 export function RadioGroup(props: RadioGroupProps): JSX.Element {
-  const { children, defaultValue = "", onChange } = props;
+  const { children, defaultValue = "", onChange, legend } = props;
 
   const [selectedValue, setSelectedValue] = useState<string>(defaultValue);
 
@@ -17,9 +17,10 @@ export function RadioGroup(props: RadioGroupProps): JSX.Element {
 
   return (
     <RadioContext.Provider value={{ selectedValue, selectOption }}>
-      <div role="radiogroup" className="flex">
+      <fieldset className="flex" role="radiogroup">
+        {legend && <legend className="mb-4 text-lg font-semibold">{legend}</legend>}
         {children}
-      </div>
+      </fieldset>
     </RadioContext.Provider>
   );
 }

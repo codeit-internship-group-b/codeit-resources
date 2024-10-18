@@ -5,6 +5,7 @@ export interface RadioGroupProps {
   children: ReactNode;
   defaultValue?: string;
   onChange?: (value: string) => void;
+  legend?: string;
 }
 
 export interface RadioOptionProps {
