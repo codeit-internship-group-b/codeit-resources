@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { type ReactNode, useState } from "react";
 import Sidebar from "./index";
 
 interface LayoutProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 function Layout(props: LayoutProps): JSX.Element {
