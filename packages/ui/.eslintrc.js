@@ -14,5 +14,6 @@ module.exports = {
     "svgr.d.ts",
     "styles/Toast.tsx",
     "postcss.config.mjs",
+    "jest.config.cjs",
   ],
 };

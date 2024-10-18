@@ -38,6 +38,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
+    "@repo/types": "workspace:*",
     "clsx": "^2.1.1",
     "react": "^18.2.0",
     "react-toastify": "^10.0.5",
