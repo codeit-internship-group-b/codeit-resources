@@ -1,48 +1,14 @@
 import express, { Router, Request, Response } from "express";
 import { rooms } from "./roomController";
+import { reservationsMock } from "../mocks/reservationsMock";
 
 const router: Router = express.Router();
 
-// Mock 데이터
-export let reservations = [
-  {
-    _id: "1",
-    userId: "1",
-    itemId: "1",
-    startDate: "2024-10-20T09:00:00",
-    endDate: "2024-10-20T10:00:00",
-    status: "reserved",
-    createdAt: "2024-10-10T08:00:00",
-    updatedAt: "2024-10-10T08:00:00",
-    notes: "프로젝트 회의",
-  },
-  {
-    _id: "2",
-    userId: "2",
-    itemId: "2",
-    startDate: "2024-10-17T11:00:00",
-    endDate: "2024-10-17T15:00:00",
-    status: "completed",
-    createdAt: "2024-10-12T09:00:00",
-    updatedAt: "2024-10-12T09:00:00",
-    notes: "프론트엔드 프로덕트 팀 미팅",
-  },
-  {
-    _id: "3",
-    userId: "4",
-    itemId: "3",
-    startDate: "2024-10-17T11:00:00",
-    endDate: "2024-10-17T15:00:00",
-    status: "cancelled",
-    createdAt: "2024-10-12T09:00:00",
-    updatedAt: "2024-10-12T09:00:00",
-    notes: "팀 회고",
-  },
-];
-
 // 예약 전체 조회
-router.get("/", (req: Request, res: Response) => {
+router.get("/", async (req: Request, res: Response) => {
   try {
+    // const reservations = await Reservation.find();
+    const reservations = reservationsMock;
     res.status(200).json(reservations);
   } catch (error) {
     res.status(500).json({ message: "Error fetching reservations", error });
@@ -55,7 +21,7 @@ router.get("/:id", (req: Request, res: Response) => {
     // todo test용 id
     const userId = "2";
     // const userId = getME.id
-    const userReservations = reservations.filter((r) => r.userId === userId);
+    const userReservations = reservationsMock.filter((r) => r.userId === userId);
     if (userReservations.length === 0) {
       return res.status(404).json({ message: "No reservations assigned" });
     }
@@ -66,19 +32,30 @@ router.get("/:id", (req: Request, res: Response) => {
 });
 
 // 아이템 타입 및 날짜에 대한 예약 조회
-router.get("/:itemType", (req: Request, res: Response) => {
-  try {
-    const { itemType } = req.params;
-    const { date } = req.query;
+// router.get("/:itemType", async (req: Request, res: Response) => {
+//   try {
+//     const { itemType } = req.params;
+//     const { date } = req.query;
 
-    // items 데이터에서 itemType으로 필터
-    // 해당 itemId로 reservations 필터
+//     if (!date) {
+//       return res.status(400).json({ message: "Date query parameter is required" });
+//     }
 
-    res.status(200).json(rooms);
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching reservations by type and date", error });
-  }
-});
+//     // 날짜 변환
+//     const targetDate = new Date(date as string);
+//     const startOfDay = new Date(targetDate.setHours(0, 0, 0, 0)); // 그날의 00:00:00
+//     const endOfDay = new Date(targetDate.setHours(23, 59, 59, 999)); // 그날의 23:59:59
+
+//     // MongoDB에서 startDate나 endDate가 해당 날짜 범위에 포함되는지 확인
+//     // const reservations = await reservationsMock.find({
+//     //   $or: [{ startDate: { $gte: startOfDay, $lte: endOfDay } }, { endDate: { $gte: startOfDay, $lte: endOfDay } }],
+//     // });
+
+//     res.status(200).json(reservations);
+//   } catch (error) {
+//     res.status(500).json({ message: "Error fetching reservations by type and date", error });
+//   }
+// });
 
 // 특정 아이템에 대한 예약 생성
 router.post("/:itemId", (req: Request, res: Response) => {
@@ -90,7 +67,7 @@ router.post("/:itemId", (req: Request, res: Response) => {
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-    reservations.push(newReservation);
+    reservationsMock.push(newReservation);
     res.status(201).json({ message: "Success creating reservation", newReservation });
   } catch (error) {
     res.status(500).json({ message: "Error creating reservation", error });
@@ -101,7 +78,7 @@ router.post("/:itemId", (req: Request, res: Response) => {
 router.patch("/:reservationId", (req: Request, res: Response) => {
   try {
     const { reservationId } = req.params;
-    const reservation = reservations.find((r) => r._id === reservationId);
+    const reservation = reservationsMock.find((r) => r._id === reservationId);
     if (!reservation) return res.status(404).json({ message: "Reservation not found" });
 
     Object.assign(reservation, req.body, { updatedAt: new Date() });
@@ -115,10 +92,10 @@ router.patch("/:reservationId", (req: Request, res: Response) => {
 router.delete("/:reservationId", (req: Request, res: Response) => {
   try {
     const { reservationId } = req.params;
-    const reservationIndex = reservations.findIndex((r) => r._id === reservationId);
+    const reservationIndex = reservationsMock.findIndex((r) => r._id === reservationId);
     if (reservationIndex === -1) return res.status(404).json({ message: "Reservation not found" });
 
-    reservations.splice(reservationIndex, 1);
+    reservationsMock.splice(reservationIndex, 1);
     res.status(200).send("Reservation deleted");
   } catch (error) {
     res.status(500).json({ message: "Error deleting reservation", error });
