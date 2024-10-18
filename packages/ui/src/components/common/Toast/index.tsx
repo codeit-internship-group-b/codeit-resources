@@ -1,3 +1,5 @@
+"use client";
+
 import { Zoom } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CustomToastContainer } from "@ui/styles/Toast";
