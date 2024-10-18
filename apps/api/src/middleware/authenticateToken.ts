@@ -1,26 +1,33 @@
-import { NextFunction, Request as ExpressRequest, Response } from "express";
-import jwt, { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
-import { TUser } from "../models/User";
+import { type NextFunction, type Request as ExpressRequest, type Response } from "express";
+import { JsonWebTokenError, verify, type Secret } from "jsonwebtoken";
+import { config } from "dotenv";
+import { type IUser } from "@repo/types/index";
+
+config();
 
 interface Request extends ExpressRequest {
-  user?: TUser;
+  user?: IUser;
 }
 
-const JWT_SECRET = process.env.JWT_SECRET as string;
+const JWT_SECRET = process.env.JWT_SECRET as Secret;
 
-export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
+export const authenticateToken = (req: Request, res: Response, next: NextFunction): void => {
   const authHeader = req.headers.authorization;
-  const token = authHeader && authHeader.split(" ")[1];
+  const token = authHeader?.split(" ")[1];
 
-  if (!token) return res.status(401).send();
+  if (!token) {
+    res.status(401).send();
+    return;
+  }
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as Request["user"];
+    const decoded = verify(token, JWT_SECRET) as Request["user"];
     req.user = decoded;
     next();
   } catch (error) {
     if (error instanceof JsonWebTokenError) {
-      return res.status(403).json({ message: "유효하지 않은 토큰입니다." });
+      res.status(403).json({ message: "유효하지 않은 토큰입니다." });
+      return;
     }
     next(error);
   }

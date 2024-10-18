@@ -1,10 +1,10 @@
-import { TUser } from "../models/User";
 import { Types } from "mongoose";
+import { type IUser } from "@repo/types/users";
 
-const usersMock: Partial<TUser>[] = [
+const usersMock: Partial<IUser>[] = [
   {
-    id: new Types.ObjectId(),
-    username: "김철수",
+    _id: new Types.ObjectId().toString(),
+    name: "김철수",
     email: "chulsoo.kim@example.com",
     password: "$2a$10$XXXXXXXXXXXXXXXXXXXXXXXX", // 실제 해시된 비밀번호
     role: "member",
@@ -13,8 +13,8 @@ const usersMock: Partial<TUser>[] = [
     updatedAt: new Date("2023-01-01"),
   },
   {
-    id: new Types.ObjectId(),
-    username: "이영희",
+    _id: new Types.ObjectId().toString(),
+    name: "이영희",
     email: "younghee.lee@example.com",
     password: "$2a$10$YYYYYYYYYYYYYYYYYYYYYYYY", // 실제 해시된 비밀번호
     role: "member",
@@ -23,8 +23,8 @@ const usersMock: Partial<TUser>[] = [
     updatedAt: new Date("2023-01-02"),
   },
   {
-    id: new Types.ObjectId(),
-    username: "박민수",
+    _id: new Types.ObjectId().toString(),
+    name: "박민수",
     email: "minsoo.park@example.com",
     password: "$2a$10$ZZZZZZZZZZZZZZZZZZZZZZZZ", // 실제 해시된 비밀번호
     role: "admin",
@@ -33,8 +33,8 @@ const usersMock: Partial<TUser>[] = [
     updatedAt: new Date("2023-01-03"),
   },
   {
-    id: new Types.ObjectId(),
-    username: "정다은",
+    _id: new Types.ObjectId().toString(),
+    name: "정다은",
     email: "daeun.jung@example.com",
     password: "$2a$10$WWWWWWWWWWWWWWWWWWWWWWWW", // 실제 해시된 비밀번호
     role: "admin",
@@ -43,8 +43,8 @@ const usersMock: Partial<TUser>[] = [
     updatedAt: new Date("2023-01-04"),
   },
   {
-    id: new Types.ObjectId(),
-    username: "홍길동",
+    _id: new Types.ObjectId().toString(),
+    name: "홍길동",
     email: "gildong.hong@example.com",
     password: "$2a$10$VVVVVVVVVVVVVVVVVVVVVVVV", // 실제 해시된 비밀번호
     role: "admin",
