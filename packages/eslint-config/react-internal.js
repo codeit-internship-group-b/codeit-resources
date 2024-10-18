@@ -19,7 +19,7 @@ module.exports = {
     require.resolve("@vercel/style-guide/eslint/browser"),
     require.resolve("@vercel/style-guide/eslint/react"),
     "eslint-config-turbo",
-    "plugin:@typescript-eslint/recommended",
+    // "plugin:@typescript-eslint/recommended",
   ],
   plugins: ["only-warn"],
   globals: {

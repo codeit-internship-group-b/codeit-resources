@@ -21,8 +21,7 @@
     "paths": {
       "@/*": ["./*"],
       "@ui/*": ["../../packages/ui/*"],
-      "@/public/*": ["./public/*"],
-      "@repo/types/*": ["../../packages/types/src/*"]
+      "@/public/*": ["./public/*"]
     },
     "typeRoots": ["../packages/ui", "./node_modules/@types"]
   }
