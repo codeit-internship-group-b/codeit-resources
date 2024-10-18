@@ -5,7 +5,7 @@ import Dropdown from "@ui/src/components/common/Dropdown";
 import MultiSelectDropdown from "../MulitiSelectDropdown";
 import Profile from "./Profile";
 
-const name = ["강형욱", "이영훈", "강동원", "조현지"];
+const mockName = ["강형욱", "이영훈", "강동원", "조현지"];
 
 export default function DropdownExample(): JSX.Element {
   const [selectedValue, setSelectedValue] = useState("");
@@ -144,7 +144,7 @@ export default function DropdownExample(): JSX.Element {
           )}
         </MultiSelectDropdown.Toggle>
         <MultiSelectDropdown.Wrapper>
-          {[...name]
+          {[...mockName]
             .sort((a, b) => {
               const isASelected = selectedValue6.includes(a);
               const isBSelected = selectedValue6.includes(b);
