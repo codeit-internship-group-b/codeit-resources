@@ -1,29 +1,46 @@
 "use client";
 
 import cn from "@ui/src/utils/cn";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { getDatesFromToday } from "@ui/src/utils/date";
+import { formatDate, getDatesForSeats, getDatesFromToday } from "@ui/src/utils/date";
+import { useRouter } from "next/navigation";
+import { useDateStore } from "@/app/store/useDateStore";
 
 interface HeaderProps {
   page: "meetings" | "seats";
-  year: number;
-  month: number;
 }
 
-export default function HeaderTabs({ page, year, month }: HeaderProps): JSX.Element {
+export default function HeaderTabs({ page }: HeaderProps): JSX.Element {
+  const { selectedDate, setSelectedDate } = useDateStore();
   const [activeTabIndex, setActiveTabIndex] = useState(0);
-  const dates = getDatesFromToday(year, month, page);
+  const dates = page === "seats" ? getDatesForSeats(2) : getDatesFromToday(selectedDate.year, selectedDate.month, 3);
+  const router = useRouter();
+
+  useEffect(() => {
+    const formattedDate = `${String(selectedDate.year)}-${String(selectedDate.month).padStart(2, "0")}-${String(selectedDate.day).padStart(2, "0")}`;
+    router.push(`/${page}?date=${formattedDate}`);
+  }, [selectedDate, router, page]);
 
   const handleActiveTab = (index: number): void => {
     setActiveTabIndex(index);
+    const datesFromToday = dates[index];
+    if (datesFromToday) {
+      setSelectedDate({
+        year: datesFromToday.getFullYear(),
+        month: datesFromToday.getMonth() + 1,
+        day: datesFromToday.getDate(),
+      });
+    }
+    router.push(
+      `/${page}/date?=${String(selectedDate.year)}-${String(selectedDate.month)}-${String(selectedDate.day)}`,
+    );
   };
-
   return (
     <div className="h-45 relative top-4 flex items-end gap-24 md:static">
       {dates.map((date, index) => (
         <motion.div
-          key={date}
+          key={String(date)}
           className="flex min-w-fit cursor-pointer flex-col gap-16"
           onClick={() => {
             handleActiveTab(index);
@@ -45,14 +62,14 @@ export default function HeaderTabs({ page, year, month }: HeaderProps): JSX.Elem
             whileHover={activeTabIndex !== index ? { color: "#6500C2" } : {}}
             transition={{ duration: 0.2 }}
           >
-            {date}
+            {formatDate(date, page)}
           </motion.span>
           <motion.span
             className="w-full border-b-2 border-solid"
             initial={{ scaleX: 0 }}
             animate={{
               scaleX: activeTabIndex === index ? 1 : 0,
-              borderColor: activeTabIndex === index ? "#6500C2" : "transparent",
+              borderColor: activeTabIndex === index ? "#6500C2" : "rgba(255, 255, 255, 0)",
             }}
             transition={{ duration: 0.3 }}
           />
