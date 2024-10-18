@@ -1,7 +1,7 @@
-import { IUser } from "@repo/types/users";
 import { Types } from "mongoose";
+import { UserDoc } from "../models/User";
 
-const usersMock: Partial<IUser>[] = [
+const usersMock: Partial<UserDoc>[] = [
   {
     _id: new Types.ObjectId(),
     username: "김철수",
