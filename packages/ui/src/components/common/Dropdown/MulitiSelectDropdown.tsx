@@ -16,6 +16,7 @@ import {
 } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import cn from "@ui/src/utils/cn";
+import { handleKeyPress } from "@ui/src/utils/handleKeyPress";
 import { RightIcon, TriangleIcon, SearchIcon } from "@ui/public";
 import { useEscapeKey } from "@ui/src/hooks/useEscapeKey";
 import { useOnClickOutside } from "@ui/src/hooks/useOnClickOutside";
@@ -107,9 +108,7 @@ function Toggle({ children, title }: ToggleProps): JSX.Element {
           },
         )}
         onClick={toggleDropdown}
-        onKeyDown={(e) => {
-          (e.key === "Enter" || e.key === " ") && toggleDropdown();
-        }}
+        onKeyDown={(e) => handleKeyPress(e, toggleDropdown)}
         aria-expanded={isOpen}
       >
         <span>{children}</span>
@@ -191,11 +190,7 @@ function Item({ children, value }: ItemProps): JSX.Element {
       onClick={() => {
         selectedItem(value);
       }}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          selectedItem(value);
-        }
-      }}
+      onKeyDown={(e) => handleKeyPress(e, () => selectedItem(value))}
       tabIndex={0}
     >
       {isSelected ? (
