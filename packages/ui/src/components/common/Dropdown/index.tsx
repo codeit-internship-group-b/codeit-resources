@@ -5,6 +5,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import cn from "@ui/src/utils/cn";
 import ErrorMessage from "../ErrorMessage";
 import { KebabIcon, RightIcon, SortIcon, TriangleIcon } from "@ui/public";
+import { useEscapeKey } from "@ui/src/hooks/useEscapeKey";
+import { useOnClickOutside } from "@ui/src/hooks/useOnClickOutside";
 
 const DropdownContext = createContext({
   isOpen: false,
@@ -55,29 +57,8 @@ export default function Dropdown({
     [isOpen, selectedValue, isError, errorMessage, size, toggleDropdown, closeDropdown, selectedItem],
   );
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        closeDropdown();
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [dropdownRef, closeDropdown]);
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        closeDropdown();
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener("keydown", handleKeyDown);
-    }
-
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, closeDropdown]);
+  useOnClickOutside(dropdownRef, closeDropdown);
+  useEscapeKey(closeDropdown, isOpen);
 
   return (
     <DropdownContext.Provider value={providerValue}>
