@@ -3,7 +3,7 @@
 import cn from "@ui/src/utils/cn";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { formatDate, getDatesForSeats, getDatesFromToday } from "@ui/src/utils/date";
+import { formatDate, getDatesForSeats, getDatesFromToday, formatSelectedDate } from "@ui/src/utils/date";
 import { useRouter } from "next/navigation";
 import { useDateStore } from "@/app/store/useDateStore";
 
@@ -18,7 +18,7 @@ export default function HeaderTabs({ page }: HeaderProps): JSX.Element {
   const router = useRouter();
 
   useEffect(() => {
-    const formattedDate = `${String(selectedDate.year)}-${String(selectedDate.month).padStart(2, "0")}-${String(selectedDate.day).padStart(2, "0")}`;
+    const formattedDate = formatSelectedDate(selectedDate);
     router.push(`/${page}?date=${formattedDate}`);
   }, [selectedDate, router, page]);
 
@@ -32,9 +32,6 @@ export default function HeaderTabs({ page }: HeaderProps): JSX.Element {
         day: datesFromToday.getDate(),
       });
     }
-    router.push(
-      `/${page}/date?=${String(selectedDate.year)}-${String(selectedDate.month)}-${String(selectedDate.day)}`,
-    );
   };
   return (
     <div className="h-45 relative top-4 flex items-end gap-24 md:static">

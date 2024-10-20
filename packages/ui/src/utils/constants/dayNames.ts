@@ -1,1 +1,1 @@
-export const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
+export const DAY_NAMES = ["일", "월", "화", "수", "목", "금", "토"];
