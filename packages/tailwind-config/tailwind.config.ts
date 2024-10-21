@@ -20,7 +20,7 @@ const config: Omit<Config, "content"> = {
       maxHeight: px0_2000,
       width: px0_2000,
       height: px0_2000,
-      //2자리수(10~99)는 Label color로 사용하려고 추가했어요
+      //2자리수(10~99)는 Badge color로 사용하려고 추가했어요
       colors: {
         purple: {
           10: "#FDFAFF",
