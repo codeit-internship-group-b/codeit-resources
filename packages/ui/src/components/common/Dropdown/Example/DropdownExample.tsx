@@ -8,11 +8,11 @@ import Profile from "./Profile";
 const mockName = ["강형욱", "이영훈", "강동원", "조현지"];
 
 export default function DropdownExample(): JSX.Element {
-  const [selectedValue, setSelectedValue] = useState("");
-  const [selectedValue2, setSelectedValue2] = useState("");
-  const [selectedValue3, setSelectedValue3] = useState("어드민");
-  const [selectedValue4, setSelectedValue4] = useState("");
-  const [selectedValue5, setSelectedValue5] = useState("최신순");
+  const [selectedValue, setSelectedValue] = useState<string | boolean>("");
+  const [selectedValue2, setSelectedValue2] = useState<string | boolean>("");
+  const [selectedValue3, setSelectedValue3] = useState<string | boolean>("어드민");
+  const [selectedValue4, setSelectedValue4] = useState<string | boolean>("");
+  const [selectedValue5, setSelectedValue5] = useState<string | boolean>("최신순");
   const [selectedValue6, setSelectedValue6] = useState<string[]>([]);
   const [customTime, setCustomTime] = useState("");
 
@@ -20,7 +20,7 @@ export default function DropdownExample(): JSX.Element {
     <div className="gap-30 pb-100 flex flex-col">
       <Dropdown
         selectedValue={selectedValue}
-        onSelect={(value: string) => {
+        onSelect={(value: string | boolean) => {
           setSelectedValue(value);
         }}
         isError={false}
@@ -36,7 +36,7 @@ export default function DropdownExample(): JSX.Element {
 
       <Dropdown
         selectedValue={selectedValue2}
-        onSelect={(value: string) => {
+        onSelect={(value: string | boolean) => {
           setSelectedValue2(value);
         }}
         isError={false}
@@ -71,7 +71,7 @@ export default function DropdownExample(): JSX.Element {
 
       <Dropdown
         selectedValue={selectedValue3}
-        onSelect={(value: string) => {
+        onSelect={(value: string | boolean) => {
           setSelectedValue3(value);
         }}
         size="sm"
@@ -86,7 +86,7 @@ export default function DropdownExample(): JSX.Element {
 
       <Dropdown
         selectedValue={selectedValue4}
-        onSelect={(value: string) => {
+        onSelect={(value: string | boolean) => {
           setSelectedValue4(value);
         }}
         size="sm"
@@ -101,7 +101,7 @@ export default function DropdownExample(): JSX.Element {
 
       <Dropdown
         selectedValue={selectedValue5}
-        onSelect={(value: string) => {
+        onSelect={(value: string | boolean) => {
           setSelectedValue5(value);
         }}
         size="sm"

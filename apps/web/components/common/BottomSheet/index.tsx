@@ -8,9 +8,20 @@ export default function SnapSheet() {
 
   return (
     <>
-      <button onClick={() => { setIsOpen(true); }}>Open sheet</button>
+      <button
+        onClick={() => {
+          setIsOpen(true);
+        }}
+      >
+        Open sheet
+      </button>
 
-      <Sheet isOpen={isOpen} onClose={() => { setIsOpen(false); }}>
+      <Sheet
+        isOpen={isOpen}
+        onClose={() => {
+          setIsOpen(false);
+        }}
+      >
         <Sheet.Container>
           <Sheet.Header />
           <Sheet.Content>{/* Your sheet content goes here */}</Sheet.Content>
