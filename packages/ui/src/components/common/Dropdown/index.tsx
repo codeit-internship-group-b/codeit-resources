@@ -3,8 +3,11 @@
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import cn from "@ui/src/utils/cn";
+import { handleKeyPress } from "@ui/src/utils/handleKeyPress";
 import ErrorMessage from "../ErrorMessage";
 import { KebabIcon, RightIcon, SortIcon, TriangleIcon } from "@ui/public";
+import useEscapeKey from "@ui/src/hooks/useEscapeKey";
+import { useOnClickOutside } from "@ui/src/hooks/useOnClickOutside";
 
 const DropdownContext = createContext({
   isOpen: false,
@@ -55,29 +58,8 @@ export default function Dropdown({
     [isOpen, selectedValue, isError, errorMessage, size, toggleDropdown, closeDropdown, selectedItem],
   );
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        closeDropdown();
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [dropdownRef, closeDropdown]);
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        closeDropdown();
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener("keydown", handleKeyDown);
-    }
-
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, closeDropdown]);
+  useOnClickOutside(dropdownRef, closeDropdown);
+  useEscapeKey(closeDropdown, isOpen);
 
   return (
     <DropdownContext.Provider value={providerValue}>
@@ -103,13 +85,13 @@ function Toggle({ children, title, iconType = "none" }: ToggleProps): JSX.Elemen
         <KebabIcon
           className="cursor-pointer"
           onClick={toggleDropdown}
-          onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && toggleDropdown()}
+          onKeyDown={(e) => handleKeyPress(e, toggleDropdown)}
         />
       )}
       {iconType === "sort" && (
         <button
           onClick={toggleDropdown}
-          onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && toggleDropdown()}
+          onKeyDown={(e) => handleKeyPress(e, toggleDropdown)}
           className="rounded-6 flex items-center gap-2 bg-gray-400 px-6 py-4"
         >
           <SortIcon />
@@ -141,7 +123,7 @@ function Toggle({ children, title, iconType = "none" }: ToggleProps): JSX.Elemen
               size === "md" ? "py-15 w-full px-20" : "w-96 gap-6 px-12 py-6",
             )}
             onClick={toggleDropdown}
-            onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && toggleDropdown()}
+            onKeyDown={(e) => handleKeyPress(e, toggleDropdown)}
             aria-expanded={isOpen}
           >
             {selectedValue ? selectedValue : <span>{children}</span>}
@@ -209,7 +191,7 @@ function Item({ children, value, position = "center" }: ItemProps): JSX.Element 
         size === "md" ? "px-12 py-6" : "text-14 px-16 py-6",
       )}
       onClick={() => selectedItem(value)}
-      onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && selectedItem(value)}
+      onKeyDown={(e) => handleKeyPress(e, () => selectedItem(value))}
       role="button"
       tabIndex={0}
     >

@@ -12,7 +12,7 @@ const NAV_ITEMS = [
   { href: "/equipment", name: "장비", icon: EquipmentIcon },
 ];
 
-const ADMIN_ITEM = [
+const ADMIN_ITEMS = [
   { href: "/admin/dashboard", name: "멤버 관리", icon: PersonIcon },
   { href: "/admin/meetings", name: "회의실 설정", icon: MeetingIcon },
   { href: "/admin/seats", name: "좌석 설정", icon: SeatsIcon },
@@ -50,7 +50,7 @@ export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element {
         <>
           <hr className="hidden border-white/10 pb-10 md:block" />
           <div className="text-sm-bold hidden px-16 pt-8 text-white/30 md:block">어드민 기능</div>
-          {ADMIN_ITEM.map(({ href, name, icon: Icon }) => {
+          {ADMIN_ITEMS.map(({ href, name, icon: Icon }) => {
             const isActive = pathname === href;
             return (
               <Link key={name} href={href} className="hidden md:block">

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-import { dayNames } from "@ui/src/utils/constants/dayNames";
+import { DAY_NAMES } from "@ui/src/utils/constants/dayNames";
 
 /**
  * 주어진 연도와 월에 맞는 날짜를 계산하여 배열로 반환합니다.
@@ -14,9 +14,11 @@ import { dayNames } from "@ui/src/utils/constants/dayNames";
  */
 export const getDatesFromToday = (year: number, month: number, dayCount: number): Date[] => {
   const dates: Date[] = [];
+  const startDate = new Date(year, month - 1, new Date().getDate());
 
   for (let i = 0; i < dayCount; i++) {
-    const futureDate = new Date(year, month - 1, new Date().getDate() + i); // 해당 연도와 월에 맞게 날짜 설정
+    const futureDate = new Date(startDate);
+    futureDate.setDate(startDate.getDate() + i);
     dates.push(futureDate);
   }
 
@@ -50,9 +52,23 @@ export const getDatesForSeats = (dayCount: number): Date[] => {
  * @returns 포맷팅된 날짜 문자열
  */
 export const formatDate = (date: Date, page: string): string => {
+  if (!(date instanceof Date) || Number.isNaN(date.getTime())) {
+    throw new Error("유효하지 않은 날짜 객체입니다.");
+  }
+
   if (page === "meetings") {
-    const dayOfWeek = dayNames[date.getDay()];
+    const dayOfWeek = DAY_NAMES[date.getDay()];
     return `${date.getDate()}일 (${dayOfWeek})`;
   }
   return `${String(date.getMonth() + 1)}월 ${String(date.getDate())}일`;
+};
+
+/**
+ * 주어진 연도, 월, 일 객체를 YYYY-MM-DD 형식의 문자열로 포맷팅합니다.
+ *
+ * @param date - 연도(year), 월(month), 일(day)을 포함하는 객체
+ * @returns YYYY-MM-DD 형식으로 포맷팅된 날짜 문자열
+ */
+export const formatSelectedDate = (date: { year: number; month: number; day: number }): string => {
+  return `${String(date.year)}-${String(date.month).padStart(2, "0")}-${String(date.day).padStart(2, "0")}`;
 };

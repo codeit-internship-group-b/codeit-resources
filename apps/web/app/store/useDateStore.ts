@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { dayNames } from "@repo/ui/src/utils/constants/dayNames";
+import { DAY_NAMES } from "@repo/ui/src/utils/constants/dayNames";
 
 interface DateStore {
   selectedDate: {
@@ -17,8 +17,21 @@ interface DateStore {
 }
 
 const getDayOfWeek = (date: Date): string => {
-  const dayOfWeek = dayNames[date.getDay()];
+  const dayOfWeek = DAY_NAMES[date.getDay()];
   return dayOfWeek ?? "알 수 없음";
+};
+
+const calculateNewDate = (year: number, month: number, day: number): { newDate: Date; dayOfWeek: string } => {
+  const daysInMonth = new Date(year, month, 0).getDate();
+  let validDay = day;
+  if (validDay > daysInMonth) {
+    validDay = daysInMonth;
+  }
+
+  const newDate = new Date(year, month - 1, validDay);
+  const dayOfWeek = getDayOfWeek(newDate);
+
+  return { newDate, dayOfWeek };
 };
 
 export const useDateStore = create<DateStore>((set) => ({
@@ -31,8 +44,7 @@ export const useDateStore = create<DateStore>((set) => ({
 
   // 전체 날짜 객체를 한 번에 설정하는 함수
   setSelectedDate: (date) => {
-    const selectedDate = new Date(date.year, date.month - 1, date.day);
-    const dayOfWeek = getDayOfWeek(selectedDate);
+    const { dayOfWeek } = calculateNewDate(date.year, date.month, date.day);
     set({
       selectedDate: {
         ...date,
@@ -44,8 +56,8 @@ export const useDateStore = create<DateStore>((set) => ({
   // 연도만 업데이트하는 함수
   setSelectedYear: (year) => {
     set((state) => {
-      const newDate = new Date(year, state.selectedDate.month - 1, state.selectedDate.day);
-      const dayOfWeek = getDayOfWeek(newDate);
+      const { month, day } = state.selectedDate;
+      const { dayOfWeek } = calculateNewDate(year, month, day);
       return {
         selectedDate: { ...state.selectedDate, year, dayOfWeek },
       };
@@ -55,10 +67,11 @@ export const useDateStore = create<DateStore>((set) => ({
   // 월만 업데이트하는 함수
   setSelectedMonth: (month) => {
     set((state) => {
-      const newDate = new Date(state.selectedDate.year, month - 1, state.selectedDate.day);
-      const dayOfWeek = getDayOfWeek(newDate);
+      if (state.selectedDate.month === month) return state;
+      const { year, day } = state.selectedDate;
+      const { dayOfWeek } = calculateNewDate(year, month, day);
       return {
-        selectedDate: { ...state.selectedDate, month, dayOfWeek },
+        selectedDate: { ...state.selectedDate, month, day, dayOfWeek },
       };
     });
   },
@@ -66,8 +79,8 @@ export const useDateStore = create<DateStore>((set) => ({
   // 일만 업데이트하는 함수
   setSelectedDay: (day) => {
     set((state) => {
-      const newDate = new Date(state.selectedDate.year, state.selectedDate.month - 1, day);
-      const dayOfWeek = getDayOfWeek(newDate);
+      const { year, month } = state.selectedDate;
+      const { dayOfWeek } = calculateNewDate(year, month, day);
       return {
         selectedDate: { ...state.selectedDate, day, dayOfWeek },
       };
@@ -77,36 +90,38 @@ export const useDateStore = create<DateStore>((set) => ({
   // 이전 달로 이동하는 함수
   handlePrevMonth: () => {
     set((state) => {
-      const { year, month } = state.selectedDate;
-      let newYear = year;
-      let newMonth = month - 1;
+      let { year, month } = state.selectedDate;
+      const { day } = state.selectedDate;
+      month -= 1;
 
-      if (newMonth === 0) {
-        newYear -= 1;
-        newMonth = 12;
+      if (month === 0) {
+        year -= 1;
+        month = 12;
       }
 
-      const newDate = new Date(newYear, newMonth - 1, state.selectedDate.day);
-      const dayOfWeek = getDayOfWeek(newDate);
-      return { selectedDate: { ...state.selectedDate, year: newYear, month: newMonth, dayOfWeek } };
+      const { dayOfWeek } = calculateNewDate(year, month, day);
+      return {
+        selectedDate: { ...state.selectedDate, year, month, day, dayOfWeek },
+      };
     });
   },
 
   // 다음 달로 이동하는 함수
   handleNextMonth: () => {
     set((state) => {
-      const { year, month } = state.selectedDate;
-      let newYear = year;
-      let newMonth = month + 1;
+      let { year, month } = state.selectedDate;
+      const { day } = state.selectedDate;
+      month += 1;
 
-      if (newMonth === 13) {
-        newYear += 1;
-        newMonth = 1;
+      if (month === 13) {
+        year += 1;
+        month = 1;
       }
 
-      const newDate = new Date(newYear, newMonth - 1, state.selectedDate.day);
-      const dayOfWeek = getDayOfWeek(newDate);
-      return { selectedDate: { ...state.selectedDate, year: newYear, month: newMonth, dayOfWeek } };
+      const { dayOfWeek } = calculateNewDate(year, month, day);
+      return {
+        selectedDate: { ...state.selectedDate, year, month, day, dayOfWeek },
+      };
     });
   },
 }));
