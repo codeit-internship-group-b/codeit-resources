@@ -81,7 +81,7 @@ function Toggle({ children, title, iconType = "none" }: ToggleProps): JSX.Elemen
     <div className="group relative">
       {iconType === "kebab" && (
         <KebabIcon
-          className="hover:bg-custom-black/5 cursor-pointer hover:rounded-full"
+          className="hover:bg-custom-black/5 cursor-pointer rounded-full transition-colors duration-300 ease-in-out"
           onClick={toggleDropdown}
           onKeyDown={(e) => handleKeyPress(e, toggleDropdown)}
         />
