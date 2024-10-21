@@ -4,12 +4,13 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "storybook dev -p 6006",
+    "dev": "storybook dev -p 6006 --no-open",
     "build:storybook": "storybook build",
     "preview": "vite preview"
   },
   "dependencies": {
     "@repo/ui": "workspace:*",
+    "@repo/types": "workspace:*",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

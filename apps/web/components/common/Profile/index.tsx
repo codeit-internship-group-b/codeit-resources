@@ -1,4 +1,4 @@
-import { ProfileEmpty } from "@ui/public";
+import { ProfileEmptyIcon } from "@ui/public";
 import { clsx } from "clsx";
 import Image from "next/image";
 
@@ -27,7 +27,7 @@ export default function Profile({ size = "size-32", src, name, className }: Prof
           <Image src={src} fill alt="프로필 이미지" />
         </div>
       ) : (
-        <ProfileEmpty width={32} height={32} />
+        <ProfileEmptyIcon width={32} height={32} />
       )}
       {name ? <div className="font-medium text-white">{name}</div> : null}
     </div>

@@ -11,8 +11,10 @@
     "rootDir": "../../",
     "paths": {
       "@repo/types/*": ["../../packages/types/src/*"]
-    }
+    },
+    "types": ["node"],
+    "moduleResolution": "NodeNext"
   },
   "exclude": ["node_modules"],
-  "include": ["src", "../../packages/types/src/*.ts"]
+  "include": ["src/**/*", "../../packages/types/src/*.ts"]
 }

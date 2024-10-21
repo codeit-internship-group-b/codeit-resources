@@ -1,8 +1,9 @@
 "use client";
 
-import { ChangeEvent, InputHTMLAttributes, useState } from "react";
 import cn from "@ui/src/utils/cn";
+import { ChangeEvent, InputHTMLAttributes, useState } from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
+import ErrorMessage from "../ErrorMessage";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   id: string;
@@ -40,7 +41,9 @@ export default function Input({
   register = {
     onChange: async () => {},
     onBlur: async () => {},
-    ref: (e: HTMLInputElement | null) => {},
+    ref: (e: HTMLInputElement | null) => {
+      e;
+    },
     name: "",
   },
   ...args
@@ -61,7 +64,7 @@ export default function Input({
         name={name || id}
         type={type}
         className={cn(
-          "trasition-linear border-custom-black/40 hover:bg-custom-black/5 peer w-full rounded-lg border border-solid p-14 placeholder-transparent focus:hover:bg-purple-700/5",
+          "transition-linear border-custom-black/40 hover:bg-custom-black/5 peer w-full rounded-lg border border-solid p-14 placeholder-transparent focus:hover:bg-purple-700/5",
           {
             "border-error focus:hover:bg-custom-black/5": isError,
             "focus:border-purple-400": !isError,
@@ -78,7 +81,7 @@ export default function Input({
       <label
         htmlFor={id}
         className={cn(
-          "bottom-39 trasition-linear text-custom-black/80 peer-focus:-translate-y-27 peer-focus:!text-13 relative left-16 z-10 bg-transparent p-0 leading-none peer-placeholder-shown:translate-y-0 peer-focus:bg-white peer-focus:px-3",
+          "bottom-39 transition-linear text-custom-black/80 peer-focus:-translate-y-27 peer-focus:!text-13 relative left-16 z-10 bg-transparent p-0 leading-none peer-placeholder-shown:translate-y-0 peer-focus:bg-white peer-focus:px-3",
           {
             "peer-focus:bg-transparent peer-focus:text-purple-400": !isError,
             "peer-focus:text-error peer-focus:bg-transparent": isError,
@@ -95,7 +98,7 @@ export default function Input({
           })}
         />
       </label>
-      {isError && <span className="text-13 text-error absolute bottom-0 block pl-20 pt-9">{errorMessage}</span>}
+      {isError && <ErrorMessage className="-bottom-6 left-20" message={errorMessage} />}
     </div>
   );
 }

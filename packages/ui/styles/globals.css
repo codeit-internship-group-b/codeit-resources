@@ -16,3 +16,8 @@ button {
 .transition-linear {
   @apply transition-all duration-300 ease-linear transform;
 }
+
+/* Webkit 기반 브라우저용 스크롤바 커스터마이징 */
+::-webkit-scrollbar {
+  height: 0px; /* 스크롤바의 높이 */
+}
