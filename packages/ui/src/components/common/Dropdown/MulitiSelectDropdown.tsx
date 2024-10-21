@@ -1,4 +1,5 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 "use client";
 
 import {
