@@ -46,3 +46,6 @@ storybook-static
 # 요청 파일
 .request.http
 request.http
+
+# 테스트 경로 추가
+apps/web/app/test
