@@ -1,48 +1,33 @@
-// import { type NextFunction, type Request as ExpressRequest, type Response } from "express";
-// import bcrypt from "bcryptjs";
-// import { type IUser } from "@repo/types";
-// import usersMock from "../mocks/usersMock";
+import { type NextFunction, type Request as ExpressRequest, type Response } from "express";
+import { type IUser } from "@repo/types";
+import { User } from "../models/User";
 
-// interface Request extends ExpressRequest {
-//   user?: IUser;
-// }
+interface Request extends ExpressRequest {
+  user?: IUser;
+}
 
-// // Get all users
-// // const getUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-// //   try {
-// //     // Use usersMock instead of querying the database
-// //     const users = usersMock.map(({ password, ...user }) => user);
-// //     res.status(200).send(users);
-// //   } catch (error) {
-// //     next(error);
-// //   }
-// // };
+// Get all users
+const getUsers = async (req: Request, res: Response): Promise<void> => {
+  const users = await User.find().select("-password");
+  res.status(200).send(users);
+};
 
-// const getUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-//   try {
-//     const users = await User.find().select("-password");
-//     res.status(200).send(users);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+// Get a user by id
+const getUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const user = await User.findById(id).select("-password");
 
-// // Get a user by id
-// const getUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-//   try {
-//     const { id } = req.params;
-//     const user = await User.findById(id).select("-password");
+    if (!user) {
+      res.status(404).send({ message: "사용자를 찾을 수 없습니다." });
+      return;
+    }
 
-//     if (!user) {
-//       res.status(404).send({ message: "사용자를 찾을 수 없습니다." });
-//       return;
-//     }
-
-//     res.status(200).send(user);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+    res.status(200).send(user);
+  } catch (error) {
+    next(error);
+  }
+};
 
 // // Create a new user
 // // admin 권한 필요
@@ -145,4 +130,4 @@
 //   }
 // };
 
-// export { getUsers, getUser, createUser, updateUser, deleteUser, updatePassword, updateProfileImage };
+export { getUsers, getUser };
