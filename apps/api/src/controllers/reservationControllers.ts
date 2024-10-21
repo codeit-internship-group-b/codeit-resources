@@ -1,119 +1,90 @@
-// import express, { type Router, type Request, type Response } from "express";
-// import { reservationsMock } from "../mocks/reservationsMock";
-// import { itemsMock } from "../mocks/itemsMock";
-// import { type IReservation } from "@repo/types/reservations";
+import { type Request, type Response } from "express";
+import { type IReservation } from "@repo/types";
+import { Item } from "../models";
+import { Reservation } from "../models/Reservation";
 
-// const router: Router = express.Router();
+// 예약 전체 조회
+export const getAllReservations = async (req: Request, res: Response): Promise<void> => {
+  const reservations: IReservation[] = await Reservation.find();
+  res.status(200).json(reservations);
+};
 
-// // 예약 전체 조회
-// router.get("/", (req: Request, res: Response) => {
-//   try {
-//     // const reservations = await Reservation.find();
-//     const reservations = reservationsMock;
-//     res.status(200).json(reservations);
-//   } catch (error) {
-//     res.status(500).json({ message: "Error fetching reservations", error });
-//   }
-// });
+// 특정 유저의 예약 조회
+export const getUserReservations = async (req: Request, res: Response): Promise<void> => {
+  const { userId } = req.params;
+  const userReservations: IReservation[] = await Reservation.find({ userId });
+  if (!userReservations.length) {
+    res.status(404).json({ message: "No reservations assigned" });
+    return;
+  }
+  res.status(200).json(userReservations);
+};
 
-// // 특정 유저의 예약 조회
-// router.get("/:id", (req: Request, res: Response) => {
-//   try {
-//     // todo test용 id
-//     const userId = "2";
-//     // const userId = getME.id
-//     const userReservations = reservationsMock.filter((r) => r.userId === userId);
-//     if (userReservations.length === 0) {
-//       return res.status(404).json({ message: "No reservations assigned" });
-//     }
-//     res.status(200).json(userReservations);
-//   } catch (error) {
-//     res.status(500).json({ message: "Error fetching user reservations", error });
-//   }
-// });
+// 아이템 타입 및 날짜에 대한 예약 조회
+export const getReservationsByTypeAndDate = async (req: Request, res: Response): Promise<void> => {
+  const { itemType } = req.params;
+  const { date } = req.query;
 
-// // 아이템 타입 및 날짜에 대한 예약 조회
-// router.get("/:itemType", (req: Request, res: Response) => {
-//   try {
-//     const { itemType } = req.params;
-//     const { date } = req.query;
+  if (typeof date !== "string") {
+    res.status(400).json({ message: "Date query parameter is required and must be a string" });
+    return;
+  }
 
-//     if (!date) {
-//       return res.status(400).json({ message: "Date query parameter is required" });
-//     }
+  const items = await Item.find({ type: itemType }, "_id");
+  if (!items.length) {
+    res.status(404).json({ message: "No items found for the provided type" });
+    return;
+  }
+  const itemIds = items.map((item) => item._id);
 
-//     // params로 받은 itemType에 해당하는 item의 id 추출
-//     // const items = await item.find({ type: itemType }, "_id");
-//     const items = itemsMock.filter((item) => item.type === itemType);
-//     if (items.length === 0) {
-//       return res.status(404).json({ message: "No reservations assigned to the item" });
-//     }
-//     const itemIds = items.map((item) => item._id);
+  const targetDate = new Date(`${date}T00:00:00Z`);
+  const startOfDay = new Date(targetDate.setUTCHours(0, 0, 0, 0));
+  const endOfDay = new Date(targetDate.setUTCHours(23, 59, 59, 999));
 
-//     // 타입가드
-//     const dateString = typeof date === "string" ? date : String(date);
+  const reservations: IReservation[] = await Reservation.find({
+    itemId: { $in: itemIds },
+    $or: [{ startDate: { $gte: startOfDay, $lte: endOfDay } }, { endDate: { $gte: startOfDay, $lte: endOfDay } }],
+  });
 
-//     const targetDate = new Date(`${dateString}T00:00:00Z`);
-//     const startOfDay = new Date(targetDate.setUTCHours(0, 0, 0, 0));
-//     const endOfDay = new Date(targetDate.setUTCHours(23, 59, 59, 999));
+  res.status(200).json(reservations);
+};
 
-//     // 반환된 예약들 중 params의 날짜에 해당되는 예약 필터링
-//     const reservations = reservationsMock.filter(
-//       (reservation) =>
-//         itemIds.includes(reservation.itemId) &&
-//         ((reservation.startDate >= startOfDay && reservation.startDate <= endOfDay) ||
-//           (reservation.endDate >= startOfDay && reservation.endDate <= endOfDay)),
-//     );
+// 특정 아이템에 대한 예약 생성
+export const createReservation = async (req: Request, res: Response): Promise<void> => {
+  const { itemId } = req.params;
+  const newReservation = new Reservation<IReservation>({
+    ...(req.body as IReservation),
+    itemId: String(itemId),
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  });
 
-//     res.status(200).json(reservations);
-//   } catch (error) {
-//     res.status(500).json({ message: "Error fetching reservations by type and date", error });
-//   }
-// });
+  const savedReservation: IReservation = await newReservation.save();
+  res.status(201).json({ message: "Success creating reservation", savedReservation });
+};
 
-// // 특정 아이템에 대한 예약 생성
-// // router.post("/:itemId", (req: Request, res: Response) => {
-// //   try {
-// //     const { itemId } = req.params;
-// //     const newReservation: IReservation = {
-// //       ...req.body,
-// //       itemId,
-// //       createdAt: new Date(),
-// //       updatedAt: new Date(),
-// //     };
-// //     reservationsMock.push(newReservation);
-// //     res.status(201).json({ message: "Success creating reservation", newReservation });
-// //   } catch (error) {
-// //     res.status(500).json({ message: "Error creating reservation", error });
-// //   }
-// // });
+// 특정 예약 수정
+export const updateReservation = async (req: Request, res: Response): Promise<void> => {
+  const { reservationId } = req.params;
+  const updatedReservation = await Reservation.findByIdAndUpdate(
+    reservationId,
+    { ...(req.body as IReservation), updatedAt: new Date() },
+    { new: true },
+  );
+  if (!updatedReservation) {
+    res.status(404).json({ message: "Reservation not found" });
+    return;
+  }
+  res.status(200).json(updatedReservation);
+};
 
-// // 특정 예약 수정
-// router.patch("/:reservationId", (req: Request, res: Response) => {
-//   try {
-//     const { reservationId } = req.params;
-//     const reservation = reservationsMock.find((r) => r._id === reservationId);
-//     if (!reservation) return res.status(404).json({ message: "Reservation not found" });
-
-//     Object.assign(reservation, req.body, { updatedAt: new Date() });
-//     res.status(200).json(reservation);
-//   } catch (error) {
-//     res.status(500).json({ message: "Error updating reservation", error });
-//   }
-// });
-
-// // 특정 예약 삭제
-// router.delete("/:reservationId", (req: Request, res: Response) => {
-//   try {
-//     const { reservationId } = req.params;
-//     const reservationIndex = reservationsMock.findIndex((r) => r._id === reservationId);
-//     if (reservationIndex === -1) return res.status(404).json({ message: "Reservation not found" });
-
-//     reservationsMock.splice(reservationIndex, 1);
-//     res.status(200).send("Reservation deleted");
-//   } catch (error) {
-//     res.status(500).json({ message: "Error deleting reservation", error });
-//   }
-// });
-
-// export default router;
+// 특정 예약 삭제
+export const deleteReservation = async (req: Request, res: Response): Promise<void> => {
+  const { reservationId } = req.params;
+  const deletedReservation = await Reservation.findByIdAndDelete(reservationId);
+  if (!deletedReservation) {
+    res.status(404).json({ message: "Reservation not found" });
+    return;
+  }
+  res.status(200).send("Reservation deleted");
+};

@@ -1,5 +1,5 @@
-import { type IReservation, ReservationStatus } from "@repo/types/reservations";
-import mongoose, { Schema, type Document } from "mongoose";
+import { type IReservation, ReservationStatus } from "@repo/types";
+import { Schema, model, type Document } from "mongoose";
 
 export interface ReservationDoc extends Omit<IReservation, "_id">, Document {}
 
@@ -17,4 +17,4 @@ const ReservationSchema: Schema = new Schema(
   },
 );
 
-export const Reservation = mongoose.model<IReservation>("Reservation", ReservationSchema);
+export const Reservation = model<IReservation>("Reservation", ReservationSchema);

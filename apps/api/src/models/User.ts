@@ -1,4 +1,4 @@
-import { Roles, type IUser } from "@repo/types/users";
+import { Roles, type IUser } from "@repo/types";
 import { Schema, model, type Document } from "mongoose";
 
 export interface UserDocument extends Omit<IUser, "_id">, Document {}

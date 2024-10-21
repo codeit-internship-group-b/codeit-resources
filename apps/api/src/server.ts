@@ -3,6 +3,7 @@ import cors from "cors";
 import { config } from "dotenv";
 import express, { json } from "express";
 import { connectDatabase } from "./database";
+import reservationRouter from "./routes/reservationRoutes";
 
 config();
 
@@ -20,6 +21,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(json());
 app.set("port", PORT);
+app.use("/reservations", reservationRouter);
 
 // 여기서 middleware 추가?
 // app.use("/api/v1/users", userRouter);

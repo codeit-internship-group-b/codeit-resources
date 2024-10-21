@@ -1,4 +1,5 @@
-import { type IItem, ItemStatus, ItemTypes } from "@repo/types/items";
+import { type IItem } from "@repo/types";
+import { ItemStatus, ItemTypes } from "@repo/types/items";
 import mongoose, { Schema, type Document } from "mongoose";
 
 export interface ItemDoc extends Omit<IItem, "_id">, Document {}
