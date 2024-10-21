@@ -1,5 +1,5 @@
-import { IItem, ItemStatus, ItemTypes } from "@repo/types/items";
-import mongoose, { Schema, Document } from "mongoose";
+import { type IItem, ItemStatus, ItemTypes } from "@repo/types/items";
+import mongoose, { Schema, type Document } from "mongoose";
 
 export interface ItemDoc extends Omit<IItem, "_id">, Document {}
 
@@ -22,7 +22,7 @@ const ItemSchema: Schema = new Schema(
 // Room 타입 하위 스키마
 export const Item = mongoose.model<IItem>("Item", ItemSchema);
 
-interface IRoom extends IItem {
+interface Room extends IItem {
   location: string;
   tags?: string[];
   capacity?: number;
@@ -34,10 +34,10 @@ const RoomSchema: Schema = new Schema({
   capacity: { type: Number },
 });
 
-export const Room = Item.discriminator<IRoom>("Room", RoomSchema);
+export const Room = Item.discriminator<Room>("Room", RoomSchema);
 
 // Seat 타입 하위 스키마
-interface ISeat extends IItem {
+interface Seat extends IItem {
   tags?: string[];
 }
 
@@ -45,10 +45,10 @@ const SeatSchema: Schema = new Schema({
   tags: { type: [String] },
 });
 
-export const Seat = Item.discriminator<ISeat>("Seat", SeatSchema);
+export const Seat = Item.discriminator<Seat>("Seat", SeatSchema);
 
 // Equipment 타입 하위 스키마
-interface IEquipment extends IItem {
+interface Equipment extends IItem {
   tags?: string[];
 }
 
@@ -56,4 +56,4 @@ const EquipmentSchema: Schema = new Schema({
   tags: { type: [String] },
 });
 
-export const Equipment = Item.discriminator<IEquipment>("Equipment", EquipmentSchema);
+export const Equipment = Item.discriminator<Equipment>("Equipment", EquipmentSchema);

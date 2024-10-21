@@ -26,6 +26,7 @@ module.exports = {
     // Turborepo custom eslint configuration configures the following rules:
     //  - https://github.com/vercel/turborepo/blob/main/packages/eslint-plugin-turbo/docs/rules/no-undeclared-env-vars.md
     "eslint-config-turbo",
+    "plugin:jsx-a11y/recommended",
   ],
   parserOptions: {
     project,
@@ -38,7 +39,7 @@ module.exports = {
     node: true,
     browser: true,
   },
-  plugins: ["only-warn"],
+  plugins: ["only-warn", "jsx-a11y"],
   settings: {
     "import/resolver": {
       typescript: {

@@ -3,7 +3,7 @@ export type TRole = (typeof Roles)[number];
 
 export interface IUser {
   _id: string;
-  username: string;
+  name: string;
   email: string;
   password: string;
   role: TRole;

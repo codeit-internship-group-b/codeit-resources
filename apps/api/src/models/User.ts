@@ -1,16 +1,15 @@
-import { IUser, Roles } from "@repo/types/users";
-import { Document, Schema, model } from "mongoose";
+import { Roles, type IUser } from "@repo/types/users";
+import { Schema, model, type Document } from "mongoose";
 
-export interface UserDoc extends Omit<IUser, "_id">, Document {}
+export interface UserDocument extends Omit<IUser, "_id">, Document {}
 
-const UserSchema: Schema = new Schema(
+const UserSchema = new Schema<UserDocument>(
   {
-    username: { type: String, required: true, unique: true },
+    name: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     role: { type: String, enum: Roles, default: "member" },
     profileImage: { type: String, default: "" },
-    department: { type: String },
   },
   {
     timestamps: {
@@ -20,4 +19,4 @@ const UserSchema: Schema = new Schema(
   },
 );
 
-export const User = model<IUser>("User", UserSchema);
+export const User = model<UserDocument>("User", UserSchema);

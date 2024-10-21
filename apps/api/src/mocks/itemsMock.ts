@@ -1,6 +1,6 @@
-import { ItemDoc } from "../models/Item";
+import { IItem } from "@repo/types/items";
 
-export const itemsMock: Partial<ItemDoc>[] = [
+export const itemsMock: IItem[] = [
   {
     _id: "item1",
     name: "Room A",

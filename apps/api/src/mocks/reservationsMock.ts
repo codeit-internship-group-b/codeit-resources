@@ -1,6 +1,6 @@
-import { ReservationDoc } from "../models/Reservation";
+import { IReservation } from "@repo/types/reservations";
 
-export const reservationsMock: Partial<ReservationDoc>[] = [
+export const reservationsMock: IReservation[] = [
   {
     _id: "1",
     userId: "user1",

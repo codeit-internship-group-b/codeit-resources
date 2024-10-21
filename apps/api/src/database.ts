@@ -1,13 +1,23 @@
-import mongoose from "mongoose";
+import { connect } from "mongoose";
+import { config } from "dotenv";
 
-const DATABASE_URL = process.env.DATABASE_URL as string;
+config();
 
-export const connectDatabase = async () => {
+const DATABASE_URL = process.env.DATABASE_URL;
+
+if (!DATABASE_URL) {
+  throw new Error("DATABASE_URL is not defined");
+}
+
+export const connectDatabase = async (): Promise<void> => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI as string);
+    await connect(DATABASE_URL);
     console.log("Connected to MongoDB");
-  } catch (error) {
-    console.error("MongoDB connection error:", error);
-    process.exit(1);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error(`MongoDB connection error: ${error.message}`);
+    } else {
+      throw new Error("Unknown MongoDB connection error");
+    }
   }
 };
