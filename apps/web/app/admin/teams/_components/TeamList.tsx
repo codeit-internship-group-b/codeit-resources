@@ -1,11 +1,10 @@
 "use client";
 
 import { BurgerIcon } from "@ui/public";
-import Dropdown from "@ui/src/components/common/Dropdown";
-import Modal from "@ui/src/components/common/Modal";
 import { useOnClickOutside } from "@ui/src/hooks/useOnClickOutside";
 import cn from "@ui/src/utils/cn";
 import { useRef, useState } from "react";
+import TeamSettingsDropdown from "./TeamSettingsDropdown";
 
 export default function TeamList(): JSX.Element {
   const [isModify, setIsModify] = useState(false);
@@ -32,7 +31,7 @@ export default function TeamList(): JSX.Element {
           {isModify ? (
             <input
               placeholder="팀 이름"
-              className="w-full placeholder:text-gray-500 placeholder:underline-offset-1 focus:outline-none"
+              className="placeholder:text-custom-black/50 w-full placeholder:underline placeholder:underline-offset-4 focus:outline-none"
               onChange={(e) => {
                 setChangeName(e.target.value);
               }}
@@ -48,45 +47,7 @@ export default function TeamList(): JSX.Element {
             "Management"
           )}
         </span>
-        <Modal.Root>
-          <Dropdown
-            selectedValue={isModify}
-            onSelect={(value: string | boolean) => {
-              if (value === "수정") {
-                setIsModify((prev) => !prev);
-              }
-            }}
-            size="sm"
-          >
-            <Dropdown.Toggle iconType="kebab" />
-            <Dropdown.Wrapper className="-left-30 top-56">
-              <Dropdown.Item hoverStyle="purple" value="수정">
-                이름 편집
-              </Dropdown.Item>
-              <Modal.Trigger>
-                <Dropdown.Item hoverStyle="purple" value="삭제">
-                  삭제
-                </Dropdown.Item>
-              </Modal.Trigger>
-            </Dropdown.Wrapper>
-          </Dropdown>
-          <Modal.Content>
-            <Modal.Title>땡땡팀을 삭제하시겠습니까?</Modal.Title>
-            <Modal.Description>
-              삭제 시, 해당 팀은 더 이상 목록에서 보이지 않으며,
-              <br className="hidden md:block" /> 해당 계정으로 로그인이 불가합니다.
-            </Modal.Description>
-            <Modal.Close
-              onConfirm={() => {
-                // TODO: 삭제 로직 작성
-              }}
-              confirmText="확인"
-              cancelText="취소"
-            >
-              예
-            </Modal.Close>
-          </Modal.Content>
-        </Modal.Root>
+        <TeamSettingsDropdown isModify={isModify} setIsModify={setIsModify} />
       </div>
     </div>
   );
