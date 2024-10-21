@@ -3,11 +3,11 @@
 import React, { type ReactNode, useState } from "react";
 import Sidebar from "./index";
 
-interface LayoutProps {
+interface SideLayoutProps {
   children: ReactNode;
 }
 
-function Layout(props: LayoutProps): JSX.Element {
+export default function SideLayout(props: SideLayoutProps): JSX.Element {
   const { children } = props;
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -35,5 +35,3 @@ function Layout(props: LayoutProps): JSX.Element {
     </div>
   );
 }
-
-export default Layout;

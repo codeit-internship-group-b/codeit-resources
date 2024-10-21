@@ -25,7 +25,7 @@ interface SidebarProps {
  * 
  */
 
-function Sidebar(props: SidebarProps): JSX.Element {
+export default function Sidebar(props: SidebarProps): JSX.Element {
   const { isOpen, onClose } = props;
   return (
     <div
@@ -33,19 +33,14 @@ function Sidebar(props: SidebarProps): JSX.Element {
         isOpen ? "translate-x-0" : "translate-x-full"
       }`}
     >
-      <button
-        type="button"
+      <DoubleChevron
         className="my-8 ml-8 size-40 cursor-pointer p-8"
         onClick={() => {
           onClose();
         }}
-      >
-        <DoubleChevron />
-      </button>
+      />
 
       <div className="px-32">사이드바 내용입니당</div>
     </div>
   );
 }
-
-export default Sidebar;
