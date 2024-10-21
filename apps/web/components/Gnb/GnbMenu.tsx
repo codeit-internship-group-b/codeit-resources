@@ -1,6 +1,7 @@
+ 
 "use client";
 
-import { PersonIcon, MeetingIcon, SeatsIcon, EquipmentIcon } from "@repo/ui/public";
+import { PersonIcon, MeetingIcon, SeatsIcon, EquipmentIcon, TeamIcon } from "@repo/ui/public";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { clsx } from "clsx";
@@ -13,7 +14,8 @@ const NAV_ITEMS = [
 ];
 
 const ADMIN_ITEMS = [
-  { href: "/admin/dashboard", name: "멤버 관리", icon: PersonIcon },
+  { href: "/admin/members", name: "멤버 관리", icon: PersonIcon },
+  { href: "/admin/teams", name: "팀 관리", icon: TeamIcon },
   { href: "/admin/meetings", name: "회의실 설정", icon: MeetingIcon },
   { href: "/admin/seats", name: "좌석 설정", icon: SeatsIcon },
   { href: "/admin/equipment", name: "장비 설정", icon: EquipmentIcon },
