@@ -1,3 +1,6 @@
+/* eslint-disable eqeqeq */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 "use client";
 
 import { type ReactNode, useContext } from "react";

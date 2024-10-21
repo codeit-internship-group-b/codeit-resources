@@ -9,7 +9,7 @@ const meta = {
     variant: {
       control: {
         type: "select",
-        options: ["Action", "primary", "secondary", "Tertiary", "TertiaryColor", "Text", "TextColor"],
+        options: ["Action", "Primary", "Secondary", "Tertiary", "TertiaryColor", "Text", "TextColor"],
       },
     },
     isActive: {
