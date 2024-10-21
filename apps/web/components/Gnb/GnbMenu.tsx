@@ -1,4 +1,3 @@
- 
 "use client";
 
 import { PersonIcon, MeetingIcon, SeatsIcon, EquipmentIcon, TeamIcon } from "@repo/ui/public";
@@ -10,15 +9,16 @@ const NAV_ITEMS = [
   { href: "/dashboard", name: "대시보드", icon: PersonIcon },
   { href: "/meetings", name: "회의실", icon: MeetingIcon },
   { href: "/seats", name: "좌석", icon: SeatsIcon },
-  { href: "/equipment", name: "장비", icon: EquipmentIcon },
+  { href: "/equipments", name: "장비", icon: EquipmentIcon },
 ];
 
 const ADMIN_ITEMS = [
   { href: "/admin/members", name: "멤버 관리", icon: PersonIcon },
+   
   { href: "/admin/teams", name: "팀 관리", icon: TeamIcon },
   { href: "/admin/meetings", name: "회의실 설정", icon: MeetingIcon },
   { href: "/admin/seats", name: "좌석 설정", icon: SeatsIcon },
-  { href: "/admin/equipment", name: "장비 설정", icon: EquipmentIcon },
+  { href: "/admin/equipments", name: "장비 설정", icon: EquipmentIcon },
 ];
 
 interface GnbMenuProps {
@@ -40,10 +40,8 @@ export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element {
                 isActive ? "md:bg-gray-300" : "md:hover:bg-gray-300",
               )}
             >
-              <Icon className={clsx("stroke-current md:text-white/60", isActive ? "text-white" : "text-white/60")} />
-              <div className={clsx("text-12 md:text-16 md:text-white/60", isActive ? "text-white" : "text-white/60")}>
-                {name}
-              </div>
+              <Icon className={clsx("stroke-current", isActive ? "text-white" : "text-white/60")} />
+              <div className={clsx("text-12 md:text-16", isActive ? "text-white" : "text-white/60")}>{name}</div>
             </div>
           </Link>
         );
@@ -62,14 +60,8 @@ export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element {
                     isActive ? "md:bg-gray-300" : "md:hover:bg-gray-300",
                   )}
                 >
-                  <Icon
-                    className={clsx("stroke-current md:text-white/60", isActive ? "text-white" : "text-white/60")}
-                  />
-                  <div
-                    className={clsx("md:text-16 text-12 md:text-white/60", isActive ? "text-white" : "text-white/60")}
-                  >
-                    {name}
-                  </div>
+                  <Icon className={clsx("stroke-current", isActive ? "text-white" : "text-white/60")} />
+                  <div className={clsx("md:text-16 text-12", isActive ? "text-white" : "text-white/60")}>{name}</div>
                 </div>
               </Link>
             );
