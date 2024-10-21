@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { createContext, ReactNode, useCallback, useContext, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import cn from "@ui/src/utils/cn";
 import { handleKeyPress } from "@ui/src/utils/handleKeyPress";
@@ -13,20 +13,18 @@ const DropdownContext = createContext({
   isOpen: false,
   isError: false,
   errorMessage: "",
-  selectedValue: "",
+  selectedValue: "" as string | boolean, // 수정: string | boolean 허용
   size: "md",
   toggleDropdown: () => {},
   closeDropdown: () => {},
-  // eslint-disable-next-line no-unused-vars
-  selectedItem: (value: string) => {},
+  selectedItem: (value: string | boolean) => {}, // 수정: string | boolean 허용
 });
 
 interface DropdownProps {
   children: ReactNode;
-  selectedValue: string;
+  selectedValue: string | boolean; // 수정: string | boolean 허용
   size?: "sm" | "md";
-  // eslint-disable-next-line no-unused-vars
-  onSelect: (value: string) => void;
+  onSelect: (value: string | boolean) => void; // 수정: string | boolean 허용
   isError?: boolean;
   errorMessage?: string;
 }
@@ -46,7 +44,7 @@ export default function Dropdown({
   const closeDropdown = useCallback(() => setIsOpen(false), []);
 
   const selectedItem = useCallback(
-    (value: string) => {
+    (value: string | boolean) => {
       onSelect(value);
       closeDropdown();
     },
@@ -83,7 +81,7 @@ function Toggle({ children, title, iconType = "none" }: ToggleProps): JSX.Elemen
     <div className="group relative">
       {iconType === "kebab" && (
         <KebabIcon
-          className="cursor-pointer"
+          className="hover:bg-custom-black/5 cursor-pointer hover:rounded-full"
           onClick={toggleDropdown}
           onKeyDown={(e) => handleKeyPress(e, toggleDropdown)}
         />
@@ -95,7 +93,7 @@ function Toggle({ children, title, iconType = "none" }: ToggleProps): JSX.Elemen
           className="rounded-6 flex items-center gap-2 bg-gray-400 px-6 py-4"
         >
           <SortIcon />
-          <span className="text-custom-black/60 text-12 font-medium">{selectedValue}</span>
+          <span className="text-custom-black/60 text-12 font-medium">{selectedValue.toString()}</span>{" "}
         </button>
       )}
       {title && (
@@ -126,7 +124,7 @@ function Toggle({ children, title, iconType = "none" }: ToggleProps): JSX.Elemen
             onKeyDown={(e) => handleKeyPress(e, toggleDropdown)}
             aria-expanded={isOpen}
           >
-            {selectedValue ? selectedValue : <span>{children}</span>}
+            {selectedValue ? selectedValue.toString() : <span>{children}</span>} {/* boolean일 경우 문자열로 변환 */}
             <TriangleIcon
               className={cn(
                 "transition-linear size-12",
@@ -172,23 +170,25 @@ function Wrapper({ children, className }: WrapperProps): JSX.Element {
 
 interface ItemProps {
   children: ReactNode;
-  value: string;
+  value: string | boolean; // 수정: string | boolean 허용
   position?: "left" | "center";
+  hoverStyle?: "gray" | "purple";
 }
 
-function Item({ children, value, position = "center" }: ItemProps): JSX.Element {
+function Item({ children, value, position = "center", hoverStyle = "gray" }: ItemProps): JSX.Element {
   const { selectedItem, selectedValue, size } = useContext(DropdownContext);
   const isSelected = selectedValue === value;
 
   return (
     <button
       className={cn(
-        "transition-linear text-custom-black/80 rounded-8 relative w-full px-12 py-6 hover:bg-gray-400 focus:bg-purple-700/5 focus:text-purple-900",
+        "transition-linear text-custom-black/80 rounded-8 relative w-full px-12 py-6 focus:bg-purple-700/5 focus:!text-purple-900",
         {
           "bg-purple-700/5 !text-purple-900 hover:bg-purple-700/5": isSelected,
           "text-left": position === "left",
         },
-        size === "md" ? "px-12 py-6" : "text-14 px-16 py-6",
+        hoverStyle === "gray" ? "hover:bg-gray-400" : "hover:bg-purple-700/5 hover:!text-purple-900",
+        size === "md" ? "px-12 py-6" : "text-15 px-1 py-6",
       )}
       onClick={() => selectedItem(value)}
       onKeyDown={(e) => handleKeyPress(e, () => selectedItem(value))}
