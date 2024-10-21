@@ -4,9 +4,21 @@ module.exports = {
   extends: ["@repo/eslint-config/next.js"],
   parser: "@typescript-eslint/parser",
   parserOptions: {
-    project: true,
+    project: "./tsconfig.json",
+    tsconfigRootDir: __dirname,
   },
-  ignorePatterns: ["postcss.config.cjs", "tailwind.config.ts", "__mocks__/**", "jest.config.ts", "out/", ".next/"],
+  ignorePatterns: [
+    "postcss.config.js",
+    "tailwind.config.ts",
+    "__mocks__/**",
+    "jest.config.cjs",
+    "out/_next/**",
+    "**/*.buildManifest.js",
+    "**/*.ssgManifest.js",
+    "**/*.chunks/**/*.js",
+    "out/",
+    ".next/",
+  ],
   env: {
     jest: true,
   },
