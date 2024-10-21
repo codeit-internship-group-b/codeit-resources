@@ -1,4 +1,6 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 "use client";
 import {
   cloneElement,
@@ -6,7 +8,6 @@ import {
   type ReactNode,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
   useRef,
   useState,
@@ -18,7 +19,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import cn from "@ui/src/utils/cn";
 import { handleKeyPress } from "@ui/src/utils/handleKeyPress";
 import { RightIcon, TriangleIcon, SearchIcon } from "@ui/public";
-import { useEscapeKey } from "@ui/src/hooks/useEscapeKey";
+import useEscapeKey from "@ui/src/hooks/useEscapeKey";
 import { useOnClickOutside } from "@ui/src/hooks/useOnClickOutside";
 
 const DropdownContext = createContext({
@@ -190,7 +191,11 @@ function Item({ children, value }: ItemProps): JSX.Element {
       onClick={() => {
         selectedItem(value);
       }}
-      onKeyDown={(e) => handleKeyPress(e, () => selectedItem(value))}
+      onKeyDown={(e) =>
+        handleKeyPress(e, () => {
+          selectedItem(value);
+        })
+      }
       tabIndex={0}
     >
       {isSelected ? (

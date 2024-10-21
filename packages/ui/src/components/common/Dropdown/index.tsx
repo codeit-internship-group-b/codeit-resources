@@ -6,7 +6,7 @@ import cn from "@ui/src/utils/cn";
 import { handleKeyPress } from "@ui/src/utils/handleKeyPress";
 import ErrorMessage from "../ErrorMessage";
 import { KebabIcon, RightIcon, SortIcon, TriangleIcon } from "@ui/public";
-import { useEscapeKey } from "@ui/src/hooks/useEscapeKey";
+import useEscapeKey from "@ui/src/hooks/useEscapeKey";
 import { useOnClickOutside } from "@ui/src/hooks/useOnClickOutside";
 
 const DropdownContext = createContext({

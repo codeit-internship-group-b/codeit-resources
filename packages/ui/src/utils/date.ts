@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { DAY_NAMES } from "@ui/src/utils/constants/dayNames";
 
 /**
@@ -56,19 +59,15 @@ export const formatDate = (date: Date, page: string): string => {
   if (page === "meetings") {
     const dayOfWeek = DAY_NAMES[date.getDay()];
     return `${date.getDate()}일 (${dayOfWeek})`;
-  } else {
-    return `${String(date.getMonth() + 1)}월 ${String(date.getDate())}일`;
   }
+  return `${String(date.getMonth() + 1)}월 ${String(date.getDate())}일`;
 };
 
 /**
  * 주어진 연도, 월, 일 객체를 YYYY-MM-DD 형식의 문자열로 포맷팅합니다.
  *
  * @param date - 연도(year), 월(month), 일(day)을 포함하는 객체
- *   @property year - 연도 (예: 2024)
- *   @property month - 월 (1월 = 1, 12월 = 12)
- *   @property day - 일 (1일부터 31일까지의 값)
- * @returns {string} YYYY-MM-DD 형식으로 포맷팅된 날짜 문자열
+ * @returns YYYY-MM-DD 형식으로 포맷팅된 날짜 문자열
  */
 export const formatSelectedDate = (date: { year: number; month: number; day: number }): string => {
   return `${String(date.year)}-${String(date.month).padStart(2, "0")}-${String(date.day).padStart(2, "0")}`;
