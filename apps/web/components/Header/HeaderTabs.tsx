@@ -1,10 +1,9 @@
 "use client";
 
 import cn from "@ui/src/utils/cn";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { formatDate, getDatesForSeats, getDatesFromToday, formatSelectedDate } from "@ui/src/utils/date";
-import { useRouter } from "next/navigation";
+import { formatDate, getDatesForSeats, getDatesFromToday } from "@ui/src/utils/date";
 import { useDateStore } from "@/app/store/useDateStore";
 
 interface HeaderProps {
@@ -15,12 +14,6 @@ export default function HeaderTabs({ page }: HeaderProps): JSX.Element {
   const { selectedDate, setSelectedDate } = useDateStore();
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const dates = page === "seats" ? getDatesForSeats(2) : getDatesFromToday(selectedDate.year, selectedDate.month, 3);
-  const router = useRouter();
-
-  useEffect(() => {
-    const formattedDate = formatSelectedDate(selectedDate);
-    router.push(`/${page}?date=${formattedDate}`);
-  }, [selectedDate, router, page]);
 
   const handleActiveTab = (index: number): void => {
     setActiveTabIndex(index);

@@ -49,7 +49,7 @@ export const getDatesForSeats = (dayCount: number): Date[] => {
  * @returns 포맷팅된 날짜 문자열
  */
 export const formatDate = (date: Date, page: string): string => {
-  if (!(date instanceof Date) || isNaN(date.getTime())) {
+  if (!(date instanceof Date) || Number.isNaN(date.getTime())) {
     throw new Error("유효하지 않은 날짜 객체입니다.");
   }
 

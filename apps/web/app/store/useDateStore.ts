@@ -34,13 +34,45 @@ const calculateNewDate = (year: number, month: number, day: number): { newDate: 
   return { newDate, dayOfWeek };
 };
 
+interface SelectedDate {
+  year: number;
+  month: number;
+  day: number;
+  dayOfWeek: string;
+}
+
+const parseDateFromUrl = (searchParams: URLSearchParams): SelectedDate => {
+  const urlDate = searchParams.get("date");
+  if (urlDate) {
+    const parsedDate = new Date(urlDate);
+    if (!isNaN(parsedDate.getTime())) {
+      return {
+        year: parsedDate.getFullYear(),
+        month: parsedDate.getMonth() + 1,
+        day: parsedDate.getDate(),
+        dayOfWeek: getDayOfWeek(parsedDate),
+      };
+    }
+  }
+  // URL에 유효한 date가 없으면 오늘 날짜 반환
+  const today = new Date();
+  return {
+    year: today.getFullYear(),
+    month: today.getMonth() + 1,
+    day: today.getDate(),
+    dayOfWeek: getDayOfWeek(today),
+  };
+};
+
 export const useDateStore = create<DateStore>((set) => ({
-  selectedDate: {
-    year: new Date().getFullYear(),
-    month: new Date().getMonth() + 1,
-    day: new Date().getDate(),
-    dayOfWeek: getDayOfWeek(new Date()),
-  },
+  selectedDate: parseDateFromUrl(new URLSearchParams(window.location.search)), // URL에서 date를 읽어와 초기화
+
+  // selectedDate: {
+  //   year: new Date().getFullYear(),
+  //   month: new Date().getMonth() + 1,
+  //   day: new Date().getDate(),
+  //   dayOfWeek: getDayOfWeek(new Date()),
+  // },
 
   // 전체 날짜 객체를 한 번에 설정하는 함수
   setSelectedDate: (date) => {
@@ -67,6 +99,7 @@ export const useDateStore = create<DateStore>((set) => ({
   // 월만 업데이트하는 함수
   setSelectedMonth: (month) => {
     set((state) => {
+      if (state.selectedDate.month === month) return state;
       const { year, day } = state.selectedDate;
       const { dayOfWeek } = calculateNewDate(year, month, day);
       return {
