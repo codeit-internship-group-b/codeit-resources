@@ -34,6 +34,7 @@ const config: Omit<Config, "content"> = {
           600: "#54009E",
           700: "#9933FF",
           800: "#7200CC",
+          900: "#760DDE",
         },
         "custom-black": "#333236",
         error: "#D6173A",
@@ -43,9 +44,12 @@ const config: Omit<Config, "content"> = {
           30: "#888893",
           40: "#999CAC",
           50: "#181B28",
+          60: "#F6F6F8",
           100: "#DDDEE4",
           200: "#413B54",
           300: "#3C3B40",
+          400: "#EDEDF0",
+          500: "#E5E5EA",
         },
         magenta: {
           100: "#EB008D",
@@ -121,6 +125,23 @@ const config: Omit<Config, "content"> = {
       "xxs-semibold": ["11px", { lineHeight: "18px", fontWeight: "600" }],
       "xxs-medium": ["11px", { lineHeight: "18px", fontWeight: "500" }],
       "xxs-regular": ["11px", { lineHeight: "18px", fontWeight: "400" }],
+    },
+    keyframes: {
+      rotateIn: {
+        "0%": { transform: "rotate(0deg)" },
+        "100%": { transform: "rotate(180deg)" },
+      },
+      rotateOut: {
+        "0%": { transform: "rotate(180deg)" },
+        "100%": { transform: "rotate(0deg)" },
+      },
+    },
+    animation: {
+      "rotate-in": "rotateIn 0.3s ease-in-out",
+      "rotate-out": "rotateOut 0.3s ease-in-out",
+    },
+    boxShadow: {
+      custom: "0 2px 4px 0 rgba(51, 50, 54, 0.06)", // X: 0, Y: 2, Blur: 4, Spread: 0, 색상: #333236/6
     },
   },
   plugins: [],
