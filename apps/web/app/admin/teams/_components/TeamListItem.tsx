@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import Dropdown from "@ui/src/components/common/Dropdown";
 import { Modal } from "@ui/index";
 import { useOnClickOutside } from "@ui/src/hooks/useOnClickOutside";
-import ListItem from "@/components/ListItem";
+import ListItem from "@ui/src/components/common/ListItem";
 
 interface TeamSettingsDropdownProps {
   teamName: string;
@@ -22,7 +22,7 @@ export default function TeamListItem({ teamName }: TeamSettingsDropdownProps): J
   });
 
   return (
-    <ListItem type="member" isModify={isModify}>
+    <ListItem isModify={isModify}>
       <span className="flex flex-grow items-center gap-32 text-left">
         {isModify ? (
           <input
