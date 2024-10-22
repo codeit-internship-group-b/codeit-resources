@@ -1,6 +1,5 @@
-import { type IItem } from "@repo/types";
-import { ItemStatus, ItemTypes } from "@repo/types/items";
-import mongoose, { Schema, type Document } from "mongoose";
+import { type IItem, ItemStatus, ItemTypes } from "@repo/types/src/itemType";
+import { Schema, type Document, model } from "mongoose";
 
 export interface ItemDoc extends Omit<IItem, "_id">, Document {}
 
@@ -21,18 +20,21 @@ const ItemSchema: Schema = new Schema(
 );
 
 // Room 타입 하위 스키마
-export const Item = mongoose.model<IItem>("Item", ItemSchema);
+export const Item = model<IItem>("Item", ItemSchema);
 
 interface Room extends IItem {
+  category: string;
   location: string;
   tags?: string[];
   capacity?: number;
 }
 
 const RoomSchema: Schema = new Schema({
+  type: { type: String, default: "room", required: true },
+  category: { type: String, required: true },
+  capacity: { type: Number, required: true },
   location: { type: String },
   tags: { type: [String] },
-  capacity: { type: Number },
 });
 
 export const Room = Item.discriminator<Room>("Room", RoomSchema);
@@ -43,6 +45,7 @@ interface Seat extends IItem {
 }
 
 const SeatSchema: Schema = new Schema({
+  type: { type: String, default: "seat", required: true },
   tags: { type: [String] },
 });
 
@@ -50,10 +53,13 @@ export const Seat = Item.discriminator<Seat>("Seat", SeatSchema);
 
 // Equipment 타입 하위 스키마
 interface Equipment extends IItem {
+  category: string;
   tags?: string[];
 }
 
 const EquipmentSchema: Schema = new Schema({
+  type: { type: String, default: "equipment", required: true },
+  category: { type: String, required: true },
   tags: { type: [String] },
 });
 

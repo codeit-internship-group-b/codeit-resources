@@ -5,7 +5,7 @@ import * as reservationController from "../controllers/reservationControllers";
 const reservationRouter: Router = Router();
 
 const {
-  getAllReservations,
+  getAllReservationsByDate,
   getUserReservations,
   getReservationsByTypeAndDate,
   createReservation,
@@ -14,7 +14,7 @@ const {
 } = reservationController;
 
 // 예약 전체 조회
-reservationRouter.get("/", asyncHandler(getAllReservations));
+reservationRouter.get("/", asyncHandler(getAllReservationsByDate));
 
 // 특정 유저의 예약 조회
 reservationRouter.get("/user/:userId", asyncHandler(getUserReservations));

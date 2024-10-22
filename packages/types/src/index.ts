@@ -1,3 +1,3 @@
-export * from "./items";
-export * from "./users";
-export * from "./reservations";
+export * from "./itemType";
+export * from "./userType";
+export * from "./reservationType";

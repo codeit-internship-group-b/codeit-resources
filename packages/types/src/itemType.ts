@@ -1,10 +1,10 @@
 export const ItemStatus = ["available", "reserved", "in-use", "unavailable"] as const; // 예약가능, 예약됨, 대여중, 사용불가
-export type TItemStatus = (typeof ItemStatus)[number];
+type TItemStatus = (typeof ItemStatus)[number];
 
 export const ItemTypes = ["seat", "room", "equipment"] as const;
-export type TItemType = (typeof ItemTypes)[number];
+type TItemType = (typeof ItemTypes)[number];
 
-interface IItem {
+export interface IItem {
   _id: string;
   name: string;
   type: TItemType;
@@ -13,10 +13,9 @@ interface IItem {
   createdAt: Date;
   updatedAt: Date;
   createdBy: string; // 리소스를 등록한 관리자 ID (User의 id)
-  location?: string;
+  category?: string; // 회의실인 경우 필수
+  location?: string; // Optional
   imageUrl?: string; // Optional
   tags?: string[]; // Optional
-  capacity?: number;
+  capacity?: number; // 회의실인 경우 필수
 }
-
-export default IItem;

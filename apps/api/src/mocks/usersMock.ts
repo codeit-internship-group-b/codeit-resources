@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { type IUser } from "@repo/types/users";
+import { type IUser } from "@repo/types/src/userType";
 
 const usersMock: Partial<IUser>[] = [
   {

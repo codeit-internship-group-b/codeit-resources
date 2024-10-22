@@ -1,7 +1,7 @@
 export const Roles = ["admin", "member"] as const;
-export type TRole = (typeof Roles)[number];
+type TRole = (typeof Roles)[number];
 
-interface IUser {
+export interface IUser {
   _id: string;
   name: string;
   email: string;
@@ -12,5 +12,3 @@ interface IUser {
   createdAt: Date;
   updatedAt: Date;
 }
-
-export default IUser;

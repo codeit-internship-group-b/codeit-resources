@@ -1,23 +1,62 @@
 import { type Request, type Response } from "express";
-import { type IReservation } from "@repo/types";
+import { type IReservation } from "@repo/types/src/reservationType";
 import { Item } from "../models";
-import { Reservation } from "../models/Reservation";
+import { Reservation } from "../models/reservationModel";
 
-// 예약 전체 조회
-export const getAllReservations = async (req: Request, res: Response): Promise<void> => {
+// 특정 날짜 예약 전체 조회
+export const getAllReservationsByDate = async (req: Request, res: Response): Promise<void> => {
+  const { date } = req.query;
+  if (!date || typeof date !== "string") {
+    res.status(400).json({ message: "날짜 형식이 잘못되었습니다." });
+    return;
+  }
   const reservations: IReservation[] = await Reservation.find();
   res.status(200).json(reservations);
 };
 
-// 특정 유저의 예약 조회
+// 특정 유저의 오늘 날짜 예약 조회
 export const getUserReservations = async (req: Request, res: Response): Promise<void> => {
   const { userId } = req.params;
-  const userReservations: IReservation[] = await Reservation.find({ userId });
+  const today = new Date();
+  const startOfDay = new Date(today.setUTCHours(0, 0, 0, 0));
+  const endOfDay = new Date(today.setUTCHours(23, 59, 59, 999));
+
+  const userReservations: IReservation[] = await Reservation.find({
+    userId,
+    startAt: { $gte: startOfDay, $lte: endOfDay },
+  }).sort({ startAt: 1 });
   if (!userReservations.length) {
     res.status(404).json({ message: "해당 유저의 예약이 없습니다." });
     return;
   }
-  res.status(200).json(userReservations);
+
+  const itemIds = userReservations.map((reservation) => reservation.itemId);
+  const items = await Item.find({ _id: { $in: itemIds } });
+
+  const reservationsByType = {
+    seat: [] as IReservation[],
+    room: [] as IReservation[],
+    equipment: [] as IReservation[],
+  };
+
+  userReservations.forEach((reservation) => {
+    const item = items.find((i) => i._id.toString() === reservation.itemId);
+    if (item) {
+      switch (item.type) {
+        case "seat":
+          reservationsByType.seat.push(reservation);
+          break;
+        case "room":
+          reservationsByType.room.push(reservation);
+          break;
+        case "equipment":
+          reservationsByType.equipment.push(reservation);
+          break;
+      }
+    }
+  });
+
+  res.status(200).json(reservationsByType);
 };
 
 // 아이템 타입 및 날짜에 대한 예약 조회
