@@ -3,12 +3,13 @@
 import { useState } from "react";
 import { Sheet } from "react-modal-sheet";
 
-export default function SnapSheet() {
+export default function SnapSheet(): JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
       <button
+        type="button"
         onClick={() => {
           setIsOpen(true);
         }}

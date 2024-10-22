@@ -1,6 +1,7 @@
 import { BurgerIcon } from "@ui/public";
+import { memo } from "react";
 
-export default function TeamListSkeleton(): JSX.Element {
+function TeamListSkeleton(): JSX.Element {
   return (
     <div className="boder-solid rounded-12 mb-16 flex h-72 items-center justify-between border border-gray-200/10 px-24 py-16">
       <div className="flex flex-grow items-center gap-32 text-left">
@@ -10,3 +11,5 @@ export default function TeamListSkeleton(): JSX.Element {
     </div>
   );
 }
+
+export default memo(TeamListSkeleton);

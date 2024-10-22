@@ -25,7 +25,7 @@ export default function TeamListItem({ teamName }: TeamSettingsDropdownProps): J
   return (
     <div
       className={cn(
-        "boder-solid rounded-12 mb-16 flex h-72 items-center justify-between border border-gray-200/10 px-24 py-16",
+        "rounded-12 mb-16 flex h-72 items-center justify-between border border-solid border-gray-200/10 px-24 py-16",
         "transition-colors duration-300",
         {
           "border-custom-black": isModify,

@@ -93,7 +93,7 @@ function Toggle({ children, title, iconType = "none" }: ToggleProps): JSX.Elemen
           className="rounded-6 flex items-center gap-2 bg-gray-400 px-6 py-4"
         >
           <SortIcon />
-          <span className="text-custom-black/60 text-12 font-medium">{selectedValue.toString()}</span>{" "}
+          <span className="text-custom-black/60 text-12 font-medium">{selectedValue.toString()}</span>
         </button>
       )}
       {title && (
@@ -124,7 +124,7 @@ function Toggle({ children, title, iconType = "none" }: ToggleProps): JSX.Elemen
             onKeyDown={(e) => handleKeyPress(e, toggleDropdown)}
             aria-expanded={isOpen}
           >
-            {selectedValue ? selectedValue.toString() : <span>{children}</span>} {/* boolean일 경우 문자열로 변환 */}
+            {selectedValue !== null && selectedValue !== undefined ? selectedValue.toString() : <span>{children}</span>}
             <TriangleIcon
               className={cn(
                 "transition-linear size-12",
