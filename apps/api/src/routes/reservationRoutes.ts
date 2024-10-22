@@ -1,5 +1,5 @@
-import { Router } from "express";
 import asyncHandler from "express-async-handler";
+import { Router } from "express";
 import * as reservationController from "../controllers/reservationControllers";
 
 const reservationRouter: Router = Router();

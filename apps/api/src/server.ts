@@ -3,7 +3,8 @@ import cors from "cors";
 import { config } from "dotenv";
 import express, { json } from "express";
 import { connectDatabase } from "./database";
-import reservationRouter from "./routes/reservationRoutes";
+import router from "./routes";
+import { errorHandler } from "./middleware/errorHandler";
 
 config();
 
@@ -21,10 +22,11 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(json());
 app.set("port", PORT);
-app.use("/reservations", reservationRouter);
 
-// 여기서 middleware 추가?
-// app.use("/api/v1/users", userRouter);
+app.use("/", router);
+
+// errorHandler 항상 실행
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
