@@ -25,6 +25,7 @@ interface CreateUserRequest extends Request {
     profileImage?: string;
     teams?: string[];
   };
+  file?: Express.Multer.File;
 }
 
 // Get all users
@@ -89,7 +90,7 @@ export const createUser = async (req: CreateUserRequest, res: Response): Promise
     email,
     password: hashedPassword,
     role: role ?? "member",
-    // profileImage: profileImageURL ?? defaultProfileImageURL,
+    profileImage: req.file ? req.file.path : null,
     teams: newTeams,
   });
 

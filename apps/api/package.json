@@ -13,7 +13,6 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.676.0",
     "@repo/types": "workspace:*",
-    "@types/multer": "^1.4.12",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
@@ -22,7 +21,8 @@
     "express-async-handler": "^1.2.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.7.1",
-    "multer": "1.4.5-lts.1"
+    "multer": "1.4.5-lts.1",
+    "multer-s3": "^3.0.1"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
@@ -35,6 +35,8 @@
     "@types/jest": "^29.5.12",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/mongoose": "^5.11.97",
+    "@types/multer": "^1.4.12",
+    "@types/multer-s3": "^3.0.3",
     "@types/node": "^20.11.24",
     "@types/supertest": "^6.0.2",
     "@typescript-eslint/eslint-plugin": "^7.18.0",

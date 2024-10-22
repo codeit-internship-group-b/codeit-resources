@@ -1,6 +1,7 @@
 import { Router } from "express";
 import asyncHandler from "express-async-handler";
 import { getUsers, getUser, createUser } from "../controllers/userController";
+import { upload } from "../utils/multerConfig";
 // import { adminCheckMiddleware } from "../middleware/adminCheckMiddleware";
 
 const userRouter: Router = Router();
@@ -15,7 +16,7 @@ userRouter.get("/:userId", asyncHandler(getUser));
 // 멤버 추가
 // TODO: admin middleware 추가
 // TODO: s3 url middleware 추가
-userRouter.post("/create", asyncHandler(createUser));
+userRouter.post("/create", upload.single("profileImage"), asyncHandler(createUser));
 
 // userRouter.put("/:id", adminCheckMiddleware, updateUser);
 // userRouter.delete("/:id", adminCheckMiddleware, deleteUser);
