@@ -1,5 +1,5 @@
 export const PAGE_NAME = {
-  dashboard: "/hashboard",
+  dashboard: "/dashboard",
   meetings: "/meetings",
   seats: "/seats",
   equipments: "/equipments",
