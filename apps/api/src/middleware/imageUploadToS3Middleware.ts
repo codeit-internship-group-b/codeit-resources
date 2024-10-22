@@ -1,3 +1,6 @@
-// import multer, {} from "multer";
+// import { memoryStorage } from "multer";
 
-// const storage = multer.memoryStorage();
+// const storage = memoryStorage();
+// const upload = multer({ storage });
+
+// export const imageUploadToS3Middleware = async (req, res, next) => {};

@@ -1,7 +1,15 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
-  "globalEnv": ["DATABASE_URL", "JWT_SECRET", "PORT", "CORS_ORIGIN"],
+  "globalEnv": [
+    "DATABASE_URL",
+    "JWT_SECRET",
+    "PORT",
+    "CORS_ORIGIN",
+    "AWS_REGION",
+    "AWS_ACCESS_KEY_ID",
+    "AWS_SECRET_ACCESS_KEY"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
