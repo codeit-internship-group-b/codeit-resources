@@ -19,8 +19,10 @@ import LogoTextIcon from "./svgs/ic_logo-text.svg";
 import LogoCodeitIcon from "./svgs/ic_logo-codeit.svg";
 import ProfileEmptyIcon from "./svgs/ic_profile-empty.svg";
 import SearchIcon from "./svgs/ic_search.svg";
+import TeamIcon from "./svgs/ic_team.svg";
 
 export {
+  TeamIcon,
   SearchIcon,
   ProfileEmptyIcon,
   LogoTextIcon,
