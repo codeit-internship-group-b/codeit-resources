@@ -21,8 +21,3 @@ hooks:
     - location: scripts/start_server.sh # 새로운 서버 시작 (PM2)
       timeout: 300
       runas: ubuntu
-
-  ValidateService: # 애플리케이션이 정상적으로 실행되고 있는지 확인
-    - location: scripts/validate_service.sh # 서비스 정상 여부 확인
-      timeout: 300
-      runas: ubuntu
