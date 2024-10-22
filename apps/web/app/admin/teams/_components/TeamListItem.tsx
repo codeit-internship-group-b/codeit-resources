@@ -1,11 +1,10 @@
 "use client";
 
-import { BurgerIcon } from "@ui/public";
-import cn from "@ui/src/utils/cn";
 import { useRef, useState } from "react";
 import Dropdown from "@ui/src/components/common/Dropdown";
 import { Modal } from "@ui/index";
 import { useOnClickOutside } from "@ui/src/hooks/useOnClickOutside";
+import ListItem from "@/components/ListItem";
 
 interface TeamSettingsDropdownProps {
   teamName: string;
@@ -23,17 +22,8 @@ export default function TeamListItem({ teamName }: TeamSettingsDropdownProps): J
   });
 
   return (
-    <div
-      className={cn(
-        "rounded-12 mb-16 flex h-72 items-center justify-between border border-solid border-gray-200/10 px-24 py-16",
-        "transition-colors duration-300",
-        {
-          "border-custom-black": isModify,
-        },
-      )}
-    >
+    <ListItem type="member" isModify={isModify}>
       <span className="flex flex-grow items-center gap-32 text-left">
-        <BurgerIcon className="cursor-pointer" />
         {isModify ? (
           <input
             ref={inputRef}
@@ -93,6 +83,6 @@ export default function TeamListItem({ teamName }: TeamSettingsDropdownProps): J
           </Modal.Close>
         </Modal.Content>
       </Modal.Root>
-    </div>
+    </ListItem>
   );
 }
