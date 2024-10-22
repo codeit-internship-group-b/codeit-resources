@@ -7,9 +7,8 @@ const ItemSchema: Schema = new Schema(
   {
     name: { type: String, required: true },
     type: { type: String, enum: ItemTypes, required: true }, // Discriminator key
-    description: { type: String, required: true },
+    description: { type: String },
     status: { type: String, enum: ItemStatus, required: true },
-    createdBy: { type: String, required: true },
     imageUrl: { type: String, default: "" },
   },
   {
@@ -24,7 +23,7 @@ export const Item = model<IItem>("Item", ItemSchema);
 
 interface Room extends IItem {
   category: string;
-  location: string;
+  location?: string;
   tags?: string[];
   capacity?: number;
 }

@@ -71,17 +71,6 @@ export const getReservationsByTypeAndDate = async (req: Request, res: Response):
     $or: [{ startDate: { $gte: startOfDay, $lte: endOfDay } }, { endDate: { $gte: startOfDay, $lte: endOfDay } }],
   }).sort({ startAt: 1 });
 
-  // todo 분류해서 줄지 말지...
-  // const reservationsByItemId: Record<string, IReservation[]> = {};
-  // reservations.forEach((reservation) => {
-  //   const itemId = reservation.itemId.toString();
-  //   // itemId가 이미 있으면 추가, 없으면 새 배열 생성
-  //   if (!reservationsByItemId[itemId]) {
-  //     reservationsByItemId[itemId] = [];
-  //   }
-  //   reservationsByItemId[itemId]?.push(reservation);
-  // });
-
   res.status(200).json(reservations);
 };
 
