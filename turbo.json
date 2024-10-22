@@ -9,7 +9,8 @@
     "AWS_REGION",
     "AWS_ACCESS_KEY_ID",
     "AWS_SECRET_ACCESS_KEY",
-    "S3_BUCKET_NAME"
+    "S3_BUCKET_NAME",
+    "DEFAULT_PROFILE_IMAGE_URL"
   ],
   "tasks": {
     "build": {

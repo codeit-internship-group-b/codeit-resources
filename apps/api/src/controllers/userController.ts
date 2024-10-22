@@ -22,10 +22,9 @@ interface CreateUserRequest extends Request {
     email: string;
     password: string;
     role?: TRole;
-    profileImage?: string;
     teams?: string[];
   };
-  file?: Express.Multer.File;
+  file?: Express.Multer.File | Express.MulterS3.File;
 }
 
 // Get all users
@@ -85,12 +84,15 @@ export const createUser = async (req: CreateUserRequest, res: Response): Promise
 
   const hashedPassword = await hash(password, 10);
 
+  const profileImageUrl =
+    req.file && "location" in req.file ? req.file.location : process.env.DEFAULT_PROFILE_IMAGE_URL;
+
   const user = new User({
     name,
     email,
     password: hashedPassword,
     role: role ?? "member",
-    profileImage: req.file ? req.file.path : null,
+    profileImage: profileImageUrl,
     teams: newTeams,
   });
 
