@@ -25,6 +25,11 @@ app.use(cors(corsOptions));
 app.use(json());
 app.set("port", PORT);
 
+app.use("/", router);
+
+// errorHandler 항상 실행
+app.use(errorHandler);
+
 // 도메인 호스팅 확인용
 app.use("/", (req, res) => {
   console.log("hello");
@@ -43,11 +48,6 @@ app.use("/", (req, res) => {
           Don't click me
         </button>`);
 });
-
-app.use("/", router);
-
-// errorHandler 항상 실행
-app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log("Server is running on your env port");

@@ -5,7 +5,7 @@ interface UserDocument extends Omit<IUser, "_id">, Document {}
 
 const UserSchema = new Schema<UserDocument>(
   {
-    name: { type: String, required: true, unique: true, maxlength: 10 },
+    name: { type: String, required: true, maxlength: 10 },
     email: { type: String, required: true, unique: true, trim: true },
     password: { type: String, required: true, minlength: 4 },
     role: { type: String, enum: Role, default: "member" },
