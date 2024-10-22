@@ -4,21 +4,21 @@ import { PersonIcon, MeetingIcon, SeatsIcon, EquipmentIcon, TeamIcon } from "@re
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { clsx } from "clsx";
+import { PAGE_NAME } from "@ui/src/utils/constants/pageName";
 
 const NAV_ITEMS = [
-  { href: "/dashboard", name: "대시보드", icon: PersonIcon },
-  { href: "/meetings", name: "회의실", icon: MeetingIcon },
-  { href: "/seats", name: "좌석", icon: SeatsIcon },
-  { href: "/equipments", name: "장비", icon: EquipmentIcon },
+  { href: PAGE_NAME.dashboard, name: "대시보드", icon: PersonIcon },
+  { href: PAGE_NAME.meetings, name: "회의실", icon: MeetingIcon },
+  { href: PAGE_NAME.seats, name: "좌석", icon: SeatsIcon },
+  { href: PAGE_NAME.equipments, name: "장비", icon: EquipmentIcon },
 ];
 
 const ADMIN_ITEMS = [
-  { href: "/admin/members", name: "멤버 관리", icon: PersonIcon },
-   
-  { href: "/admin/teams", name: "팀 관리", icon: TeamIcon },
-  { href: "/admin/meetings", name: "회의실 설정", icon: MeetingIcon },
-  { href: "/admin/seats", name: "좌석 설정", icon: SeatsIcon },
-  { href: "/admin/equipments", name: "장비 설정", icon: EquipmentIcon },
+  { href: PAGE_NAME.adminMembers, name: "멤버 관리", icon: PersonIcon },
+  { href: PAGE_NAME.adminTeams, name: "팀 관리", icon: TeamIcon },
+  { href: PAGE_NAME.adminMeetings, name: "회의실 설정", icon: MeetingIcon },
+  { href: PAGE_NAME.adminSeats, name: "좌석 설정", icon: SeatsIcon },
+  { href: PAGE_NAME.adminEquipments, name: "장비 설정", icon: EquipmentIcon },
 ];
 
 interface GnbMenuProps {
