@@ -20,8 +20,9 @@ import LogoCodeitIcon from "./svgs/ic_logo-codeit.svg";
 import ProfileEmptyIcon from "./svgs/ic_profile-empty.svg";
 import SearchIcon from "./svgs/ic_search.svg";
 import TeamIcon from "./svgs/ic_team.svg";
-
+import PersonEmptyIcon from "./svgs/ic_person-empty.svg";
 export {
+  PersonEmptyIcon,
   TeamIcon,
   SearchIcon,
   ProfileEmptyIcon,
