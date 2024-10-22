@@ -1,52 +1,102 @@
-import { type NextFunction, type Request as ExpressRequest, type Response } from "express";
-import { type IUser } from "@repo/types";
-import { User } from "../models/User";
+import { type Request, type Response } from "express";
+import { hash } from "bcryptjs";
+import { type TRole } from "@repo/types/userType";
+import { User } from "../models/userModel";
 
-interface Request extends ExpressRequest {
-  user?: IUser;
+interface UserRequest extends Request {
+  query: {
+    role?: TRole;
+    team?: string;
+    sortOption?: "newest" | "oldest" | "alphabetical";
+  };
+}
+
+interface Filters {
+  role?: TRole;
+  team?: string;
+}
+
+interface CreateUserRequest extends Request {
+  body: {
+    name: string;
+    email: string;
+    password: string;
+    role?: TRole;
+    profileImage?: string;
+    teams?: string[];
+  };
 }
 
 // Get all users
-const getUsers = async (req: Request, res: Response): Promise<void> => {
-  const users = await User.find().select("-password");
-  res.status(200).send(users);
+export const getUsers = async (req: UserRequest, res: Response): Promise<void> => {
+  const { role, team, sortOption } = req.query;
+
+  const filters: Filters = {};
+
+  if (role) filters.role = role;
+  if (team) filters.team = team;
+
+  let query = User.find(filters).select("-password");
+
+  if (sortOption === "alphabetical") {
+    query = query.sort({ name: 1 });
+  } else if (sortOption === "oldest") {
+    query = query.sort({ createdAt: 1 });
+  } else {
+    query = query.sort({ createdAt: -1 });
+  }
+
+  const users = await query.exec();
+  res.status(200).json(users);
 };
 
 // Get a user by id
-const getUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  try {
-    const { id } = req.params;
-    const user = await User.findById(id).select("-password");
+export const getUser = async (req: Request, res: Response): Promise<void> => {
+  const { userId } = req.params;
+  const user = await User.findById(userId).select("-password");
 
-    if (!user) {
-      res.status(404).send({ message: "사용자를 찾을 수 없습니다." });
-      return;
-    }
-
-    res.status(200).send(user);
-  } catch (error) {
-    next(error);
+  if (!user) {
+    res.status(404).send({ message: "사용자를 찾을 수 없습니다." });
+    return;
   }
+
+  res.status(200).send(user);
 };
 
-// // Create a new user
-// // admin 권한 필요
-// const createUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-//   try {
-//     const { role } = req.user as TUser;
-//     if (role !== "admin") {
-//       res.status(403).send({ message: "권한이 없습니다." });
-//       return;
-//     }
+// Create a new user
+// admin 권한 필요
+export const createUser = async (req: CreateUserRequest, res: Response): Promise<void> => {
+  const { name, email, password, role, teams } = req.body;
 
-//     const user = new User(req.body);
-//     await user.save();
+  if (!name || !email || !password) {
+    res.status(400).send({ message: "이름, 이메일, 비밀번호는 필수 항목입니다." });
+    return;
+  }
 
-//     res.status(201).send({ message: "새로운 사용자가 생성되었습니다." });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    res.status(409).send({ message: "이미 존재하는 이메일입니다." });
+    return;
+  }
+
+  const newTeams: string[] = [];
+
+  if (teams) newTeams.push(...teams);
+
+  const hashedPassword = await hash(password, 10);
+
+  const user = new User({
+    name,
+    email,
+    password: hashedPassword,
+    role: role ?? "member",
+    // profileImage: profileImageURL ?? defaultProfileImageURL,
+    teams: newTeams,
+  });
+
+  await user.save();
+  res.status(201).send({ message: "새로운 사용자가 생성되었습니다." });
+};
 
 // // Update a user by id
 // // admin 권한 필요
@@ -129,5 +179,3 @@ const getUser = async (req: Request, res: Response, next: NextFunction): Promise
 //     next(error);
 //   }
 // };
-
-export { getUsers, getUser };
