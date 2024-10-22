@@ -2,19 +2,9 @@ import { type Request, type Response } from "express";
 import { type IReservation } from "@repo/types/src/reservationType";
 import { Item } from "../models";
 import { Reservation } from "../models/reservationModel";
+import isValidDateFormat from "../utils/isValidDateFormat";
 
-// 특정 날짜 예약 전체 조회
-export const getAllReservationsByDate = async (req: Request, res: Response): Promise<void> => {
-  const { date } = req.query;
-  if (!date || typeof date !== "string") {
-    res.status(400).json({ message: "날짜 형식이 잘못되었습니다." });
-    return;
-  }
-  const reservations: IReservation[] = await Reservation.find();
-  res.status(200).json(reservations);
-};
-
-// 특정 유저의 오늘 날짜 예약 조회
+// 특정 유저의 오늘 날짜 예약 조회(dashboards)
 export const getUserReservations = async (req: Request, res: Response): Promise<void> => {
   const { userId } = req.params;
   const today = new Date();
@@ -25,8 +15,8 @@ export const getUserReservations = async (req: Request, res: Response): Promise<
     userId,
     startAt: { $gte: startOfDay, $lte: endOfDay },
   }).sort({ startAt: 1 });
-  if (!userReservations.length) {
-    res.status(404).json({ message: "해당 유저의 예약이 없습니다." });
+  if (userReservations.length === 0) {
+    res.status(200).json({ message: "해당 유저의 예약이 없습니다.", reservations: [] });
     return;
   }
 
@@ -42,17 +32,7 @@ export const getUserReservations = async (req: Request, res: Response): Promise<
   userReservations.forEach((reservation) => {
     const item = items.find((i) => i._id.toString() === reservation.itemId);
     if (item) {
-      switch (item.type) {
-        case "seat":
-          reservationsByType.seat.push(reservation);
-          break;
-        case "room":
-          reservationsByType.room.push(reservation);
-          break;
-        case "equipment":
-          reservationsByType.equipment.push(reservation);
-          break;
-      }
+      reservationsByType[item.type].push(reservation);
     }
   });
 
@@ -62,19 +42,25 @@ export const getUserReservations = async (req: Request, res: Response): Promise<
 // 아이템 타입 및 날짜에 대한 예약 조회
 export const getReservationsByTypeAndDate = async (req: Request, res: Response): Promise<void> => {
   const { itemType } = req.params;
-  const { date } = req.query;
+  let { date } = req.query;
 
-  if (!date || typeof date !== "string") {
-    res.status(400).json({ message: "날짜 형식이 잘못되었습니다." });
-    return;
+  // 날짜가 없을 경우 오늘 날짜로 기본값 설정
+  if (!date) {
+    const today = new Date();
+    date = today.toISOString().split("T")[0];
   }
 
   const items = await Item.find({ type: itemType }, "_id");
-  if (!items.length) {
+  if (items.length === 0) {
     res.status(404).json({ message: "해당 타입의 아이템이 없습니다." });
     return;
   }
   const itemIds = items.map((item) => item._id);
+
+  if (typeof date !== "string" || !isValidDateFormat(date)) {
+    res.status(400).json({ message: "날짜 형식이 잘못되었습니다." });
+    return;
+  }
 
   const targetDate = new Date(`${date}T00:00:00Z`);
   const startOfDay = new Date(targetDate.setUTCHours(0, 0, 0, 0));
@@ -83,7 +69,18 @@ export const getReservationsByTypeAndDate = async (req: Request, res: Response):
   const reservations: IReservation[] = await Reservation.find({
     itemId: { $in: itemIds },
     $or: [{ startDate: { $gte: startOfDay, $lte: endOfDay } }, { endDate: { $gte: startOfDay, $lte: endOfDay } }],
-  });
+  }).sort({ startAt: 1 });
+
+  // todo 분류해서 줄지 말지...
+  // const reservationsByItemId: Record<string, IReservation[]> = {};
+  // reservations.forEach((reservation) => {
+  //   const itemId = reservation.itemId.toString();
+  //   // itemId가 이미 있으면 추가, 없으면 새 배열 생성
+  //   if (!reservationsByItemId[itemId]) {
+  //     reservationsByItemId[itemId] = [];
+  //   }
+  //   reservationsByItemId[itemId]?.push(reservation);
+  // });
 
   res.status(200).json(reservations);
 };
@@ -94,8 +91,6 @@ export const createReservation = async (req: Request, res: Response): Promise<vo
   const newReservation = new Reservation<IReservation>({
     ...(req.body as IReservation),
     itemId: String(itemId),
-    createdAt: new Date(),
-    updatedAt: new Date(),
   });
 
   const savedReservation: IReservation = await newReservation.save();
@@ -105,9 +100,9 @@ export const createReservation = async (req: Request, res: Response): Promise<vo
 // 특정 예약 수정
 export const updateReservation = async (req: Request, res: Response): Promise<void> => {
   const { reservationId } = req.params;
-  const updatedReservation = await Reservation.findByIdAndUpdate(
+  const updatedReservation: IReservation | null = await Reservation.findByIdAndUpdate(
     reservationId,
-    { ...(req.body as IReservation), updatedAt: new Date() },
+    { ...(req.body as IReservation) },
     { new: true },
   );
   if (!updatedReservation) {
@@ -120,10 +115,10 @@ export const updateReservation = async (req: Request, res: Response): Promise<vo
 // 특정 예약 삭제
 export const deleteReservation = async (req: Request, res: Response): Promise<void> => {
   const { reservationId } = req.params;
-  const deletedReservation = await Reservation.findByIdAndDelete(reservationId);
+  const deletedReservation: IReservation | null = await Reservation.findByIdAndDelete(reservationId);
   if (!deletedReservation) {
     res.status(404).json({ message: "예약을 찾을 수 없습니다." });
     return;
   }
-  res.status(200).send("예약이 삭제되었습니다.");
+  res.status(200).json({ message: "예약이 삭제되었습니다." });
 };

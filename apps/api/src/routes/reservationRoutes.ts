@@ -4,22 +4,13 @@ import * as reservationController from "../controllers/reservationControllers";
 
 const reservationRouter: Router = Router();
 
-const {
-  getAllReservationsByDate,
-  getUserReservations,
-  getReservationsByTypeAndDate,
-  createReservation,
-  updateReservation,
-  deleteReservation,
-} = reservationController;
-
-// 예약 전체 조회
-reservationRouter.get("/", asyncHandler(getAllReservationsByDate));
+const { getUserReservations, getReservationsByTypeAndDate, createReservation, updateReservation, deleteReservation } =
+  reservationController;
 
 // 특정 유저의 예약 조회
 reservationRouter.get("/user/:userId", asyncHandler(getUserReservations));
 
-// 아이템 타입 및 날짜에 대한 예약 조회
+// 아이템 타입 및 날짜에 대한 예약 조회 default: today
 reservationRouter.get("/:itemType", asyncHandler(getReservationsByTypeAndDate));
 
 // 특정 아이템에 대한 예약 생성
