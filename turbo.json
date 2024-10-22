@@ -1,7 +1,7 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
-  "globalEnv": ["DATABASE_URL", "JWT_SECRET", "PORT"],
+  "globalEnv": ["DATABASE_URL", "JWT_SECRET", "PORT", "CORS_ORIGIN"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],

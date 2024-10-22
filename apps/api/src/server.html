@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Don't Click Me</title>
+    <style>
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+      }
+      button:hover {
+        background-color: #ddd;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Hello stranger!</h1>
+    <button id="dontClickButton">Don't Click Me!</button>
+
+    <script>
+      document.getElementById("dontClickButton").addEventListener("click", () => {
+        alert("I told you not to click!");
+      });
+    </script>
+  </body>
+</html>

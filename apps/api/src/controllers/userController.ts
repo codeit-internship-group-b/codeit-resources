@@ -64,7 +64,6 @@ export const getUser = async (req: Request, res: Response): Promise<void> => {
 };
 
 // Create a new user
-// admin 권한 필요
 export const createUser = async (req: CreateUserRequest, res: Response): Promise<void> => {
   const { name, email, password, role, teams } = req.body;
 
