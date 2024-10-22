@@ -14,7 +14,7 @@ export const getUserReservations = async (req: Request, res: Response): Promise<
   const { userId } = req.params;
   const userReservations: IReservation[] = await Reservation.find({ userId });
   if (!userReservations.length) {
-    res.status(404).json({ message: "No reservations assigned" });
+    res.status(404).json({ message: "해당 유저의 예약이 없습니다." });
     return;
   }
   res.status(200).json(userReservations);
@@ -25,14 +25,14 @@ export const getReservationsByTypeAndDate = async (req: Request, res: Response):
   const { itemType } = req.params;
   const { date } = req.query;
 
-  if (typeof date !== "string") {
-    res.status(400).json({ message: "Date query parameter is required and must be a string" });
+  if (!date || typeof date !== "string") {
+    res.status(400).json({ message: "날짜 형식이 잘못되었습니다." });
     return;
   }
 
   const items = await Item.find({ type: itemType }, "_id");
   if (!items.length) {
-    res.status(404).json({ message: "No items found for the provided type" });
+    res.status(404).json({ message: "해당 타입의 아이템이 없습니다." });
     return;
   }
   const itemIds = items.map((item) => item._id);
@@ -60,7 +60,7 @@ export const createReservation = async (req: Request, res: Response): Promise<vo
   });
 
   const savedReservation: IReservation = await newReservation.save();
-  res.status(201).json({ message: "Success creating reservation", savedReservation });
+  res.status(201).json({ message: "예약에 성공했습니다.", savedReservation });
 };
 
 // 특정 예약 수정
@@ -72,7 +72,7 @@ export const updateReservation = async (req: Request, res: Response): Promise<vo
     { new: true },
   );
   if (!updatedReservation) {
-    res.status(404).json({ message: "Reservation not found" });
+    res.status(404).json({ message: "예약을 찾을 수 없습니다." });
     return;
   }
   res.status(200).json(updatedReservation);
@@ -83,8 +83,8 @@ export const deleteReservation = async (req: Request, res: Response): Promise<vo
   const { reservationId } = req.params;
   const deletedReservation = await Reservation.findByIdAndDelete(reservationId);
   if (!deletedReservation) {
-    res.status(404).json({ message: "Reservation not found" });
+    res.status(404).json({ message: "예약을 찾을 수 없습니다." });
     return;
   }
-  res.status(200).send("Reservation deleted");
+  res.status(200).send("예약이 삭제되었습니다.");
 };
