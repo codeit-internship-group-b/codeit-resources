@@ -55,7 +55,7 @@ export default function DashboardSection({ type, data }: DashboardSectionProps):
                 <button
                   type="button"
                   className={cn(
-                    "rounded-6 text-sm-medium border-custom-black/20 relative border border-solid px-12 py-5",
+                    "rounded-6 text-sm-medium border-custom-black/20 hover:bg-custom-black/5 hover:text-custom-black relative border border-solid px-12 py-5 transition-all duration-300 ease-linear",
                     isMeeting ? "-top-20 md:-top-4" : "-top-10 md:-top-2",
                   )}
                 >
