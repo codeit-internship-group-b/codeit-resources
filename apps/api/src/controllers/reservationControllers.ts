@@ -166,13 +166,33 @@ export const updateReservation = async (
     return;
   }
 
-  const updatedReservation: IReservation | null = await Reservation.findByIdAndUpdate(reservationId, req.body, {
-    new: true,
-  });
-  if (!updatedReservation) {
+  const targetReservation: IReservation | null = await Reservation.findById(reservationId);
+  if (!targetReservation) {
     res.status(404).json({ message: "예약을 찾을 수 없습니다." });
     return;
   }
+
+  // 중복 예약 검사
+  const overlappingReservation = await Reservation.findOne({
+    itemId: targetReservation.itemId,
+    status: "reserved",
+    $or: [
+      { startAt: { $lt: endAt }, endAt: { $gt: startAt } }, // 기존 예약의 시간과 겹치는지 확인
+    ],
+    $nor: [
+      { startAt: { $eq: endAt } }, // 새 예약의 시작 시간이 기존 예약의 종료 시간과 동일한 경우
+      { endAt: { $eq: startAt } }, // 새 예약의 종료 시간이 기존 예약의 시작 시간과 동일한 경우
+    ],
+  });
+
+  if (overlappingReservation) {
+    res.status(409).json({ message: "해당 시간에 이미 예약이 존재합니다." });
+    return;
+  }
+
+  const updatedReservation: IReservation | null = await Reservation.findByIdAndUpdate(reservationId, req.body, {
+    new: true,
+  });
 
   res.status(200).json(updatedReservation);
 };
