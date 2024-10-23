@@ -8,9 +8,9 @@ const { getUserReservations, getReservationsByTypeAndDate, createReservation, up
   reservationController;
 
 // 특정 유저의 예약 조회
-reservationRouter.get("/user/:userId", asyncHandler(getUserReservations));
+reservationRouter.get("/:userId", asyncHandler(getUserReservations));
 
-// 아이템 타입 및 날짜에 대한 예약 조회 default: today
+// 아이템 타입 및 날짜에 대한 예약 조회 query: date (default: today)
 reservationRouter.get("/:itemType", asyncHandler(getReservationsByTypeAndDate));
 
 // 특정 아이템에 대한 예약 생성

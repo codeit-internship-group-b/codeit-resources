@@ -1,11 +1,11 @@
 import { type Request, type Response } from "express";
-import { type IReservation } from "@repo/types/src/reservationType";
+import { type TReservationStatus, type IReservation } from "@repo/types/src/reservationType";
 import { Item } from "../models";
 import { Reservation } from "../models/reservationModel";
 import isValidDateFormat from "../utils/isValidDateFormat";
 
 // 특정 유저의 오늘 날짜 예약 조회(dashboards)
-export const getUserReservations = async (req: Request, res: Response): Promise<void> => {
+export const getUserReservations = async (req: Request<{ userId: string }>, res: Response): Promise<void> => {
   const { userId } = req.params;
   const today = new Date();
   const startOfDay = new Date(today.setUTCHours(0, 0, 0, 0));
@@ -40,7 +40,10 @@ export const getUserReservations = async (req: Request, res: Response): Promise<
 };
 
 // 아이템 타입 및 날짜에 대한 예약 조회
-export const getReservationsByTypeAndDate = async (req: Request, res: Response): Promise<void> => {
+export const getReservationsByTypeAndDate = async (
+  req: Request<{ itemType: string }, unknown, IReservation, { date?: string }>,
+  res: Response,
+): Promise<void> => {
   const { itemType } = req.params;
   let { date } = req.query;
 
@@ -75,11 +78,29 @@ export const getReservationsByTypeAndDate = async (req: Request, res: Response):
 };
 
 // 특정 아이템에 대한 예약 생성
-export const createReservation = async (req: Request, res: Response): Promise<void> => {
+interface CreateReservationRequestBody {
+  userId: string; // 예약한 사용자 ID (User의 id)
+  itemId: string; // 예약된 리소스 ID (Item의 id)
+  startAt: Date;
+  endAt: Date;
+  status: TReservationStatus;
+  notes?: string;
+  attendees?: string[];
+}
+export const createReservation = async (
+  req: Request<{ itemId: string }, IReservation, CreateReservationRequestBody>,
+  res: Response,
+): Promise<void> => {
   const { itemId } = req.params;
-  const newReservation = new Reservation<IReservation>({
-    ...(req.body as IReservation),
-    itemId: String(itemId),
+  const newReservation = new Reservation({
+    userId: ``,
+    itemId,
+    // todo 시간 기본값 추가
+    startAt: "",
+    endAt: "",
+    status: "reserved",
+    notes: "",
+    attendees: [],
   });
 
   const savedReservation: IReservation = await newReservation.save();
@@ -87,13 +108,22 @@ export const createReservation = async (req: Request, res: Response): Promise<vo
 };
 
 // 특정 예약 수정
-export const updateReservation = async (req: Request, res: Response): Promise<void> => {
+interface UpdateReservationRequestBody {
+  startAt?: Date;
+  endAt?: Date;
+  status?: TReservationStatus;
+  notes?: string;
+  attendees?: string[];
+}
+export const updateReservation = async (
+  req: Request<{ reservationId: string }, IReservation, UpdateReservationRequestBody>,
+  res: Response,
+): Promise<void> => {
   const { reservationId } = req.params;
-  const updatedReservation: IReservation | null = await Reservation.findByIdAndUpdate(
-    reservationId,
-    { ...(req.body as IReservation) },
-    { new: true },
-  );
+
+  const updatedReservation: IReservation | null = await Reservation.findByIdAndUpdate(reservationId, req.body, {
+    new: true,
+  });
   if (!updatedReservation) {
     res.status(404).json({ message: "예약을 찾을 수 없습니다." });
     return;
@@ -102,7 +132,10 @@ export const updateReservation = async (req: Request, res: Response): Promise<vo
 };
 
 // 특정 예약 삭제
-export const deleteReservation = async (req: Request, res: Response): Promise<void> => {
+export const deleteReservation = async (
+  req: Request<{ reservationId: string }, unknown, unknown>,
+  res: Response,
+): Promise<void> => {
   const { reservationId } = req.params;
   const deletedReservation: IReservation | null = await Reservation.findByIdAndDelete(reservationId);
   if (!deletedReservation) {

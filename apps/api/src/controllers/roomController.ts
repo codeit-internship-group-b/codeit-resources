@@ -41,8 +41,18 @@ export const createRoom = async (req: Request<unknown, IItem, CreateRoomRequestB
 };
 
 // 회의실 아이템 정보 수정
+interface UpdateRoomRequestBody {
+  name?: string;
+  description?: string;
+  status?: string;
+  imageUrl?: string;
+  category?: string;
+  capacity?: number;
+  location?: string;
+  tags?: string[];
+}
 export const updateRoom = async (
-  req: Request<{ id: string }, IItem, Partial<CreateRoomRequestBody>>,
+  req: Request<{ id: string }, IItem, Partial<UpdateRoomRequestBody>>,
   res: Response,
 ): Promise<void> => {
   const { id } = req.params;
