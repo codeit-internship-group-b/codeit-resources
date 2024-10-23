@@ -1,6 +1,7 @@
 /* eslint-disable */
 import React, { useState } from "react";
-import { MeetingBottomSheet } from "./MeetingBottomSheet"; // SnapSheet 컴포넌트 임포트
+import { TimeSlot } from "./TimeSlot";
+import { MeetingBottomSheet } from "./MeetingBottomSheet";
 
 interface Schedule {
   start: string;
@@ -12,13 +13,13 @@ interface Schedule {
 interface RoomScheduleProps {
   roomName: string;
   schedules: Schedule[];
-  currentUserId: string; // 현재 사용자의 ID
+  currentUserId: string;
 }
 
 export const RoomSchedule: React.FC<RoomScheduleProps> = ({ roomName, schedules, currentUserId }) => {
-  const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(null); // 선택한 예약
+  const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(null);
 
-  // 00:00부터 23:30까지 30분 간격의 슬롯을 생성
+  // 00:00부터 23:30까지 30분 간격의 슬롯 생성
   const timeSlots = Array.from({ length: 48 }, (_, i) => {
     const hour = Math.floor(i / 2);
     const minutes = i % 2 === 0 ? "00" : "30";
@@ -27,14 +28,15 @@ export const RoomSchedule: React.FC<RoomScheduleProps> = ({ roomName, schedules,
 
   return (
     <div>
-      <div className="mb-2 rounded-lg bg-white p-2 text-center shadow-md">{roomName}</div>
+      <div className="rounded-8 text-custom-black/80 border-1 my-28 flex h-48 w-80 items-center justify-center gap-8 border-gray-200/10 bg-white">
+        {roomName}
+      </div>
 
-      {/* 시간표 (가로 스크롤 가능) */}
-      <div className="ml-50 flex flex-col overflow-x-auto">
-        {/* 시간 라벨 및 예약 현황을 함께 표시 */}
+      {/* 스케줄 그리드 */}
+      <div className="pl-50 flex flex-col overflow-x-auto">
         <div className="flex">
           {Array.from({ length: 24 }, (_, i) => {
-            const hourLabel = i < 10 ? `0${i}:00` : `${i}:00`; // 시간 라벨 추가
+            const hourLabel = i < 10 ? `0${i}:00` : `${i}:00`;
             const firstSlotIndex = i * 2;
             const secondSlotIndex = firstSlotIndex + 1;
             const firstSlot = timeSlots[firstSlotIndex];
@@ -42,55 +44,26 @@ export const RoomSchedule: React.FC<RoomScheduleProps> = ({ roomName, schedules,
 
             return (
               <div key={i} className="flex flex-col items-center">
-                {/* 시간 라벨 */}
-                <div className="w-[100px] text-center text-sm font-bold text-gray-700">{hourLabel}</div>
+                <div className="-ml-100 text-custom-black/50 text-xs-semibold w-[100px] text-center">{hourLabel}</div>
 
                 <div className="flex">
                   {firstSlot && (
-                    <div
+                    <TimeSlot
                       key={firstSlot}
-                      className="relative h-12 w-[50px] border border-gray-300"
-                      onClick={() => {
-                        const schedule = schedules.find(
-                          (s) => s.start <= firstSlot && s.end > firstSlot && s.userId === currentUserId,
-                        );
-                        if (schedule) setSelectedSchedule(schedule);
-                      }}
-                    >
-                      {schedules.map((schedule, index) => {
-                        const isScheduled = schedule.start <= firstSlot && schedule.end > firstSlot;
-                        const isCurrentUser = schedule.userId === currentUserId; // 현재 사용자가 예약했는지 확인
-                        return isScheduled ? (
-                          <div
-                            key={index}
-                            className={`absolute inset-0 ${isCurrentUser ? "bg-purple-700" : "bg-gray-300"}`} // 현재 사용자일 경우 배경색을 purple, 그렇지 않으면 gray
-                          />
-                        ) : null;
-                      })}
-                    </div>
+                      time={firstSlot}
+                      schedules={schedules}
+                      currentUserId={currentUserId}
+                      onSelectSchedule={setSelectedSchedule}
+                    />
                   )}
                   {secondSlot && (
-                    <div
+                    <TimeSlot
                       key={secondSlot}
-                      className="relative h-12 w-[50px] border border-gray-300"
-                      onClick={() => {
-                        const schedule = schedules.find(
-                          (s) => s.start <= secondSlot && s.end > secondSlot && s.userId === currentUserId,
-                        );
-                        if (schedule) setSelectedSchedule(schedule);
-                      }}
-                    >
-                      {schedules.map((schedule, index) => {
-                        const isScheduled = schedule.start <= secondSlot && schedule.end > secondSlot;
-                        const isCurrentUser = schedule.userId === currentUserId; // 현재 사용자가 예약했는지 확인
-                        return isScheduled ? (
-                          <div
-                            key={index}
-                            className={`absolute inset-0 ${isCurrentUser ? "bg-purple-700" : "bg-gray-300"}`} // 현재 사용자일 경우 배경색을 purple, 그렇지 않으면 gray
-                          />
-                        ) : null;
-                      })}
-                    </div>
+                      time={secondSlot}
+                      schedules={schedules}
+                      currentUserId={currentUserId}
+                      onSelectSchedule={setSelectedSchedule}
+                    />
                   )}
                 </div>
               </div>
@@ -99,12 +72,12 @@ export const RoomSchedule: React.FC<RoomScheduleProps> = ({ roomName, schedules,
         </div>
       </div>
 
-      {/* SnapSheet 컴포넌트 */}
+      {/* MeetingBottomSheet 컴포넌트 */}
       {selectedSchedule && (
         <MeetingBottomSheet
           isOpen={!!selectedSchedule}
           onClose={() => setSelectedSchedule(null)}
-          schedule={selectedSchedule} // 예약된 스케줄 정보를 전달
+          schedule={selectedSchedule}
         />
       )}
     </div>
