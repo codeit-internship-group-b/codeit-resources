@@ -1,3 +1,3 @@
-export default function Meetings(): JSX.Element {
+export default function MyMeetings(): JSX.Element {
   return <div />;
 }
