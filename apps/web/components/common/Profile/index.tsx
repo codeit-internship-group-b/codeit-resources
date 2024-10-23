@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { ProfileEmptyIcon } from "@ui/public";
+import { ProfileDefaultIcon } from "@ui/public";
 import { clsx } from "clsx";
 import Image from "next/image";
 
@@ -28,7 +28,7 @@ function Profile({ size = "size-32", src, name, className }: ProfileProps): JSX.
           <Image src={src} fill alt="프로필 이미지" />
         </div>
       ) : (
-        <ProfileEmptyIcon width={32} height={32} />
+        <ProfileDefaultIcon width={32} height={32} />
       )}
       {name ? <div className="font-medium text-white">{name}</div> : null}
     </div>
