@@ -90,13 +90,21 @@ export const useDateStore = create<DateStore>((set) => ({
   // 이전 달로 이동하는 함수
   handlePrevMonth: () => {
     set((state) => {
-      let { year, month } = state.selectedDate;
-      const { day } = state.selectedDate;
+      let { year, month, day } = state.selectedDate;
+      const today = new Date();
+      const currentYear = today.getFullYear();
+      const currentMonth = today.getMonth() + 1;
+      const currentDay = today.getDate();
+
       month -= 1;
 
       if (month === 0) {
         year -= 1;
         month = 12;
+      }
+
+      if (year === currentYear && month === currentMonth) {
+        day = currentDay;
       }
 
       const { dayOfWeek } = calculateNewDate(year, month, day);
@@ -109,8 +117,9 @@ export const useDateStore = create<DateStore>((set) => ({
   // 다음 달로 이동하는 함수
   handleNextMonth: () => {
     set((state) => {
-      let { year, month } = state.selectedDate;
-      const { day } = state.selectedDate;
+      let { year, month, day } = state.selectedDate;
+      const currentMonth = new Date().getMonth() + 1; // 현재 월
+
       month += 1;
 
       if (month === 13) {
@@ -118,7 +127,12 @@ export const useDateStore = create<DateStore>((set) => ({
         month = 1;
       }
 
+      if (month !== currentMonth) {
+        day = 1;
+      }
+
       const { dayOfWeek } = calculateNewDate(year, month, day);
+
       return {
         selectedDate: { ...state.selectedDate, year, month, day, dayOfWeek },
       };
