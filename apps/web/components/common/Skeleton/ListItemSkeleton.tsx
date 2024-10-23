@@ -5,8 +5,8 @@ import LoadingBar from "./LoadingBar";
 
 interface ListItemSkeletonProps {
   type?: "team" | "member";
-  thickness: "thin" | "thick";
-  color: "white" | "gray";
+  thickness?: "thin" | "thick";
+  color?: "white" | "gray";
 }
 
 /**
