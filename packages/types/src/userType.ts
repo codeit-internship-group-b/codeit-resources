@@ -7,7 +7,7 @@ export interface IUser {
   email: string;
   password: string;
   role: TRole;
-  teams: String[];
+  teams: string[];
   profileImage?: string;
   department?: string;
   createdAt: Date;

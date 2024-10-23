@@ -31,22 +31,8 @@ app.use("/", router);
 app.use(errorHandler);
 
 // 도메인 호스팅 확인용
-app.use("/", (req, res) => {
-  console.log("hello");
-  res.send(`<button style="
-          padding: 10px 20px;
-          font-size: 16px;
-          cursor: pointer;
-          background-color: #f0f0f0;
-          border: 1px solid #ccc;
-          border-radius: 5px;
-          transition: background-color 0.3s ease;
-        " 
-        onmouseover="this.style.backgroundColor='#ddd'"
-        onmouseout="this.style.backgroundColor='#f0f0f0'"
-        onclick="alert('I told you not to click!')">
-          Don't click me
-        </button>`);
+app.get("/health", (req, res) => {
+  res.json({ status: "healthy", timestamp: new Date().toISOString() });
 });
 
 app.listen(PORT, () => {

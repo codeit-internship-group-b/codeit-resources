@@ -8,9 +8,10 @@ import { createS3Client } from "./createS3Client";
 type FileNameCallback = (error: Error | null, key?: string) => void;
 
 const bucket = process.env.S3_BUCKET_NAME;
-const s3: S3Client = createS3Client();
 
 if (!bucket) throw new Error("S3_BUCKET_NAME is missing in environment variables");
+
+const s3: S3Client = createS3Client();
 
 export const upload: Multer = multer({
   storage: multerS3({

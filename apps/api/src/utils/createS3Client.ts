@@ -14,5 +14,9 @@ export const createS3Client = (): S3Client => {
       accessKeyId: AWS_ACCESS_KEY_ID,
       secretAccessKey: AWS_SECRET_ACCESS_KEY,
     },
+    maxAttempts: 3,
+    requestHandler: {
+      requestTimeout: 5000,
+    },
   });
 };
