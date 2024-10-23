@@ -3,7 +3,7 @@ import { hash } from "bcryptjs";
 import { type TRole } from "@repo/types/userType";
 import { User } from "../models/userModel";
 
-interface UserRequest extends Request {
+interface GetUsersRequest extends Request {
   query: {
     role?: TRole;
     team?: string;
@@ -14,6 +14,12 @@ interface UserRequest extends Request {
 interface Filters {
   role?: TRole;
   team?: string;
+}
+
+interface GetUserRequest extends Request {
+  params: {
+    userId: string;
+  };
 }
 
 interface CreateUserRequest extends Request {
@@ -28,7 +34,7 @@ interface CreateUserRequest extends Request {
 }
 
 // Get all users
-export const getUsers = async (req: UserRequest, res: Response): Promise<void> => {
+export const getUsers = async (req: GetUsersRequest, res: Response): Promise<void> => {
   const { role, team, sortOption } = req.query;
 
   const filters: Filters = {};
@@ -51,7 +57,7 @@ export const getUsers = async (req: UserRequest, res: Response): Promise<void> =
 };
 
 // Get a user by id
-export const getUser = async (req: Request, res: Response): Promise<void> => {
+export const getUser = async (req: GetUserRequest, res: Response): Promise<void> => {
   const { userId } = req.params;
   const user = await User.findById(userId).select("-password");
 
