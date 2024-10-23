@@ -45,6 +45,7 @@ const config: Omit<Config, "content"> = {
           40: "#999CAC",
           50: "#181B28",
           60: "#F6F6F8",
+          70: "#D5D6DD",
           100: "#DDDEE4",
           200: "#413B54",
           300: "#3C3B40",
