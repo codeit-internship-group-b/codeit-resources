@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React from "react";
 
 interface Schedule {
@@ -28,16 +30,20 @@ export const TimeSlot: React.FC<TimeSlotProps> = ({ time, schedules, currentUser
     currentUserSchedule = slotSchedules.find((schedule) => schedule.userId === currentUserId);
 
     if (currentUserSchedule) {
-      backgroundColor = "bg-purple-700";
+      backgroundColor = "bg-purple-400";
       isCurrentUser = true;
     } else {
-      backgroundColor = "bg-gray-300";
+      backgroundColor = "bg-gray-70";
       scheduleTitle = slotSchedules[0]?.title || "";
     }
   }
 
   return (
-    <div className={`h-56 ${slotIndex % 2 === 0 ? "border-l-1" : "border-x-1"} border-gray-400`}>
+    <div
+      className={`h-56 ${slotIndex % 2 === 0 ? "" : "border-r-1"} border-gray-400 ${
+        isCurrentUser ? "hover:outline-purple-40 hover:bg-purple-200" : "hover:bg-gray-60"
+      } hover:outline-1`}
+    >
       <div
         className={`group relative mt-20 h-12 w-[50px] ${backgroundColor}`}
         onClick={() => {
@@ -45,8 +51,9 @@ export const TimeSlot: React.FC<TimeSlotProps> = ({ time, schedules, currentUser
             onSelectSchedule(currentUserSchedule);
           }
         }}
-       />
-      <div className="border-b-1 border-gray-10 -mt-6 border-dotted" />
+      />
+      <div className="border-b-1 border-gray-10 mt-12 border-dotted" />
+      {slotIndex % 2 !== 0 && <div className="border-l-1 border-gray-10 -mt-9 h-20" />}
     </div>
   );
 };

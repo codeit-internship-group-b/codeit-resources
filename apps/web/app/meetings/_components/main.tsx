@@ -10,8 +10,8 @@ export default function MeetingRoomSchedule() {
   const selectedDateString = `${selectedDate.year}-${selectedDate.month < 10 ? `0${selectedDate.month}` : selectedDate.month}-${selectedDate.day < 10 ? `0${selectedDate.day}` : selectedDate.day}`;
 
   return (
-    <div className="p-4">
-      <h1 className="mb-4 text-2xl font-bold">회의실 예약 현황</h1>
+    <div className="px-16 py-24">
+      <p className="text-custom-black/50 text-md-medium">미팅룸</p>
 
       {/* 미팅룸 리스트와 각각의 시간표 */}
       {rooms.map((room) => (
