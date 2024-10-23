@@ -84,13 +84,13 @@ export const createUser = async (req: CreateUserRequest, res: Response): Promise
     return;
   }
 
-  const newTeams: string[] = [];
-
-  if (teams) newTeams.push(...teams);
+  const newTeams = teams ?? [];
 
   const hashedPassword = await hash(password, 10);
 
-  const profileImageUrl = (req.file as Express.MulterS3.File).location || process.env.DEFAULT_PROFILE_IMAGE_URL;
+  const profileImageUrl = req.file
+    ? (req.file as Express.MulterS3.File).location
+    : process.env.DEFAULT_PROFILE_IMAGE_URL;
 
   const user = new User({
     name,

@@ -32,9 +32,14 @@ app.use(errorHandler);
 
 // 도메인 호스팅 확인용
 app.get("/health", (req, res) => {
-  res.json({ status: "healthy", timestamp: new Date().toISOString() });
+  res.json({
+    status: "healthy",
+    timestamp: new Date().toISOString(),
+    memory: process.memoryUsage(),
+    uptime: process.uptime(),
+    version: process.version,
+  });
 });
-
 app.listen(PORT, () => {
   console.log("Server is running on your env port");
 });
