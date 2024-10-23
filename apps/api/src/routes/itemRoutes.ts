@@ -1,9 +1,9 @@
 import { Router } from "express";
 import asyncHandler from "express-async-handler";
-import * as reservationController from "../controllers/roomController";
+import * as roomController from "../controllers/roomControllers";
 
 export const roomRouter: Router = Router();
-const { getAllRooms, createRoom, updateRoom, deleteRoom } = reservationController;
+const { getAllRooms, createRoom, updateRoom, deleteRoom } = roomController;
 
 // 전체 회의실 리스트 조회
 roomRouter.get("/", asyncHandler(getAllRooms));

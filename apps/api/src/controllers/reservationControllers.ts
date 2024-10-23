@@ -1,5 +1,6 @@
 import { type Request, type Response } from "express";
 import { type IReservation } from "@repo/types/src/reservationType";
+import { type FilterQuery } from "mongoose";
 import { Item } from "../models";
 import { Reservation } from "../models/reservationModel";
 import { isValidDateFormat } from "../utils/isValidDateFormat";
@@ -42,16 +43,17 @@ export const getUserReservations = async (req: Request<{ userId: string }>, res:
 
 // 아이템 타입 및 날짜에 대한 예약 조회
 export const getReservationsByTypeAndDate = async (
-  req: Request<{ itemType: string }, unknown, IReservation, { date?: string }>,
+  req: Request<{ itemType: string }, unknown, IReservation, { date?: string; status?: string }>,
   res: Response,
 ): Promise<void> => {
   const { itemType } = req.params;
-  let { date } = req.query;
+  const { date, status } = req.query;
 
+  let searchDate = date;
   // 날짜가 없을 경우 오늘 날짜로 기본값 설정
-  if (!date) {
+  if (!searchDate) {
     const today = new Date();
-    date = today.toISOString().split("T")[0];
+    searchDate = today.toISOString().split("T")[0];
   }
 
   const items = await Item.find({ type: itemType }, "_id");
@@ -61,19 +63,27 @@ export const getReservationsByTypeAndDate = async (
   }
   const itemIds = items.map((item) => item._id);
 
-  if (typeof date !== "string" || !isValidDateFormat(date)) {
+  if (typeof searchDate !== "string" || !isValidDateFormat(searchDate)) {
     res.status(400).json({ message: "날짜 형식이 잘못되었습니다." });
     return;
   }
 
-  const targetDate = new Date(`${date}T00:00:00Z`);
+  const targetDate = new Date(`${searchDate}T00:00:00Z`);
   const startOfDay = new Date(targetDate.setUTCHours(0, 0, 0, 0));
   const endOfDay = new Date(targetDate.setUTCHours(23, 59, 59, 999));
 
-  const reservations: IReservation[] = await Reservation.find({
+  // 동적으로 필터링 조건 설정
+  const query: FilterQuery<IReservation> = {
     itemId: { $in: itemIds },
     $or: [{ startDate: { $gte: startOfDay, $lte: endOfDay } }, { endDate: { $gte: startOfDay, $lte: endOfDay } }],
-  }).sort({ startAt: 1 });
+  };
+
+  // status가 있으면 추가
+  if (status) {
+    query.status = status;
+  }
+
+  const reservations: IReservation[] = await Reservation.find(query).sort({ status: 1, startAt: 1 });
 
   res.status(200).json(reservations);
 };

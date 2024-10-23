@@ -26,5 +26,6 @@ const ReservationSchema: Schema = new Schema(
   },
 );
 ReservationSchema.index({ startAt: 1 });
+ReservationSchema.index({ status: 1, startAt: 1 });
 
 export const Reservation = model<IReservation>("Reservation", ReservationSchema);
