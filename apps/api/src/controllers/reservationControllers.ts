@@ -5,13 +5,13 @@ import { Item } from "../models";
 import { Reservation } from "../models/reservationModel";
 import { isValidDateFormat } from "../utils/isValidDateFormat";
 import { isTimeInTenMinuteIntervals } from "../utils/isMinuteValid";
+import { getStartAndEndOfDay } from "../utils/getStartAndEndOfDay";
 
 // 특정 유저의 오늘 날짜 예약 조회(dashboards)
 export const getUserReservations = async (req: Request<{ userId: string }>, res: Response): Promise<void> => {
   const { userId } = req.params;
   const today = new Date();
-  const startOfDay = new Date(today.setUTCHours(0, 0, 0, 0));
-  const endOfDay = new Date(today.setUTCHours(23, 59, 59, 999));
+  const { startOfDay, endOfDay } = getStartAndEndOfDay(today);
 
   const userReservations: IReservation[] = await Reservation.find({
     userId,
@@ -69,8 +69,7 @@ export const getReservationsByTypeAndDate = async (
   }
 
   const targetDate = new Date(`${searchDate}T00:00:00Z`);
-  const startOfDay = new Date(targetDate.setUTCHours(0, 0, 0, 0));
-  const endOfDay = new Date(targetDate.setUTCHours(23, 59, 59, 999));
+  const { startOfDay, endOfDay } = getStartAndEndOfDay(targetDate);
 
   // 동적으로 필터링 조건 설정
   const query: FilterQuery<IReservation> = {
