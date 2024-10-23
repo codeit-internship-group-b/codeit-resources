@@ -1,18 +1,200 @@
-// mockData.ts
 export const rooms = [
   {
     id: "roomA",
-    title: "회의실 A",
+    title: "미팅룸 A",
     schedules: [
       {
         id: "scheduleA1",
-        date: "2024-10-16",
+        date: "2024-10-23",
         start_time: "09:00",
         end_time: "09:30",
         title: "팀 미팅",
+        userId: "1",
       },
-      // more schedules...
+      {
+        id: "scheduleA2",
+        date: "2024-10-24",
+        start_time: "10:00",
+        end_time: "10:30",
+        title: "프로젝트 회의",
+        userId: "1",
+      },
+      {
+        id: "scheduleA3",
+        date: "2024-10-25",
+        start_time: "11:00",
+        end_time: "11:30",
+        title: "클라이언트 미팅",
+        userId: "2",
+      },
+      {
+        id: "scheduleA4", // 추가된 예약
+        date: "2024-10-23",
+        start_time: "10:00",
+        end_time: "10:30",
+        title: "제품 디자인 회의",
+        userId: "3",
+      },
+      {
+        id: "scheduleA5", // 추가된 예약
+        date: "2024-10-23",
+        start_time: "11:00",
+        end_time: "11:30",
+        title: "마케팅 전략 회의",
+        userId: "2",
+      },
     ],
   },
-  // more rooms...
+  {
+    id: "roomB",
+    title: "미팅룸 B",
+    schedules: [
+      {
+        id: "scheduleB1",
+        date: "2024-10-23",
+        start_time: "09:00",
+        end_time: "09:30",
+        title: "팀 미팅",
+        userId: "1",
+      },
+      {
+        id: "scheduleB2",
+        date: "2024-10-24",
+        start_time: "10:00",
+        end_time: "10:30",
+        title: "프로젝트 회의",
+        userId: "2",
+      },
+      {
+        id: "scheduleB3",
+        date: "2024-10-25",
+        start_time: "11:00",
+        end_time: "11:30",
+        title: "클라이언트 미팅",
+        userId: "1",
+      },
+      {
+        id: "scheduleB4", // 추가된 예약
+        date: "2024-10-23",
+        start_time: "11:30",
+        end_time: "12:00",
+        title: "개발 계획 회의",
+        userId: "3",
+      },
+    ],
+  },
+  {
+    id: "roomC",
+    title: "미팅룸 C",
+    schedules: [
+      {
+        id: "scheduleC1",
+        date: "2024-10-23",
+        start_time: "09:00",
+        end_time: "09:30",
+        title: "팀 미팅",
+        userId: "2",
+      },
+      {
+        id: "scheduleC2",
+        date: "2024-10-24",
+        start_time: "10:00",
+        end_time: "10:30",
+        title: "프로젝트 회의",
+        userId: "2",
+      },
+      {
+        id: "scheduleC3",
+        date: "2024-10-25",
+        start_time: "11:00",
+        end_time: "11:30",
+        title: "클라이언트 미팅",
+        userId: "1",
+      },
+      {
+        id: "scheduleC4", // 추가된 예약
+        date: "2024-10-23",
+        start_time: "14:00",
+        end_time: "14:30",
+        title: "팀 리더 회의",
+        userId: "1",
+      },
+    ],
+  },
+  {
+    id: "roomD",
+    title: "미팅룸 D",
+    schedules: [
+      {
+        id: "scheduleD1",
+        date: "2024-10-23",
+        start_time: "09:00",
+        end_time: "09:30",
+        title: "팀 미팅",
+        userId: "2",
+      },
+      {
+        id: "scheduleD2",
+        date: "2024-10-24",
+        start_time: "10:00",
+        end_time: "10:30",
+        title: "프로젝트 회의",
+        userId: "1",
+      },
+      {
+        id: "scheduleD3",
+        date: "2024-10-25",
+        start_time: "11:00",
+        end_time: "11:30",
+        title: "클라이언트 미팅",
+        userId: "2",
+      },
+      {
+        id: "scheduleD4", // 추가된 예약
+        date: "2024-10-23",
+        start_time: "12:00",
+        end_time: "12:30",
+        title: "HR 미팅",
+        userId: "4",
+      },
+    ],
+  },
+  {
+    id: "roomE",
+    title: "미팅룸 E",
+    schedules: [
+      {
+        id: "scheduleE1",
+        date: "2024-10-23",
+        start_time: "09:00",
+        end_time: "09:30",
+        title: "팀 미팅",
+        userId: "2",
+      },
+      {
+        id: "scheduleE2",
+        date: "2024-10-24",
+        start_time: "10:00",
+        end_time: "10:30",
+        title: "프로젝트 회의",
+        userId: "1",
+      },
+      {
+        id: "scheduleE3",
+        date: "2024-10-25",
+        start_time: "11:00",
+        end_time: "11:30",
+        title: "클라이언트 미팅",
+        userId: "2",
+      },
+      {
+        id: "scheduleE4", // 추가된 예약
+        date: "2024-10-23",
+        start_time: "15:00",
+        end_time: "15:30",
+        title: "부서 미팅",
+        userId: "1",
+      },
+    ],
+  },
 ];
