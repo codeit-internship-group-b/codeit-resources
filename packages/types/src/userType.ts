@@ -1,5 +1,5 @@
 export const Roles = ["admin", "member"] as const;
-type TRole = (typeof Roles)[number];
+export type TRole = (typeof Roles)[number];
 
 export interface IUser {
   _id: string;
@@ -7,6 +7,7 @@ export interface IUser {
   email: string;
   password: string;
   role: TRole;
+  teams: string[];
   profileImage?: string;
   department?: string;
   createdAt: Date;

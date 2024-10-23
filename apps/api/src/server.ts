@@ -14,9 +14,11 @@ void connectDatabase().catch((error: unknown) => {
 });
 
 const app = express();
-const PORT = process.env.PORT ?? "8080";
+const PORT = process.env.PORT ?? 3000;
+const CORS_ORIGIN = process.env.CORS_ORIGIN?.split(",") ?? "http://localhost:3000";
+
 const corsOptions = {
-  origin: ["http://localhost:3000/"],
+  origin: CORS_ORIGIN,
 };
 
 app.use(cors(corsOptions));
@@ -28,6 +30,16 @@ app.use("/", router);
 // errorHandler 항상 실행
 app.use(errorHandler);
 
+// 도메인 호스팅 확인용
+app.get("/health", (req, res) => {
+  res.json({
+    status: "healthy",
+    timestamp: new Date().toISOString(),
+    memory: process.memoryUsage(),
+    uptime: process.uptime(),
+    version: process.version,
+  });
+});
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log("Server is running on your env port");
 });

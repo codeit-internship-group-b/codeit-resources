@@ -1,67 +1,109 @@
-// import { type NextFunction, type Request as ExpressRequest, type Response } from "express";
-// import bcrypt from "bcryptjs";
-// import { type IUser } from "@repo/types";
-// import usersMock from "../mocks/usersMock";
+import { type Request, type Response } from "express";
+import { hash } from "bcryptjs";
+import { type TRole } from "@repo/types/userType";
+import { User } from "../models/userModel";
 
-// interface Request extends ExpressRequest {
-//   user?: IUser;
-// }
+interface GetUsersRequest extends Request {
+  query: {
+    role?: TRole;
+    team?: string;
+    sortOption?: "newest" | "oldest" | "alphabetical";
+  };
+}
 
-// // Get all users
-// // const getUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-// //   try {
-// //     // Use usersMock instead of querying the database
-// //     const users = usersMock.map(({ password, ...user }) => user);
-// //     res.status(200).send(users);
-// //   } catch (error) {
-// //     next(error);
-// //   }
-// // };
+interface Filters {
+  role?: TRole;
+  team?: string;
+}
 
-// const getUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-//   try {
-//     const users = await User.find().select("-password");
-//     res.status(200).send(users);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+interface GetUserRequest extends Request {
+  params: {
+    userId: string;
+  };
+}
 
-// // Get a user by id
-// const getUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-//   try {
-//     const { id } = req.params;
-//     const user = await User.findById(id).select("-password");
+interface CreateUserRequest extends Request {
+  body: {
+    name: string;
+    email: string;
+    password: string;
+    role?: TRole;
+    teams?: string[];
+  };
+  file?: Express.Multer.File | Express.MulterS3.File;
+}
 
-//     if (!user) {
-//       res.status(404).send({ message: "사용자를 찾을 수 없습니다." });
-//       return;
-//     }
+// Get all users
+export const getUsers = async (req: GetUsersRequest, res: Response): Promise<void> => {
+  const { role, team, sortOption } = req.query;
 
-//     res.status(200).send(user);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+  const filters: Filters = {};
 
-// // Create a new user
-// // admin 권한 필요
-// const createUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-//   try {
-//     const { role } = req.user as TUser;
-//     if (role !== "admin") {
-//       res.status(403).send({ message: "권한이 없습니다." });
-//       return;
-//     }
+  if (role) filters.role = role;
+  if (team) filters.team = team;
 
-//     const user = new User(req.body);
-//     await user.save();
+  let query = User.find(filters).select("-password");
 
-//     res.status(201).send({ message: "새로운 사용자가 생성되었습니다." });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+  if (sortOption === "alphabetical") {
+    query = query.sort({ name: 1 });
+  } else if (sortOption === "oldest") {
+    query = query.sort({ createdAt: 1 });
+  } else {
+    query = query.sort({ createdAt: -1 });
+  }
+
+  const users = await query.exec();
+  res.status(200).json(users);
+};
+
+// Get a user by id
+export const getUser = async (req: GetUserRequest, res: Response): Promise<void> => {
+  const { userId } = req.params;
+  const user = await User.findById(userId).select("-password");
+
+  if (!user) {
+    res.status(404).send({ message: "사용자를 찾을 수 없습니다." });
+    return;
+  }
+
+  res.status(200).send(user);
+};
+
+// Create a new user
+export const createUser = async (req: CreateUserRequest, res: Response): Promise<void> => {
+  const { name, email, password, role, teams } = req.body;
+
+  if (!name || !email || !password) {
+    res.status(400).send({ message: "이름, 이메일, 비밀번호는 필수 항목입니다." });
+    return;
+  }
+
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    res.status(409).send({ message: "이미 존재하는 이메일입니다." });
+    return;
+  }
+
+  const newTeams = teams ?? [];
+
+  const hashedPassword = await hash(password, 10);
+
+  const profileImageUrl = req.file
+    ? (req.file as Express.MulterS3.File).location
+    : process.env.DEFAULT_PROFILE_IMAGE_URL;
+
+  const user = new User({
+    name,
+    email,
+    password: hashedPassword,
+    role: role ?? "member",
+    profileImage: profileImageUrl,
+    teams: newTeams,
+  });
+
+  await user.save();
+  res.status(201).send({ message: "새로운 사용자가 생성되었습니다." });
+};
 
 // // Update a user by id
 // // admin 권한 필요
@@ -144,5 +186,3 @@
 //     next(error);
 //   }
 // };
-
-// export { getUsers, getUser, createUser, updateUser, deleteUser, updatePassword, updateProfileImage };
