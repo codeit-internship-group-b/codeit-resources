@@ -7,14 +7,26 @@ const ReservationSchema: Schema = new Schema(
   {
     userId: { type: String, required: true },
     itemId: { type: String, required: true },
-    startAt: { type: Date, required: true },
+    startAt: {
+      type: Date,
+      required: true,
+      validate: {
+        validator(this: ReservationDoc, startAt: Date) {
+          // 10분정도 여유 둬서 애매하게 기다리지 않도록
+          const timeWithBuffer = new Date(new Date().getTime() - 600000);
+          return startAt >= timeWithBuffer;
+        },
+        message: "시작 시간은 10분 전 이후로 설정 가능합니다.",
+      },
+    },
     endAt: {
       type: Date,
       required: true,
       validate: {
-        validator(this: IReservation, value: Date): boolean {
-          return value > this.startAt;
+        validator(this: ReservationDoc, endAt: Date) {
+          return endAt > this.startAt;
         },
+        message: "종료 시간은 시작 시간 이후로 설정 가능합니다.",
       },
     },
     status: { type: String, enum: ReservationStatus, required: true },
