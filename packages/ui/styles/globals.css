@@ -17,11 +17,6 @@ button {
   @apply transform transition-all duration-300 ease-linear;
 }
 
-/* Webkit 기반 브라우저용 스크롤바 커스터마이징 */
-::-webkit-scrollbar {
-  height: 0px; /* 스크롤바의 높이 */
-}
-
 h1 {
   @apply text-2xl-bold md:text-3xl-bold;
 }
@@ -35,4 +30,11 @@ h1 {
   background-color: rgba(0, 0, 0, 0.1); /* 대각선의 색상 */
   transform: rotate(27deg); /* 대각선 회전 */
   transform-origin: left top;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  width: 0px; /* 웹킷 기반 브라우저에서 스크롤바 숨김 */
+  height: 0px; /* 스크롤바의 높이 */
+  -ms-overflow-style: none; /* IE 및 엣지에서 스크롤바 숨김 */
+  scrollbar-width: none; /* 파이어폭스에서 스크롤바 숨김 */
 }

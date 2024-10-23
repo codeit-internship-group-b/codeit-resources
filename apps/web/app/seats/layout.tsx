@@ -14,9 +14,9 @@ export default function Layout({
   children: ReactNode;
 }>): JSX.Element {
   return (
-    <div className="bg-custom-black/5 h-screen">
+    <>
       <Header page="seats" />
-      {children}
-    </div>
+      <div className="bg-custom-black/5 md:px-118 md:py-83 h-screen px-16 py-28">{children}</div>
+    </>
   );
 }
