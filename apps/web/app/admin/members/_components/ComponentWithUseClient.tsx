@@ -2,10 +2,13 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Button from "@ui/src/components/common/Button";
 import Dropdown from "@ui/src/components/common/Dropdown";
+import { Badge } from "@ui/index";
+import ProfileImage from "@ui/public/images/image_profile.png";
 
-const categories = [
+const CATEGORIES = [
   "전체",
   "멤버",
   "어드민",
@@ -21,11 +24,13 @@ const categories = [
   "People & Culture",
 ];
 
-const sortOptions = ["최신순", "가나다순", "오래된순"];
+const USER_ROLES = ["멤버", "어드민"];
+const SORT_OPTIONS = ["최신순", "가나다순", "오래된순"];
 
 export default function ComponentWithUseClient(): JSX.Element {
   const [activeTab, setActiveTab] = useState("전체");
   const [selectedSort, setSelectedSort] = useState("최신순");
+  const [selectedRole, setSelectedRole] = useState("어드민");
 
   const handleCategoryClick = (category: string): void => {
     setActiveTab(category);
@@ -34,6 +39,12 @@ export default function ComponentWithUseClient(): JSX.Element {
   const handleSortChange = (value: string | boolean): void => {
     if (typeof value === "string") {
       setSelectedSort(value);
+    }
+  };
+
+  const handleRoleChange = (value: string | boolean): void => {
+    if (typeof value === "string") {
+      setSelectedRole(value);
     }
   };
 
@@ -46,9 +57,8 @@ export default function ComponentWithUseClient(): JSX.Element {
         </Button>
       </header>
 
-      {/* 네비게이션 */}
-      <div className="relative">
-        <nav
+      <nav className="relative mb-24">
+        <div
           className="w-full overflow-x-auto border-b border-gray-200/10"
           style={{
             scrollbarWidth: "none",
@@ -56,7 +66,7 @@ export default function ComponentWithUseClient(): JSX.Element {
           }}
         >
           <ul className="flex flex-row gap-32 whitespace-nowrap">
-            {categories.map((category) => (
+            {CATEGORIES.map((category) => (
               <li key={category}>
                 <button
                   type="button"
@@ -76,7 +86,7 @@ export default function ComponentWithUseClient(): JSX.Element {
             <Dropdown selectedValue={selectedSort} onSelect={handleSortChange} size="sm">
               <Dropdown.Toggle iconType="sort">{selectedSort}</Dropdown.Toggle>
               <Dropdown.Wrapper className="-left-34 top-32">
-                {sortOptions.map((option) => (
+                {SORT_OPTIONS.map((option) => (
                   <Dropdown.Item hoverStyle="purple" key={option} value={option}>
                     {option}
                   </Dropdown.Item>
@@ -84,8 +94,40 @@ export default function ComponentWithUseClient(): JSX.Element {
               </Dropdown.Wrapper>
             </Dropdown>
           </div>
-        </nav>
-      </div>
+        </div>
+      </nav>
+
+      <main className="flex flex-col gap-16">
+        <div className="p rounded-12 flex items-center border border-gray-200/10 px-24 py-16">
+          <div className="flex items-center gap-16">
+            <Image src={ProfileImage} alt="profile image" width={40} height={40} className="rounded-full" />
+            <span className="text-custom-black">김효준</span>
+            <span className="text-custom-black/60 max-w-200 overflow-wrap-break-word mr-16 break-all">
+              hyojune@codeit.com
+            </span>
+          </div>
+
+          <div className="mr-16 flex flex-grow flex-wrap gap-16">
+            <Badge color="purple" colorApplyTo="font" shape="round">
+              Product
+            </Badge>
+            <Badge color="purple" colorApplyTo="font" shape="round">
+              Content
+            </Badge>
+          </div>
+
+          <Dropdown selectedValue={selectedRole} onSelect={handleRoleChange} size="sm">
+            <Dropdown.Toggle>{selectedRole}</Dropdown.Toggle>
+            <Dropdown.Wrapper className="top-42">
+              {USER_ROLES.map((role) => (
+                <Dropdown.Item hoverStyle="purple" key={role} value={role}>
+                  {role}
+                </Dropdown.Item>
+              ))}
+            </Dropdown.Wrapper>
+          </Dropdown>
+        </div>
+      </main>
     </div>
   );
 }
