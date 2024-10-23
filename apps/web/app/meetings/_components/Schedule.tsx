@@ -26,7 +26,7 @@ export const RoomSchedule: React.FC<RoomScheduleProps> = ({ roomName, schedules,
   });
 
   return (
-    <div className="mb-8">
+    <div>
       <div className="mb-2 rounded-lg bg-white p-2 text-center shadow-md">{roomName}</div>
 
       {/* 시간표 (가로 스크롤 가능) */}
@@ -59,7 +59,13 @@ export const RoomSchedule: React.FC<RoomScheduleProps> = ({ roomName, schedules,
                     >
                       {schedules.map((schedule, index) => {
                         const isScheduled = schedule.start <= firstSlot && schedule.end > firstSlot;
-                        return isScheduled ? <div key={index} className="absolute inset-0 bg-gray-300" /> : null;
+                        const isCurrentUser = schedule.userId === currentUserId; // 현재 사용자가 예약했는지 확인
+                        return isScheduled ? (
+                          <div
+                            key={index}
+                            className={`absolute inset-0 ${isCurrentUser ? "bg-purple-700" : "bg-gray-300"}`} // 현재 사용자일 경우 배경색을 purple, 그렇지 않으면 gray
+                          />
+                        ) : null;
                       })}
                     </div>
                   )}
@@ -76,7 +82,13 @@ export const RoomSchedule: React.FC<RoomScheduleProps> = ({ roomName, schedules,
                     >
                       {schedules.map((schedule, index) => {
                         const isScheduled = schedule.start <= secondSlot && schedule.end > secondSlot;
-                        return isScheduled ? <div key={index} className="absolute inset-0 bg-gray-300" /> : null;
+                        const isCurrentUser = schedule.userId === currentUserId; // 현재 사용자가 예약했는지 확인
+                        return isScheduled ? (
+                          <div
+                            key={index}
+                            className={`absolute inset-0 ${isCurrentUser ? "bg-purple-700" : "bg-gray-300"}`} // 현재 사용자일 경우 배경색을 purple, 그렇지 않으면 gray
+                          />
+                        ) : null;
                       })}
                     </div>
                   )}
