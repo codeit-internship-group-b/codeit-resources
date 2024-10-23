@@ -1,10 +1,9 @@
 "use client";
 
 import cn from "@ui/src/utils/cn";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { formatDate, getDatesForSeats, getDatesFromToday } from "@ui/src/utils/date";
-import { useRouter } from "next/navigation";
 import { useDateStore } from "@/app/store/useDateStore";
 
 interface HeaderProps {
@@ -15,12 +14,6 @@ export default function HeaderTabs({ page }: HeaderProps): JSX.Element {
   const { selectedDate, setSelectedDate } = useDateStore();
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const dates = page === "seats" ? getDatesForSeats(2) : getDatesFromToday(selectedDate.year, selectedDate.month, 3);
-  const router = useRouter();
-
-  useEffect(() => {
-    const formattedDate = `${String(selectedDate.year)}-${String(selectedDate.month).padStart(2, "0")}-${String(selectedDate.day).padStart(2, "0")}`;
-    router.push(`/${page}?date=${formattedDate}`);
-  }, [selectedDate, router, page]);
 
   const handleActiveTab = (index: number): void => {
     setActiveTabIndex(index);
@@ -32,9 +25,6 @@ export default function HeaderTabs({ page }: HeaderProps): JSX.Element {
         day: datesFromToday.getDate(),
       });
     }
-    router.push(
-      `/${page}/date?=${String(selectedDate.year)}-${String(selectedDate.month)}-${String(selectedDate.day)}`,
-    );
   };
   return (
     <div className="h-45 relative top-4 flex items-end gap-24 md:static">

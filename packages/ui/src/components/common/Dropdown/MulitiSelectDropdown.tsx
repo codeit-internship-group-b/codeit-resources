@@ -1,13 +1,13 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 "use client";
-
 import {
   cloneElement,
   createContext,
   type ReactNode,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
   useRef,
   useState,
@@ -17,7 +17,10 @@ import {
 } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import cn from "@ui/src/utils/cn";
+import { handleKeyPress } from "@ui/src/utils/handleKeyPress";
 import { RightIcon, TriangleIcon, SearchIcon } from "@ui/public";
+import useEscapeKey from "@ui/src/hooks/useEscapeKey";
+import { useOnClickOutside } from "@ui/src/hooks/useOnClickOutside";
 
 const DropdownContext = createContext({
   isOpen: false,
@@ -65,33 +68,8 @@ export default function MultiSelectDropdown({ children, selectedValue, onSelect 
     [isOpen, selectedValue, toggleDropdown, closeDropdown, selectedItem],
   );
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent): void => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        closeDropdown();
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [dropdownRef, closeDropdown]);
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent): void => {
-      if (event.key === "Escape") {
-        closeDropdown();
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener("keydown", handleKeyDown);
-    }
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [isOpen, closeDropdown]);
+  useOnClickOutside(dropdownRef, closeDropdown);
+  useEscapeKey(closeDropdown, isOpen);
 
   return (
     <DropdownContext.Provider value={providerValue}>
@@ -131,9 +109,7 @@ function Toggle({ children, title }: ToggleProps): JSX.Element {
           },
         )}
         onClick={toggleDropdown}
-        onKeyDown={(e) => {
-          (e.key === "Enter" || e.key === " ") && toggleDropdown();
-        }}
+        onKeyDown={(e) => handleKeyPress(e, toggleDropdown)}
         aria-expanded={isOpen}
       >
         <span>{children}</span>
@@ -215,11 +191,11 @@ function Item({ children, value }: ItemProps): JSX.Element {
       onClick={() => {
         selectedItem(value);
       }}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
+      onKeyDown={(e) =>
+        handleKeyPress(e, () => {
           selectedItem(value);
-        }
-      }}
+        })
+      }
       tabIndex={0}
     >
       {isSelected ? (

@@ -1,29 +1,30 @@
 "use client";
 
-import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { createContext, ReactNode, useCallback, useContext, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import cn from "@ui/src/utils/cn";
+import { handleKeyPress } from "@ui/src/utils/handleKeyPress";
 import ErrorMessage from "../ErrorMessage";
 import { KebabIcon, RightIcon, SortIcon, TriangleIcon } from "@ui/public";
+import useEscapeKey from "@ui/src/hooks/useEscapeKey";
+import { useOnClickOutside } from "@ui/src/hooks/useOnClickOutside";
 
 const DropdownContext = createContext({
   isOpen: false,
   isError: false,
   errorMessage: "",
-  selectedValue: "",
+  selectedValue: "" as string | boolean, // 수정: string | boolean 허용
   size: "md",
   toggleDropdown: () => {},
   closeDropdown: () => {},
-  // eslint-disable-next-line no-unused-vars
-  selectedItem: (value: string) => {},
+  selectedItem: (value: string | boolean) => {}, // 수정: string | boolean 허용
 });
 
 interface DropdownProps {
   children: ReactNode;
-  selectedValue: string;
+  selectedValue: string | boolean; // 수정: string | boolean 허용
   size?: "sm" | "md";
-  // eslint-disable-next-line no-unused-vars
-  onSelect: (value: string) => void;
+  onSelect: (value: string | boolean) => void; // 수정: string | boolean 허용
   isError?: boolean;
   errorMessage?: string;
 }
@@ -43,7 +44,7 @@ export default function Dropdown({
   const closeDropdown = useCallback(() => setIsOpen(false), []);
 
   const selectedItem = useCallback(
-    (value: string) => {
+    (value: string | boolean) => {
       onSelect(value);
       closeDropdown();
     },
@@ -55,29 +56,8 @@ export default function Dropdown({
     [isOpen, selectedValue, isError, errorMessage, size, toggleDropdown, closeDropdown, selectedItem],
   );
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        closeDropdown();
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [dropdownRef, closeDropdown]);
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        closeDropdown();
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener("keydown", handleKeyDown);
-    }
-
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, closeDropdown]);
+  useOnClickOutside(dropdownRef, closeDropdown);
+  useEscapeKey(closeDropdown, isOpen);
 
   return (
     <DropdownContext.Provider value={providerValue}>
@@ -101,19 +81,19 @@ function Toggle({ children, title, iconType = "none" }: ToggleProps): JSX.Elemen
     <div className="group relative">
       {iconType === "kebab" && (
         <KebabIcon
-          className="cursor-pointer"
+          className="hover:bg-custom-black/5 cursor-pointer rounded-full transition-colors duration-300 ease-in-out"
           onClick={toggleDropdown}
-          onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && toggleDropdown()}
+          onKeyDown={(e) => handleKeyPress(e, toggleDropdown)}
         />
       )}
       {iconType === "sort" && (
         <button
           onClick={toggleDropdown}
-          onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && toggleDropdown()}
+          onKeyDown={(e) => handleKeyPress(e, toggleDropdown)}
           className="rounded-6 flex items-center gap-2 bg-gray-400 px-6 py-4"
         >
           <SortIcon />
-          <span className="text-custom-black/60 text-12 font-medium">{selectedValue}</span>
+          <span className="text-custom-black/60 text-12 font-medium">{selectedValue.toString()}</span>
         </button>
       )}
       {title && (
@@ -141,10 +121,10 @@ function Toggle({ children, title, iconType = "none" }: ToggleProps): JSX.Elemen
               size === "md" ? "py-15 w-full px-20" : "w-96 gap-6 px-12 py-6",
             )}
             onClick={toggleDropdown}
-            onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && toggleDropdown()}
+            onKeyDown={(e) => handleKeyPress(e, toggleDropdown)}
             aria-expanded={isOpen}
           >
-            {selectedValue ? selectedValue : <span>{children}</span>}
+            {selectedValue !== null && selectedValue !== undefined ? selectedValue.toString() : <span>{children}</span>}
             <TriangleIcon
               className={cn(
                 "transition-linear size-12",
@@ -190,26 +170,28 @@ function Wrapper({ children, className }: WrapperProps): JSX.Element {
 
 interface ItemProps {
   children: ReactNode;
-  value: string;
+  value: string | boolean; // 수정: string | boolean 허용
   position?: "left" | "center";
+  hoverStyle?: "gray" | "purple";
 }
 
-function Item({ children, value, position = "center" }: ItemProps): JSX.Element {
+function Item({ children, value, position = "center", hoverStyle = "gray" }: ItemProps): JSX.Element {
   const { selectedItem, selectedValue, size } = useContext(DropdownContext);
   const isSelected = selectedValue === value;
 
   return (
     <button
       className={cn(
-        "transition-linear text-custom-black/80 rounded-8 relative w-full px-12 py-6 hover:bg-gray-400 focus:bg-purple-700/5 focus:text-purple-900",
+        "transition-linear text-custom-black/80 rounded-8 relative w-full px-12 py-6 focus:bg-purple-700/5 focus:!text-purple-900",
         {
           "bg-purple-700/5 !text-purple-900 hover:bg-purple-700/5": isSelected,
           "text-left": position === "left",
         },
-        size === "md" ? "px-12 py-6" : "text-14 px-16 py-6",
+        hoverStyle === "gray" ? "hover:bg-gray-400" : "hover:bg-purple-700/5 hover:!text-purple-900",
+        size === "md" ? "px-12 py-6" : "text-15 px-1 py-6",
       )}
       onClick={() => selectedItem(value)}
-      onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && selectedItem(value)}
+      onKeyDown={(e) => handleKeyPress(e, () => selectedItem(value))}
       role="button"
       tabIndex={0}
     >
