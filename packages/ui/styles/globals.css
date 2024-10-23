@@ -14,7 +14,7 @@ button {
 }
 
 .transition-linear {
-  @apply transition-all duration-300 ease-linear transform;
+  @apply transform transition-all duration-300 ease-linear;
 }
 
 /* Webkit 기반 브라우저용 스크롤바 커스터마이징 */
