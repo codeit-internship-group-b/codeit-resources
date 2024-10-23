@@ -74,7 +74,7 @@ export const getReservationsByTypeAndDate = async (
   // 동적으로 필터링 조건 설정
   const query: FilterQuery<IReservation> = {
     itemId: { $in: itemIds },
-    $or: [{ startDate: { $gte: startOfDay, $lte: endOfDay } }, { endDate: { $gte: startOfDay, $lte: endOfDay } }],
+    $or: [{ startAt: { $gte: startOfDay, $lte: endOfDay } }, { endAt: { $gte: startOfDay, $lte: endOfDay } }],
   };
 
   // status가 있으면 추가
