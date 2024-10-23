@@ -20,8 +20,12 @@ const config: Omit<Config, "content"> = {
       maxHeight: px0_2000,
       width: px0_2000,
       height: px0_2000,
+      //2자리수(10~99)는 Badge color로 사용하려고 추가했어요
       colors: {
         purple: {
+          10: "#FDFAFF",
+          20: "#760DDE",
+          30: "#B363FD",
           100: "#F8ECFF",
           200: "#E9CCFF",
           300: "#A64EFF",
@@ -30,17 +34,50 @@ const config: Omit<Config, "content"> = {
           600: "#54009E",
           700: "#9933FF",
           800: "#7200CC",
-          900: "#760DDE"
+          900: "#760DDE",
         },
         "custom-black": "#333236",
         error: "#D6173A",
         gray: {
+          10: "#EDEDF0",
+          20: "#ADAEB8",
+          30: "#888893",
+          40: "#999CAC",
+          50: "#181B28",
+          60: "#F6F6F8",
           100: "#DDDEE4",
           200: "#413B54",
           300: "#3C3B40",
+          400: "#EDEDF0",
+          500: "#E5E5EA",
         },
         magenta: {
           100: "#EB008D",
+        },
+        green: {
+          10: "#EBFFEB",
+          20: "#00BE2F",
+          30: "#80F188",
+          40: "#025918",
+        },
+        pink: {
+          10: "#FFEBF7",
+          20: "#FF52B7",
+          30: "#72004B",
+          40: "#EB008D",
+        },
+        yellow: {
+          10: "#FFF7E5",
+          20: "#FF9100",
+          30: "#FFE057",
+          40: "#A34900",
+          50: "#FFB200",
+        },
+        blue: {
+          10: "#EBF3FF",
+          20: "#1790FF",
+          30: "#003078",
+          40: "#85C2FF",
         },
       },
     },
@@ -84,13 +121,35 @@ const config: Omit<Config, "content"> = {
       "xs-semibold": ["12px", { lineHeight: "20px", fontWeight: "600" }],
       "xs-medium": ["12px", { lineHeight: "20px", fontWeight: "500" }],
       "xs-regular": ["12px", { lineHeight: "20px", fontWeight: "400" }],
-      
+
       "xxs-semibold": ["11px", { lineHeight: "18px", fontWeight: "600" }],
       "xxs-medium": ["11px", { lineHeight: "18px", fontWeight: "500" }],
       "xxs-regular": ["11px", { lineHeight: "18px", fontWeight: "400" }],
     },
+    keyframes: {
+      rotateIn: {
+        "0%": { transform: "rotate(0deg)" },
+        "100%": { transform: "rotate(180deg)" },
+      },
+      rotateOut: {
+        "0%": { transform: "rotate(180deg)" },
+        "100%": { transform: "rotate(0deg)" },
+      },
+    },
+    animation: {
+      "rotate-in": "rotateIn 0.3s ease-in-out",
+      "rotate-out": "rotateOut 0.3s ease-in-out",
+    },
+    boxShadow: {
+      custom: "0 2px 4px 0 rgba(51, 50, 54, 0.06)", // X: 0, Y: 2, Blur: 4, Spread: 0, 색상: #333236/6
+    },
   },
   plugins: [],
+  safelist: [
+    {
+      pattern: /(bg|text)-(purple|green|pink|yellow|gray|blue)-(10|20|30|40|50|100|200|300)/,
+    },
+  ],
 };
 
 export default config;

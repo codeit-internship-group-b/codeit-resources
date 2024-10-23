@@ -1,6 +1,6 @@
 import React, { ComponentPropsWithoutRef, ElementType, ReactNode } from "react";
 import cn from "@ui/src/utils/cn";
-import { LogoCodeit } from "@ui/public";
+import { LogoCodeitIcon } from "@ui/public";
 
 interface ButtonProps {
   variant: "Action" | "Primary" | "Secondary" | "Tertiary" | "TertiaryColor" | "Text" | "TextColor";
@@ -110,7 +110,7 @@ export default function Button<C extends ElementType = "button">(props: Polymorp
   return (
     <Component className={classes} {...rest} disabled={!isActive || isPending}>
       <div className={cn("flex items-center transition-all duration-300", isPending ? "gap-10" : "gap-0")}>
-        {isPending && <LogoCodeit className={spinnerStyles} />}
+        {isPending && <LogoCodeitIcon className={spinnerStyles} />}
         <span className="transition-all duration-300">{isPending ? "수정 중..." : children}</span>
       </div>
     </Component>

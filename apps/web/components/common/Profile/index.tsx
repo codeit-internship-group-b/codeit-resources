@@ -1,4 +1,5 @@
-import { ProfileEmpty } from "@ui/public";
+import { memo } from "react";
+import { ProfileDefaultIcon } from "@ui/public";
 import { clsx } from "clsx";
 import Image from "next/image";
 
@@ -19,7 +20,7 @@ interface ProfileProps {
  * @returns 프로필 컴포넌트 JSX 요소를 반환합니다.
  */
 
-export default function Profile({ size = "size-32", src, name, className }: ProfileProps): JSX.Element {
+function Profile({ size = "size-32", src, name, className }: ProfileProps): JSX.Element {
   return (
     <div className={clsx(name && "flex items-center gap-10", className)}>
       {src ? (
@@ -27,9 +28,11 @@ export default function Profile({ size = "size-32", src, name, className }: Prof
           <Image src={src} fill alt="프로필 이미지" />
         </div>
       ) : (
-        <ProfileEmpty width={32} height={32} />
+        <ProfileDefaultIcon width={32} height={32} />
       )}
       {name ? <div className="font-medium text-white">{name}</div> : null}
     </div>
   );
 }
+
+export default memo(Profile);
