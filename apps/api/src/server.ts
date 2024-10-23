@@ -14,8 +14,8 @@ void connectDatabase().catch((error: unknown) => {
 });
 
 const app = express();
-const PORT = process.env.PORT;
-const CORS_ORIGIN = process.env.CORS_ORIGIN?.split(",");
+const PORT = process.env.PORT ?? 3000;
+const CORS_ORIGIN = process.env.CORS_ORIGIN?.split(",") ?? "http://localhost:3000";
 
 const corsOptions = {
   origin: CORS_ORIGIN,
