@@ -1,8 +1,9 @@
 import { type Request, type Response } from "express";
-import { type TReservationStatus, type IReservation } from "@repo/types/src/reservationType";
+import { type IReservation } from "@repo/types/src/reservationType";
 import { Item } from "../models";
 import { Reservation } from "../models/reservationModel";
 import isValidDateFormat from "../utils/isValidDateFormat";
+import isTimeInTenMinuteIntervals from "../utils/isMinuteValid";
 
 // 특정 유저의 오늘 날짜 예약 조회(dashboards)
 export const getUserReservations = async (req: Request<{ userId: string }>, res: Response): Promise<void> => {
@@ -83,7 +84,7 @@ interface CreateReservationRequestBody {
   itemId: string; // 예약된 리소스 ID (Item의 id)
   startAt: Date;
   endAt: Date;
-  status: TReservationStatus;
+  status: string;
   notes?: string;
   attendees?: string[];
 }
@@ -92,15 +93,40 @@ export const createReservation = async (
   res: Response,
 ): Promise<void> => {
   const { itemId } = req.params;
+  const { userId, startAt, endAt, notes, attendees, status } = req.body;
+
+  if (!isTimeInTenMinuteIntervals(startAt) || !isTimeInTenMinuteIntervals(endAt)) {
+    res.status(400).json({ message: "시간은 10분 단위로 설정해야 합니다." });
+    return;
+  }
+
+  // 중복 예약 검사
+  const overlappingReservation = await Reservation.findOne({
+    itemId,
+    status: "reserved",
+    $or: [
+      { startAt: { $lt: endAt }, endAt: { $gt: startAt } }, // 기존 예약의 시간과 겹치는지 확인
+    ],
+    $nor: [
+      { startAt: { $eq: endAt } }, // 새 예약의 시작 시간이 기존 예약의 종료 시간과 동일한 경우
+      { endAt: { $eq: startAt } }, // 새 예약의 종료 시간이 기존 예약의 시작 시간과 동일한 경우
+    ],
+  });
+
+  if (overlappingReservation) {
+    res.status(409).json({ message: "해당 시간에 이미 예약이 존재합니다." });
+    return;
+  }
+
   const newReservation = new Reservation({
-    userId: ``,
+    userId,
     itemId,
     // todo 시간 기본값 추가
-    startAt: "",
-    endAt: "",
-    status: "reserved",
-    notes: "",
-    attendees: [],
+    startAt,
+    endAt,
+    status: status ? status : "reserved",
+    notes,
+    attendees: attendees ? attendees : [],
   });
 
   const savedReservation: IReservation = await newReservation.save();
@@ -111,7 +137,7 @@ export const createReservation = async (
 interface UpdateReservationRequestBody {
   startAt?: Date;
   endAt?: Date;
-  status?: TReservationStatus;
+  status?: string;
   notes?: string;
   attendees?: string[];
 }
@@ -120,6 +146,16 @@ export const updateReservation = async (
   res: Response,
 ): Promise<void> => {
   const { reservationId } = req.params;
+  const { startAt, endAt } = req.body;
+
+  if (startAt && !isTimeInTenMinuteIntervals(startAt)) {
+    res.status(400).json({ message: "startAt 시간은 10분 단위로 설정해야 합니다." });
+    return;
+  }
+  if (endAt && !isTimeInTenMinuteIntervals(endAt)) {
+    res.status(400).json({ message: "endAt 시간은 10분 단위로 설정해야 합니다." });
+    return;
+  }
 
   const updatedReservation: IReservation | null = await Reservation.findByIdAndUpdate(reservationId, req.body, {
     new: true,
@@ -128,6 +164,7 @@ export const updateReservation = async (
     res.status(404).json({ message: "예약을 찾을 수 없습니다." });
     return;
   }
+
   res.status(200).json(updatedReservation);
 };
 
