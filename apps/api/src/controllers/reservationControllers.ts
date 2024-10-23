@@ -2,8 +2,8 @@ import { type Request, type Response } from "express";
 import { type IReservation } from "@repo/types/src/reservationType";
 import { Item } from "../models";
 import { Reservation } from "../models/reservationModel";
-import isValidDateFormat from "../utils/isValidDateFormat";
-import isTimeInTenMinuteIntervals from "../utils/isMinuteValid";
+import { isValidDateFormat } from "../utils/isValidDateFormat";
+import { isTimeInTenMinuteIntervals } from "../utils/isMinuteValid";
 
 // 특정 유저의 오늘 날짜 예약 조회(dashboards)
 export const getUserReservations = async (req: Request<{ userId: string }>, res: Response): Promise<void> => {
