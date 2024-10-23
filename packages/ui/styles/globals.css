@@ -25,3 +25,14 @@ button {
 h1 {
   @apply text-2xl-bold md:text-3xl-bold;
 }
+
+.diagonal-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100px;
+  height: 1px; /* 대각선의 두께 */
+  background-color: rgba(0, 0, 0, 0.1); /* 대각선의 색상 */
+  transform: rotate(27deg); /* 대각선 회전 */
+  transform-origin: left top;
+}
