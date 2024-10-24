@@ -1,12 +1,27 @@
 import { type Request, type Response } from "express";
 import { type IReservation } from "@repo/types/src/reservationType";
 import { type FilterQuery } from "mongoose";
+import { Item } from "../models/itemModel";
 import { Reservation } from "../models/reservationModel";
+import { User } from "../models";
+import { isMinuteValid } from "../utils/isMinuteValid";
 import { isValidDateFormat } from "../utils/isValidDateFormat";
 import { getStartAndEndOfDay } from "../utils/getStartAndEndOfDay";
-import { Item } from "../models/itemModel";
-import { isMinuteValid } from "../utils/isMinuteValid";
-import { User } from "../models";
+
+interface BaseReservation {
+  startAt: Date;
+  endAt: Date;
+  status?: string;
+  notes?: string;
+  attendees?: string[];
+}
+
+interface CreateReservationRequestBody extends BaseReservation {
+  userId: string;
+  itemId: string;
+}
+
+type UpdateReservationRequestBody = Partial<BaseReservation>;
 
 // 특정 유저의 오늘 날짜 예약 전체 조회(dashboards)
 export const getUserReservations = async (
@@ -84,15 +99,6 @@ export const getReservationsByTypeAndDate = async (
 };
 
 // 특정 아이템에 대한 예약 생성
-interface CreateReservationRequestBody {
-  userId: string; // 예약한 사용자 ID (User의 id)
-  itemId: string; // 예약된 리소스 ID (Item의 id)
-  startAt: Date;
-  endAt: Date;
-  status: string;
-  notes?: string;
-  attendees?: string[];
-}
 export const createReservation = async (
   req: Request<{ itemId: string }, IReservation, CreateReservationRequestBody>,
   res: Response,
@@ -155,9 +161,9 @@ export const createReservation = async (
     itemId,
     startAt,
     endAt,
-    status: status ? status : "reserved",
+    status: status ?? "reserved",
     notes,
-    attendees: attendees ? attendees : [],
+    attendees: attendees ?? [],
   });
 
   const savedReservation: IReservation = await newReservation.save();
@@ -165,13 +171,6 @@ export const createReservation = async (
 };
 
 // 특정 예약 수정
-interface UpdateReservationRequestBody {
-  startAt?: Date;
-  endAt?: Date;
-  status?: string;
-  notes?: string;
-  attendees?: string[];
-}
 export const updateReservation = async (
   req: Request<{ reservationId: string }, IReservation, UpdateReservationRequestBody>,
   res: Response,
@@ -234,9 +233,11 @@ export const updateReservation = async (
   const updatedReservation: IReservation | null = await Reservation.findByIdAndUpdate(
     reservationId,
     {
-      ...req.body,
       startAt: finalStartAt,
       endAt: finalEndAt,
+      status: req.body.status,
+      notes: req.body.notes,
+      attendees: req.body.attendees,
     }, // 최종 시간 값으로 업데이트
     { new: true, runValidators: true },
   );

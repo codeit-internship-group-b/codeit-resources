@@ -36,13 +36,12 @@ export const createRoom = async (req: Request<unknown, IRoom, CreateRoomRequestB
 
   const newRoom = {
     name,
-    description: description ? description : "",
+    description: description ?? "",
     status,
-    imageUrl: imageUrl ? imageUrl : "",
+    imageUrl: imageUrl ?? "",
     category,
-    capacity: capacity ? capacity : 4,
-    location: location ? location : "",
-    type: "room",
+    capacity: capacity ?? 4,
+    location: location ?? "",
   };
 
   const createdRoom = (await Room.create(newRoom)) as unknown;
@@ -53,7 +52,7 @@ export const createRoom = async (req: Request<unknown, IRoom, CreateRoomRequestB
 interface UpdateRoomRequestBody {
   name?: string;
   description?: string;
-  status?: string;
+  status?: TItemStatus;
   imageUrl?: string;
   category?: string;
   capacity?: number;
@@ -91,8 +90,14 @@ export const updateRoom = async (
 };
 
 // 회의실 아이템 삭제 (DELETE /rooms/:itemId)
-export const deleteRoom = async (req: Request, res: Response): Promise<void> => {
+export const deleteRoom = async (req: Request<{ itemId: string }>, res: Response): Promise<void> => {
   const { itemId } = req.params;
+
+  // 데이터 유효성 검증
+  if (!/^[0-9a-fA-F]{24}$/.test(itemId)) {
+    res.status(400).json({ message: "유효하지 않은 ID입니다." });
+    return;
+  }
 
   const checkAssignedReservations = await Reservation.exists({
     itemId,

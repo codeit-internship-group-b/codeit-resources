@@ -3,7 +3,7 @@ export const isMinuteValid = (date: Date | string): boolean => {
   const parsedDate = typeof date === "string" ? new Date(date) : date;
 
   // Date 객체인지와 유효한 날짜인지 확인
-  if (!(parsedDate instanceof Date) || isNaN(parsedDate.getTime())) {
+  if (!(parsedDate instanceof Date) || Number.isNaN(parsedDate.getTime())) {
     return false;
   }
 

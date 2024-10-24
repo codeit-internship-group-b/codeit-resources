@@ -17,14 +17,15 @@ const ItemSchema: Schema = new Schema(
   },
 );
 
-export const Item = model("Item", ItemSchema);
+export const Item = model<ItemDoc>("Item", ItemSchema);
 
 // Room 타입 하위 스키마
 
 const RoomSchema: Schema = new Schema({
-  category: { type: String, required: true, ref: "Category", default: "기타" },
+  category: { type: Schema.Types.ObjectId, required: true, ref: "Category" },
   capacity: { type: Number, min: 1 },
   location: { type: String },
+  type: { type: String, default: "room", required: true },
 });
 
 export const Room = Item.discriminator<IRoom>("Room", RoomSchema, "room");
@@ -32,13 +33,15 @@ export const Room = Item.discriminator<IRoom>("Room", RoomSchema, "room");
 // Seat 타입 하위 스키마
 const SeatSchema: Schema = new Schema({
   userName: { type: String, ref: "User" },
+  type: { type: String, default: "seat", required: true },
 });
 
 export const Seat = Item.discriminator<ISeat>("Seat", SeatSchema, "seat");
 
 // Equipment 타입 하위 스키마
 const EquipmentSchema: Schema = new Schema({
-  category: { type: String, required: true, ref: "Category", default: "기타" },
+  category: { type: Schema.Types.ObjectId, required: true, ref: "Category" },
+  type: { type: String, default: "equipment", required: true },
 });
 
 export const Equipment = Item.discriminator<IEquipment>("Equipment", EquipmentSchema, "equipment");
