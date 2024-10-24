@@ -1,4 +1,4 @@
-import { Role, type IUser } from "@repo/types/userType";
+import { Roles, type IUser } from "@repo/types/userType";
 import { Schema, model, type Document } from "mongoose";
 import { emailValidator } from "../utils/emailValidator";
 
@@ -17,7 +17,7 @@ const UserSchema = new Schema<UserDocument>(
     },
     email: { type: String, required: true, minlength: 4, unique: true },
     password: { type: String, required: true, minlength: 4, trim: true },
-    role: { type: String, enum: Role, default: "member" },
+    role: { type: String, enum: Roles, default: "member" },
     teams: {
       type: [String],
       ref: "Team",

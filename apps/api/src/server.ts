@@ -40,6 +40,7 @@ app.get("/health", (req, res) => {
     version: process.version,
   });
 });
+
 app.listen(PORT, () => {
   console.log("Server is running on your env port");
 });
