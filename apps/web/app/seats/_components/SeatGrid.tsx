@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { SEAT_GRID } from "@ui/src/utils/constants/seatGrid";
+import { SeatProvider } from "../context/SeatContext";
 import SeatBlock from "./SeatBlock";
 
 const mock = {
@@ -120,6 +121,7 @@ interface SeatStatus {
 }
 
 export default function SeatGrid(): JSX.Element {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(mock);
 
   const seatMap = useMemo(() => {
@@ -141,16 +143,18 @@ export default function SeatGrid(): JSX.Element {
   }
 
   return (
-    <div className="w-660 md:w-1004 m-auto grid grid-cols-2 gap-20 md:gap-40">
-      {Object.entries(SEAT_GRID).map(([row, seats]) => (
-        <SeatBlock
-          key={row}
-          seats={seats.map((seatNum) => ({
-            seatNum,
-            ...getSeatStatus(seatNum),
-          }))}
-        />
-      ))}
-    </div>
+    <SeatProvider>
+      <div className="w-660 md:w-1004 m-auto grid grid-cols-2 gap-20 md:gap-40">
+        {Object.entries(SEAT_GRID).map(([row, seats]) => (
+          <SeatBlock
+            key={row}
+            seats={seats.map((seatNum) => ({
+              seatNum,
+              ...getSeatStatus(seatNum),
+            }))}
+          />
+        ))}
+      </div>
+    </SeatProvider>
   );
 }

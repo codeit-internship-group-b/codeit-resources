@@ -200,7 +200,7 @@ function Item({ children, value }: ItemProps): JSX.Element {
     >
       {isSelected ? (
         <span className="border-custom-black/20 rounded-2 relative size-20 border border-solid bg-purple-700">
-          <RightIcon className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform fill-white" />
+          <RightIcon className="absolute left-1/2 top-1/2 h-20 w-20 -translate-x-1/2 -translate-y-1/2 transform fill-white" />
         </span>
       ) : (
         <span className="border-custom-black/20 rounded-2 block size-20 border border-solid bg-white/40" />

@@ -197,7 +197,7 @@ function Item({ children, value, position = "center", hoverStyle = "gray" }: Ite
     >
       {children}
       {isSelected && size === "md" && (
-        <RightIcon className="absolute right-8 top-1/2 -translate-y-1/2 transform fill-purple-700" />
+        <RightIcon className="absolute right-8 top-1/2 h-20 w-20 -translate-y-1/2 transform fill-purple-700" />
       )}
     </button>
   );
