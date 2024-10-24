@@ -11,7 +11,7 @@
     "test": "jest --detectOpenHandles"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=18"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.676.0",
