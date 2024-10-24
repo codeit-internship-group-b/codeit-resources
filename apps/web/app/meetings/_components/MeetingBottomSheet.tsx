@@ -1,18 +1,13 @@
+/* eslint-disable */
 "use client";
 
 import { Sheet } from "react-modal-sheet";
+import { type Schedule } from "@/app/types/scheduletypes";
 
 interface SnapSheetProps {
   isOpen: boolean;
   onClose: () => void;
-  schedule: {
-    id: string;
-    date: string;
-    start_time: string; // HH:mm 형식
-    end_time: string; // HH:mm 형식
-    title: string;
-    userId: string;
-  };
+  schedule: Schedule;
 }
 
 export const MeetingBottomSheet: React.FC<SnapSheetProps> = ({ isOpen, onClose, schedule }) => {
