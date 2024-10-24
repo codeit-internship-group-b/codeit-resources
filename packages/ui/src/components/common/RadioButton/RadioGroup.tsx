@@ -10,13 +10,16 @@ import { type RadioGroupProps, type RadioContextProps } from "@ui/src/types/Radi
 export const RadioContext = createContext<RadioContextProps | null>(null);
 
 export function RadioGroup(props: RadioGroupProps): JSX.Element {
-  const { children, defaultValue = "", onChange, legend } = props;
+  const { children, defaultValue = "", value, onChange, legend } = props;
 
-  const [selectedValue, setSelectedValue] = useState<string>(defaultValue);
+  const [internalValue, setInternalValue] = useState<string>(defaultValue);
 
-  const selectOption = (value: string): void => {
-    setSelectedValue(value);
-    onChange?.(value);
+  // 외부 value가 있으면 외부 value를 사용하고 없으면 내부 value 사용
+  const selectedValue = value !== undefined ? value : internalValue;
+
+  const selectOption = (newValue: string): void => {
+    setInternalValue(newValue);
+    onChange?.(newValue);
   };
 
   return (
