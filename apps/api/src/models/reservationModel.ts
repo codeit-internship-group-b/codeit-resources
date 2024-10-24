@@ -3,6 +3,8 @@ import { Schema, model, type Document } from "mongoose";
 
 export interface ReservationDoc extends Omit<IReservation, "_id">, Document {}
 
+const TEN_MIN_BUFFER = 10 * 60 * 1000;
+
 const ReservationSchema: Schema = new Schema(
   {
     userId: { type: String, required: true },
@@ -13,7 +15,7 @@ const ReservationSchema: Schema = new Schema(
       validate: {
         validator(this: ReservationDoc, startAt: Date) {
           // 10분정도 여유 둬서 애매하게 기다리지 않도록
-          const timeWithBuffer = new Date(new Date().getTime() - 600000);
+          const timeWithBuffer = new Date(new Date().getTime() - TEN_MIN_BUFFER);
           return startAt >= timeWithBuffer;
         },
         message: "시작 시간은 10분 전 이후로 설정 가능합니다.",
@@ -39,5 +41,6 @@ const ReservationSchema: Schema = new Schema(
 );
 ReservationSchema.index({ startAt: 1 });
 ReservationSchema.index({ status: 1, startAt: 1 });
+ReservationSchema.index({ type: 1, startAt: 1 });
 
 export const Reservation = model<IReservation>("Reservation", ReservationSchema);
