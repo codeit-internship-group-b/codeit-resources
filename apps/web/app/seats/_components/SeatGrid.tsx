@@ -8,8 +8,11 @@ import { seatsMock } from "../mock/ItemMock";
 import SeatBlock from "./SeatBlock";
 
 export default function SeatGrid(): JSX.Element {
+  // 탠스택쿼리로 바꿀 예정 (data / Loading)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(seatsMock);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [isLoading, setIsLoading] = useState(false);
   const { getSeatStatus } = useSeatStatus(data);
 
   return (
@@ -22,6 +25,7 @@ export default function SeatGrid(): JSX.Element {
               seatNum,
               ...getSeatStatus(seatNum),
             }))}
+            isLoading={isLoading}
           />
         ))}
       </div>

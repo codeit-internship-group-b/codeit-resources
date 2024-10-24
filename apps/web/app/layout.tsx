@@ -2,6 +2,7 @@ import "@repo/ui/styles/globals.css";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import type { ReactNode } from "react";
+import { Toast } from "@ui/index";
 import { Providers } from "./providers";
 import Gnb from "@/components/Gnb";
 
@@ -33,6 +34,7 @@ export default function RootLayout({
         <Providers>
           <div className="md:ml-200">{children}</div>
         </Providers>
+        <Toast />
       </body>
     </html>
   );
