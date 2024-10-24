@@ -6,9 +6,12 @@ interface SnapSheetProps {
   isOpen: boolean;
   onClose: () => void;
   schedule: {
+    id: string;
+    date: string;
+    start_time: string; // HH:mm 형식
+    end_time: string; // HH:mm 형식
     title: string;
-    start: string;
-    end: string;
+    userId: string;
   };
 }
 

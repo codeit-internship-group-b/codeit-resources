@@ -4,8 +4,10 @@
 import React from "react";
 
 interface Schedule {
-  start: string;
-  end: string;
+  id: string;
+  date: string;
+  start_time: string; // HH:mm 형식
+  end_time: string; // HH:mm 형식
   title: string;
   userId: string;
 }
@@ -19,7 +21,7 @@ interface TimeSlotProps {
 }
 
 export const TimeSlot: React.FC<TimeSlotProps> = ({ time, schedules, currentUserId, onSelectSchedule, slotIndex }) => {
-  const slotSchedules = schedules.filter((schedule) => schedule.start <= time && schedule.end > time);
+  const slotSchedules = schedules.filter((schedule) => schedule.start_time <= time && schedule.end_time > time);
   const isReserved = slotSchedules.length > 0;
 
   let backgroundColor = "";

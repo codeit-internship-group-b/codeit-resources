@@ -19,10 +19,12 @@ export default function MeetingRoomSchedule() {
           key={room.id}
           roomName={room.title} // 데이터에서 name을 title로 변경
           schedules={room.schedules
-            .filter((schedule) => schedule.date === selectedDateString) // 선택된 날짜에 맞는 스케줄만 필터링
+            .filter((schedule) => schedule.date === selectedDateString)
             .map((schedule) => ({
-              start: schedule.start_time,
-              end: schedule.end_time,
+              id: schedule.id,
+              date: schedule.date, // date 속성 추가
+              start_time: schedule.start_time, // start_time으로 변경
+              end_time: schedule.end_time, // end_time으로 변경
               title: schedule.title,
               userId: schedule.userId,
             }))}

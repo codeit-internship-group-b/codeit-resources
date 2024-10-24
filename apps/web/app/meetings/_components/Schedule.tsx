@@ -1,4 +1,5 @@
 /* eslint-disable */
+"use client";
 
 import React, { useState } from "react";
 import { TimeSlot } from "./TimeSlot";
@@ -7,8 +8,10 @@ import { RoomHeader } from "./RoomHeader";
 import { MeetingBottomSheet } from "./MeetingBottomSheet";
 
 interface Schedule {
-  start: string;
-  end: string;
+  id: string;
+  date: string;
+  start_time: string; // HH:mm 형식
+  end_time: string; // HH:mm 형식
   title: string;
   userId: string;
 }
