@@ -60,27 +60,27 @@ interface UpdateRoomRequestBody {
   location?: string;
 }
 export const updateRoom = async (
-  req: Request<{ id: string }, IRoom, Partial<UpdateRoomRequestBody>>,
+  req: Request<{ itemId: string }, IRoom, Partial<UpdateRoomRequestBody>>,
   res: Response,
 ): Promise<void> => {
-  const { id } = req.params;
+  const { itemId } = req.params;
   const { name } = req.body;
 
   // 데이터 유효성 검증
-  if (!/^[0-9a-fA-F]{24}$/.test(id)) {
+  if (!/^[0-9a-fA-F]{24}$/.test(itemId)) {
     res.status(400).json({ message: "유효하지 않은 ID입니다." });
     return;
   }
 
   if (name !== undefined) {
-    const existingRoom = (await Room.findOne({ name, _id: { $ne: id } }).select("_id")) as unknown;
+    const existingRoom = (await Room.findOne({ name, _id: { $ne: itemId } }).select("_id")) as unknown;
     if (existingRoom) {
       res.status(400).json({ message: "이미 존재하는 회의실 이름입니다." });
       return;
     }
   }
 
-  const updatedRoom = (await Room.findByIdAndUpdate(id, req.body, { new: true, runValidators: true })) as unknown;
+  const updatedRoom = (await Room.findByIdAndUpdate(itemId, req.body, { new: true, runValidators: true })) as unknown;
 
   if (!updatedRoom) {
     res.status(404).json({ message: "해당 회의실을 찾을 수 없습니다." });
@@ -90,12 +90,12 @@ export const updateRoom = async (
   res.status(200).json({ message: "회의실 정보가 업데이트되었습니다.", updatedRoom });
 };
 
-// 회의실 아이템 삭제 (DELETE /rooms/:id)
+// 회의실 아이템 삭제 (DELETE /rooms/:itemId)
 export const deleteRoom = async (req: Request, res: Response): Promise<void> => {
-  const { id } = req.params;
+  const { itemId } = req.params;
 
   const checkAssignedReservations = await Reservation.exists({
-    itemId: id,
+    itemId,
     status: "reserved",
   });
 
@@ -104,7 +104,7 @@ export const deleteRoom = async (req: Request, res: Response): Promise<void> => 
     return;
   }
 
-  const deletedRoom = (await Room.findByIdAndDelete(id)) as unknown;
+  const deletedRoom = (await Room.findByIdAndDelete(itemId)) as unknown;
 
   if (!deletedRoom) {
     res.status(404).json({ message: "해당 회의실을 찾을 수 없습니다." });

@@ -179,44 +179,67 @@ export const updateReservation = async (
   const { reservationId } = req.params;
   const { startAt, endAt } = req.body;
 
-  if (startAt && !isMinuteValid(startAt)) {
-    res.status(400).json({ message: "startAt 시간은 10분 단위로 설정해야 합니다." });
-    return;
-  }
-  if (endAt && !isMinuteValid(endAt)) {
-    res.status(400).json({ message: "endAt 시간은 10분 단위로 설정해야 합니다." });
-    return;
-  }
-
-  const targetReservation: IReservation | null = await Reservation.findById(reservationId).select("_id");
+  // 예약 존재여부 확인
+  const targetReservation: IReservation | null =
+    await Reservation.findById(reservationId).select("startAt endAt itemId");
   if (!targetReservation) {
     res.status(404).json({ message: "예약을 찾을 수 없습니다." });
     return;
   }
 
-  // 중복 예약 검사
-  if (startAt ?? endAt) {
-    const overlappingReservation = await Reservation.findOne({
-      itemId: targetReservation.itemId,
-      status: "reserved",
-      $or: [
-        { startAt: { $lt: endAt }, endAt: { $gt: startAt } }, // 기존 예약의 시간과 겹치는지 확인
-      ],
-      $nor: [
-        { startAt: { $eq: endAt } }, // 새 예약의 시작 시간이 기존 예약의 종료 시간과 동일한 경우
-        { endAt: { $eq: startAt } }, // 새 예약의 종료 시간이 기존 예약의 시작 시간과 동일한 경우
-      ],
-    });
+  // 기존 startAt, endAt 값을 가져옴
+  const existingStartAt = targetReservation.startAt;
+  const existingEndAt = targetReservation.endAt;
 
-    if (overlappingReservation) {
-      res.status(409).json({ message: "해당 시간에 이미 예약이 존재합니다." });
-      return;
-    }
+  // startAt이나 endAt 중 하나만 수정된 경우 기존 값을 유지
+  const finalStartAt = startAt ? startAt : existingStartAt;
+  const finalEndAt = endAt ? endAt : existingEndAt;
+
+  // 시작, 종료 시간이 10분 단위인지 검사
+  if (!isMinuteValid(finalStartAt)) {
+    res.status(400).json({ message: "startAt 시간은 10분 단위로 설정해야 합니다." });
+    return;
+  }
+  if (!isMinuteValid(finalEndAt)) {
+    res.status(400).json({ message: "endAt 시간은 10분 단위로 설정해야 합니다." });
+    return;
   }
 
-  const updatedReservation: IReservation | null = await Reservation.findByIdAndUpdate(reservationId, req.body, {
-    new: true,
+  // 시작, 종료 시간 크기 비교
+  if (finalStartAt >= finalEndAt) {
+    res.status(400).json({ message: "시작 시간은 종료 시간보다 이전이어야 합니다." });
+    return;
+  }
+
+  // 중복 예약 검사
+  const overlappingReservation = await Reservation.findOne({
+    itemId: targetReservation.itemId,
+    status: "reserved",
+    _id: { $ne: reservationId }, // 자신을 제외한 예약을 검사
+    $or: [
+      { startAt: { $lt: finalEndAt }, endAt: { $gt: finalStartAt } }, // 시간 겹치는지 확인
+    ],
+    $nor: [
+      { startAt: { $eq: finalEndAt } }, // 새 예약의 시작 시간이 기존 예약의 종료 시간과 동일한 경우
+      { endAt: { $eq: finalStartAt } }, // 새 예약의 종료 시간이 기존 예약의 시작 시간과 동일한 경우
+    ],
   });
+
+  if (overlappingReservation) {
+    res.status(409).json({ message: "해당 시간에 이미 예약이 존재합니다." });
+    return;
+  }
+
+  // 예약 업데이트
+  const updatedReservation: IReservation | null = await Reservation.findByIdAndUpdate(
+    reservationId,
+    {
+      ...req.body,
+      startAt: finalStartAt,
+      endAt: finalEndAt,
+    }, // 최종 시간 값으로 업데이트
+    { new: true, runValidators: true },
+  );
 
   res.status(200).json(updatedReservation);
 };
