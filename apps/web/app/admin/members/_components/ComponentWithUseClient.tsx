@@ -6,7 +6,7 @@ import Image from "next/image";
 import Button from "@ui/src/components/common/Button";
 import Dropdown from "@ui/src/components/common/Dropdown";
 import { Badge, Toast } from "@ui/index";
-import { MOCK_MEMBERS, CATEGORIES } from "../mockData";
+import { type Member, MOCK_MEMBERS, CATEGORIES } from "../mockData";
 import SidePanel from "./SidePanel";
 
 const USER_ROLES = ["멤버", "어드민"];
@@ -17,6 +17,7 @@ export default function ComponentWithUseClient(): JSX.Element {
   const [selectedSort, setSelectedSort] = useState("최신순");
   const [selectedRole, setSelectedRole] = useState("어드민");
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
+  const [selectedMember, setSelectedMember] = useState<Member | null>(null);
 
   const handleOpenSidePanel = (): void => {
     setIsSidePanelOpen(true);
@@ -24,6 +25,7 @@ export default function ComponentWithUseClient(): JSX.Element {
 
   const handleCloseSidePanel = (): void => {
     setIsSidePanelOpen(false);
+    setSelectedMember(null);
   };
 
   const handleCategoryClick = (category: string): void => {
@@ -34,6 +36,11 @@ export default function ComponentWithUseClient(): JSX.Element {
     if (typeof value === "string") {
       setSelectedSort(value);
     }
+  };
+
+  const handleMemberClick = (member: Member): void => {
+    setSelectedMember(member);
+    setIsSidePanelOpen(true);
   };
 
   const handleRoleChange = (value: string | boolean): void => {
@@ -97,7 +104,12 @@ export default function ComponentWithUseClient(): JSX.Element {
 
       <main className="flex flex-col gap-16">
         {MOCK_MEMBERS.map((member) => (
-          <div key={member.id} className="rounded-12 flex items-center border border-gray-200/10 px-24 py-16">
+          <button
+            key={member.id}
+            type="button"
+            onClick={() => handleMemberClick(member)}
+            className="rounded-12 flex items-center border border-gray-200/10 px-24 py-16 outline outline-1 outline-transparent transition-all duration-300 hover:border-transparent hover:bg-purple-700/5 hover:outline-purple-300"
+          >
             <div className="flex items-center gap-16">
               <Image
                 src={member.profileImage}
@@ -130,10 +142,11 @@ export default function ComponentWithUseClient(): JSX.Element {
                 ))}
               </Dropdown.Wrapper>
             </Dropdown>
-          </div>
+          </button>
         ))}
       </main>
-      <SidePanel isOpen={isSidePanelOpen} onClose={handleCloseSidePanel} />
+
+      <SidePanel isOpen={isSidePanelOpen} onClose={handleCloseSidePanel} selectedMember={selectedMember} />
       <Toast />
     </div>
   );
