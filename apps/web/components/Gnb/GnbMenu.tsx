@@ -14,7 +14,6 @@ const NAV_ITEMS = [
 
 const ADMIN_ITEMS = [
   { href: "/admin/members", name: "멤버 관리", icon: PersonIcon },
-   
   { href: "/admin/teams", name: "팀 관리", icon: TeamIcon },
   { href: "/admin/meetings", name: "회의실 설정", icon: MeetingIcon },
   { href: "/admin/seats", name: "좌석 설정", icon: SeatsIcon },
