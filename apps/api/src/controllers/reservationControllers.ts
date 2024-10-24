@@ -1,11 +1,12 @@
 import { type Request, type Response } from "express";
 import { type IReservation } from "@repo/types/src/reservationType";
 import { type FilterQuery } from "mongoose";
-import { Item } from "../models";
+import { type IItem } from "@repo/types";
 import { Reservation } from "../models/reservationModel";
 import { isValidDateFormat } from "../utils/isValidDateFormat";
 import { isTimeInTenMinuteIntervals } from "../utils/isMinuteValid";
 import { getStartAndEndOfDay } from "../utils/getStartAndEndOfDay";
+import { Item } from "../models/itemModel";
 
 // 특정 유저의 오늘 날짜 예약 조회(dashboards)
 export const getUserReservations = async (req: Request<{ userId: string }>, res: Response): Promise<void> => {
@@ -23,7 +24,7 @@ export const getUserReservations = async (req: Request<{ userId: string }>, res:
   }
 
   const itemIds = userReservations.map((reservation) => reservation.itemId);
-  const items = await Item.find({ _id: { $in: itemIds } });
+  const items: IItem[] = await Item.find({ _id: { $in: itemIds } });
 
   const reservationsByType = {
     seat: [] as IReservation[],
@@ -32,7 +33,7 @@ export const getUserReservations = async (req: Request<{ userId: string }>, res:
   };
 
   userReservations.forEach((reservation) => {
-    const item = items.find((i) => i._id.toString() === reservation.itemId);
+    const item = items.find((i) => i._id === reservation.itemId);
     if (item) {
       reservationsByType[item.type].push(reservation);
     }

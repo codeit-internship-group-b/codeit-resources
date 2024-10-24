@@ -1,13 +1,12 @@
-import { type IItem, ItemStatus, ItemTypes } from "@repo/types/src/itemType";
+import { type TBaseItem, type IRoom, type ISeat, type IEquipment, ItemStatus } from "@repo/types/src/itemType";
 import { Schema, type Document, model } from "mongoose";
 
-export interface ItemDoc extends Omit<IItem, "_id">, Document {}
+export interface ItemDoc extends Omit<TBaseItem, "_id">, Document {}
 
 const ItemSchema: Schema = new Schema(
   {
-    name: { type: String, required: true },
-    type: { type: String, enum: ItemTypes, required: true }, // Discriminator key
-    description: { type: String },
+    name: { type: String, required: true, maxlength: 50 },
+    description: { type: String, maxlength: 200 },
     status: { type: String, enum: ItemStatus, required: true },
     imageUrl: { type: String, default: "" },
   },
@@ -18,48 +17,31 @@ const ItemSchema: Schema = new Schema(
   },
 );
 
-// Room 타입 하위 스키마
-export const Item = model<IItem>("Item", ItemSchema);
+export const Item = model("Item", ItemSchema);
 
-interface Room extends IItem {
-  category: string;
-  location?: string;
-  tags?: string[];
-  capacity?: number;
-}
+// Room 타입 하위 스키마
 
 const RoomSchema: Schema = new Schema({
   type: { type: String, default: "room", required: true },
-  category: { type: String, required: true },
-  capacity: { type: Number, required: true },
+  category: { type: String, required: true, ref: "Category", default: "기타" },
+  capacity: { type: Number },
   location: { type: String },
-  tags: { type: [String] },
 });
 
-export const Room = Item.discriminator<Room>("Room", RoomSchema);
+export const Room = Item.discriminator<IRoom>("Room", RoomSchema);
 
 // Seat 타입 하위 스키마
-interface Seat extends IItem {
-  tags?: string[];
-}
-
 const SeatSchema: Schema = new Schema({
   type: { type: String, default: "seat", required: true },
-  tags: { type: [String] },
+  userName: { type: String, ref: "User" },
 });
 
-export const Seat = Item.discriminator<Seat>("Seat", SeatSchema);
+export const Seat = Item.discriminator<ISeat>("Seat", SeatSchema);
 
 // Equipment 타입 하위 스키마
-interface Equipment extends IItem {
-  category: string;
-  tags?: string[];
-}
-
 const EquipmentSchema: Schema = new Schema({
   type: { type: String, default: "equipment", required: true },
-  category: { type: String, required: true },
-  tags: { type: [String] },
+  category: { type: String, required: true, ref: "Category", default: "기타" },
 });
 
-export const Equipment = Item.discriminator<Equipment>("Equipment", EquipmentSchema);
+export const Equipment = Item.discriminator<IEquipment>("Equipment", EquipmentSchema);

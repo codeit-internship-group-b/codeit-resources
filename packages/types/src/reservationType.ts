@@ -1,6 +1,8 @@
 export const ReservationStatus = ["reserved", "cancelled", "completed"] as const; // 예약됨, 취소, 완료
 export type TReservationStatus = (typeof ReservationStatus)[number];
 
+type UserId = string;
+
 export interface IReservation {
   _id: string;
   userId: string; // 예약한 사용자 ID (User의 id)
@@ -11,5 +13,5 @@ export interface IReservation {
   createdAt: Date;
   updatedAt: Date;
   notes?: string; // Optional
-  attendees?: string[]; // Optional 참여자 ID (User의 id)
+  attendees?: UserId[]; // Optional 참여자 ID (User의 id)
 }
