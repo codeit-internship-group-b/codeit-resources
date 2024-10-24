@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-console */
 "use client";
@@ -29,14 +30,16 @@ interface MemberFormData {
 const TEAMS = ["Management", "Finance", "Strategy", "Brand Experience", "People & Culture"];
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
 
+const initialFormData: MemberFormData = {
+  role: "멤버",
+  name: "",
+  email: "",
+  teams: [],
+  profileImage: null,
+};
+
 export default function SidePanel({ isOpen, onClose, selectedMember }: AddMemberSidePanelProps): JSX.Element {
-  const [formData, setFormData] = useState<MemberFormData>({
-    role: "멤버",
-    name: "",
-    email: "",
-    teams: [],
-    profileImage: null,
-  });
+  const [formData, setFormData] = useState<MemberFormData>(initialFormData);
 
   const handleRoleChange = (role: string): void => {
     setFormData((prev) => ({ ...prev, role }));
@@ -72,6 +75,13 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
 
     // TODO: 폼 제출 로직
     console.log("폼 제출:", formData);
+
+    notify({
+      type: "success",
+      message: selectedMember ? "멤버가 수정되었어요" : "멤버가 추가되었어요",
+    });
+
+    onClose();
   };
 
   const handleModalConfirm = (): void => {
@@ -82,7 +92,13 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
   };
 
   useEffect(() => {
-    if (selectedMember) {
+    if (!isOpen) {
+      const timer = setTimeout(() => {
+        setFormData(initialFormData);
+      }, 100);
+
+      return () => clearTimeout(timer);
+    } else if (selectedMember) {
       setFormData({
         role: selectedMember.role,
         name: selectedMember.name,
@@ -91,7 +107,7 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
         profileImage: selectedMember.profileImage,
       });
     }
-  }, [selectedMember]);
+  }, [isOpen, selectedMember]);
 
   return (
     <Modal.Root>
