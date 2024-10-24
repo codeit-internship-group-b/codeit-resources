@@ -1,5 +1,4 @@
 import { type Request, type Response } from "express";
-import { hash } from "bcryptjs";
 import { type TRole } from "@repo/types/userType";
 import { User } from "../models/userModel";
 
@@ -86,8 +85,6 @@ export const createUser = async (req: CreateUserRequest, res: Response): Promise
 
   const newTeams = teams ?? [];
 
-  const hashedPassword = await hash(password, 10);
-
   const profileImageUrl = req.file
     ? (req.file as Express.MulterS3.File).location
     : process.env.DEFAULT_PROFILE_IMAGE_URL;
@@ -95,7 +92,7 @@ export const createUser = async (req: CreateUserRequest, res: Response): Promise
   const user = new User({
     name,
     email,
-    password: hashedPassword,
+    password,
     role: role ?? "member",
     profileImage: profileImageUrl,
     teams: newTeams,
@@ -132,6 +129,7 @@ export const updateUser = async (req: UpdateUserRequest, res: Response): Promise
 
   targetUser.role = role;
   if (name) targetUser.name = name;
+  if (teams) targetUser.teams = teams;
   if (email) {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -141,7 +139,6 @@ export const updateUser = async (req: UpdateUserRequest, res: Response): Promise
 
     targetUser.email = email;
   }
-  if (teams) targetUser.teams = teams;
 
   if (req.file) {
     const profileImageUrl = (req.file as Express.MulterS3.File).location;
