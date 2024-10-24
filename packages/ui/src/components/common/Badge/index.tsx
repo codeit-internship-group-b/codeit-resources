@@ -61,7 +61,7 @@ const colorShades: Record<
 export default function Badge(props: BadgeProps): JSX.Element {
   const { color, shape, colorApplyTo, children } = props;
   const baseClasses =
-    "h-20 md:h-28 lg:h-32 px-4 md:py-4 md:px-8 lg:px-10 lg:py-6 text-xs-medium md:text-md-medium lg:text-lg-medium";
+    "flex items-center justify-center h-20 md:h-28 lg:h-32 px-4 md:py-4 md:px-8 lg:px-10 lg:py-6 text-xs-medium md:text-md-medium lg:text-lg-medium";
   const shapeClass = shape === "round" ? "rounded-32" : "rounded-2 md:rounded-4 lg:rounded-6";
 
   const shades = colorShades[color][colorApplyTo];
