@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
+import { useState } from "react";
 import { CATEGORIES } from "../mockData";
 import CategoryTab from "./CategoryTab";
 import SortDropdown from "./SortDropdown";
@@ -6,16 +7,17 @@ import SortDropdown from "./SortDropdown";
 interface NavigationProps {
   activeTab: string;
   onTabChange: (category: string) => void;
-  selectedSort: string;
-  onSortChange: (value: string | boolean) => void;
 }
 
-export default function Navigation({
-  activeTab,
-  onTabChange,
-  selectedSort,
-  onSortChange,
-}: NavigationProps): JSX.Element {
+export default function Navigation({ activeTab, onTabChange }: NavigationProps): JSX.Element {
+  const [selectedSort, setSelectedSort] = useState("최신순");
+
+  const handleSortChange = (value: string | boolean): void => {
+    if (typeof value === "string") {
+      setSelectedSort(value);
+    }
+  };
+
   return (
     <nav className="relative mb-24">
       <div
@@ -32,7 +34,7 @@ export default function Navigation({
             />
           ))}
         </ul>
-        <SortDropdown selectedSort={selectedSort} onSortChange={onSortChange} />
+        <SortDropdown selectedSort={selectedSort} onSortChange={handleSortChange} />
       </div>
     </nav>
   );
