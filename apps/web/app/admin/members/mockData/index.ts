@@ -1,4 +1,18 @@
-import ProfileImage from "@ui/public/images/image_profile.png";
+import { type StaticImageData } from "next/image";
+import 현지 from "@ui/public/images/현지.png";
+import 보경 from "@ui/public/images/보경.png";
+import 승헌 from "@ui/public/images/승헌.png";
+import 영준 from "@ui/public/images/영준.png";
+import 혜린 from "@ui/public/images/혜린.png";
+
+export interface Member {
+  id: string;
+  name: string;
+  email: string;
+  teams: string[];
+  role: string;
+  profileImage: StaticImageData;
+}
 
 export const MOCK_MEMBERS = [
   {
@@ -7,7 +21,7 @@ export const MOCK_MEMBERS = [
     email: "yg@codeit.com",
     teams: ["Content"],
     role: "어드민",
-    profileImage: ProfileImage,
+    profileImage: 영준,
   },
   {
     id: "2",
@@ -15,7 +29,7 @@ export const MOCK_MEMBERS = [
     email: "bk@codeit.com",
     teams: ["Finance"],
     role: "멤버",
-    profileImage: ProfileImage,
+    profileImage: 보경,
   },
   {
     id: "3",
@@ -23,7 +37,7 @@ export const MOCK_MEMBERS = [
     email: "sh@codeit.com",
     teams: ["Strategy"],
     role: "멤버",
-    profileImage: ProfileImage,
+    profileImage: 승헌,
   },
   {
     id: "4",
@@ -31,7 +45,7 @@ export const MOCK_MEMBERS = [
     email: "hj@codeit.com",
     teams: ["Brand Experience"],
     role: "멤버",
-    profileImage: ProfileImage,
+    profileImage: 현지,
   },
   {
     id: "5",
@@ -39,7 +53,7 @@ export const MOCK_MEMBERS = [
     email: "hr@codeit.com",
     teams: ["Product"],
     role: "멤버",
-    profileImage: ProfileImage,
+    profileImage: 혜린,
   },
 ];
 
