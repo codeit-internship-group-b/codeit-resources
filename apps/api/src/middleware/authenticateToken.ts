@@ -1,34 +1,53 @@
-import { type NextFunction, type Request as ExpressRequest, type Response } from "express";
-import { JsonWebTokenError, verify, type Secret } from "jsonwebtoken";
+import { type NextFunction, type Request, type Response } from "express";
+import { type JwtPayload, verify, type Secret } from "jsonwebtoken";
 import { config } from "dotenv";
-import { type IUser } from "@repo/types/index";
+import { User } from "../models/userModel";
 
 config();
 
-interface Request extends ExpressRequest {
-  user?: IUser;
-}
-
 const JWT_SECRET = process.env.JWT_SECRET as Secret;
 
-export const authenticateToken = (req: Request, res: Response, next: NextFunction): void => {
-  const authHeader = req.headers.authorization;
-  const token = authHeader?.split(" ")[1];
+interface AuthenticateTokenRequest extends Request {
+  token: string;
+}
 
-  if (!token) {
-    res.status(401).send();
-    return;
-  }
+type CustomJwtPayload = JwtPayload & { id: string };
 
+export const authenticateToken = async (
+  req: AuthenticateTokenRequest,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   try {
-    const decoded = verify(token, JWT_SECRET) as Request["user"];
-    req.user = decoded;
+    const token = req.header("Authorization")?.replace("Bearer ", "");
+
+    if (!token) {
+      throw new Error("토큰이 존재하지 않습니다.");
+    }
+
+    const decodedToken = verify(token, JWT_SECRET) as CustomJwtPayload;
+    const userId = decodedToken.id;
+
+    if (!userId) {
+      throw new Error("잘못된 토큰입니다.");
+    }
+
+    console.log(decodedToken);
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      res.clearCookie("authorization");
+      throw new Error("사용자가 존재하지 않습니다.");
+    }
+
     next();
   } catch (error) {
-    if (error instanceof JsonWebTokenError) {
-      res.status(403).json({ message: "유효하지 않은 토큰입니다." });
-      return;
-    }
+    // const err = error as Error;
+    // res.clearCookie("authorization");
+    // res.status(401).send({ message: err.message });
+
+    res.clearCookie("authorization");
     next(error);
   }
 };

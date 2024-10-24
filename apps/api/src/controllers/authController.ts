@@ -13,12 +13,9 @@ interface SignInRequest extends Request {
 export const signIn = async (req: SignInRequest, res: Response): Promise<void> => {
   const { email, password } = req.body;
 
-  if (!email) {
-    res.status(400).send({ message: "이메일을 입력해 주세요." });
-    return;
-  }
-  if (!password) {
-    res.status(400).send({ message: "비밀번호를 입력해 주세요." });
+  if (!email || !password) {
+    const missingField = !email ? "이메일" : "비밀번호";
+    res.status(400).send({ message: `${missingField}을(를) 입력해 주세요.` });
     return;
   }
 
@@ -37,5 +34,5 @@ export const signIn = async (req: SignInRequest, res: Response): Promise<void> =
     sameSite: "none",
   });
 
-  res.status(200).send({ accessToken });
+  res.status(200).send({ accessToken, message: "배움의 기쁨을 세상 모두에게. 오늘도 환영합니다 :)" });
 };
