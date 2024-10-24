@@ -1,6 +1,9 @@
 import { type Request, type Response } from "express";
 import { type TRole } from "@repo/types/userType";
+import { config } from "dotenv";
 import { User } from "../models/userModel";
+
+config();
 
 interface GetUsersRequest extends Request {
   query: {

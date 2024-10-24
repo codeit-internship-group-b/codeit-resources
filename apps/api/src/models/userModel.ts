@@ -1,9 +1,14 @@
 import { Roles, type IUser } from "@repo/types/userType";
-import { Schema, model, type Document } from "mongoose";
+import { Schema, type Types, model, type Document } from "mongoose";
 import { genSalt, hash } from "bcryptjs";
+import { config } from "dotenv";
 import { emailValidator } from "../utils/emailValidator";
 
-interface UserDocument extends Omit<IUser, "_id">, Document {}
+config();
+
+interface UserDocument extends Omit<IUser, "_id">, Document {
+  _id: Types.ObjectId;
+}
 
 const UserSchema = new Schema<UserDocument>(
   {
