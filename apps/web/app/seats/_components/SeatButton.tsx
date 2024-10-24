@@ -6,7 +6,7 @@ import { useSeatContext } from "../context/SeatContext";
 
 interface SeatButtonProps {
   isLoading?: boolean;
-  status?: string;
+  status: "in-use" | "unavailable" | "available" | "reserved";
   user?: string | null;
   seatNum: string;
 }
@@ -16,23 +16,25 @@ export default function SeatButton({ isLoading, status = "available", user, seat
   const [isAdmin, setIsAdmin] = useState(false);
   const { checkedSeat, handleSelectSeat } = useSeatContext();
   const isChecked = checkedSeat === seatNum;
-  const isDisabled = (Boolean(checkedSeat) && checkedSeat !== seatNum) || status !== "available" || isLoading;
+  const isDisabled = checkedSeat === seatNum || status !== "available" || isLoading;
+
+  const handleClick = (): void => {
+    handleSelectSeat(seatNum);
+  };
 
   return (
     <span className="group relative">
       <button
         type="button"
-        onClick={() => {
-          handleSelectSeat(seatNum);
-        }}
+        onClick={handleClick}
         className={cn(
           "!text-12 md:w-90 md:!text-16 rounded-4 h-36 w-60 min-w-60 overflow-hidden md:h-48",
           isLoading ? "bg-gray-10" : "border-custom-black/20 border border-solid",
           {
             "transition-linear bg-white hover:bg-purple-200": status === "available" && !isChecked,
-            "border-custom-black/30 text-custom-black/30 bg-gray-200/10 font-medium": status === "fixed",
+            "border-custom-black/30 text-custom-black/30 bg-gray-200/10 font-medium": status === "in-use",
             "bg-gray-200/5": status === "unavailable",
-            "cursor-not-allowed": !isAdmin && (status === "fixed" || status === "unavailable"),
+            "cursor-not-allowed": !isAdmin && (status === "in-use" || status === "unavailable"),
             "bg-purple-700": isChecked,
           },
         )}

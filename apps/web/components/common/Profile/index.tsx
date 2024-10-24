@@ -24,9 +24,7 @@ function Profile({ size = "size-32", src, name, className }: ProfileProps): JSX.
   return (
     <div className={clsx(name && "flex items-center gap-10", className)}>
       {src ? (
-        <div className={`relative ${size}`}>
-          <Image src={src} fill alt="프로필 이미지" />
-        </div>
+        <Image src={src} width={32} height={32} alt="프로필 이미지" unoptimized={false} />
       ) : (
         <ProfileDefaultIcon width={32} height={32} />
       )}
@@ -36,3 +34,6 @@ function Profile({ size = "size-32", src, name, className }: ProfileProps): JSX.
 }
 
 export default memo(Profile);
+
+// onError 로 에러처리 가능
+// unoptimized 살펴보기

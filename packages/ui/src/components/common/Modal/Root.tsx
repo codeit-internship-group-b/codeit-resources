@@ -15,11 +15,11 @@ import useEscapeKey from "../../../hooks/useEscapeKey";
 
 export interface ModalRootProps extends PropsWithChildren {
   open?: boolean;
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (_open: boolean) => void;
 }
 
 interface ModalContextProps extends Pick<ModalRootProps, "open"> {
-  handleOpenChange: (open: boolean) => void;
+  handleOpenChange: (_open: boolean) => void;
   trigger: RefObject<HTMLDivElement> | undefined;
   setTrigger: Dispatch<SetStateAction<RefObject<HTMLDivElement> | undefined>>;
 }

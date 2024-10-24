@@ -13,18 +13,18 @@ const DropdownContext = createContext({
   isOpen: false,
   isError: false,
   errorMessage: "",
-  selectedValue: "" as string | boolean, // 수정: string | boolean 허용
+  selectedValue: "" as string | boolean,
   size: "md",
   toggleDropdown: () => {},
   closeDropdown: () => {},
-  selectedItem: (value: string | boolean) => {}, // 수정: string | boolean 허용
+  selectedItem: (_value: string | boolean) => {},
 });
 
 interface DropdownProps {
   children: ReactNode;
-  selectedValue: string | boolean; // 수정: string | boolean 허용
+  selectedValue: string | boolean;
   size?: "sm" | "md";
-  onSelect: (value: string | boolean) => void; // 수정: string | boolean 허용
+  onSelect: (_value: string | boolean) => void;
   isError?: boolean;
   errorMessage?: string;
 }

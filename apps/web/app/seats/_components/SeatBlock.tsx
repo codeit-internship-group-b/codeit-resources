@@ -4,7 +4,7 @@ import SeatButton from "./SeatButton";
 
 interface Seat {
   seatNum: string;
-  status: "available" | "fixed" | "unavailable" | "unknown";
+  status: "in-use" | "unavailable" | "available" | "reserved";
   user: string | null;
 }
 

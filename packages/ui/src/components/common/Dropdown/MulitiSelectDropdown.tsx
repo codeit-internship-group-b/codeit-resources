@@ -39,7 +39,7 @@ const DropdownContext = createContext({
 interface DropdownProps {
   children: ReactNode;
   selectedValue: string[];
-  onSelect: (value: string[]) => void;
+  onSelect: (_value: string[]) => void;
 }
 
 export default function MultiSelectDropdown({ children, selectedValue, onSelect }: DropdownProps): JSX.Element {
