@@ -26,7 +26,7 @@ export const signIn = async (req: SignInRequest, res: Response): Promise<void> =
     return;
   }
 
-  const accessToken = createSecretToken(user._id.toString());
+  const accessToken = createSecretToken(user._id.toString(), user.role);
 
   res.cookie("token", accessToken, {
     // secure: true,

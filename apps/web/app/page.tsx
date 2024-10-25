@@ -6,7 +6,6 @@ export default function Home(): JSX.Element {
       <summary>api 주소</summary>
       <p>{JSON.stringify(API_ENDPOINTS, null, 2)}</p>
       <p>{API_ENDPOINTS.USERS.GET_USER(1)}</p>
-      <p>{API_ENDPOINTS.ITEMS.GET_ALL("seats")}</p>
     </details>
   );
 }

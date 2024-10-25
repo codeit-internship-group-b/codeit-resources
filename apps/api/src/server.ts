@@ -2,7 +2,7 @@ import { exit } from "node:process";
 import cors from "cors";
 import { config } from "dotenv";
 import express, { json } from "express";
-import { connectDatabase } from "./database";
+import { connectDatabase } from "./utils/database";
 import router from "./routes";
 import { errorHandler } from "./middleware/errorHandler";
 
