@@ -30,7 +30,6 @@ export default function SideLayout(props: SideLayoutProps): JSX.Element {
           setIsSidebarOpen(false);
         }}
       />
-
       {children}
     </div>
   );
