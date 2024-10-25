@@ -147,7 +147,7 @@ export const createReservation = async (
   const newReservation = new Reservation({
     userId,
     itemId,
-    itemType: itemExists.type,
+    itemType: itemExists.itemType,
     startAt,
     endAt,
     status: status ?? "reserved",

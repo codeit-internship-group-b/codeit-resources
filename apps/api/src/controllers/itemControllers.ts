@@ -95,7 +95,7 @@ export const updateItem = async (
 
   let updatedItem;
 
-  switch (target.type) {
+  switch (target.itemType) {
     case "room":
       updatedItem = await Room.findByIdAndUpdate(
         itemId,
@@ -122,7 +122,7 @@ export const updateItem = async (
       return;
   }
 
-  res.status(200).json({ message: `${target.type} 아이템 정보가 업데이트되었습니다.`, updatedItem });
+  res.status(200).json({ message: `${target.itemType} 아이템 정보가 업데이트되었습니다.`, updatedItem });
 };
 
 // 아이템 삭제
@@ -143,5 +143,5 @@ export const deleteItem = async (
     return;
   }
 
-  res.status(200).json({ message: `${deletedItem.type} 아이템이 삭제되었습니다.` });
+  res.status(200).json({ message: `${deletedItem.itemType} 아이템이 삭제되었습니다.` });
 };

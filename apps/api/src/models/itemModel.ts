@@ -2,7 +2,7 @@ import { type TBaseItem, type IRoom, type ISeat, type IEquipment, ItemStatus } f
 import { Schema, type Document, model } from "mongoose";
 
 export interface ItemDoc extends Omit<TBaseItem, "_id">, Document {
-  type: "room" | "seat" | "equipment";
+  itemType: "room" | "seat" | "equipment";
 }
 
 const ItemSchema: Schema = new Schema(
@@ -14,7 +14,7 @@ const ItemSchema: Schema = new Schema(
   },
   {
     timestamps: true,
-    discriminatorKey: "type",
+    discriminatorKey: "itemType",
     collection: "items",
   },
 );

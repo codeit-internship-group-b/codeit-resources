@@ -15,17 +15,17 @@ export interface TBaseItem {
 }
 
 export interface IRoom extends TBaseItem {
-  type: "room";
+  itemType: "room";
   category: string;
   location?: string;
   capacity?: number;
 }
 
 export interface ISeat extends TBaseItem {
-  type: "seat";
+  itemType: "seat";
 }
 
 export interface IEquipment extends TBaseItem {
-  type: "equipment";
+  itemType: "equipment";
   category: string;
 }
