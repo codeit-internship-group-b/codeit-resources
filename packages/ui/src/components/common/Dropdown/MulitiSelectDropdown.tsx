@@ -40,11 +40,20 @@ interface DropdownProps {
   children: ReactNode;
   selectedValue: string[];
   onSelect: (_value: string[]) => void;
+  isMultiSelect?: boolean;
+  defaultValue?: string[];
 }
 
-export default function MultiSelectDropdown({ children, selectedValue, onSelect }: DropdownProps): JSX.Element {
+export default function MultiSelectDropdown({
+  children,
+  selectedValue,
+  onSelect,
+  isMultiSelect = true,
+  defaultValue = [],
+}: DropdownProps): JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const initialSelectedValue = selectedValue.length > 0 ? selectedValue : defaultValue;
 
   const toggleDropdown = useCallback(() => {
     setIsOpen((prev) => !prev);
@@ -55,17 +64,22 @@ export default function MultiSelectDropdown({ children, selectedValue, onSelect 
 
   const selectedItem = useCallback(
     (value: string) => {
-      const newValue = selectedValue.includes(value)
-        ? selectedValue.filter((item) => item !== value)
-        : [...selectedValue, value];
+      let newValue;
+      if (isMultiSelect) {
+        newValue = initialSelectedValue.includes(value)
+          ? initialSelectedValue.filter((item) => item !== value)
+          : [...initialSelectedValue, value];
+      } else {
+        newValue = initialSelectedValue.includes(value) ? [] : [value];
+      }
       onSelect(newValue);
     },
-    [onSelect, selectedValue],
+    [onSelect, initialSelectedValue, isMultiSelect],
   );
 
   const providerValue = useMemo(
-    () => ({ isOpen, selectedValue, toggleDropdown, closeDropdown, selectedItem }),
-    [isOpen, selectedValue, toggleDropdown, closeDropdown, selectedItem],
+    () => ({ isOpen, selectedValue: initialSelectedValue, toggleDropdown, closeDropdown, selectedItem }),
+    [isOpen, initialSelectedValue, toggleDropdown, closeDropdown, selectedItem],
   );
 
   useOnClickOutside(dropdownRef, closeDropdown);
