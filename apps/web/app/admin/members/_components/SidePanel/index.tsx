@@ -4,27 +4,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { type StaticImageData } from "next/image";
 import { notify, Modal } from "@ui/index";
 import { DoubleChevron } from "@ui/public";
 import { ACCEPTED_IMAGE_TYPES } from "@repo/ui/src/utils/constants/imageTypes";
 import { NOTIFICATION_MESSAGES } from "@repo/ui/src/utils/constants/notificationMessage";
-import { type Member } from "../../mockData";
 import MemberForm from "./MemberForm";
-
-interface AddMemberSidePanelProps {
-  isOpen: boolean;
-  onClose: () => void;
-  selectedMember: Member | null;
-}
-
-interface MemberFormData {
-  role: string;
-  name: string;
-  email: string;
-  teams: string[];
-  profileImage: File | null | StaticImageData;
-}
+import { type AddMemberSidePanelProps, type MemberFormData } from "./index.types";
 
 const initialFormData: MemberFormData = {
   role: "멤버",
