@@ -25,7 +25,7 @@ export default function Header({ page }: HeaderProps): JSX.Element {
          */}
         {page === "seats" && (
           <Link href="admin/seats">
-            <GearIcon className="relative right-10 top-3 cursor-pointer md:hidden" />
+            <GearIcon className="gear-icon relative right-10 top-3 cursor-pointer md:hidden" />
           </Link>
         )}
         {page === "meetings" && (

@@ -46,3 +46,20 @@ h1 {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+@keyframes halfRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(180deg);
+  }
+}
+
+.gear-icon {
+  transition: transform 0.4s ease-out;
+}
+
+.gear-icon:hover {
+  animation: halfRotate 0.4s ease-out;
+}

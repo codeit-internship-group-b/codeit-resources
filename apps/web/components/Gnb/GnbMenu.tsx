@@ -6,6 +6,7 @@ import Link from "next/link";
 import { clsx } from "clsx";
 import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
 import cn from "@ui/src/utils/cn";
+import useIsMobileStore from "@/app/store/useIsMobileStore";
 
 const NAV_ITEMS = [
   { href: PAGE_NAME.DASHBOARD, name: "대시보드", icon: PersonIcon },
@@ -28,11 +29,21 @@ interface GnbMenuProps {
 
 export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element {
   const pathname = usePathname();
+  const isMobile = useIsMobileStore();
+  const adminPathMapping = {
+    [PAGE_NAME.ADMIN_MEETINGS]: PAGE_NAME.MEETINGS,
+    [PAGE_NAME.ADMIN_SEATS]: PAGE_NAME.SEATS,
+  };
 
   return (
     <menu className="md:w-168 flex w-full justify-around gap-12 p-16 md:flex-col md:p-0">
       {NAV_ITEMS.map(({ href, name, icon: Icon }) => {
-        const isActive = pathname.includes(href);
+        const isActive = isMobile
+          ? pathname.includes(href) ||
+            Object.keys(adminPathMapping).some(
+              (adminPath) => pathname.startsWith(adminPath) && adminPathMapping[adminPath] === href,
+            )
+          : pathname === href;
         return (
           <Link key={name} href={href}>
             <div
@@ -52,7 +63,7 @@ export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element {
           <hr className="hidden border-white/10 pb-10 md:block" />
           <div className="text-sm-bold hidden px-16 pt-8 text-white/30 md:block">어드민 기능</div>
           {ADMIN_ITEMS.map(({ href, name, icon: Icon }) => {
-            const isActive = pathname.startsWith(href);
+            const isActive = !isMobile && pathname.startsWith(href);
             return (
               <Link key={name} href={href} className="hidden md:block">
                 <div
