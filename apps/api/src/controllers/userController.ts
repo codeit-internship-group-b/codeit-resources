@@ -1,5 +1,5 @@
 import { type Request, type Response } from "express";
-import { type TRole } from "@repo/types/userType";
+import { type TRole } from "@repo/types";
 import { config } from "dotenv";
 import { User } from "../models/userModel";
 

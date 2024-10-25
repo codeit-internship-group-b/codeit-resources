@@ -32,9 +32,6 @@ importers:
       '@aws-sdk/client-s3':
         specifier: ^3.676.0
         version: 3.676.0
-      '@repo/types':
-        specifier: workspace:*
-        version: link:../../packages/types
       bcryptjs:
         specifier: ^2.4.3
         version: 2.4.3
@@ -72,6 +69,9 @@ importers:
       '@repo/jest-config':
         specifier: workspace:*
         version: link:../../packages/jest-config
+      '@repo/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
@@ -103,7 +103,7 @@ importers:
         specifier: ^3.0.3
         version: 3.0.3
       '@types/node':
-        specifier: ^20.11.24
+        specifier: ^20
         version: 20.16.12
       '@types/supertest':
         specifier: ^6.0.2
@@ -262,9 +262,6 @@ importers:
 
   apps/web:
     dependencies:
-      '@repo/types':
-        specifier: workspace:*
-        version: link:../../packages/types
       '@repo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -293,6 +290,9 @@ importers:
       '@jest/globals':
         specifier: ^29.7.0
         version: 29.7.0
+      '@repo/constants':
+        specifier: workspace:*
+        version: link:../../packages/constants
       '@repo/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
@@ -302,6 +302,9 @@ importers:
       '@repo/tailwind-config':
         specifier: workspace:*
         version: link:../../packages/tailwind-config
+      '@repo/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
@@ -371,6 +374,21 @@ importers:
       typescript:
         specifier: ^5.2.2
         version: 5.6.3
+
+  packages/constants:
+    devDependencies:
+      '@repo/types':
+        specifier: workspace:*
+        version: link:../types
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/node':
+        specifier: ^20
+        version: 20.16.12
+      typescript:
+        specifier: 5.2.2
+        version: 5.2.2
 
   packages/eslint-config:
     devDependencies:
@@ -479,7 +497,7 @@ importers:
   packages/types:
     devDependencies:
       '@repo/typescript-config':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../typescript-config
       typescript:
         specifier: 5.2.2
@@ -493,9 +511,6 @@ importers:
 
   packages/ui:
     dependencies:
-      '@repo/types':
-        specifier: workspace:*
-        version: link:../types
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -521,6 +536,9 @@ importers:
       '@jest/globals':
         specifier: ^29.7.0
         version: 29.7.0
+      '@repo/constants':
+        specifier: workspace:*
+        version: link:../constants
       '@repo/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
@@ -530,6 +548,9 @@ importers:
       '@repo/tailwind-config':
         specifier: workspace:*
         version: link:../tailwind-config
+      '@repo/types':
+        specifier: workspace:*
+        version: link:../types
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
@@ -555,7 +576,7 @@ importers:
         specifier: ^29.5.12
         version: 29.5.13
       '@types/node':
-        specifier: ^20.11.24
+        specifier: ^20
         version: 20.16.12
       '@types/react':
         specifier: ^18.3.11

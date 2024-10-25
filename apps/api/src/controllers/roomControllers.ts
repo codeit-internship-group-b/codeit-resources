@@ -1,5 +1,5 @@
 import { type Request, type Response } from "express";
-import { type IRoom, type TItemStatus } from "@repo/types/itemType";
+import { type IRoom, type TItemStatus } from "@repo/types";
 import { Reservation, Room } from "../models";
 
 // 모든 회의실 목록 조회
