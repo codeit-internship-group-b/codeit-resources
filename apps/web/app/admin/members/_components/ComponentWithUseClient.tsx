@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 "use client";
 
 import { useState } from "react";
@@ -12,7 +10,6 @@ import MemberListItem from "./MemberListItem";
 
 export default function Members(): JSX.Element {
   const [activeTab, setActiveTab] = useState("전체");
-  const [selectedSort, setSelectedSort] = useState("최신순");
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
 
