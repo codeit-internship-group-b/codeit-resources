@@ -39,7 +39,7 @@ module.exports = {
     node: true,
     browser: true,
   },
-  plugins: ["only-warn"],
+  plugins: ["only-warn", "jsx-a11y"],
   settings: {
     "import/resolver": {
       typescript: {

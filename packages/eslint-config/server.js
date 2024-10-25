@@ -45,5 +45,6 @@ module.exports = {
     "no-console": ["error", { allow: ["warn", "error", "log"] }], // console 사용 금지 - log, warn, error만 사용 가능
     "import/prefer-named-exports": "off", // named exports 사용 금지
     "import/no-default-export": "off", // default export 사용 금지
+    "@typescript-eslint/restrict-template-expressions": "off", // 템플릿 리터럴 내에서 string이 아닌 값 (예: number)을 허용하지 않도록 하는 설정
   },
 };
