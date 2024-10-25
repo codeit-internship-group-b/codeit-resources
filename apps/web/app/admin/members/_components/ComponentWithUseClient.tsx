@@ -2,16 +2,17 @@
 
 import { useState } from "react";
 import { Toast } from "@ui/index";
-import { type Member, MOCK_MEMBERS } from "../mockData";
+import { MOCK_MEMBERS } from "../mockData";
 import SidePanel from "./SidePanel";
 import Header from "./Header";
 import Navigation from "./Navigation";
 import MemberListItem from "./MemberListItem";
+import { type MemberWithStaticImport } from "./ComponentWithUseClient.types";
 
 export default function Members(): JSX.Element {
   const [activeTab, setActiveTab] = useState("전체");
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
-  const [selectedMember, setSelectedMember] = useState<Member | null>(null);
+  const [selectedMember, setSelectedMember] = useState<MemberWithStaticImport | null>(null);
 
   const handleOpenSidePanel = (): void => {
     setIsSidePanelOpen(true);
@@ -22,7 +23,7 @@ export default function Members(): JSX.Element {
     setSelectedMember(null);
   };
 
-  const handleMemberClick = (member: Member): void => {
+  const handleMemberClick = (member: MemberWithStaticImport): void => {
     setSelectedMember(member);
     setIsSidePanelOpen(true);
   };

@@ -8,10 +8,16 @@ import { notify, Modal } from "@ui/index";
 import { DoubleChevron } from "@ui/public";
 import { IMAGE_TYPES } from "@repo/ui/src/utils/constants/imageTypes";
 import { NOTIFICATION_MESSAGES } from "@repo/ui/src/utils/constants/notificationMessage";
+import { type MemberWithStaticImage, type MemberWithStaticImport } from "../ComponentWithUseClient.types";
 import MemberForm from "./MemberForm";
-import { type AddMemberSidePanelProps, type MemberFormData } from "./index.types";
 
-const initialFormData: MemberFormData = {
+interface AddMemberSidePanelProps {
+  isOpen: boolean;
+  onClose: () => void;
+  selectedMember: MemberWithStaticImport | null;
+}
+
+const initialFormData: MemberWithStaticImage = {
   role: "멤버",
   name: "",
   email: "",
@@ -20,7 +26,7 @@ const initialFormData: MemberFormData = {
 };
 
 export default function SidePanel({ isOpen, onClose, selectedMember }: AddMemberSidePanelProps): JSX.Element {
-  const [formData, setFormData] = useState<MemberFormData>(initialFormData);
+  const [formData, setFormData] = useState<MemberWithStaticImage | MemberWithStaticImport>(initialFormData);
 
   const handleRoleChange = (role: string): void => {
     setFormData((prev) => ({ ...prev, role }));

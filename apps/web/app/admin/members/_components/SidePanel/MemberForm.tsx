@@ -1,3 +1,4 @@
+import { type ChangeEvent } from "react";
 import Image from "next/image";
 import { Radio } from "@ui/index";
 import Input from "@ui/src/components/common/Input";
@@ -5,7 +6,17 @@ import MultiSelectDropdown from "@repo/ui/src/components/common/Dropdown/MulitiS
 import DefaultProfileImage from "@ui/public/images/image_default_profile.png";
 import Button from "@ui/src/components/common/Button";
 import { MOCK_TEAMS } from "../../mockData";
-import { type MemberFormProps } from "./MemberForm.types";
+import { type MemberWithStaticImage, type MemberWithStaticImport } from "../ComponentWithUseClient.types";
+
+export interface MemberFormProps {
+  formData: MemberWithStaticImage | MemberWithStaticImport;
+  onRoleChange: (role: string) => void;
+  onInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onTeamsSelect: (teams: string[]) => void;
+  onImageUpload: (e: ChangeEvent<HTMLInputElement>) => void;
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  isEdit?: boolean;
+}
 
 export default function MemberForm({
   formData,

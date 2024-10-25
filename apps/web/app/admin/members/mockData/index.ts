@@ -1,18 +1,8 @@
-import { type StaticImageData } from "next/image";
 import 현지 from "@ui/public/images/현지.png";
 import 보경 from "@ui/public/images/보경.png";
 import 승헌 from "@ui/public/images/승헌.png";
 import 영준 from "@ui/public/images/영준.png";
 import 혜린 from "@ui/public/images/혜린.png";
-
-export interface Member {
-  id: string;
-  name: string;
-  email: string;
-  teams: string[];
-  role: string;
-  profileImage: StaticImageData;
-}
 
 export const MOCK_MEMBERS = [
   {
