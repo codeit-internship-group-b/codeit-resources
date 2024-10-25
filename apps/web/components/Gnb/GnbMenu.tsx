@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { clsx } from "clsx";
 import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
+import cn from "@ui/src/utils/cn";
 
 const NAV_ITEMS = [
   { href: PAGE_NAME.DASHBOARD, name: "대시보드", icon: PersonIcon },
@@ -31,7 +32,7 @@ export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element {
   return (
     <menu className="md:w-168 flex w-full justify-around gap-12 p-16 md:flex-col md:p-0">
       {NAV_ITEMS.map(({ href, name, icon: Icon }) => {
-        const isActive = pathname.startsWith(href);
+        const isActive = pathname.includes(href);
         return (
           <Link key={name} href={href}>
             <div
@@ -40,7 +41,7 @@ export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element {
                 isActive ? "md:bg-gray-300" : "md:hover:bg-gray-300",
               )}
             >
-              <Icon className={clsx("stroke-white/60", isActive ? "text-white" : "stroke-white/60")} />
+              <Icon className={cn("stroke-white/60", isActive ? "stroke-white" : "stroke-white/60")} />
               <div className={clsx("text-12 md:text-16", isActive ? "text-white" : "text-white/60")}>{name}</div>
             </div>
           </Link>
@@ -60,7 +61,7 @@ export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element {
                     isActive ? "md:bg-gray-300" : "md:hover:bg-gray-300",
                   )}
                 >
-                  <Icon className={clsx("stroke-white/60", isActive ? "stroke-white" : "stroke-white/60")} />
+                  <Icon className={cn("stroke-white/60", isActive ? "stroke-white" : "stroke-white/60")} />
                   <div className={clsx("md:text-16 text-12", isActive ? "text-white" : "text-white/60")}>{name}</div>
                 </div>
               </Link>
