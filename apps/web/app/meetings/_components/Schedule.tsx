@@ -1,14 +1,11 @@
-/* eslint-disable */
-"use client";
-// RoomSchedule.tsx
-
 import React, { useState } from "react";
-import { Schedule } from "@/app/types/scheduletypes";
+import { type Schedule } from "../../types/scheduletypes";
 import { MeetingBottomSheet } from "./MeetingBottomSheet";
-import { ReservationBottomSheet } from "./ReservationBottomSheet"; // 추가된 컴포넌트
+import { ReservationBottomSheet } from "./ReservationBottomSheet";
 import { RoomHeader } from "./RoomHeader";
 import { TimeHeader } from "./TimeHeader";
-import { TimeSlot } from "./TimeSlot";
+import { TimeSlot } from "./TimeSlot/TimeSlot";
+import { DesktopRoomSchedule } from "./DesktopRoomSchedule";
 
 interface RoomScheduleProps {
   roomName: string;
@@ -18,9 +15,9 @@ interface RoomScheduleProps {
 
 export const RoomSchedule: React.FC<RoomScheduleProps> = ({ roomName, schedules, currentUserId }) => {
   const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(null);
-  const [isReservationOpen, setIsReservationOpen] = useState(false); // 예약 바텀시트 열림 여부
-  const [reservationTime, setReservationTime] = useState<string>(""); // 선택된 예약 시간
-  const [userSchedules, setUserSchedules] = useState<Schedule[]>(schedules); // 사용자 예약 상태
+  const [isReservationOpen, setIsReservationOpen] = useState(false);
+  const [reservationTime, setReservationTime] = useState<string>("");
+  const [userSchedules, setUserSchedules] = useState<Schedule[]>(schedules);
 
   const handleCreateReservation = (time: string) => {
     setReservationTime(time);
@@ -40,71 +37,86 @@ export const RoomSchedule: React.FC<RoomScheduleProps> = ({ roomName, schedules,
 
   return (
     <div>
-      <RoomHeader roomName={roomName} />
+      {/* 모바일 버전 Room Schedule */}
+      <div className="block md:hidden">
+        <RoomHeader roomName={roomName} />
 
-      <div className="pl-50 relative flex flex-col overflow-x-auto">
-        <div className="flex">
-          {/* TimeSlot 렌더링 */}
-          {Array.from({ length: 24 }, (_, i) => {
-            const firstSlotIndex = i * 2;
-            const secondSlotIndex = firstSlotIndex + 1;
-            const firstSlot = timeSlots[firstSlotIndex];
-            const secondSlot = timeSlots[secondSlotIndex];
+        <div className="pl-50 relative flex flex-col overflow-x-auto">
+          <div className="flex">
+            {Array.from({ length: 24 }, (_, i) => {
+              const firstSlotIndex = i * 2;
+              const secondSlotIndex = firstSlotIndex + 1;
+              const firstSlot = timeSlots[firstSlotIndex];
+              const secondSlot = timeSlots[secondSlotIndex];
 
-            return (
-              <div key={i} className="flex flex-col items-center">
-                <TimeHeader hour={i} />
+              return (
+                <div key={i} className="flex flex-col items-center">
+                  <TimeHeader hour={i} />
 
-                <div className="flex">
-                  {firstSlot && (
-                    <TimeSlot
-                      key={firstSlot}
-                      time={firstSlot}
-                      schedules={userSchedules}
-                      currentUserId={currentUserId}
-                      onSelectSchedule={setSelectedSchedule}
-                      onCreateReservation={handleCreateReservation} // 추가된 props
-                      slotIndex={firstSlotIndex}
-                    />
-                  )}
-                  {secondSlot && (
-                    <TimeSlot
-                      key={secondSlot}
-                      time={secondSlot}
-                      schedules={userSchedules}
-                      currentUserId={currentUserId}
-                      onSelectSchedule={setSelectedSchedule}
-                      onCreateReservation={handleCreateReservation} // 추가된 props
-                      slotIndex={secondSlotIndex}
-                    />
-                  )}
+                  <div className="flex">
+                    {firstSlot ? (
+                      <TimeSlot
+                        key={firstSlot}
+                        time={firstSlot}
+                        schedules={userSchedules}
+                        currentUserId={currentUserId}
+                        onSelectSchedule={setSelectedSchedule}
+                        onCreateReservation={handleCreateReservation}
+                        slotIndex={firstSlotIndex}
+                      />
+                    ) : null}
+                    {secondSlot ? (
+                      <TimeSlot
+                        key={secondSlot}
+                        time={secondSlot}
+                        schedules={userSchedules}
+                        currentUserId={currentUserId}
+                        onSelectSchedule={setSelectedSchedule}
+                        onCreateReservation={handleCreateReservation}
+                        slotIndex={secondSlotIndex}
+                      />
+                    ) : null}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
 
-      {/* 기존 예약 상세 바텀시트 */}
-      {selectedSchedule && (
+      {/* 데스크탑 버전 Room Schedule */}
+      <div className="hidden md:block">
+        <DesktopRoomSchedule
+          roomName={roomName}
+          schedules={userSchedules}
+          currentUserId={currentUserId}
+          onSelectSchedule={setSelectedSchedule}
+          onCreateReservation={handleCreateReservation}
+        />
+      </div>
+
+      {selectedSchedule ? (
         <MeetingBottomSheet
-          isOpen={!!selectedSchedule}
-          onClose={() => setSelectedSchedule(null)}
+          isOpen={Boolean(selectedSchedule)}
+          onClose={() => {
+            setSelectedSchedule(null);
+          }}
           schedule={selectedSchedule}
         />
-      )}
+      ) : null}
 
-      {/* 새로운 예약 생성 바텀시트 */}
-      {isReservationOpen && (
+      {isReservationOpen ? (
         <ReservationBottomSheet
           isOpen={isReservationOpen}
-          onClose={() => setIsReservationOpen(false)}
+          onClose={() => {
+            setIsReservationOpen(false);
+          }}
           initialTime={reservationTime}
           schedules={userSchedules}
           onAddSchedule={handleAddSchedule}
           currentUserId={currentUserId}
         />
-      )}
+      ) : null}
     </div>
   );
 };
