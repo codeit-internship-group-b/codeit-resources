@@ -20,9 +20,6 @@ export default function Header({ page }: HeaderProps): JSX.Element {
         <h1 className="pr-13 !text-custom-black text-2xl-bold md:text-3xl-bold pb-13 md:pb-40 md:pr-24">
           {page === "meetings" ? "회의실 예약" : "좌석예약"}
         </h1>
-        {/* 모바일일때 처리 해줘야함. 
-        - GNB에는 좌석페이지 연동되게
-         */}
         {page === "seats" && (
           <Link href="admin/seats">
             <GearIcon className="gear-icon relative right-10 top-3 cursor-pointer md:hidden" />
