@@ -3,6 +3,7 @@ import { type ReactNode } from "react";
 export interface RadioGroupProps {
   children: ReactNode;
   defaultValue?: string;
+  value?: string;
   onChange?: (_value: string) => void;
   legend?: string;
 }
