@@ -3,11 +3,11 @@ export type TItemStatus = (typeof ItemStatus)[number];
 
 export interface TBaseItem {
   _id: string;
-  name: string;
-  description: string;
-  status: TItemStatus;
   createdAt: Date;
   updatedAt: Date;
+  name: string;
+  status: TItemStatus;
+  description?: string;
   imageUrl?: string; // Optional
 }
 
@@ -20,7 +20,6 @@ export interface IRoom extends TBaseItem {
 
 export interface ISeat extends TBaseItem {
   type: "seat";
-  userName?: string;
 }
 
 export interface IEquipment extends TBaseItem {

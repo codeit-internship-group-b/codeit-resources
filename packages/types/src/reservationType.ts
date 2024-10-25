@@ -5,8 +5,9 @@ type UserId = string;
 
 export interface IReservation {
   _id: string;
-  userId: string; // 예약한 사용자 ID (User의 id)
+  userId: UserId; // 예약한 사용자 ID (User의 id)
   itemId: string; // 예약된 리소스 ID (Item의 id)
+  itemType: string;
   startAt: Date;
   endAt: Date;
   status: TReservationStatus;
