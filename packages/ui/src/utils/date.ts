@@ -4,22 +4,38 @@
 import { DAY_NAMES } from "@ui/src/utils/constants/dayNames";
 
 /**
- * 주어진 연도와 월에 맞는 날짜를 계산하여 배열로 반환합니다.
+ * 오늘 날짜로부터 해당 월의 마지막 날까지의 날짜를 계산하여 배열로 반환합니다.
  * 날짜는 `Date` 객체로 반환됩니다.
+ * 주어진 연도와 월이 오늘 날짜보다 과거일 경우 빈 배열을 반환합니다.
  *
  * @param year - 연도 (예: 2024)
  * @param month - 월 (1월 = 1, 12월 = 12)
- * @param dayCount - 반환할 날짜의 수 (예: 3일, 2일)
- * @returns 계산된 날짜 배열
+ * @returns 오늘 날짜부터 해당 월의 마지막 날까지의 날짜 배열, 또는 빈 배열
  */
-export const getDatesFromToday = (year: number, month: number, dayCount: number): Date[] => {
+export const getDatesFromTodayToEndOfMonth = (year: number, month: number): Date[] => {
   const dates: Date[] = [];
-  const startDate = new Date(year, month - 1, new Date().getDate());
 
-  for (let i = 0; i < dayCount; i++) {
-    const futureDate = new Date(startDate);
-    futureDate.setDate(startDate.getDate() + i);
-    dates.push(futureDate);
+  // 오늘 날짜 구하기
+  const today = new Date();
+  const currentYear = today.getFullYear();
+  const currentMonth = today.getMonth() + 1;
+  const currentDay = today.getDate();
+
+  if (year < currentYear || (year === currentYear && month < currentMonth)) {
+    return [];
+  }
+
+  const startDay = year === currentYear && month === currentMonth ? currentDay : 1;
+
+  if (month < 1 || month > 12) {
+    throw new Error("Invalid month. Please provide a month between 1 and 12.");
+  }
+
+  const endDate = new Date(year, month, 0);
+  const lastDayOfMonth = endDate.getDate();
+
+  for (let day = startDay; day <= lastDayOfMonth; day++) {
+    dates.push(new Date(year, month - 1, day));
   }
 
   return dates;

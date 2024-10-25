@@ -1,8 +1,8 @@
 import { type NextFunction, type Request, type Response } from "express";
 import { type JwtPayload, verify, type Secret } from "jsonwebtoken";
 import { config } from "dotenv";
-import { type IUser } from "@repo/types/userType";
 import { User } from "../models/userModel";
+import { type IUser } from "@repo/types/src/userType";
 
 config();
 
