@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { useState } from "react";
 import Image from "next/image";
 import { Badge } from "@ui/index";
@@ -21,6 +22,11 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>): void => {
+    if (e.key === "Escape") {
+      e.currentTarget.blur();
+      return;
+    }
+
     if (e.key === "Enter" || e.key === " ") {
       onMemberClick(member);
     }
