@@ -3,7 +3,7 @@
 import cn from "@ui/src/utils/cn";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { formatDate, getDatesForSeats, getDatesFromToday } from "@ui/src/utils/date";
+import { formatDate, getDatesForSeats, getDatesFromTodayToEndOfMonth } from "@ui/src/utils/date";
 import { useDateStore } from "@/app/store/useDateStore";
 
 interface HeaderProps {
@@ -13,7 +13,8 @@ interface HeaderProps {
 export default function HeaderTabs({ page }: HeaderProps): JSX.Element {
   const { selectedDate, setSelectedDate } = useDateStore();
   const [activeTabIndex, setActiveTabIndex] = useState(0);
-  const dates = page === "seats" ? getDatesForSeats(2) : getDatesFromToday(selectedDate.year, selectedDate.month, 3);
+  const dates =
+    page === "seats" ? getDatesForSeats(2) : getDatesFromTodayToEndOfMonth(selectedDate.year, selectedDate.month);
 
   const handleActiveTab = (index: number): void => {
     setActiveTabIndex(index);
@@ -26,8 +27,9 @@ export default function HeaderTabs({ page }: HeaderProps): JSX.Element {
       });
     }
   };
+
   return (
-    <div className="h-45 relative top-4 flex items-end gap-24 md:static">
+    <div className="h-45 relative top-4 flex items-end gap-24 overflow-auto md:static">
       {dates.map((date, index) => (
         <motion.div
           key={String(date)}
