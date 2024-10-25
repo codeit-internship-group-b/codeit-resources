@@ -5,8 +5,9 @@ import { useMemo, useState } from "react";
 import { notify } from "@ui/index";
 import AlertModal from "@ui/src/components/common/ConditionalActionModal/AlertModal";
 import { usePathname } from "next/navigation";
+import { Sheet } from "react-modal-sheet";
 import { useSeatContext } from "../context/SeatContext";
-import AdminBottomSheet from "./AdminBottomSheet";
+import AdminSeatSetting from "./AdminSeatSetting";
 import useIsMobileStore from "@/app/store/useIsMobileStore";
 import Sidebar from "@/components/common/Sidebar";
 
@@ -26,7 +27,6 @@ export default function SeatButton({ isLoading, status = "available", user, seat
   const pathname = usePathname();
   const isAdmin = useMemo(() => pathname.includes("admin"), [pathname]);
   const isMobile = useIsMobileStore();
-
   const isChecked = checkedSeat === seatNum;
   const isDisabled = !isAdmin && (checkedSeat === seatNum || status !== "available" || isLoading);
 
@@ -44,10 +44,9 @@ export default function SeatButton({ isLoading, status = "available", user, seat
     if (isMobile) {
       setIsBottomSheetOpen(true);
       handleSelectSeat(seatNum);
-      console.log(isMobile);
-    } else if (!isMobile) {
-      console.log(isMobile);
+    } else {
       setIsSidebarOpen(true);
+      handleSelectSeat(seatNum);
     }
   };
 
@@ -73,6 +72,7 @@ export default function SeatButton({ isLoading, status = "available", user, seat
             "cursor-not-allowed": !isAdmin && (status === "in-use" || status === "unavailable"),
             "bg-purple-700": isChecked && !isAdmin,
             "border-custom-black": isChecked && isAdmin,
+            "bg-white": isChecked && isAdmin && status === "available",
             "transition-linear": !isAdmin,
           },
         )}
@@ -91,7 +91,6 @@ export default function SeatButton({ isLoading, status = "available", user, seat
             "bg-custom-black absolute -right-6 -top-10 size-24 cursor-pointer rounded-full md:-right-4 md:-top-8",
             {
               "hidden group-hover:block": !isAdmin,
-              "": isAdmin,
             },
           )}
         />
@@ -112,19 +111,31 @@ export default function SeatButton({ isLoading, status = "available", user, seat
         cancelButtonName="취소하기"
         confirmButtonName="이동하기"
       />
-      <AdminBottomSheet
+
+      <Sheet
+        snapPoints={[0.6]}
         isOpen={isBottomSheetOpen}
         onClose={() => {
           setIsBottomSheetOpen(false);
         }}
-        status={status}
-      />
+      >
+        <Sheet.Container>
+          <Sheet.Header />
+          <Sheet.Content>
+            <AdminSeatSetting status={status} userName={user} />
+          </Sheet.Content>
+        </Sheet.Container>
+        <Sheet.Backdrop />
+      </Sheet>
+
       <Sidebar
         isOpen={isSidebarOpen}
         onClose={() => {
           setIsSidebarOpen(false);
         }}
-      />
+      >
+        <AdminSeatSetting status={status} userName={user} />
+      </Sidebar>
     </span>
   );
 }
