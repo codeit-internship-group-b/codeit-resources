@@ -1,5 +1,7 @@
+import { type ReactNode } from "react";
+
 interface AdminLayout {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export default function AdminLayout({ children }: AdminLayout): JSX.Element {

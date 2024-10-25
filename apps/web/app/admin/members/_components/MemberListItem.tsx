@@ -1,5 +1,4 @@
- 
-import { useState } from "react";
+import { useState, type MouseEvent, type KeyboardEvent } from "react";
 import Image from "next/image";
 import { Badge } from "@ui/index";
 import Dropdown from "@ui/src/components/common/Dropdown";
@@ -14,14 +13,14 @@ interface MemberListItemProps {
 export default function MemberListItem({ member, onMemberClick }: MemberListItemProps): JSX.Element {
   const [currentRole, setCurrentRole] = useState(member.role);
 
-  const handleMemberClick = (e: React.MouseEvent<HTMLDivElement>): void => {
+  const handleMemberClick = (e: MouseEvent<HTMLDivElement>): void => {
     const target = e.target as HTMLElement;
     if (!target.closest('[data-dropdown="true"]')) {
       onMemberClick(member);
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>): void => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>): void => {
     if (e.key === "Escape") {
       e.currentTarget.blur();
       return;
