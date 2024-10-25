@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 import { useState } from "react";
+import { SORT_OPTIONS } from "@ui/src/utils/constants/sortOptions";
 import { MOCK_CATEGORIES } from "../mockData";
 import CategoryTab from "./CategoryTab";
 import SortDropdown from "./SortDropdown";
@@ -10,7 +11,7 @@ interface NavigationProps {
 }
 
 export default function Navigation({ activeTab, onTabChange }: NavigationProps): JSX.Element {
-  const [selectedSort, setSelectedSort] = useState("최신순");
+  const [selectedSort, setSelectedSort] = useState(SORT_OPTIONS[0]);
 
   const handleSortChange = (value: string | boolean): void => {
     if (typeof value === "string") {

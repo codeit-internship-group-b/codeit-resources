@@ -1,11 +1,10 @@
 import Dropdown from "@ui/src/components/common/Dropdown";
+import { SORT_OPTIONS } from "@repo/ui/src/utils/constants/sortOptions";
 
 interface SortDropdownProps {
-  selectedSort: string;
+  selectedSort: string | undefined;
   onSortChange: (value: string | boolean) => void;
 }
-
-const SORT_OPTIONS = ["최신순", "가나다순", "오래된순"];
 
 export default function SortDropdown({ selectedSort, onSortChange }: SortDropdownProps): JSX.Element {
   return (

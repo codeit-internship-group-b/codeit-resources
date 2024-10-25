@@ -13,7 +13,7 @@ const DropdownContext = createContext({
   isOpen: false,
   isError: false,
   errorMessage: "",
-  selectedValue: "" as string | boolean, // 수정: string | boolean 허용
+  selectedValue: "" as string | boolean | undefined, // 수정: string | boolean | undefined 허용
   size: "md",
   toggleDropdown: () => {},
   closeDropdown: () => {},
@@ -22,7 +22,7 @@ const DropdownContext = createContext({
 
 interface DropdownProps {
   children: ReactNode;
-  selectedValue: string | boolean; // 수정: string | boolean 허용
+  selectedValue: string | boolean | undefined; // 수정: string | boolean 허용
   size?: "sm" | "md";
   onSelect: (value: string | boolean) => void; // 수정: string | boolean 허용
   isError?: boolean;
@@ -93,7 +93,7 @@ function Toggle({ children, title, iconType = "none" }: ToggleProps): JSX.Elemen
           className="rounded-6 flex items-center gap-2 bg-gray-400 px-6 py-4"
         >
           <SortIcon />
-          <span className="text-custom-black/60 text-12 font-medium">{selectedValue.toString()}</span>
+          <span className="text-custom-black/60 text-12 font-medium">{selectedValue?.toString()}</span>
         </button>
       )}
       {title && (
