@@ -1,7 +1,7 @@
 import { type NextFunction, type Request as ExpressRequest, type Response } from "express";
 import { JsonWebTokenError, verify, type Secret } from "jsonwebtoken";
 import { config } from "dotenv";
-import { type IUser } from "@repo/types/index";
+import { type IUser } from "@repo/types/src/userType";
 
 config();
 

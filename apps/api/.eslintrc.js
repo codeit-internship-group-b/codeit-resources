@@ -2,7 +2,7 @@
 module.exports = {
   root: true,
   extends: ["@repo/eslint-config/server.js"],
-  ignorePatterns: ["node_modules", "dist", "jest.config.js"],
+  ignorePatterns: ["node_modules", "dist", "jest.config.js", "coverage"],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     project: "./tsconfig.json",
