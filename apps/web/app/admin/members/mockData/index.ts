@@ -57,7 +57,7 @@ export const MOCK_MEMBERS = [
   },
 ];
 
-export const CATEGORIES = [
+export const MOCK_CATEGORIES = [
   "전체",
   "멤버",
   "어드민",
@@ -67,3 +67,5 @@ export const CATEGORIES = [
   "Brand Experience",
   "People & Culture",
 ];
+
+export const MOCK_TEAMS = ["Management", "Finance", "Strategy", "Brand Experience", "People & Culture"];

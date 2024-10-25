@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 import { useState } from "react";
-import { CATEGORIES } from "../mockData";
+import { MOCK_CATEGORIES } from "../mockData";
 import CategoryTab from "./CategoryTab";
 import SortDropdown from "./SortDropdown";
 
@@ -25,7 +25,7 @@ export default function Navigation({ activeTab, onTabChange }: NavigationProps):
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         <ul className="flex flex-row gap-32 whitespace-nowrap">
-          {CATEGORIES.map((category) => (
+          {MOCK_CATEGORIES.map((category) => (
             <CategoryTab
               key={category}
               category={category}
