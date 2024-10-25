@@ -1,1 +1,4 @@
-export const MEMBER_ROLES = ["멤버", "어드민"];
+export const MEMBER_ROLES = {
+  MEMBER: "멤버",
+  ADMIN: "어드민",
+};

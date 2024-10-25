@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
+ 
 import { useState } from "react";
 import Image from "next/image";
 import { Badge } from "@ui/index";
@@ -69,7 +69,7 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
         <Dropdown selectedValue={currentRole} onSelect={handleRoleChange} size="sm">
           <Dropdown.Toggle>{currentRole}</Dropdown.Toggle>
           <Dropdown.Wrapper className="top-42">
-            {MEMBER_ROLES.map((role) => (
+            {Object.values(MEMBER_ROLES).map((role) => (
               <Dropdown.Item hoverStyle="purple" key={role} value={role}>
                 {role}
               </Dropdown.Item>

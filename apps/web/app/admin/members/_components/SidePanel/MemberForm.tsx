@@ -5,6 +5,7 @@ import Input from "@ui/src/components/common/Input";
 import MultiSelectDropdown from "@repo/ui/src/components/common/Dropdown/MulitiSelectDropdown";
 import DefaultProfileImage from "@ui/public/images/image_default_profile.png";
 import Button from "@ui/src/components/common/Button";
+import { MEMBER_ROLES } from "@ui/src/utils/constants/memberRoles";
 import { MOCK_TEAMS } from "../../mockData";
 import { type MemberWithStaticImage, type MemberWithStaticImport } from "../ComponentWithUseClient.types";
 
@@ -31,8 +32,8 @@ export default function MemberForm({
     <form onSubmit={onSubmit}>
       <div className="mb-24">
         <Radio.Group value={formData.role} onChange={onRoleChange}>
-          <Radio.Option value="멤버">멤버</Radio.Option>
-          <Radio.Option value="어드민">어드민</Radio.Option>
+          <Radio.Option value="멤버">{MEMBER_ROLES.MEMBER}</Radio.Option>
+          <Radio.Option value="어드민">{MEMBER_ROLES.ADMIN}</Radio.Option>
         </Radio.Group>
       </div>
 
