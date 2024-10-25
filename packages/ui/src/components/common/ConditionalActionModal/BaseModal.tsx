@@ -1,6 +1,6 @@
-import cn from "@ui/src/utils/cn";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect } from "react";
+import cn from "@ui/src/utils/cn";
 
 interface BaseModalProps {
   isOpen: boolean;
@@ -9,7 +9,7 @@ interface BaseModalProps {
   children: React.ReactNode;
 }
 
-export default function BaseModal(props: BaseModalProps): JSX.Element {
+export function BaseModal(props: BaseModalProps): JSX.Element {
   const { isOpen, onClose, className, children } = props;
 
   useEffect(() => {
@@ -35,6 +35,7 @@ export default function BaseModal(props: BaseModalProps): JSX.Element {
           onClick={onClose}
         >
           <motion.div
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
             className={cn(
               "max-w-1200 rounded-16 relative h-auto max-h-full w-auto overflow-auto bg-white",
               // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
