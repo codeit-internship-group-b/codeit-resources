@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Badge } from "@ui/index";
 import Dropdown from "@ui/src/components/common/Dropdown";
 import { MEMBER_ROLES } from "@repo/ui/src/utils/constants/memberRoles";
+import DefaultProfileImage from "@ui/public/images/image_default_profile.png";
 import { type MemberWithStaticImport } from "./ComponentWithUseClient.types";
 
 interface MemberListItemProps {
@@ -12,6 +13,7 @@ interface MemberListItemProps {
 
 export default function MemberListItem({ member, onMemberClick }: MemberListItemProps): JSX.Element {
   const [currentRole, setCurrentRole] = useState(member.role);
+  const [isImageError, setIsImageError] = useState(false);
 
   const handleMemberClick = (e: MouseEvent<HTMLDivElement>): void => {
     const target = e.target as HTMLElement;
@@ -37,6 +39,10 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
     }
   };
 
+  const handleImageError = (): void => {
+    setIsImageError(true);
+  };
+
   return (
     <div
       role="button"
@@ -47,11 +53,12 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
     >
       <div className="flex items-center gap-16">
         <Image
-          src={member.profileImage}
+          src={isImageError ? DefaultProfileImage : member.profileImage}
           alt={`${member.name}의 프로필`}
           width={40}
           height={40}
           className="rounded-full"
+          onError={handleImageError}
         />
         <span className="text-custom-black">{member.name}</span>
         <span className="text-custom-black/60 max-w-200 overflow-wrap-break-word mr-16 break-all">{member.email}</span>

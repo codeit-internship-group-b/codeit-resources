@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 "use client";
 
 import { useState, useEffect, type ChangeEvent } from "react";
@@ -11,6 +12,7 @@ import { NOTIFICATION_MESSAGES } from "@repo/ui/src/utils/constants/notification
 import { MEMBER_ROLES } from "@ui/src/utils/constants/memberRoles";
 import DefaultProfileImage from "@ui/public/images/image_default_profile.png";
 import MultiSelectDropdown from "@repo/ui/src/components/common/Dropdown/MulitiSelectDropdown";
+import { type StaticImport } from "next/dist/shared/lib/get-img-props";
 import { MOCK_TEAMS } from "../mockData";
 import { type MemberWithStaticImage, type MemberWithStaticImport } from "./ComponentWithUseClient.types";
 
@@ -31,6 +33,7 @@ const initialFormData: MemberWithStaticImage = {
 export default function SidePanel({ isOpen, onClose, selectedMember }: AddMemberSidePanelProps): JSX.Element {
   const [formData, setFormData] = useState<MemberWithStaticImage | MemberWithStaticImport>(initialFormData);
   const [imageObjectUrl, setImageObjectUrl] = useState<string>("");
+  const [isImageError, setIsImageError] = useState(false);
 
   const handleRoleChange = (role: string): void => {
     setFormData((prev) => ({ ...prev, role }));
@@ -87,6 +90,26 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
       type: "success",
       message: NOTIFICATION_MESSAGES.MEMBER_DELETE,
     });
+  };
+
+  const handleImageError = (): void => {
+    setIsImageError(true);
+  };
+
+  const getImageSource = (): string | StaticImport => {
+    if (isImageError) {
+      return DefaultProfileImage;
+    }
+
+    if (formData.profileImage instanceof File) {
+      return imageObjectUrl;
+    }
+
+    if (typeof formData.profileImage === "string" && formData.profileImage) {
+      return formData.profileImage;
+    }
+
+    return DefaultProfileImage;
   };
 
   // 멤버 수정 시, 폼 데이터 초기화 및 사이드 패널 상태 관리
@@ -175,13 +198,12 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
             </div>
             <div className="mb-[262px] flex items-center gap-24">
               <Image
-                src={
-                  formData.profileImage instanceof File ? imageObjectUrl : formData.profileImage || DefaultProfileImage
-                }
+                src={getImageSource()}
                 alt={formData.profileImage ? "프로필 이미지 미리보기" : "기본 프로필 이미지"}
                 width={120}
                 height={120}
                 className="size-120 rounded-full object-cover"
+                onError={handleImageError}
               />
               <label
                 htmlFor="profileImage"
