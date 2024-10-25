@@ -20,7 +20,6 @@ import LogoCodeitIcon from "./svgs/ic_logo-codeit.svg";
 import ProfileDefaultIcon from "./svgs/ic_profile-default.svg";
 import SearchIcon from "./svgs/ic_search.svg";
 import TeamIcon from "./svgs/ic_team.svg";
-import SortingICon from "./svgs/ic_sorting.svg";
 import PersonEmptyIcon from "./svgs/ic_person-empty.svg";
 
 export {
@@ -47,5 +46,4 @@ export {
   SortIcon,
   TextBalloonIcon,
   TriangleIcon,
-  SortingICon,
 };
