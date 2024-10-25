@@ -1,33 +1,8 @@
-"use client";
+import { BottomSheetRoot } from "./Root";
+import { Content } from "./Content";
+import { Trigger } from "./Trigger";
 
-import { useState } from "react";
-import { Sheet } from "react-modal-sheet";
-
-export default function SnapSheet() {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <>
-      <button
-        onClick={() => {
-          setIsOpen(true);
-        }}
-      >
-        Open sheet
-      </button>
-
-      <Sheet
-        isOpen={isOpen}
-        onClose={() => {
-          setIsOpen(false);
-        }}
-      >
-        <Sheet.Container>
-          <Sheet.Header />
-          <Sheet.Content>{/* Your sheet content goes here */}</Sheet.Content>
-        </Sheet.Container>
-        <Sheet.Backdrop />
-      </Sheet>
-    </>
-  );
-}
+export const BottomSheet = Object.assign(BottomSheetRoot, {
+  Content,
+  Trigger,
+});
