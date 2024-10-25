@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { Toast } from "@ui/index";
 import { Providers } from "./providers";
 import Gnb from "@/components/Gnb";
+import MobileSizeWatcher from "@/components/MobileSizeWatcher";
 
 const spoqaHanSansNeo = localFont({
   src: [
@@ -30,6 +31,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className={spoqaHanSansNeo.variable}>
+        <MobileSizeWatcher />
         <Gnb />
         <Providers>
           <div className="md:ml-200">{children}</div>
