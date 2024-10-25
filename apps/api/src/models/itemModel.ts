@@ -1,7 +1,9 @@
 import { type TBaseItem, type IRoom, type ISeat, type IEquipment, ItemStatus } from "@repo/types/src/itemType";
 import { Schema, type Document, model } from "mongoose";
 
-export interface ItemDoc extends Omit<TBaseItem, "_id">, Document {}
+export interface ItemDoc extends Omit<TBaseItem, "_id">, Document {
+  type: "room" | "seat" | "equipment";
+}
 
 const ItemSchema: Schema = new Schema(
   {
