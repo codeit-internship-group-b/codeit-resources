@@ -1,7 +1,7 @@
 export const ReservationStatus = ["reserved", "cancelled", "completed"] as const; // 예약됨, 취소, 완료
 export type TReservationStatus = (typeof ReservationStatus)[number];
 
-type UserId = string;
+export type UserId = string;
 
 export interface IReservation {
   _id: string;
