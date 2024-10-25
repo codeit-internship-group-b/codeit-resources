@@ -25,6 +25,10 @@ import { useOnClickOutside } from "@ui/src/hooks/useOnClickOutside";
 const DropdownContext = createContext({
   isOpen: false,
   selectedValue: [] as string[],
+  searchTerm: "",
+  setSearchTerm: (_value: string) => {
+    // intentionally empty
+  },
   toggleDropdown: () => {
     // intentionally empty
   },
@@ -53,13 +57,16 @@ export default function MultiSelectDropdown({
 }: DropdownProps): JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [searchTerm, setSearchTerm] = useState("");
   const initialSelectedValue = selectedValue.length > 0 ? selectedValue : defaultValue;
 
   const toggleDropdown = useCallback(() => {
     setIsOpen((prev) => !prev);
   }, []);
+
   const closeDropdown = useCallback(() => {
     setIsOpen(false);
+    setSearchTerm("");
   }, []);
 
   const selectedItem = useCallback(
@@ -71,15 +78,24 @@ export default function MultiSelectDropdown({
           : [...initialSelectedValue, value];
       } else {
         newValue = initialSelectedValue.includes(value) ? [] : [value];
+        closeDropdown();
       }
       onSelect(newValue);
     },
-    [onSelect, initialSelectedValue, isMultiSelect],
+    [onSelect, initialSelectedValue, isMultiSelect, closeDropdown],
   );
 
   const providerValue = useMemo(
-    () => ({ isOpen, selectedValue: initialSelectedValue, toggleDropdown, closeDropdown, selectedItem }),
-    [isOpen, initialSelectedValue, toggleDropdown, closeDropdown, selectedItem],
+    () => ({
+      isOpen,
+      selectedValue: initialSelectedValue,
+      toggleDropdown,
+      closeDropdown,
+      selectedItem,
+      searchTerm,
+      setSearchTerm,
+    }),
+    [isOpen, initialSelectedValue, toggleDropdown, closeDropdown, selectedItem, searchTerm, setSearchTerm],
   );
 
   useOnClickOutside(dropdownRef, closeDropdown);
@@ -140,8 +156,7 @@ interface WrapperProps {
 }
 
 function Wrapper({ children }: WrapperProps): JSX.Element {
-  const { isOpen } = useContext(DropdownContext);
-  const [searchTerm, setSearchTerm] = useState("");
+  const { isOpen, searchTerm, setSearchTerm } = useContext(DropdownContext);
 
   const filteredChildren =
     Children.map(children, (child) => {

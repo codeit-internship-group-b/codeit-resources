@@ -52,11 +52,20 @@ export default function AdminSeatSetting({ status, userName }: AdminSeatSettingP
                 )}
               </MultiSelectDropdown.Toggle>
               <MultiSelectDropdown.Wrapper>
-                {[...mockName].map((profile) => (
-                  <MultiSelectDropdown.Item key={profile} value={profile}>
-                    <Profile name={profile} size="size-27" textColor="black" />
-                  </MultiSelectDropdown.Item>
-                ))}
+                {[...mockName]
+                  .sort((a, b) => {
+                    const isASelected = selectName.includes(a);
+                    const isBSelected = selectName.includes(b);
+
+                    if (isASelected && !isBSelected) return -1;
+                    if (!isASelected && isBSelected) return 1;
+                    return 0;
+                  })
+                  .map((profile) => (
+                    <MultiSelectDropdown.Item key={profile} value={profile}>
+                      <Profile name={profile} size="size-27" textColor="black" />
+                    </MultiSelectDropdown.Item>
+                  ))}
               </MultiSelectDropdown.Wrapper>
             </MultiSelectDropdown>
           )}
