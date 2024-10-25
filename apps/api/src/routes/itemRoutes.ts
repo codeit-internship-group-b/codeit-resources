@@ -1,18 +1,15 @@
 import { Router } from "express";
 import asyncHandler from "express-async-handler";
-import * as roomController from "../controllers/roomControllers";
+import * as roomController from "../controllers/itemControllers";
 
-export const roomRouter: Router = Router();
-const { getAllRooms, createRoom, updateRoom, deleteRoom } = roomController;
+export const itemRouter: Router = Router();
+const { getAllItems, createItem, updateItem, deleteItem } = roomController;
 
-// 전체 회의실 리스트 조회
-roomRouter.get("/", asyncHandler(getAllRooms));
-// 신규 회의실 등록
-roomRouter.post("/", asyncHandler(createRoom));
-// 회의실 정보 수정
-roomRouter.patch("/:itemId", asyncHandler(updateRoom));
-// 회의실 삭제
-roomRouter.delete("/:itemId", asyncHandler(deleteRoom));
+// Item CRUD
+itemRouter.get("/:itemType?", asyncHandler(getAllItems));
+itemRouter.post("/", asyncHandler(createItem)); // admin
+itemRouter.patch("/:itemId", asyncHandler(updateItem)); // admin
+itemRouter.delete("/:itemId", asyncHandler(deleteItem)); // admin
 
 export const seatRouter: Router = Router();
 
