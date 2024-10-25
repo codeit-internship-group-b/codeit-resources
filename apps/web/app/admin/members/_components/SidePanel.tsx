@@ -1,4 +1,3 @@
- 
 "use client";
 
 import { useState, useEffect, type ChangeEvent } from "react";
@@ -12,8 +11,8 @@ import { NOTIFICATION_MESSAGES } from "@repo/ui/src/utils/constants/notification
 import { MEMBER_ROLES } from "@ui/src/utils/constants/memberRoles";
 import DefaultProfileImage from "@ui/public/images/image_default_profile.png";
 import MultiSelectDropdown from "@repo/ui/src/components/common/Dropdown/MulitiSelectDropdown";
-import { MOCK_TEAMS } from "../../mockData";
-import { type MemberWithStaticImage, type MemberWithStaticImport } from "../ComponentWithUseClient.types";
+import { MOCK_TEAMS } from "../mockData";
+import { type MemberWithStaticImage, type MemberWithStaticImport } from "./ComponentWithUseClient.types";
 
 interface AddMemberSidePanelProps {
   isOpen: boolean;
