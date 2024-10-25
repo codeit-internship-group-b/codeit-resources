@@ -1,15 +1,19 @@
-/* eslint-disable @typescript-eslint/no-confusing-void-expression */
-/* eslint-disable react/no-unescaped-entities */
-/* eslint-disable no-console */
+ 
 "use client";
 
-import { useState, useEffect } from "react";
-import { notify, Modal } from "@ui/index";
+import { useState, useEffect, type ChangeEvent } from "react";
+import Image from "next/image";
+import { notify, Modal, Radio } from "@ui/index";
+import Input from "@ui/src/components/common/Input";
+import Button from "@ui/src/components/common/Button";
 import { DoubleChevron } from "@ui/public";
-import { IMAGE_TYPES } from "@repo/ui/src/utils/constants/imageTypes";
+import { IMAGE_TYPES, MAX_SIZE } from "@repo/ui/src/utils/constants/image";
 import { NOTIFICATION_MESSAGES } from "@repo/ui/src/utils/constants/notificationMessage";
+import { MEMBER_ROLES } from "@ui/src/utils/constants/memberRoles";
+import DefaultProfileImage from "@ui/public/images/image_default_profile.png";
+import MultiSelectDropdown from "@repo/ui/src/components/common/Dropdown/MulitiSelectDropdown";
+import { MOCK_TEAMS } from "../../mockData";
 import { type MemberWithStaticImage, type MemberWithStaticImport } from "../ComponentWithUseClient.types";
-import MemberForm from "./MemberForm";
 
 interface AddMemberSidePanelProps {
   isOpen: boolean;
@@ -27,12 +31,13 @@ const initialFormData: MemberWithStaticImage = {
 
 export default function SidePanel({ isOpen, onClose, selectedMember }: AddMemberSidePanelProps): JSX.Element {
   const [formData, setFormData] = useState<MemberWithStaticImage | MemberWithStaticImport>(initialFormData);
+  const [imageObjectUrl, setImageObjectUrl] = useState<string>("");
 
   const handleRoleChange = (role: string): void => {
     setFormData((prev) => ({ ...prev, role }));
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const { id, value } = e.target;
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
@@ -41,7 +46,7 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
     setFormData((prev) => ({ ...prev, teams }));
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleImageUpload = (e: ChangeEvent<HTMLInputElement>): void => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -54,20 +59,27 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
       return;
     }
 
+    if (file.size > MAX_SIZE) {
+      notify({
+        type: "error",
+        message: NOTIFICATION_MESSAGES.INVAILD_IMAGE_SIZE,
+      });
+      e.target.value = "";
+      return;
+    }
+
+    const newObjectUrl = URL.createObjectURL(file);
+    setImageObjectUrl(newObjectUrl);
     setFormData((prev) => ({ ...prev, profileImage: file }));
   };
 
+  // TODO: 폼 제출 로직
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-
-    // TODO: 폼 제출 로직
-    console.log("폼 제출:", formData);
-
     notify({
       type: "success",
       message: selectedMember ? NOTIFICATION_MESSAGES.MEMBER_UPDATE : NOTIFICATION_MESSAGES.MEMBER_ADD,
     });
-
     onClose();
   };
 
@@ -78,13 +90,16 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
     });
   };
 
+  // 멤버 수정 시, 폼 데이터 초기화 및 사이드 패널 상태 관리
   useEffect(() => {
     if (!isOpen) {
       const timer = setTimeout(() => {
         setFormData(initialFormData);
       }, 100);
 
-      return () => clearTimeout(timer);
+      return () => {
+        clearTimeout(timer);
+      };
     } else if (selectedMember) {
       setFormData({
         role: selectedMember.role,
@@ -95,6 +110,15 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
       });
     }
   }, [isOpen, selectedMember]);
+
+  // 컴포넌트 언마운트 시에만 URL 해제
+  useEffect(() => {
+    return () => {
+      if (imageObjectUrl) {
+        URL.revokeObjectURL(imageObjectUrl);
+      }
+    };
+  }, [imageObjectUrl]);
 
   return (
     <Modal.Root>
@@ -121,19 +145,66 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
             ) : null}
           </div>
 
-          <MemberForm
-            formData={formData}
-            onRoleChange={handleRoleChange}
-            onInputChange={handleInputChange}
-            onTeamsSelect={handleTeamsSelect}
-            onImageUpload={handleImageUpload}
-            onSubmit={handleSubmit}
-            isEdit={Boolean(selectedMember)}
-          />
+          <form onSubmit={handleSubmit}>
+            <div className="mb-24">
+              <Radio.Group value={formData.role} onChange={handleRoleChange}>
+                <Radio.Option value="멤버">{MEMBER_ROLES.MEMBER}</Radio.Option>
+                <Radio.Option value="어드민">{MEMBER_ROLES.ADMIN}</Radio.Option>
+              </Radio.Group>
+            </div>
+            <Input id="name" type="text" value={formData.name} placeholder="멤버 이름" onChange={handleInputChange} />
+            <Input
+              id="email"
+              type="email"
+              value={formData.email}
+              placeholder="멤버 이메일"
+              onChange={handleInputChange}
+            />
+            <div className="mb-24">
+              <MultiSelectDropdown selectedValue={formData.teams} onSelect={handleTeamsSelect}>
+                <MultiSelectDropdown.Toggle>
+                  {formData.teams.length > 0 ? formData.teams.join(", ") : "팀"}
+                </MultiSelectDropdown.Toggle>
+                <MultiSelectDropdown.Wrapper>
+                  {MOCK_TEAMS.map((team) => (
+                    <MultiSelectDropdown.Item key={team} value={team}>
+                      {team}
+                    </MultiSelectDropdown.Item>
+                  ))}
+                </MultiSelectDropdown.Wrapper>
+              </MultiSelectDropdown>
+            </div>
+            <div className="mb-[262px] flex items-center gap-24">
+              <Image
+                src={
+                  formData.profileImage instanceof File ? imageObjectUrl : formData.profileImage || DefaultProfileImage
+                }
+                alt={formData.profileImage ? "프로필 이미지 미리보기" : "기본 프로필 이미지"}
+                width={120}
+                height={120}
+                className="size-120 rounded-full object-cover"
+              />
+              <label
+                htmlFor="profileImage"
+                className="w-86 border-custom-black/20 rounded-6 text-sm-medium text-custom-black/80 flex h-32 cursor-pointer items-center justify-center border transition-colors duration-300 hover:border-purple-400 hover:text-purple-400"
+              >
+                사진 업로드
+                <input
+                  id="profileImage"
+                  type="file"
+                  accept=".png, .jpeg, .jpg"
+                  className="hidden"
+                  onChange={handleImageUpload}
+                />
+              </label>
+            </div>
+            <Button variant="Primary" type="submit" className="w-full">
+              {selectedMember ? "수정하기" : "추가하기"}
+            </Button>
+          </form>
         </div>
       </div>
 
-      {/* 모달 */}
       <Modal.Content>
         <Modal.Title>'{selectedMember?.name}'님을 탈퇴시킬까요?</Modal.Title>
         <Modal.Description>
