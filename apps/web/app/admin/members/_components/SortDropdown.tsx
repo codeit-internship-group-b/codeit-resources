@@ -12,7 +12,7 @@ export default function SortDropdown({ selectedSort, onSortChange }: SortDropdow
     <div className="bg-custom-gradient w-174 absolute right-0 top-0 flex h-full items-center justify-end pb-4">
       <Dropdown selectedValue={selectedSort} onSelect={onSortChange} size="sm">
         <Dropdown.Toggle iconType="sort">{selectedSort}</Dropdown.Toggle>
-        <Dropdown.Wrapper className="-left-34 top-32">
+        <Dropdown.Wrapper className="right-0 mt-2">
           {SORT_OPTIONS.map((option) => (
             <Dropdown.Item hoverStyle="purple" key={option} value={option}>
               {option}
