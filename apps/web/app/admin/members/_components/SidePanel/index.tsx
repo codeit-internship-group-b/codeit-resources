@@ -6,7 +6,7 @@
 import { useState, useEffect } from "react";
 import { notify, Modal } from "@ui/index";
 import { DoubleChevron } from "@ui/public";
-import { ACCEPTED_IMAGE_TYPES } from "@repo/ui/src/utils/constants/imageTypes";
+import { IMAGE_TYPES } from "@repo/ui/src/utils/constants/imageTypes";
 import { NOTIFICATION_MESSAGES } from "@repo/ui/src/utils/constants/notificationMessage";
 import MemberForm from "./MemberForm";
 import { type AddMemberSidePanelProps, type MemberFormData } from "./index.types";
@@ -39,7 +39,7 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+    if (!IMAGE_TYPES.includes(file.type)) {
       notify({
         type: "error",
         message: NOTIFICATION_MESSAGES.INVALID_IMAGE_TYPE,

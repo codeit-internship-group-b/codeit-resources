@@ -2,14 +2,13 @@ import { useState } from "react";
 import Image from "next/image";
 import { Badge } from "@ui/index";
 import Dropdown from "@ui/src/components/common/Dropdown";
+import { MEMBER_ROLES } from "@repo/ui/src/utils/constants/memberRoles";
 import { type Member } from "../mockData";
 
 interface MemberListItemProps {
   member: Member;
   onMemberClick: (member: Member) => void;
 }
-
-const MEMBER_ROLES = ["멤버", "어드민"];
 
 export default function MemberListItem({ member, onMemberClick }: MemberListItemProps): JSX.Element {
   const [currentRole, setCurrentRole] = useState(member.role);
