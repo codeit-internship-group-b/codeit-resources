@@ -16,7 +16,6 @@
 ⠀⠛⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠛⠀
 '
 
-npx lint-staged
 pnpm run lint:fix
 
 current_branch=$(git rev-parse --abbrev-ref HEAD)

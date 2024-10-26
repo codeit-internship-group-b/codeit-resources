@@ -4,6 +4,7 @@ import { Chevron, GearIcon } from "@ui/public";
 import Link from "next/link";
 import HeaderTabs from "./HeaderTabs";
 import { useDateStore } from "@/app/store/useDateStore";
+import HeaderTabs from "./HeaderTabs";
 
 interface HeaderProps {
   page: "meetings" | "seats";
