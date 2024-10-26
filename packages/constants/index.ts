@@ -12,6 +12,8 @@ export const API_ENDPOINTS = {
     PATCH_USER: (userId: string | number) => `${API_BASE_URL}/users/${userId}`, // 유저 정보 수정
     DELETE_USER: (userId: string | number) => `${API_BASE_URL}/users/${userId}`, // 유저 삭제
     CREATE_USER: `${API_BASE_URL}/users/`, // 유저 생성
+    ME_IMAGE: `${API_BASE_URL}/users/me/image`,
+    ME_PASSWORD: `${API_BASE_URL}/users/me/password`,
   },
   RESERVATION: {
     GET_USER_RESERVATIONS: (userId: string | number) => `${API_BASE_URL}/reservations/dashboard/${userId}`, // 유저별 예약 조회

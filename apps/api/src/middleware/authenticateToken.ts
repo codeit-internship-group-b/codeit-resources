@@ -41,6 +41,11 @@ export const authenticateToken = async (
     return;
   }
 
+  req.user = {
+    ...user.toObject(),
+    _id: userId,
+  } as IUser;
+
   next();
 };
 
