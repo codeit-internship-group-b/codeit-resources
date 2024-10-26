@@ -1,36 +1,20 @@
 "use client";
 
 import React from "react";
-import { rooms } from "../../mocks/mockData"; // 기존 rooms 데이터를 가져옵니다.
-import { RoomSchedule } from "./Schedule";
+import { rooms } from "../../mocks/mockData"; // 업데이트된 rooms 데이터를 가져옵니다.
+import ScheduleTable from "./ScheduleTable";
 import { useDateStore } from "@/app/store/useDateStore"; // 선택된 날짜 가져오기 위한 store import
 
 export default function MeetingRoomSchedule() {
   const { selectedDate } = useDateStore(); // 선택된 날짜 가져오기
-  const selectedDateString = `${selectedDate.year}-${selectedDate.month < 10 ? `0${selectedDate.month}` : selectedDate.month}-${selectedDate.day < 10 ? `0${selectedDate.day}` : selectedDate.day}`;
+
+  // selectedDate를 "YYYY-MM-DD" 형식의 문자열로 변환
+  const formattedDate = `${selectedDate.year}-${String(selectedDate.month).padStart(2, "0")}-${String(selectedDate.day).padStart(2, "0")}`;
 
   return (
-    <div className="px-16 py-24">
-      <p className="text-custom-black/50 text-md-medium">미팅룸</p>
-
-      {/* 미팅룸 리스트와 각각의 시간표 */}
-      {rooms.map((room) => (
-        <RoomSchedule
-          key={room.id}
-          roomName={room.title} // 데이터에서 name을 title로 변경
-          schedules={room.schedules
-            .filter((schedule) => schedule.date === selectedDateString)
-            .map((schedule) => ({
-              id: schedule.id,
-              date: schedule.date, // date 속성 추가
-              start_time: schedule.start_time, // start_time으로 변경
-              end_time: schedule.end_time, // end_time으로 변경
-              title: schedule.title,
-              userId: schedule.userId,
-            }))}
-          currentUserId="1"
-        />
-      ))}
+    <div className="container mx-auto">
+      <h1 className="mb-4 text-2xl font-bold">예약 스케줄</h1>
+      <ScheduleTable rooms={rooms} selectedDate={formattedDate} />
     </div>
   );
 }
