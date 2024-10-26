@@ -33,6 +33,8 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({ schedules, slotWidth = 72, sl
     return hours * 60 + minutes;
   };
 
+  const currentUserId = "1"; // 현재 로그인한 사용자의 userId
+
   return (
     <div className="relative" style={{ height: slotHeight }}>
       {/* 빈 슬롯들 */}
@@ -70,17 +72,23 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({ schedules, slotWidth = 72, sl
         const leftPosition = (startMinutes / totalMinutes) * (slotWidth * totalSlots);
         const scheduleWidth = (scheduleDuration / totalMinutes) * (slotWidth * totalSlots);
 
+        // 사용자에 따른 스타일 결정
+        const isCurrentUser = schedule.userId === currentUserId;
+        const backgroundColor = isCurrentUser ? "bg-purple-500" : "bg-black";
+        const hoverColor = isCurrentUser ? "hover:bg-purple-600" : "hover:bg-gray-800";
+
         return (
           <div
             key={schedule.id}
-            className="absolute h-full bg-none hover:bg-purple-200"
+            className={`absolute h-full ${hoverColor}`}
             style={{
               left: `${leftPosition}px`,
               width: `${scheduleWidth}px`,
+              backgroundColor: "none",
             }}
           >
             <div
-              className="absolute left-0 top-0 flex h-20 cursor-pointer items-center justify-center bg-blue-500 text-white hover:bg-blue-600"
+              className={`top-26 absolute left-0 flex h-20 cursor-pointer items-center justify-center ${backgroundColor} text-white`}
               style={{
                 width: "100%",
               }}
