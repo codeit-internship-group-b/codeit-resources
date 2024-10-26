@@ -42,17 +42,17 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({ schedules, slotWidth = 72, sl
         {Array.from({ length: totalSlots }).map((_, index) => (
           <div key={index} className="relative" style={{ width: slotWidth, height: slotHeight }}>
             {/* 슬롯 배경 */}
-            <div className="h-full w-full cursor-pointer hover:bg-gray-200/10"></div>
+            <div className="hover:bg-gray-60 h-full w-full cursor-pointer"></div>
             {/* 30분, 1시간마다 다른 border 표시 */}
             {index % 2 === 0 ? (
               // 매 시간마다 굵은 왼쪽 border
-              <div className="absolute left-0 top-0 h-full border-l-2 border-gray-400"></div>
+              <div className="border-gray-10 absolute left-0 top-0 h-full border-l-2"></div>
             ) : (
               // 30분마다 얇은 왼쪽 border
-              <div className="absolute bottom-0 left-0 h-12 border-l border-gray-300"></div>
+              <div className="border-gray-10 absolute bottom-0 left-0 h-12 border-l"></div>
             )}
             {/* 하단 border */}
-            <div className="absolute bottom-10 left-0 w-full border-b border-dotted border-gray-300"></div>
+            <div className="border-gray-10 absolute bottom-10 left-0 w-full border-b border-dotted"></div>
           </div>
         ))}
       </div>
@@ -74,8 +74,10 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({ schedules, slotWidth = 72, sl
 
         // 사용자에 따른 스타일 결정
         const isCurrentUser = schedule.userId === currentUserId;
-        const backgroundColor = isCurrentUser ? "bg-purple-500" : "bg-black";
-        const hoverColor = isCurrentUser ? "hover:bg-purple-600" : "hover:bg-gray-800";
+        const backgroundColor = isCurrentUser ? "bg-purple-400" : "bg-gray-80";
+        const hoverColor = isCurrentUser
+          ? "hover:bg-purple-200 hover:outline-purple-40 hover:outline"
+          : "hover:bg-gray-200/10";
 
         return (
           <div
@@ -84,11 +86,10 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({ schedules, slotWidth = 72, sl
             style={{
               left: `${leftPosition}px`,
               width: `${scheduleWidth}px`,
-              backgroundColor: "none",
             }}
           >
             <div
-              className={`top-26 absolute left-0 flex h-20 cursor-pointer items-center justify-center ${backgroundColor} text-white`}
+              className={`group absolute relative left-0 top-20 flex h-20 cursor-pointer items-center justify-center ${backgroundColor} text-white`}
               style={{
                 width: "100%",
               }}
@@ -97,7 +98,23 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({ schedules, slotWidth = 72, sl
                 // 스케줄 클릭 이벤트 처리
               }}
             >
-              {schedule.title}
+              {isCurrentUser ? (
+                // 자신의 스케줄인 경우 타이틀 표시
+                <span>&nbsp;</span>
+              ) : (
+                // 다른 사용자의 스케줄인 경우 타이틀 숨기고 툴팁 표시
+                <>
+                  {/* 빈 내용 */}
+                  <span>&nbsp;</span>
+                  {/* 툴팁 */}
+                  <div className="absolute bottom-full left-1/2 mb-16 hidden w-max -translate-x-1/2 transform group-hover:block">
+                    <div className="text-sm-medium bg-gray-90 relative z-10 rounded-lg px-8 py-4 text-sm text-white/90">
+                      {schedule.title}
+                      <div className="border-t-gray-90 absolute left-20 top-full h-0 w-0 -translate-x-1/2 border-x-8 border-t-8 border-x-transparent"></div>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         );
