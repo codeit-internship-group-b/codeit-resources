@@ -3,10 +3,10 @@ export const rooms = [
     id: "roomA",
     title: "미팅룸 A",
     schedules: [
-      // 10월 24일 스케줄
+      // 10월 26일 스케줄
       {
         id: "scheduleA1",
-        date: "2024-10-24",
+        date: "2024-10-26",
         start_time: "09:00",
         end_time: "10:00",
         title: "팀 미팅",
@@ -14,7 +14,7 @@ export const rooms = [
       },
       {
         id: "scheduleA2",
-        date: "2024-10-24",
+        date: "2024-10-26",
         start_time: "10:30",
         end_time: "11:30",
         title: "프로젝트 회의",
@@ -22,7 +22,7 @@ export const rooms = [
       },
       {
         id: "scheduleA3",
-        date: "2024-10-24",
+        date: "2024-10-26",
         start_time: "13:00",
         end_time: "15:00",
         title: "워크샵",
@@ -30,16 +30,16 @@ export const rooms = [
       },
       {
         id: "scheduleA4",
-        date: "2024-10-24",
+        date: "2024-10-26",
         start_time: "15:30",
         end_time: "16:30",
         title: "클라이언트 미팅",
         userId: "4",
       },
-      // 10월 25일 스케줄
+      // 10월 27일 스케줄
       {
         id: "scheduleA5",
-        date: "2024-10-25",
+        date: "2024-10-27",
         start_time: "09:30",
         end_time: "10:30",
         title: "디자인 리뷰",
@@ -47,7 +47,7 @@ export const rooms = [
       },
       {
         id: "scheduleA6",
-        date: "2024-10-25",
+        date: "2024-10-27",
         start_time: "11:00",
         end_time: "12:00",
         title: "개발팀 회의",
@@ -55,7 +55,7 @@ export const rooms = [
       },
       {
         id: "scheduleA7",
-        date: "2024-10-25",
+        date: "2024-10-27",
         start_time: "13:00",
         end_time: "14:00",
         title: "마케팅 전략 회의",
@@ -63,16 +63,16 @@ export const rooms = [
       },
       {
         id: "scheduleA8",
-        date: "2024-10-25",
+        date: "2024-10-27",
         start_time: "15:00",
         end_time: "17:00",
         title: "전사 회의",
         userId: "4",
       },
-      // 10월 26일 스케줄
+      // 10월 28일 스케줄
       {
         id: "scheduleA9",
-        date: "2024-10-26",
+        date: "2024-10-28",
         start_time: "09:00",
         end_time: "11:00",
         title: "프로젝트 킥오프",
@@ -80,7 +80,7 @@ export const rooms = [
       },
       {
         id: "scheduleA10",
-        date: "2024-10-26",
+        date: "2024-10-28",
         start_time: "11:30",
         end_time: "12:30",
         title: "교육 세션",
@@ -88,7 +88,7 @@ export const rooms = [
       },
       {
         id: "scheduleA11",
-        date: "2024-10-26",
+        date: "2024-10-28",
         start_time: "13:00",
         end_time: "14:30",
         title: "브레인스토밍",
@@ -96,7 +96,7 @@ export const rooms = [
       },
       {
         id: "scheduleA12",
-        date: "2024-10-26",
+        date: "2024-10-28",
         start_time: "15:00",
         end_time: "16:00",
         title: "고객 미팅",
@@ -104,215 +104,6 @@ export const rooms = [
       },
     ],
   },
-  {
-    id: "roomB",
-    title: "미팅룸 B",
-    schedules: [
-      // 10월 24일 스케줄
-      {
-        id: "scheduleB1",
-        date: "2024-10-24",
-        start_time: "09:15",
-        end_time: "10:15",
-        title: "아침 회의",
-        userId: "2",
-      },
-      {
-        id: "scheduleB2",
-        date: "2024-10-24",
-        start_time: "10:45",
-        end_time: "11:45",
-        title: "제품 시연",
-        userId: "3",
-      },
-      {
-        id: "scheduleB3",
-        date: "2024-10-24",
-        start_time: "12:00",
-        end_time: "13:00",
-        title: "점심 미팅",
-        userId: "4",
-      },
-      {
-        id: "scheduleB4",
-        date: "2024-10-24",
-        start_time: "14:00",
-        end_time: "15:30",
-        title: "협력사 미팅",
-        userId: "1",
-      },
-      // 10월 25일 스케줄
-      {
-        id: "scheduleB5",
-        date: "2024-10-25",
-        start_time: "09:00",
-        end_time: "10:00",
-        title: "주간 계획 회의",
-        userId: "2",
-      },
-      {
-        id: "scheduleB6",
-        date: "2024-10-25",
-        start_time: "10:30",
-        end_time: "12:00",
-        title: "데이터 분석 세션",
-        userId: "3",
-      },
-      {
-        id: "scheduleB7",
-        date: "2024-10-25",
-        start_time: "13:30",
-        end_time: "15:00",
-        title: "세미나",
-        userId: "4",
-      },
-      {
-        id: "scheduleB8",
-        date: "2024-10-25",
-        start_time: "15:30",
-        end_time: "16:30",
-        title: "문서 검토",
-        userId: "1",
-      },
-      // 10월 26일 스케줄
-      {
-        id: "scheduleB9",
-        date: "2024-10-26",
-        start_time: "09:00",
-        end_time: "10:30",
-        title: "팀 교육",
-        userId: "2",
-      },
-      {
-        id: "scheduleB10",
-        date: "2024-10-26",
-        start_time: "11:00",
-        end_time: "12:00",
-        title: "고객 지원 회의",
-        userId: "3",
-      },
-      {
-        id: "scheduleB11",
-        date: "2024-10-26",
-        start_time: "13:00",
-        end_time: "14:00",
-        title: "신제품 회의",
-        userId: "4",
-      },
-      {
-        id: "scheduleB12",
-        date: "2024-10-26",
-        start_time: "14:30",
-        end_time: "16:00",
-        title: "재무 검토",
-        userId: "1",
-      },
-    ],
-  },
-  {
-    id: "roomC",
-    title: "미팅룸 C",
-    schedules: [
-      // 10월 24일 스케줄
-      {
-        id: "scheduleC1",
-        date: "2024-10-24",
-        start_time: "09:00",
-        end_time: "10:00",
-        title: "HR 인터뷰",
-        userId: "3",
-      },
-      {
-        id: "scheduleC2",
-        date: "2024-10-24",
-        start_time: "10:30",
-        end_time: "12:00",
-        title: "기술 세미나",
-        userId: "4",
-      },
-      {
-        id: "scheduleC3",
-        date: "2024-10-24",
-        start_time: "13:00",
-        end_time: "14:00",
-        title: "브랜드 회의",
-        userId: "1",
-      },
-      {
-        id: "scheduleC4",
-        date: "2024-10-24",
-        start_time: "15:00",
-        end_time: "16:30",
-        title: "파트너십 논의",
-        userId: "2",
-      },
-      // 10월 25일 스케줄
-      {
-        id: "scheduleC5",
-        date: "2024-10-25",
-        start_time: "09:30",
-        end_time: "10:30",
-        title: "UI/UX 워크샵",
-        userId: "3",
-      },
-      {
-        id: "scheduleC6",
-        date: "2024-10-25",
-        start_time: "11:00",
-        end_time: "12:30",
-        title: "보안 세션",
-        userId: "4",
-      },
-      {
-        id: "scheduleC7",
-        date: "2024-10-25",
-        start_time: "13:00",
-        end_time: "14:30",
-        title: "영업 전략 회의",
-        userId: "1",
-      },
-      {
-        id: "scheduleC8",
-        date: "2024-10-25",
-        start_time: "15:00",
-        end_time: "16:00",
-        title: "회계 검토",
-        userId: "2",
-      },
-      // 10월 26일 스케줄
-      {
-        id: "scheduleC9",
-        date: "2024-10-26",
-        start_time: "09:00",
-        end_time: "10:00",
-        title: "직원 교육",
-        userId: "3",
-      },
-      {
-        id: "scheduleC10",
-        date: "2024-10-26",
-        start_time: "10:30",
-        end_time: "12:00",
-        title: "시장 조사 발표",
-        userId: "4",
-      },
-      {
-        id: "scheduleC11",
-        date: "2024-10-26",
-        start_time: "13:00",
-        end_time: "14:00",
-        title: "기술 리뷰",
-        userId: "1",
-      },
-      {
-        id: "scheduleC12",
-        date: "2024-10-26",
-        start_time: "14:30",
-        end_time: "16:00",
-        title: "전략 회의",
-        userId: "2",
-      },
-    ],
-  },
-  // roomD, roomE도 유사하게 작성하실 수 있습니다.
+  // roomB와 roomC의 날짜도 동일하게 26, 27, 28로 변경합니다.
+  // ...
 ];
