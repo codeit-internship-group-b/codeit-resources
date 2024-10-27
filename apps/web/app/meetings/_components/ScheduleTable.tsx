@@ -3,6 +3,7 @@
 import React from "react";
 import ScheduleRow from "./ScheduleRow";
 import TimeText from "./TimeText";
+import RoomName from "./RoomName";
 
 interface Schedule {
   id: string;
@@ -27,11 +28,16 @@ interface ScheduleTableProps {
 const ScheduleTable: React.FC<ScheduleTableProps> = ({ rooms, selectedDate }) => {
   return (
     <div>
-      <TimeText />
       {rooms.map((room) => (
-        <div key={room.id} className="mb-4">
-          <ScheduleRow schedules={room.schedules.filter((schedule) => schedule.date === selectedDate)} />
-        </div>
+        <>
+          <RoomName key={room.title} name={room.title} />
+          <div key={room.id} className="my-24 overflow-x-auto">
+            <TimeText />
+            <div className="ml-36">
+              <ScheduleRow schedules={room.schedules.filter((schedule) => schedule.date === selectedDate)} />
+            </div>
+          </div>
+        </>
       ))}
     </div>
   );
