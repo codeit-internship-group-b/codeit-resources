@@ -6,10 +6,10 @@ import { notify } from "@ui/index";
 import AlertModal from "@ui/src/components/common/ConditionalActionModal/AlertModal";
 import { usePathname } from "next/navigation";
 import { Sheet } from "react-modal-sheet";
-import { useSeatContext } from "../context/SeatContext";
-import AdminSeatSetting from "./AdminSeatSetting";
 import useIsMobileStore from "@/app/store/useIsMobileStore";
 import Sidebar from "@/components/common/Sidebar";
+import { useSeatContext } from "../context/SeatContext";
+import AdminSeatSetting from "./AdminSeatSetting";
 
 interface SeatButtonProps {
   isLoading?: boolean;
