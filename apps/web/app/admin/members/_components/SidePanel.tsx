@@ -34,7 +34,11 @@ const initialFormData: SidePanelFormData = {
   profileImage: null,
 };
 
-export default function SidePanel({ isOpen, onClose, selectedMember }: AddMemberSidePanelProps): JSX.Element {
+export default function SidePanel({
+  isOpen,
+  onClose,
+  selectedMember,
+}: AddMemberSidePanelProps): JSX.Element {
   const [formData, setFormData] = useState<SidePanelFormData>(initialFormData);
   const [imageObjectUrl, setImageObjectUrl] = useState<string>("");
   const [isImageError, setIsImageError] = useState(false);
@@ -84,7 +88,9 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
     e.preventDefault();
     notify({
       type: "success",
-      message: selectedMember ? NOTIFICATION_MESSAGES.MEMBER_UPDATE : NOTIFICATION_MESSAGES.MEMBER_ADD,
+      message: selectedMember
+        ? NOTIFICATION_MESSAGES.MEMBER_UPDATE
+        : NOTIFICATION_MESSAGES.MEMBER_ADD,
     });
     onClose();
   };
@@ -153,12 +159,18 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <button onClick={onClose} type="button" className="mb-32 ml-16 mt-16 flex flex-row">
+        <button
+          onClick={onClose}
+          type="button"
+          className="mb-32 ml-16 mt-16 flex flex-row"
+        >
           <DoubleChevron />
         </button>
         <div className="mx-32 mb-40">
           <div className={selectedMember ? "flex justify-between" : ""}>
-            <h1 className="text-3xl-bold mb-32">{selectedMember ? "멤버 수정" : "멤버 추가"}</h1>
+            <h1 className="text-3xl-bold mb-32">
+              {selectedMember ? "멤버 수정" : "멤버 추가"}
+            </h1>
             {selectedMember ? (
               <Modal.Trigger>
                 <button
@@ -178,7 +190,13 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
                 <Radio.Option value="어드민">{MEMBER_ROLES.ADMIN}</Radio.Option>
               </Radio.Group>
             </div>
-            <Input id="name" type="text" value={formData.name} placeholder="멤버 이름" onChange={handleInputChange} />
+            <Input
+              id="name"
+              type="text"
+              value={formData.name}
+              placeholder="멤버 이름"
+              onChange={handleInputChange}
+            />
             <Input
               id="email"
               type="email"
@@ -187,7 +205,10 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
               onChange={handleInputChange}
             />
             <div className="mb-24">
-              <MultiSelectDropdown selectedValue={formData.teams} onSelect={handleTeamsSelect}>
+              <MultiSelectDropdown
+                selectedValue={formData.teams}
+                onSelect={handleTeamsSelect}
+              >
                 <MultiSelectDropdown.Toggle>
                   {formData.teams.length > 0 ? formData.teams.join(", ") : "팀"}
                 </MultiSelectDropdown.Toggle>
@@ -203,7 +224,11 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
             <div className="mb-[262px] flex items-center gap-24">
               <Image
                 src={getImageSource()}
-                alt={formData.profileImage ? "프로필 이미지 미리보기" : "기본 프로필 이미지"}
+                alt={
+                  formData.profileImage
+                    ? "프로필 이미지 미리보기"
+                    : "기본 프로필 이미지"
+                }
                 width={120}
                 height={120}
                 className="size-120 rounded-full object-cover"
@@ -233,9 +258,14 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
       <Modal.Content>
         <Modal.Title>'{selectedMember?.name}'님을 탈퇴시킬까요?</Modal.Title>
         <Modal.Description>
-          탈퇴 시, 해당 멤버는 더 이상 목록에서 보이지 않으며, 해당 계정으로 로그인이 불가합니다.
+          탈퇴 시, 해당 멤버는 더 이상 목록에서 보이지 않으며, 해당 계정으로
+          로그인이 불가합니다.
         </Modal.Description>
-        <Modal.Close onConfirm={handleModalConfirm} confirmText="탈퇴하기" cancelText="취소하기" />
+        <Modal.Close
+          onConfirm={handleModalConfirm}
+          confirmText="탈퇴하기"
+          cancelText="취소하기"
+        />
       </Modal.Content>
     </Modal.Root>
   );

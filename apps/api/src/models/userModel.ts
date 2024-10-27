@@ -17,7 +17,7 @@ const UserSchema = new Schema<UserDocument>(
     },
     email: { type: String, required: true, minlength: 4, unique: true },
     password: { type: String, required: true, minlength: 4, trim: true },
-    role: { type: String, enum: Roles, default: "member" },
+    role: { type: String, enum: Roles, default: "멤버" },
     teams: {
       type: [String],
       ref: "Team",
