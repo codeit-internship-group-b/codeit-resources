@@ -1,7 +1,8 @@
 /* eslint-disable  */
 // components/ScheduleRow.tsx
 
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { MeetingBottomSheet } from "./MeetingBottomSheet";
 
 interface Schedule {
   id: string;
@@ -33,28 +34,57 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({ schedules, slotWidth = 72, sl
     return hours * 60 + minutes;
   };
 
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [clickedSlotIndex, setClickedSlotIndex] = useState<number | null>(null);
+
   const currentUserId = "1"; // 현재 로그인한 사용자의 userId
 
+  const handleSlotClick = (index: number) => {
+    // 클릭된 슬롯의 시간을 계산
+    const clickedTimeMinutes = startHour * 60 + index * minutesPerSlot;
+    const hours = Math.floor(clickedTimeMinutes / 60);
+    const minutes = clickedTimeMinutes % 60;
+    const timeString = `${String(hours).padStart(2, "0")}:${String(minutes).toString().padStart(2, "0")}`;
+
+    setSelectedTime(timeString);
+    setClickedSlotIndex(index); // 클릭된 슬롯 인덱스 저장
+    setIsOpen(true);
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+    setClickedSlotIndex(null); // 클릭된 슬롯 인덱스 초기화
+  };
+
   return (
-    <div className="relative" style={{ height: slotHeight }}>
+    <div className="relative my-4 mb-10" style={{ height: slotHeight }}>
       {/* 빈 슬롯들 */}
       <div className="absolute left-0 top-0 flex">
-        {Array.from({ length: totalSlots }).map((_, index) => (
-          <div key={index} className="relative" style={{ width: slotWidth, height: slotHeight }}>
-            {/* 슬롯 배경 */}
-            <div className="hover:bg-gray-60 h-full w-full cursor-pointer"></div>
-            {/* 30분, 1시간마다 다른 border 표시 */}
-            {index % 2 === 0 ? (
-              // 매 시간마다 굵은 왼쪽 border
-              <div className="border-gray-10 absolute left-0 top-0 h-full border-l-2"></div>
-            ) : (
-              // 30분마다 얇은 왼쪽 border
-              <div className="border-gray-10 absolute bottom-0 left-0 h-12 border-l"></div>
-            )}
-            {/* 하단 border */}
-            <div className="border-gray-10 absolute bottom-10 left-0 w-full border-b border-dotted"></div>
-          </div>
-        ))}
+        {Array.from({ length: totalSlots }).map((_, index) => {
+          const isClicked = index === clickedSlotIndex;
+          return (
+            <div
+              key={index}
+              className={`relative ${isClicked ? "bg-gray-60" : ""}`}
+              style={{ width: slotWidth, height: slotHeight }}
+              onClick={() => handleSlotClick(index)}
+            >
+              {/* 슬롯 배경 */}
+              <div className="hover:bg-gray-60 h-full w-full cursor-pointer"></div>
+              {/* 30분, 1시간마다 다른 border 표시 */}
+              {index % 2 === 0 ? (
+                // 매 시간마다 굵은 왼쪽 border
+                <div className="border-gray-10 absolute left-0 top-0 h-full border-l-2"></div>
+              ) : (
+                // 30분마다 얇은 왼쪽 border
+                <div className="border-gray-10 absolute bottom-0 left-0 h-24 border-l"></div>
+              )}
+              {/* 하단 border */}
+              <div className="border-gray-10 absolute bottom-12 left-0 w-full border-b border-dotted"></div>
+            </div>
+          );
+        })}
       </div>
 
       {/* 스케줄 표시 */}
@@ -74,7 +104,7 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({ schedules, slotWidth = 72, sl
 
         // 사용자에 따른 스타일 결정
         const isCurrentUser = schedule.userId === currentUserId;
-        const backgroundColor = isCurrentUser ? "bg-purple-400" : "bg-gray-80";
+        const backgroundColor = isCurrentUser ? "bg-purple-400" : "bg-gray-70 hover:bg-gray-80";
         const hoverColor = isCurrentUser
           ? "hover:bg-purple-200 hover:outline-purple-40 hover:outline"
           : "hover:bg-gray-200/10";
@@ -107,7 +137,7 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({ schedules, slotWidth = 72, sl
                   {/* 빈 내용 */}
                   <span>&nbsp;</span>
                   {/* 툴팁 */}
-                  <div className="absolute bottom-full left-1/2 mb-16 hidden w-max -translate-x-1/2 transform group-hover:block">
+                  <div className="absolute bottom-full left-1/2 mb-14 hidden w-max -translate-x-1/2 transform group-hover:block">
                     <div className="text-sm-medium bg-gray-90 relative z-10 rounded-lg px-8 py-4 text-sm text-white/90">
                       {schedule.title}
                       <div className="border-t-gray-90 absolute left-20 top-full h-0 w-0 -translate-x-1/2 border-x-8 border-t-8 border-x-transparent"></div>
@@ -119,6 +149,15 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({ schedules, slotWidth = 72, sl
           </div>
         );
       })}
+
+      {/* MeetingBottomSheet 모달 시트 */}
+      {selectedTime && (
+        <MeetingBottomSheet
+          isOpen={isOpen}
+          onClose={handleClose} // 수정된 핸들러 사용
+          selectedTime={selectedTime}
+        />
+      )}
     </div>
   );
 };
