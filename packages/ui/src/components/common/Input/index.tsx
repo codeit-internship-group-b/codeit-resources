@@ -1,7 +1,7 @@
 "use client";
 
 import cn from "@ui/src/utils/cn";
-import { ChangeEvent, InputHTMLAttributes, useState } from "react";
+import { ChangeEvent, InputHTMLAttributes } from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
 import ErrorMessage from "../ErrorMessage";
 
@@ -29,8 +29,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
  * @param {UseFormRegisterReturn} [register] - `react-hook-form`의 `register` 객체를 사용하여 입력 필드의 이벤트와 값을 관리합니다.
  * @param {object} args - 그 외 추가적인 속성들을 전달할 수 있습니다.
  * @author 조현지
- */
-export default function Input({
+ */ export default function Input({
   placeholder,
   id,
   type = "text",
@@ -48,11 +47,9 @@ export default function Input({
   },
   ...args
 }: InputProps) {
-  const [hasValue, setHasValue] = useState(!!value);
   const { onChange, onBlur, ref, disabled, name } = register;
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setHasValue(!!e.target.value);
     onChange(e);
   };
 
@@ -60,7 +57,7 @@ export default function Input({
     <div className={cn("group relative", className)}>
       <input
         id={id}
-        defaultValue={value}
+        value={value}
         name={name || id}
         type={type}
         className={cn(
@@ -85,8 +82,8 @@ export default function Input({
           {
             "peer-focus:bg-transparent peer-focus:text-purple-400": !isError,
             "peer-focus:text-error peer-focus:bg-transparent": isError,
-            "-translate-y-27 !text-13 bg-transparent px-3": !isError && hasValue,
-            "-translate-y-27 !text-13 text-error bg-transparent px-3": isError && hasValue,
+            "-translate-y-27 !text-13 bg-transparent px-3": !isError && !!value,
+            "-translate-y-27 !text-13 text-error bg-transparent px-3": isError && !!value,
           },
         )}
         style={{ display: "inline-block" }}
@@ -94,7 +91,7 @@ export default function Input({
         <span className="relative z-10">{placeholder}</span>
         <span
           className={cn("absolute bottom-6 left-0 right-0 z-0 h-4 group-focus-within:bg-white", {
-            "bottom-6 bg-white": hasValue,
+            "bottom-6 bg-white": !!value,
           })}
         />
       </label>
