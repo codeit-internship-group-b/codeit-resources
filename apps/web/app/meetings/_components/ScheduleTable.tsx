@@ -1,9 +1,9 @@
 // components/ScheduleTable.tsx
 
 import React from "react";
-import ScheduleRow from "./ScheduleRow";
-import TimeText from "./TimeText";
-import RoomName from "./RoomName";
+import ScheduleRow from "./Schedule/ScheduleRow";
+import TimeText from "./Schedule/ScheduleRow/TimeText";
+import RoomName from "./Schedule/RoomName";
 
 interface Schedule {
   id: string;

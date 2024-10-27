@@ -1,9 +1,8 @@
-/* eslint-disable  */
-// components/ScheduleRow.tsx
-
 import React, { useState } from "react";
-import { MobileReservationSheet } from "./Reservation/MobileReservationSheet";
-import { DesktopReservationSheet } from "./Reservation/DesktopReservationSheet";
+import { DesktopReservationSheet } from "../../Reservation/DesktopReservationSheet";
+import { MobileReservationSheet } from "../../Reservation/MobileReservationSheet";
+import ScheduleSlot from "./ScheduleSlot";
+import ScheduleItem from "./ScheduleItem";
 
 interface Schedule {
   id: string;
@@ -46,11 +45,15 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({ schedules, slotWidth = 72, sl
     const clickedTimeMinutes = startHour * 60 + index * minutesPerSlot;
     const hours = Math.floor(clickedTimeMinutes / 60);
     const minutes = clickedTimeMinutes % 60;
-    const timeString = `${String(hours).padStart(2, "0")}:${String(minutes).toString().padStart(2, "0")}`;
+    const timeString = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
 
     setSelectedTime(timeString);
     setClickedSlotIndex(index); // 클릭된 슬롯 인덱스 저장
     setIsOpen(true);
+
+    if (onSlotClick) {
+      onSlotClick(timeString);
+    }
   };
 
   const handleClose = () => {
@@ -59,32 +62,20 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({ schedules, slotWidth = 72, sl
   };
 
   return (
-    <>
-      <div className="relative my-4 mb-10" style={{ height: slotHeight }}>
+    <div className="relative my-4 mb-10" style={{ height: slotHeight }}>
         {/* 빈 슬롯들 */}
         <div className="absolute left-0 top-0 flex">
           {Array.from({ length: totalSlots }).map((_, index) => {
             const isClicked = index === clickedSlotIndex;
             return (
-              <div
+              <ScheduleSlot
                 key={index}
-                className={`relative ${isClicked ? "bg-gray-60" : ""}`}
-                style={{ width: slotWidth, height: slotHeight }}
-                onClick={() => handleSlotClick(index)}
-              >
-                {/* 슬롯 배경 */}
-                <div className="transition-linear hover:bg-gray-60 h-full w-full cursor-pointer"></div>
-                {/* 30분, 1시간마다 다른 border 표시 */}
-                {index % 2 === 0 ? (
-                  // 매 시간마다 굵은 왼쪽 border
-                  <div className="border-gray-10 absolute left-0 top-0 h-full border-l-2"></div>
-                ) : (
-                  // 30분마다 얇은 왼쪽 border
-                  <div className="border-gray-10 absolute bottom-0 left-0 h-24 border-l"></div>
-                )}
-                {/* 하단 border */}
-                <div className="border-gray-10 absolute bottom-12 left-0 w-full border-b border-dotted"></div>
-              </div>
+                index={index}
+                slotWidth={slotWidth}
+                slotHeight={slotHeight}
+                isClicked={isClicked}
+                onClick={handleSlotClick}
+              />
             );
           })}
         </div>
@@ -106,53 +97,20 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({ schedules, slotWidth = 72, sl
 
           // 사용자에 따른 스타일 결정
           const isCurrentUser = schedule.userId === currentUserId;
-          const backgroundColor = isCurrentUser ? "bg-purple-400" : "bg-gray-70 hover:bg-gray-80";
-          const hoverColor = isCurrentUser ? "hover:bg-purple-200 " : "hover:bg-gray-200/10";
 
           return (
-            <div
+            <ScheduleItem
               key={schedule.id}
-              className={`transition-linear absolute h-full ${hoverColor}`}
-              style={{
-                left: `${leftPosition}px`,
-                width: `${scheduleWidth}px`,
-              }}
-            >
-              <div
-                className={`transition-linear group relative left-0 top-20 flex h-20 cursor-pointer items-center justify-center ${backgroundColor} text-white`}
-                style={{
-                  width: "100%",
-                }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  // 스케줄 클릭 이벤트 처리
-                }}
-              >
-                {isCurrentUser ? (
-                  // 자신의 스케줄인 경우 타이틀 표시
-                  <span>&nbsp;</span>
-                ) : (
-                  // 다른 사용자의 스케줄인 경우 타이틀 숨기고 툴팁 표시
-                  <>
-                    {/* 빈 내용 */}
-                    <span>&nbsp;</span>
-                    {/* 툴팁 */}
-                    <div className="absolute bottom-full left-1/2 mb-14 hidden w-max -translate-x-1/2 transform group-hover:block">
-                      <div className="text-sm-medium bg-gray-90 relative z-10 rounded-lg px-8 py-4 text-sm text-white/90">
-                        {schedule.title}
-                        <div className="border-t-gray-90 absolute left-20 top-full h-0 w-0 -translate-x-1/2 border-x-8 border-t-8 border-x-transparent"></div>
-                      </div>
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
+              schedule={schedule}
+              leftPosition={leftPosition}
+              scheduleWidth={scheduleWidth}
+              isCurrentUser={isCurrentUser}
+            />
           );
         })}
 
         {/* 예약 시트 */}
-        {selectedTime && (
-          <>
+        {selectedTime ? <>
             <div className="hidden md:block">
               <DesktopReservationSheet isOpen={isOpen} onClose={handleClose} selectedTime={selectedTime} />
             </div>
@@ -160,10 +118,8 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({ schedules, slotWidth = 72, sl
             <div className="block md:hidden">
               <MobileReservationSheet isOpen={isOpen} onClose={handleClose} selectedTime={selectedTime} />
             </div>
-          </>
-        )}
+          </> : null}
       </div>
-    </>
   );
 };
 
