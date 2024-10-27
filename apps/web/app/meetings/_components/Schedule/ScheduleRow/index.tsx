@@ -3,6 +3,7 @@ import { DesktopReservationSheet } from "../../Reservation/DesktopReservationShe
 import { MobileReservationSheet } from "../../Reservation/MobileReservationSheet";
 import ScheduleSlot from "./ScheduleSlot";
 import ScheduleItem from "./ScheduleItem";
+import CurrentTimeIndicator from "./CurrentTimeIndicator";
 
 interface Schedule {
   id: string;
@@ -63,63 +64,68 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({ schedules, slotWidth = 72, sl
 
   return (
     <div className="relative my-4 mb-10" style={{ height: slotHeight }}>
-        {/* 빈 슬롯들 */}
-        <div className="absolute left-0 top-0 flex">
-          {Array.from({ length: totalSlots }).map((_, index) => {
-            const isClicked = index === clickedSlotIndex;
-            return (
-              <ScheduleSlot
-                key={index}
-                index={index}
-                slotWidth={slotWidth}
-                slotHeight={slotHeight}
-                isClicked={isClicked}
-                onClick={handleSlotClick}
-              />
-            );
-          })}
-        </div>
-
-        {/* 스케줄 표시 */}
-        {schedules.map((schedule) => {
-          const startMinutes = timeToMinutes(schedule.start_time) - startHour * 60;
-          const endMinutes = timeToMinutes(schedule.end_time) - startHour * 60;
-          const scheduleDuration = endMinutes - startMinutes;
-
-          // 스케줄이 타임라인 범위 내에 있는지 확인
-          if (startMinutes < 0 || endMinutes > totalMinutes) {
-            return null; // 타임라인 범위를 벗어나는 스케줄은 표시하지 않음
-          }
-
-          // 스케줄 바의 위치와 너비 계산
-          const leftPosition = (startMinutes / totalMinutes) * (slotWidth * totalSlots);
-          const scheduleWidth = (scheduleDuration / totalMinutes) * (slotWidth * totalSlots);
-
-          // 사용자에 따른 스타일 결정
-          const isCurrentUser = schedule.userId === currentUserId;
-
+      {/* 빈 슬롯들 */}
+      <div className="absolute left-0 top-0 flex">
+        {Array.from({ length: totalSlots }).map((_, index) => {
+          const isClicked = index === clickedSlotIndex;
           return (
-            <ScheduleItem
-              key={schedule.id}
-              schedule={schedule}
-              leftPosition={leftPosition}
-              scheduleWidth={scheduleWidth}
-              isCurrentUser={isCurrentUser}
+            <ScheduleSlot
+              key={index}
+              index={index}
+              slotWidth={slotWidth}
+              slotHeight={slotHeight}
+              isClicked={isClicked}
+              onClick={handleSlotClick}
             />
           );
         })}
-
-        {/* 예약 시트 */}
-        {selectedTime ? <>
-            <div className="hidden md:block">
-              <DesktopReservationSheet isOpen={isOpen} onClose={handleClose} selectedTime={selectedTime} />
-            </div>
-
-            <div className="block md:hidden">
-              <MobileReservationSheet isOpen={isOpen} onClose={handleClose} selectedTime={selectedTime} />
-            </div>
-          </> : null}
       </div>
+
+      {/* 현재 시간 표시 */}
+      <CurrentTimeIndicator slotWidth={slotWidth} startHour={startHour} endHour={endHour} />
+
+      {/* 스케줄 표시 */}
+      {schedules.map((schedule) => {
+        const startMinutes = timeToMinutes(schedule.start_time) - startHour * 60;
+        const endMinutes = timeToMinutes(schedule.end_time) - startHour * 60;
+        const scheduleDuration = endMinutes - startMinutes;
+
+        // 스케줄이 타임라인 범위 내에 있는지 확인
+        if (startMinutes < 0 || endMinutes > totalMinutes) {
+          return null; // 타임라인 범위를 벗어나는 스케줄은 표시하지 않음
+        }
+
+        // 스케줄 바의 위치과 너비 계산
+        const leftPosition = (startMinutes / totalMinutes) * (slotWidth * totalSlots);
+        const scheduleWidth = (scheduleDuration / totalMinutes) * (slotWidth * totalSlots);
+
+        // 사용자에 따른 스타일 결정
+        const isCurrentUser = schedule.userId === currentUserId;
+
+        return (
+          <ScheduleItem
+            key={schedule.id}
+            schedule={schedule}
+            leftPosition={leftPosition}
+            scheduleWidth={scheduleWidth}
+            isCurrentUser={isCurrentUser}
+          />
+        );
+      })}
+
+      {/* 예약 시트 */}
+      {selectedTime ? (
+        <>
+          <div className="hidden md:block">
+            <DesktopReservationSheet isOpen={isOpen} onClose={handleClose} selectedTime={selectedTime} />
+          </div>
+
+          <div className="block md:hidden">
+            <MobileReservationSheet isOpen={isOpen} onClose={handleClose} selectedTime={selectedTime} />
+          </div>
+        </>
+      ) : null}
+    </div>
   );
 };
 
