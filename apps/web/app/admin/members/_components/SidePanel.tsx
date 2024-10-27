@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/no-unescaped-entities */
 "use client";
 
-import { useState, useEffect, type ChangeEvent } from "react";
+import { useState, useEffect, type ChangeEvent, type FormEvent } from "react";
 import Image from "next/image";
 import { notify, Modal, Radio } from "@ui/index";
 import Input from "@ui/src/components/common/Input";
@@ -13,16 +14,19 @@ import { MEMBER_ROLES } from "@ui/src/utils/constants/memberRoles";
 import DefaultProfileImage from "@ui/public/images/image_default_profile.png";
 import MultiSelectDropdown from "@repo/ui/src/components/common/Dropdown/MulitiSelectDropdown";
 import { type StaticImport } from "next/dist/shared/lib/get-img-props";
+import { type IUser } from "@repo/types";
+// TODO: 폼 제출 로직
+import { useForm } from "@tanstack/react-form";
 import { MOCK_TEAMS } from "../mockData";
-import { type MemberWithStaticImage, type MemberWithStaticImport } from "./ComponentWithUseClient.types";
+import { type MemberWithFileImage, type SidePanelFormData } from "../types";
 
 interface AddMemberSidePanelProps {
   isOpen: boolean;
   onClose: () => void;
-  selectedMember: MemberWithStaticImport | null;
+  selectedMember: MemberWithFileImage | null;
 }
 
-const initialFormData: MemberWithStaticImage = {
+const initialFormData: SidePanelFormData = {
   role: "멤버",
   name: "",
   email: "",
@@ -31,12 +35,12 @@ const initialFormData: MemberWithStaticImage = {
 };
 
 export default function SidePanel({ isOpen, onClose, selectedMember }: AddMemberSidePanelProps): JSX.Element {
-  const [formData, setFormData] = useState<MemberWithStaticImage | MemberWithStaticImport>(initialFormData);
+  const [formData, setFormData] = useState<SidePanelFormData>(initialFormData);
   const [imageObjectUrl, setImageObjectUrl] = useState<string>("");
   const [isImageError, setIsImageError] = useState(false);
 
   const handleRoleChange = (role: string): void => {
-    setFormData((prev) => ({ ...prev, role }));
+    setFormData((prev) => ({ ...prev, role: role as IUser["role"] }));
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
@@ -76,7 +80,7 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
   };
 
   // TODO: 폼 제출 로직
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     notify({
       type: "success",
@@ -128,7 +132,7 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
         name: selectedMember.name,
         email: selectedMember.email,
         teams: selectedMember.teams,
-        profileImage: selectedMember.profileImage,
+        profileImage: selectedMember.profileImage ?? null,
       });
     }
   }, [isOpen, selectedMember]);
