@@ -1,5 +1,4 @@
 import DashboardSection from "./_components/DashboardSection";
-import InputTestForm from "./_components/InputTest";
 
 const mock = [
   { title: "디자인 콘텐츠 회의", time: "10:00 ~ 11:30", resource: "미팅룸 B", status: "진행 중" },
@@ -15,7 +14,6 @@ export default function Dashboard(): JSX.Element {
     <div className="text-custom-black mx-16 mt-40 flex flex-col gap-80 md:m-80">
       <DashboardSection type="meeting" data={mock} />
       <DashboardSection type="equipment" data={equipmentMock} />
-      <InputTestForm />
     </div>
   );
 }
