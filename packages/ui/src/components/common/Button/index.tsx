@@ -22,7 +22,7 @@ type PolymorphicButtonProps<C extends ElementType> = ButtonProps & {
  *
  * @param {PolymorphicButtonProps<C>} props - 버튼 컴포넌트의 속성들
  * @param {C} [props.as='button'] - 렌더링할 요소를 지정합니다.
- * @param {"Action" | "primary" | "secondary" | "Tertiary" | "TertiaryColor" | "Text" | "TextColor"} props.variant - 버튼의 변형 스타일을 지정합니다.
+ * @param {"Action" | "Primary" | "Secondary" | "Tertiary" | "TertiaryColor" | "Text" | "TextColor"} props.variant - 버튼의 변형 스타일을 지정합니다.
  * @param {boolean} [props.isActive=true] - 버튼의 활성화 여부를 지정합니다. 비활성화 시 특정 스타일이 적용됩니다.
  * @param {boolean} [props.isPending=false] - 버튼의 로딩(수정 중) 상태를 지정합니다.
  * @param {string} [props.className] - 추가적인 사용자 정의 클래스 이름을 지정할 수 있습니다.
@@ -31,7 +31,7 @@ type PolymorphicButtonProps<C extends ElementType> = ButtonProps & {
  *
  * @example
  * // 기본 사용 예시 (button 요소로 렌더링)
- * <Button variant="primary">Primary Button</Button>
+ * <Button variant="Primary">Primary Button</Button>
  *
  * @example
  * // 링크로 사용 예시 (a 요소로 렌더링)
@@ -39,11 +39,11 @@ type PolymorphicButtonProps<C extends ElementType> = ButtonProps & {
  *
  * @example
  * // 비활성화된 secondary 버튼
- * <Button variant="secondary" isActive={false}>Disabled Secondary Button</Button>
+ * <Button variant="Secondary" isActive={false}>Disabled Secondary Button</Button>
  *
  * @example
  * // 수정 중 상태의 버튼
- * <Button variant="primary" isPending={true}>Save</Button>
+ * <Button variant="Primary" isPending={true}>Save</Button>
  *
  * @author
  * 배영준
