@@ -2,7 +2,8 @@
 // components/ScheduleRow.tsx
 
 import React, { useState, useEffect } from "react";
-import { MeetingBottomSheet } from "./MeetingBottomSheet";
+import { MobileReservationSheet } from "./Reservation/MobileReservationSheet";
+import { DesktopReservationSheet } from "./Reservation/DesktopReservationSheet";
 
 interface Schedule {
   id: string;
@@ -150,13 +151,17 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({ schedules, slotWidth = 72, sl
         );
       })}
 
-      {/* MeetingBottomSheet 모달 시트 */}
+      {/* 예약 시트 */}
       {selectedTime && (
-        <MeetingBottomSheet
-          isOpen={isOpen}
-          onClose={handleClose} // 수정된 핸들러 사용
-          selectedTime={selectedTime}
-        />
+        <>
+          <div className="hidden md:block">
+            <DesktopReservationSheet isOpen={isOpen} onClose={handleClose} selectedTime={selectedTime} />
+          </div>
+
+          <div className="block md:hidden">
+            <MobileReservationSheet isOpen={isOpen} onClose={handleClose} selectedTime={selectedTime} />
+          </div>
+        </>
       )}
     </div>
   );
