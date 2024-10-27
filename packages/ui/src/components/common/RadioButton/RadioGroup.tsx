@@ -24,8 +24,8 @@ export function RadioGroup(props: RadioGroupProps): JSX.Element {
 
   return (
     <RadioContext.Provider value={{ selectedValue, selectOption }}>
-      <fieldset className="flex" role="radiogroup">
-        {legend ? <legend className="mb-4 text-lg font-semibold">{legend}</legend> : null}
+      <fieldset className="flex justify-between" role="radiogroup">
+        {legend ? <legend className="mb-4 text-lg">{legend}</legend> : null}
         {children}
       </fieldset>
     </RadioContext.Provider>

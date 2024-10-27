@@ -1,6 +1,6 @@
 import { memo } from "react";
-import { ProfileDefaultIcon } from "@ui/public";
 import { clsx } from "clsx";
+import { ProfileDefaultIcon } from "@ui/public";
 import Image from "next/image";
 
 interface ProfileProps {
@@ -8,6 +8,7 @@ interface ProfileProps {
   src?: string;
   name?: string;
   className?: string;
+  textColor?: "white" | "black";
 }
 
 /**
@@ -17,22 +18,32 @@ interface ProfileProps {
  * @param src - 프로필 이미지의 경로.
  * @param name - 사용자의 이름.
  * @param className - 추가적으로 적용할 클래스명.
+ * @param textColor - 이름의 색상. 기본은 하얀색.
  * @returns 프로필 컴포넌트 JSX 요소를 반환합니다.
  */
 
-function Profile({ size = "size-32", src, name, className }: ProfileProps): JSX.Element {
+function Profile({ size = "size-32", src, name, className, textColor = "white" }: ProfileProps): JSX.Element {
   return (
     <div className={clsx(name && "flex items-center gap-10", className)}>
       {src ? (
-        <div className={`relative ${size}`}>
-          <Image src={src} fill alt="프로필 이미지" />
-        </div>
+        <Image src={src} width={32} height={32} alt="프로필 이미지" unoptimized={false} />
       ) : (
         <ProfileDefaultIcon width={32} height={32} />
       )}
-      {name ? <div className="font-medium text-white">{name}</div> : null}
+      {name ? (
+        <div
+          className={clsx("font-medium", {
+            "text-white": textColor === "white",
+            "text-custom-black": textColor === "black",
+          })}
+        >
+          {name}
+        </div>
+      ) : null}
     </div>
   );
 }
-
 export default memo(Profile);
+
+// onError 로 에러처리 가능
+// unoptimized 살펴보기

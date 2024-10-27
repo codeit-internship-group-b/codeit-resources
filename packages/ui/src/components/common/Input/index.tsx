@@ -1,7 +1,7 @@
 "use client";
 
 import cn from "@ui/src/utils/cn";
-import { ChangeEvent, InputHTMLAttributes, useState } from "react";
+import { ChangeEvent, InputHTMLAttributes, useEffect, useState } from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
 import ErrorMessage from "../ErrorMessage";
 
@@ -51,6 +51,11 @@ export default function Input({
   const [hasValue, setHasValue] = useState(!!value);
   const { onChange, onBlur, ref, disabled, name } = register;
 
+  useEffect(() => {
+    if (value) {
+      setHasValue(true);
+    }
+  }, [value]);
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setHasValue(!!e.target.value);
     onChange(e);
