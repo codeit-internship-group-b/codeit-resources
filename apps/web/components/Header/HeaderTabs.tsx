@@ -3,7 +3,7 @@
 import cn from "@ui/src/utils/cn";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { formatDate, getDatesForSeats, getDatesFromTodayToEndOfMonth } from "@ui/src/utils/date";
+import { formatDate, getDatesForSeats, getDatesFromTodayToEndOfMonth, isCurrentMonth } from "@ui/src/utils/date";
 import { useDateStore } from "@/app/store/useDateStore";
 
 interface HeaderProps {
@@ -28,16 +28,14 @@ export default function HeaderTabs({ page }: HeaderProps): JSX.Element {
     }
   };
 
+  const { month } = selectedDate;
   useEffect(() => {
     setActiveTabIndex(0);
-  }, [selectedDate.month]);
-
-  const today = new Date();
-  const isCurrentMonth = selectedDate.year === today.getFullYear() && selectedDate.month === today.getMonth() + 1;
+  }, [month]);
 
   return (
     <>
-      {isCurrentMonth ? (
+      {isCurrentMonth(selectedDate) ? (
         <span className="text-10 rounded-8 absolute bg-[#EB008D] px-4 py-2 text-center font-medium text-white">
           오늘
         </span>

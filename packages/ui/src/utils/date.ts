@@ -88,3 +88,14 @@ export const formatDate = (date: Date, page: string): string => {
 export const formatSelectedDate = (date: { year: number; month: number; day: number }): string => {
   return `${String(date.year)}-${String(date.month).padStart(2, "0")}-${String(date.day).padStart(2, "0")}`;
 };
+
+/**
+ * 제공된 연도와 월이 현재 연도와 월과 일치하는지 확인합니다.
+ *
+ * @param selectedDate - 확인할 연도와 월을 포함한 날짜 객체입니다.
+ * @returns - 선택한 날짜가 현재 연도와 월과 같으면 `true`를, 그렇지 않으면 `false`를 반환합니다.
+ */
+export const isCurrentMonth = (selectedDate: { year: number; month: number }): boolean => {
+  const today = new Date();
+  return selectedDate.year === today.getFullYear() && selectedDate.month === today.getMonth() + 1;
+};
