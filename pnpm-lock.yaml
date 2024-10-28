@@ -262,6 +262,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@repo/constants':
+        specifier: workspace:*
+        version: link:../../packages/constants
       '@repo/types':
         specifier: workspace:*
         version: link:../../packages/types
