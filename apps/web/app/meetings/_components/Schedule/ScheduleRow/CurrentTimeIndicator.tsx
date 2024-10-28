@@ -37,7 +37,9 @@ const CurrentTimeIndicator: React.FC<CurrentTimeIndicatorProps> = ({ slotWidth, 
     updatePosition();
     const interval = setInterval(updatePosition, 60000); // 매 분마다 업데이트
 
-    return () => { clearInterval(interval); };
+    return () => {
+      clearInterval(interval);
+    };
   }, [slotWidth, startHour, endHour]);
 
   if (currentPosition === null) {
@@ -48,13 +50,13 @@ const CurrentTimeIndicator: React.FC<CurrentTimeIndicatorProps> = ({ slotWidth, 
     <>
       {/* 수직선 */}
       <div
-        className="border-custom-black absolute top-0 border-l-2"
-        style={{ left: `${currentPosition}px`, height: "100%", zIndex: 10 }}
-       />
+        className="border-custom-black md:top-30 absolute top-0 z-0 h-full border-l-2 md:h-[84%]"
+        style={{ left: `${currentPosition}px` }}
+      />
       {/* 현재 시간 라벨 */}
       <div
-        className="text-xs-semibold text-custom-black absolute -bottom-24 -ml-16 rounded bg-none"
-        style={{ left: `${currentPosition}px`, zIndex: 11 }}
+        className="text-xs-semibold text-custom-black absolute -bottom-24 z-0 -ml-16 rounded bg-none md:bottom-0"
+        style={{ left: `${currentPosition}px` }}
       >
         {currentTime}
       </div>
