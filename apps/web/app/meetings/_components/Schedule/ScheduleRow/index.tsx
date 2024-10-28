@@ -82,7 +82,9 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({ schedules, slotWidth = 72, sl
       </div>
 
       {/* 현재 시간 표시 */}
-      <CurrentTimeIndicator slotWidth={slotWidth} startHour={startHour} endHour={endHour} />
+      <div className="block md:hidden">
+        <CurrentTimeIndicator slotWidth={slotWidth} startHour={startHour} endHour={endHour} />
+      </div>
 
       {/* 스케줄 표시 */}
       {schedules.map((schedule) => {
