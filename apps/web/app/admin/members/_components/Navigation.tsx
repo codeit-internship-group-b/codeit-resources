@@ -1,14 +1,13 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 import { useState } from "react";
 import { SORT_OPTIONS } from "@ui/src/utils/constants/sortOptions";
-import { MOCK_CATEGORIES } from "../mockData";
-import CategoryTab from "./CategoryTab";
+import Tab from "./Tab";
 import SortDropdown from "./SortDropdown";
 
 interface NavigationProps {
   activeTab: string;
   onTabChange: (category: string) => void;
-  teams: string[]; // MOCK_CATEGORIES 대신 실제 팀 목록 받기
+  teams: string[];
 }
 
 export default function Navigation({ activeTab, onTabChange, teams }: NavigationProps): JSX.Element {
@@ -28,7 +27,7 @@ export default function Navigation({ activeTab, onTabChange, teams }: Navigation
       >
         <ul className="flex flex-row gap-32 whitespace-nowrap">
           {teams.map((team) => (
-            <CategoryTab key={team} team={team} isActive={activeTab === team} onClick={() => onTabChange(team)} />
+            <Tab key={team} team={team} isActive={activeTab === team} onClick={() => onTabChange(team)} />
           ))}
         </ul>
         <SortDropdown selectedSort={selectedSort} onSortChange={handleSortChange} />

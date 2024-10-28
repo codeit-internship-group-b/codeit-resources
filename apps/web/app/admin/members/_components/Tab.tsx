@@ -1,10 +1,10 @@
-interface CategoryTabProps {
+interface TabProps {
   team: string;
   isActive: boolean;
   onClick: () => void;
 }
 
-export default function CategoryTab({ team, isActive, onClick }: CategoryTabProps): JSX.Element {
+export default function Tab({ team, isActive, onClick }: TabProps): JSX.Element {
   return (
     <li>
       <button
