@@ -162,7 +162,11 @@ export const updateUser = async (req: UpdateUserRequest, res: Response): Promise
 // Delete a user by id
 export const deleteUser = async (req: GetUserRequest, res: Response): Promise<void> => {
   const { userId } = req.params;
-  await User.findByIdAndDelete(userId);
+  const deletedUser = await User.findByIdAndDelete(userId);
+
+  if (!deletedUser) {
+    res.status(404).send({ message: "사용자를 찾을 수 없습니다." });
+  }
 
   res.status(200).send({ message: "사용자가 삭제되었습니다." });
 };
