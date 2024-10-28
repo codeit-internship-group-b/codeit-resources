@@ -11,3 +11,15 @@ export const getMembers = async (): Promise<MemberWithStaticImage[]> => {
 
   return data;
 };
+
+export const postMember = async (formData: FormData): Promise<FormData> => {
+  const { data } = await axiosRequester({
+    options: {
+      method: "POST",
+      url: "users/create",
+      data: formData,
+    },
+  });
+
+  return data;
+};
