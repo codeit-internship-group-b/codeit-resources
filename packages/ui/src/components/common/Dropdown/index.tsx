@@ -13,18 +13,18 @@ const DropdownContext = createContext({
   isOpen: false,
   isError: false,
   errorMessage: "",
-  selectedValue: "" as string | boolean | undefined, // 수정: string | boolean | undefined 허용
+  selectedValue: "" as string | boolean | undefined,
   size: "md",
   toggleDropdown: () => {},
   closeDropdown: () => {},
-  selectedItem: (value: string | boolean) => {}, // 수정: string | boolean 허용
+  selectedItem: (_value: string | boolean) => {},
 });
 
 interface DropdownProps {
   children: ReactNode;
-  selectedValue: string | boolean | undefined; // 수정: string | boolean 허용
+  selectedValue: string | boolean | undefined;
   size?: "sm" | "md";
-  onSelect: (value: string | boolean) => void; // 수정: string | boolean 허용
+  onSelect: (_value: string | boolean) => void;
   isError?: boolean;
   errorMessage?: string;
 }
@@ -197,7 +197,7 @@ function Item({ children, value, position = "center", hoverStyle = "gray" }: Ite
     >
       {children}
       {isSelected && size === "md" && (
-        <RightIcon className="absolute right-8 top-1/2 -translate-y-1/2 transform fill-purple-700" />
+        <RightIcon className="absolute right-8 top-1/2 h-20 w-20 -translate-y-1/2 transform fill-purple-700" />
       )}
     </button>
   );
