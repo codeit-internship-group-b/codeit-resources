@@ -41,3 +41,14 @@ export const patchMember = async (userId: string, formData: FormData): Promise<F
 
   return data;
 };
+
+export const deleteMember = async (userId: string): Promise<string> => {
+  const { data } = await axiosRequester<string>({
+    options: {
+      method: "DELETE",
+      url: `users/${userId}`,
+    },
+  });
+
+  return data;
+};

@@ -15,7 +15,7 @@ import { MEMBER_ROLES } from "@ui/src/utils/constants/memberRoles";
 import DefaultProfileImage from "@ui/public/images/image_default_profile.png";
 import MultiSelectDropdown from "@repo/ui/src/components/common/Dropdown/MulitiSelectDropdown";
 import { type StaticImport } from "next/dist/shared/lib/get-img-props";
-import { patchMember, postMember } from "@/api/members";
+import { patchMember, postMember, deleteMember } from "@/api/members";
 import { MOCK_TEAMS } from "../mockData";
 import { type MemberWithFileImage, type SidePanelFormData } from "../types";
 
@@ -86,6 +86,24 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
     },
   });
 
+  const deleteMemberMutation = useMutation({
+    mutationFn: (userId: string) => deleteMember(userId),
+    onSuccess: async () => {
+      notify({
+        type: "success",
+        message: NOTIFICATION_MESSAGES.MEMBER_DELETE,
+      });
+      await queryClient.invalidateQueries({ queryKey: ["members"] });
+      onClose();
+    },
+    onError: (error) => {
+      notify({
+        type: "error",
+        message: error.message,
+      });
+    },
+  });
+
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>): void => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -135,10 +153,15 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
   };
 
   const handleModalConfirm = (): void => {
-    notify({
-      type: "success",
-      message: NOTIFICATION_MESSAGES.MEMBER_DELETE,
-    });
+    if (!selectedMember?._id) {
+      notify({
+        type: "error",
+        message: "멤버 ID가 없습니다.",
+      });
+      return;
+    }
+
+    deleteMemberMutation.mutate(selectedMember._id);
   };
 
   const handleImageError = (): void => {
