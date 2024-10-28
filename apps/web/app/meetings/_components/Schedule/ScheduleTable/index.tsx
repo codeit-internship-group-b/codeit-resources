@@ -10,7 +10,7 @@ export default function ScheduleTable(props: ScheduleTableProps): JSX.Element {
   const { rooms, selectedDate } = props;
 
   return (
-    <div className="w-full">
+    <div className="overflow-hidden">
       <ScheduleTableMobile rooms={rooms} selectedDate={selectedDate} />
       <ScheduleTableDesktop rooms={rooms} selectedDate={selectedDate} />
     </div>

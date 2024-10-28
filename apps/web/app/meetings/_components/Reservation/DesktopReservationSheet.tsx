@@ -26,7 +26,7 @@ export default function DesktopReservationSheet(props: DesktopReservationSheetPr
   }, [isOpen]);
 
   return (
-    <div>
+    <div className="hidden md:block">
       <Sidebar
         isOpen={isSidebarOpen}
         onClose={() => {
