@@ -56,13 +56,12 @@ export const getReservationsByTypeAndDate = async (
   const { date, status } = req.query;
 
   let searchDate = date;
-  if (typeof searchDate !== "string" || !isValidDateFormat(searchDate)) {
-    res.status(400).json({ message: "날짜 형식이 잘못되었습니다." });
-    return;
-  }
   if (!searchDate) {
     const today = new Date();
     searchDate = today.toISOString().split("T")[0];
+  } else if (!isValidDateFormat(searchDate)) {
+    res.status(400).json({ message: "날짜 형식이 잘못되었습니다. YYYY-MM-DD 형식으로 입력해주세요." });
+    return;
   }
 
   const itemIds = await Item.find({ itemType }, "_id");
