@@ -34,6 +34,7 @@ export default function Members(): JSX.Element {
     setIsSidePanelOpen(true);
   };
 
+  // TODO: 스켈레톤 UI로 변경
   if (isLoading) return <div>Loading...💫</div>;
   if (error) return <div>Error🚨</div>;
 
@@ -41,8 +42,18 @@ export default function Members(): JSX.Element {
     <div>
       <Header onAddMember={handleOpenSidePanel} />
       <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
-      <main className="flex flex-col gap-16">
-        {data?.map((member) => <MemberListItem key={member._id} member={member} onMemberClick={handleMemberClick} />)}
+      <main>
+        {data?.length === 0 ? (
+          <div className="flex min-h-[400px] items-center justify-center">
+            <p className="text-20 text-custom-black/60">등록된 멤버가 없습니다.</p>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-16">
+            {data?.map((member) => (
+              <MemberListItem key={member._id} member={member} onMemberClick={handleMemberClick} />
+            ))}
+          </div>
+        )}
       </main>
       <SidePanel isOpen={isSidePanelOpen} onClose={handleCloseSidePanel} selectedMember={selectedMember} />
       <Toast />
