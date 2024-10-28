@@ -10,12 +10,8 @@ interface CategoryRequestBody {
 
 // 모든 카테고리 조회
 export const getAllCategories = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const categories = await Category.find();
-    res.status(200).json(categories);
-  } catch (error) {
-    res.status(500).json({ message: "카테고리 조회에 실패했습니다.", error });
-  }
+  const categories = await Category.find();
+  res.status(200).json(categories);
 };
 
 // 카테고리 추가
