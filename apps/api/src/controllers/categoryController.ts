@@ -18,26 +18,6 @@ export const getAllCategories = async (req: Request, res: Response): Promise<voi
   }
 };
 
-// 특정 카테고리 조회
-export const getCategoryById = async (
-  req: Request<{ categoryId: string }, ICategory>,
-  res: Response,
-): Promise<void> => {
-  const { categoryId } = req.params;
-
-  if (!isObjectIdValid(categoryId)) {
-    res.status(400).json({ message: "유효하지 않은 카테고리 ID입니다." });
-    return;
-  }
-
-  const category = await Category.findById(categoryId);
-  if (!category) {
-    res.status(404).json({ message: "카테고리를 찾을 수 없습니다." });
-    return;
-  }
-  res.status(200).json(category);
-};
-
 // 카테고리 추가
 export const createCategory = async (
   req: Request<unknown, ICategory, CategoryRequestBody>,

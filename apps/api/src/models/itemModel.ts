@@ -38,3 +38,6 @@ const EquipmentSchema: Schema = new Schema({
   category: { type: Schema.Types.ObjectId, required: true, ref: "Category" },
 });
 export const Equipment = Item.discriminator<IEquipment>("Equipment", EquipmentSchema, "equipment");
+
+RoomSchema.index({ category: 1, name: 1 });
+EquipmentSchema.index({ category: 1, name: 1 });
