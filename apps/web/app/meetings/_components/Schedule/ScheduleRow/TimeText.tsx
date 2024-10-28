@@ -1,8 +1,4 @@
-// components/TimeText.tsx
-
-import React from "react";
-
-const TimeText: React.FC = () => {
+export default function TimeText(): JSX.Element {
   const times = Array.from({ length: 49 }, (_, index) => {
     if (index % 2 === 0) {
       const hour = (index / 2).toString().padStart(2, "0");
@@ -13,13 +9,11 @@ const TimeText: React.FC = () => {
 
   return (
     <div className="flex w-full">
-      {times.map((time, index) => (
-        <div key={index} className="flex min-w-72 items-center justify-center">
+      {times.map((time, _) => (
+        <div key={time} className="flex min-w-72 items-center justify-center">
           {time ? <span className="text-custom-black/50 text-xs-semibold">{time}</span> : null}
         </div>
       ))}
     </div>
   );
-};
-
-export default TimeText;
+}

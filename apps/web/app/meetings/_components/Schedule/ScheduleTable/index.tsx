@@ -2,12 +2,9 @@
 
 import ScheduleTableMobile from "./ScheduleTableMobile";
 import ScheduleTableDesktop from "./ScheduleTableDesktop";
-import { type Room } from "@/app/types/scheduletypes";
+import { type ScheduleDate } from "@/app/types/scheduletypes";
 
-interface ScheduleTableProps {
-  rooms: Room[];
-  selectedDate: string;
-}
+type ScheduleTableProps = ScheduleDate;
 
 export default function ScheduleTable(props: ScheduleTableProps): JSX.Element {
   const { rooms, selectedDate } = props;

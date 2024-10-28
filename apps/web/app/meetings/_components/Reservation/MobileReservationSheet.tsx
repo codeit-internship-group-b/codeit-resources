@@ -1,19 +1,21 @@
-// components/MeetingBottomSheet.tsx
-
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { Sheet } from "react-modal-sheet";
-import { ReservationForm } from "./ReservationForm";
+import ReservationForm from "./ReservationForm";
+import { type ScheduleFormData, type Schedule } from "@/app/types/scheduletypes";
 
 interface MobileReservationSheetProps {
   isOpen: boolean;
   onClose: () => void;
   selectedTime: string;
+  selectedSchedule?: Schedule;
 }
 
-export const MobileReservationSheet: React.FC<MobileReservationSheetProps> = ({ isOpen, onClose, selectedTime }) => {
-  const handleSubmit = (data: any) => {
-    console.log("Reservation Data:", data);
+export default function MobileReservationSheet(props: MobileReservationSheetProps): JSX.Element {
+  const { isOpen, onClose, selectedTime, selectedSchedule } = props;
+
+  const handleSubmit = (data: ScheduleFormData): void => {
     onClose();
   };
 
@@ -22,10 +24,10 @@ export const MobileReservationSheet: React.FC<MobileReservationSheetProps> = ({ 
       <Sheet.Container>
         <Sheet.Header />
         <Sheet.Content>
-          <ReservationForm onSubmit={handleSubmit} selectedTime={selectedTime} />
+          <ReservationForm onSubmit={handleSubmit} selectedTime={selectedTime} selectedSchedule={selectedSchedule} />
         </Sheet.Content>
       </Sheet.Container>
       <Sheet.Backdrop onTap={onClose} />
     </Sheet>
   );
-};
+}

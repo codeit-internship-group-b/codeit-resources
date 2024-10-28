@@ -1,23 +1,21 @@
 "use client";
 
-import React from "react";
 import RoomName from "../RoomName";
 import ScheduleRow from "../ScheduleRow";
 import TimeText from "../ScheduleRow/TimeText";
-import { type Room } from "@/app/types/scheduletypes";
+import { type ScheduleDate } from "@/app/types/scheduletypes";
 
-interface ScheduleTableMobileProps {
-  rooms: Room[];
-  selectedDate: string;
-}
+type ScheduleTableMobileProps = ScheduleDate;
 
-const ScheduleTableMobile: React.FC<ScheduleTableMobileProps> = ({ rooms, selectedDate }) => {
+export default function ScheduleTableMobile(props: ScheduleTableMobileProps): JSX.Element {
+  const { rooms, selectedDate } = props;
+
   return (
     <div className="mx-16 my-24 block w-full md:hidden">
       {rooms.map((room) => (
-        <div key={room.id} className="mb-24">
+        <div key={room.id} className="mb-26">
           <RoomName name={room.title} />
-          <div className="mt-6 h-auto overflow-x-auto">
+          <div className="mt-30 overflow-x-auto pb-20">
             <TimeText />
             <div className="ml-36 mt-8">
               <ScheduleRow schedules={room.schedules.filter((schedule) => schedule.date === selectedDate)} />
@@ -27,6 +25,4 @@ const ScheduleTableMobile: React.FC<ScheduleTableMobileProps> = ({ rooms, select
       ))}
     </div>
   );
-};
-
-export default ScheduleTableMobile;
+}

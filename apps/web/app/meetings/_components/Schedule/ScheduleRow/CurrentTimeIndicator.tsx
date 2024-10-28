@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from "react";
+"use client";
+
+import { useEffect, useState } from "react";
 
 interface CurrentTimeIndicatorProps {
   slotWidth: number;
@@ -6,12 +8,13 @@ interface CurrentTimeIndicatorProps {
   endHour: number;
 }
 
-const CurrentTimeIndicator: React.FC<CurrentTimeIndicatorProps> = ({ slotWidth, startHour, endHour }) => {
+export default function CurrentTimeIndicator(props: CurrentTimeIndicatorProps): JSX.Element {
+  const { slotWidth, startHour, endHour } = props;
   const [currentPosition, setCurrentPosition] = useState<number | null>(null);
   const [currentTime, setCurrentTime] = useState<string>("");
 
   useEffect(() => {
-    const updatePosition = () => {
+    const updatePosition = (): void => {
       const now = new Date();
       const currentMinutes = now.getHours() * 60 + now.getMinutes();
       const totalMinutes = (endHour - startHour) * 60;
@@ -35,7 +38,7 @@ const CurrentTimeIndicator: React.FC<CurrentTimeIndicatorProps> = ({ slotWidth, 
     };
 
     updatePosition();
-    const interval = setInterval(updatePosition, 60000); // 매 분마다 업데이트
+    const interval = setInterval(updatePosition, 60000);
 
     return () => {
       clearInterval(interval);
@@ -43,25 +46,22 @@ const CurrentTimeIndicator: React.FC<CurrentTimeIndicatorProps> = ({ slotWidth, 
   }, [slotWidth, startHour, endHour]);
 
   if (currentPosition === null) {
-    return null;
+    return <div />;
   }
 
   return (
-    <>
-      {/* 수직선 */}
+    <div>
       <div
         className="border-custom-black md:top-30 absolute top-0 z-0 h-full border-l-2 md:h-[84%]"
-        style={{ left: `${currentPosition}px` }}
+        style={{ left: `${String(currentPosition)}px` }}
       />
-      {/* 현재 시간 라벨 */}
+
       <div
         className="text-xs-semibold text-custom-black absolute -bottom-24 z-0 -ml-16 rounded bg-none md:bottom-0"
-        style={{ left: `${currentPosition}px` }}
+        style={{ left: `${String(currentPosition)}px` }}
       >
         {currentTime}
       </div>
-    </>
+    </div>
   );
-};
-
-export default CurrentTimeIndicator;
+}
