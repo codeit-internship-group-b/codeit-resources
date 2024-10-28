@@ -1,5 +1,5 @@
-import { axiosRequester } from "@/app/lib/axios";
-import { type MemberWithStaticImage } from "../admin/members/types";
+import { type MemberWithStaticImage } from "@/app/admin/members/types";
+import { axiosRequester } from "@/lib/axios";
 
 export const getMembers = async (): Promise<MemberWithStaticImage[]> => {
   const { data } = await axiosRequester<MemberWithStaticImage[]>({
