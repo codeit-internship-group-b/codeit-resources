@@ -1,6 +1,10 @@
 import { type TItemType } from "@repo/types";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? null;
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL ??
+  (() => {
+    throw new Error("NEXT_PUBLIC_API_URL 환경 변수가 설정되지 않았습니다.");
+  })();
 
 export const API_ENDPOINTS = {
   AUTH: {
@@ -17,7 +21,8 @@ export const API_ENDPOINTS = {
   },
   RESERVATION: {
     GET_USER_RESERVATIONS: (userId: string | number) => `${API_BASE_URL}/reservations/dashboard/${userId}`, // 유저별 예약 조회
-    GET_RESERVATIONS_BY_TYPE_AND_DATE: (itemType: string) => `${API_BASE_URL}/reservations/${itemType}`, // 타입 및 날짜로 예약 조회
+    GET_RESERVATIONS_BY_TYPE_AND_DATE: (itemType: string, date: string) =>
+      `${API_BASE_URL}/reservations/${itemType}?date=${date}`, // 타입 및 날짜로 예약 조회
     CREATE_RESERVATION: (itemId: string | number) => `${API_BASE_URL}/reservations/${itemId}`, // 예약 생성
     UPDATE_RESERVATION: (reservationId: string | number) => `${API_BASE_URL}/reservations/${reservationId}`, // 예약 수정
     DELETE_RESERVATION: (reservationId: string | number) => `${API_BASE_URL}/reservations/${reservationId}`, // 예약 삭제
