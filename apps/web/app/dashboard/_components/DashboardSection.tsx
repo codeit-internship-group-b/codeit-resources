@@ -1,19 +1,13 @@
 import cn from "@ui/src/utils/cn";
+import { type IReservation } from "@repo/types";
 import EmptyState from "./EmptyState";
 
 interface DashboardSectionProps {
-  type: "meeting" | "equipment";
-  data: ItemInfo[];
+  type?: "meeting" | "equipment";
+  data?: IReservation[];
 }
 
-interface ItemInfo {
-  title: string;
-  time: string;
-  resource: string;
-  status: string;
-}
-
-export default function DashboardSection({ type, data }: DashboardSectionProps): JSX.Element {
+export default function DashboardSection({ type = "meeting", data = [] }: DashboardSectionProps): JSX.Element {
   const isMeeting = type === "meeting";
 
   return (
@@ -24,7 +18,7 @@ export default function DashboardSection({ type, data }: DashboardSectionProps):
         <div className="scrollbar-hidden flex gap-16 overflow-auto">
           {data.map((item) => (
             <div
-              key={item.title}
+              key={item._id}
               className={cn(
                 "rounded-8 text-custom-black/80 mb-4 border border-solid border-gray-200/10 p-8",
                 isMeeting ? "min-w-259 w-259 h-148 md:w-275 md:h-172" : "min-w-240 w-240 h-144 md:w-280 md:h-160",
@@ -43,11 +37,13 @@ export default function DashboardSection({ type, data }: DashboardSectionProps):
                     : "relative bottom-6 justify-center gap-8 md:bottom-2 md:gap-12",
                 )}
               >
-                {isMeeting ? <div className="text-2lg-bold">{item.title}</div> : null}
-                <time className={cn("text-13 leading-21", !isMeeting && "order-1")}>{item.time}</time>
+                {isMeeting ? <div className="text-2lg-bold">{item.notes}</div> : null}
+                <time
+                  className={cn("text-13 leading-21", !isMeeting && "order-1")}
+                >{`${String(item.startAt)} ~ ${String(item.endAt)}`}</time>
                 <div className={cn(!isMeeting && "text-center")}>
                   <span className="rounded-32 border-custom-black/5 !text-sm-bold border border-solid bg-purple-100 px-8 py-4 text-purple-300">
-                    {item.resource}
+                    {item.itemId}
                   </span>
                 </div>
               </div>
