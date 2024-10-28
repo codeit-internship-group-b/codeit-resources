@@ -39,7 +39,6 @@ const ReservationSchema: Schema = new Schema(
     timestamps: true,
   },
 );
-ReservationSchema.index({ startAt: 1 });
 ReservationSchema.index({ status: 1, startAt: 1 });
 ReservationSchema.index({ itemType: 1, startAt: 1 });
 

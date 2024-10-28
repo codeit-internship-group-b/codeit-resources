@@ -1,9 +1,9 @@
 import { Router } from "express";
 import asyncHandler from "express-async-handler";
-import * as roomController from "../controllers/itemControllers";
+import * as itemControllers from "../controllers/itemControllers";
 
 export const itemRouter: Router = Router();
-const { getAllItems, createItem, updateItem, deleteItem } = roomController;
+const { getAllItems, createItem, updateItem, deleteItem } = itemControllers;
 
 // Item CRUD
 itemRouter.get("/:itemType?", asyncHandler(getAllItems));
