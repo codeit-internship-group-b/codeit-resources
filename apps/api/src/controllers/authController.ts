@@ -28,8 +28,10 @@ export const signIn = async (req: SignInRequest, res: Response): Promise<void> =
 
   const accessToken = createSecretToken(user._id.toString(), user.role);
 
+  const isProduction = process.env.NODE_ENV === "production";
+
   res.cookie("token", accessToken, {
-    // secure: true,
+    secure: isProduction,
     httpOnly: true,
     sameSite: "none",
   });

@@ -133,6 +133,7 @@ export const updateUser = async (req: UpdateUserRequest, res: Response): Promise
 
   if (!(email || name)) {
     res.status(400).send({ message: "모든 필드값을 전송해주세요." });
+    return;
   }
 
   if (email) {

@@ -11,7 +11,8 @@
     "AWS_SECRET_ACCESS_KEY",
     "S3_BUCKET_NAME",
     "DEFAULT_PROFILE_IMAGE_URL",
-    "NEXT_PUBLIC_API_URL"
+    "NEXT_PUBLIC_API_URL",
+    "NODE_ENV"
   ],
   "tasks": {
     "build": {
