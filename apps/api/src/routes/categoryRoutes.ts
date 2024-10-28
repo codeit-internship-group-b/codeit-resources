@@ -8,5 +8,5 @@ const { getAllCategories, createCategory, updateCategory, deleteCategory } = cat
 // category CRUD, all for admin
 categoryRouter.get("/", asyncHandler(getAllCategories));
 categoryRouter.post("/", asyncHandler(createCategory));
-categoryRouter.patch("/categoryId", asyncHandler(updateCategory));
-categoryRouter.delete("/categoryId", asyncHandler(deleteCategory));
+categoryRouter.patch("/:categoryId", asyncHandler(updateCategory));
+categoryRouter.delete("/:categoryId", asyncHandler(deleteCategory));

@@ -7,6 +7,7 @@ export interface IReservation {
   _id: string;
   userId: UserId; // 예약한 사용자 ID (User의 id)
   itemId: string; // 예약된 리소스 ID (Item의 id)
+  itemName: string; // 예약된 리소스 Name (Item의 name)
   itemType: string;
   startAt: Date;
   endAt: Date;

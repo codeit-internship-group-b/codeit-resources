@@ -50,7 +50,7 @@ export const createItem = async (
   const { itemType } = req.params;
   const { name, description, status, imageUrl, category, capacity, location } = req.body;
 
-  if (!name || !category) {
+  if (!name) {
     res.status(400).json({ message: "필수 필드가 누락되었습니다." });
     return;
   }
@@ -61,7 +61,7 @@ export const createItem = async (
       createdItem = await Room.create({ name, description, status, imageUrl, category, capacity, location });
       break;
     case "seat":
-      createdItem = await Seat.create({ name, description, status, imageUrl, category });
+      createdItem = await Seat.create({ name, description, status, imageUrl });
       break;
     case "equipment":
       createdItem = await Equipment.create({ name, description, status, imageUrl, category });

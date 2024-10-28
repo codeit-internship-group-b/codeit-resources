@@ -1,0 +1,108 @@
+### 1. 카테고리 추가
+POST http://localhost:8080/categories
+Content-Type: application/json
+
+{
+  "name": "영준이2",
+  "itemType": "equipment"
+}
+
+### 2. 카테고리 목록 조회
+GET http://localhost:8080/categories
+
+### 3. 카테고리 수정
+PATCH http://localhost:8080/categories/671f4855bbccd02b79d1154a
+Content-Type: application/json
+
+{
+  "name": "회의실2"
+}
+
+### 4. 카테고리 삭제
+DELETE http://localhost:8080/categories/671f49052ee4b8e9d44c155a
+
+
+### 5. 아이템 추가 (Room)
+POST http://localhost:8080/items/room
+Content-Type: application/json
+
+{
+  "name": "B 회의실",
+  "description": "대규모 회의실",
+  "status": "available",
+  "imageUrl": "",
+  "category": "671f485ebbccd02b79d1154c",
+  "capacity": 20,
+  "location": "영준이"
+}
+
+### 6. 아이템 추가 (Seat)
+POST http://localhost:8080/items/seat
+Content-Type: application/json
+
+{
+  "name": "2A",
+  "description": "영준이 옆자리",
+  "status": "available",
+  "imageUrl": ""
+}
+
+### 8. 모든 아이템 조회 (Room, Seat, Equipment 포함)
+GET http://localhost:8080/items
+
+### 9. 특정 아이템 수정 (Room)
+PATCH http://localhost:8080/items/671f4a2b58c40924a7d09489
+Content-Type: application/json
+
+{
+  "name": "Z 회의실",
+  "status": "unavailable",
+  "description": "정부 기관평가 TF 진행",
+  "capacity": 8
+}
+
+### 10. 특정 아이템 삭제
+DELETE http://localhost:8080/items/{{itemId}}
+
+
+
+### 유저 생성
+POST http://localhost:8080/users/create
+Content-Type: application/json
+
+{
+  "name": "영준",
+  "email": "test@tset.sets",
+  "password": "324124132123",
+  "role": "멤버",
+  "teams": "영준팀"
+}
+
+### 11. 예약 생성
+POST http://localhost:8080/reservations/671f4a3858c40924a7d0948b
+Content-Type: application/json
+
+{
+  "userId": "",
+  "startAt": "2024-10-28T09:00:00Z",
+  "endAt": "2024-10-28T11:00:00Z",
+  "status": "reserved",
+  "notes": "회의",
+  "attendees": []
+}
+
+### 12. 특정 아이템 예약 목록 조회 (오늘 날짜)
+GET http://localhost:8080/items/{{itemId}}/reservations/today
+
+### 13. 특정 예약 수정
+PATCH http://localhost:8080/reservations/{{reservationId}}
+Content-Type: application/json
+
+{
+  "startAt": "2024-10-31T11:00:00Z",
+  "endAt": "2024-10-31T12:00:00Z",
+  "notes": "예약 시간 수정"
+}
+
+### 14. 특정 예약 삭제
+DELETE http://localhost:8080/reservations/{{reservationId}}
