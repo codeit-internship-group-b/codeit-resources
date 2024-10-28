@@ -1,9 +1,7 @@
 import { type Request, type Response } from "express";
 import { type ICategory } from "@repo/types/categoryType";
 import { Category } from "../models/categoryModel";
-
-// 유효성 검사 함수
-const isObjectIdValid = (id: string): boolean => /^[0-9a-fA-F]{24}$/.test(id);
+import isObjectIdValid from "../utils/isObjectIdValid";
 
 interface CategoryRequestBody {
   name: string;

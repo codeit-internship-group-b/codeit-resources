@@ -1,6 +1,7 @@
 import { type Request, type Response } from "express";
 import { type IEquipment, type IRoom, type ISeat } from "@repo/types";
 import { Item, Room, Seat, Equipment } from "../models";
+import isObjectIdValid from "../utils/isObjectIdValid";
 
 interface ItemRequestBody {
   name: string;
@@ -80,7 +81,7 @@ export const updateItem = async (
 ): Promise<void> => {
   const { itemId } = req.params;
 
-  if (!/^[0-9a-fA-F]{24}$/.test(itemId)) {
+  if (!isObjectIdValid(itemId)) {
     res.status(400).json({ message: "유효하지 않은 사용자 ID입니다." });
     return;
   }
@@ -132,7 +133,7 @@ export const deleteItem = async (
 ): Promise<void> => {
   const { itemId } = req.params;
 
-  if (!/^[0-9a-fA-F]{24}$/.test(itemId)) {
+  if (!isObjectIdValid(itemId)) {
     res.status(400).json({ message: "유효하지 않은 사용자 ID입니다." });
     return;
   }

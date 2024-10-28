@@ -8,6 +8,7 @@ import { User } from "../models";
 import { isMinuteValid } from "../utils/isMinuteValid";
 import { isValidDateFormat } from "../utils/isValidDateFormat";
 import { getStartAndEndOfDay } from "../utils/getStartAndEndOfDay";
+import isObjectIdValid from "../utils/isObjectIdValid";
 
 interface ReservationRequestBody {
   userId: string;
@@ -26,7 +27,7 @@ export const getUserReservations = async (
 ): Promise<void> => {
   const { userId } = req.params;
 
-  if (!/^[0-9a-fA-F]{24}$/.test(userId)) {
+  if (!isObjectIdValid(userId)) {
     res.status(400).json({ message: "유효하지 않은 사용자 ID입니다." });
     return;
   }
@@ -97,7 +98,7 @@ export const createReservation = async (
   const { itemId } = req.params;
   const { userId, startAt, endAt, status, notes, attendees } = req.body;
 
-  if (!/^[0-9a-fA-F]{24}$/.test(userId)) {
+  if (!isObjectIdValid(userId)) {
     res.status(400).json({ message: "유효하지 않은 사용자 ID입니다." });
     return;
   }
