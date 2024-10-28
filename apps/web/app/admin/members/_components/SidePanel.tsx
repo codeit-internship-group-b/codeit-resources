@@ -15,7 +15,7 @@ import { MEMBER_ROLES } from "@ui/src/utils/constants/memberRoles";
 import DefaultProfileImage from "@ui/public/images/image_default_profile.png";
 import MultiSelectDropdown from "@repo/ui/src/components/common/Dropdown/MulitiSelectDropdown";
 import { type StaticImport } from "next/dist/shared/lib/get-img-props";
-import { postMember } from "@/api/members";
+import { patchMember, postMember } from "@/api/members";
 import { MOCK_TEAMS } from "../mockData";
 import { type MemberWithFileImage, type SidePanelFormData } from "../types";
 
@@ -68,6 +68,24 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
     },
   });
 
+  const patchMemberMutation = useMutation({
+    mutationFn: (data: FormData) => (selectedMember ? patchMember(selectedMember._id, data) : postMember(data)),
+    onSuccess: async () => {
+      notify({
+        type: "success",
+        message: selectedMember ? NOTIFICATION_MESSAGES.MEMBER_UPDATE : NOTIFICATION_MESSAGES.MEMBER_ADD,
+      });
+      await queryClient.invalidateQueries({ queryKey: ["members"] });
+      onClose();
+    },
+    onError: () => {
+      notify({
+        type: "error",
+        message: selectedMember ? "멤버 수정에 실패했습니다." : "멤버 추가에 실패했습니다.",
+      });
+    },
+  });
+
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>): void => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -105,7 +123,15 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
       formData.append("teams", team);
     });
 
-    postMemberMutation.mutate(formData);
+    if (data.profileImage instanceof File) {
+      formData.append("profileImage", data.profileImage);
+    }
+
+    if (selectedMember) {
+      patchMemberMutation.mutate(formData);
+    } else {
+      postMemberMutation.mutate(formData);
+    }
   };
 
   const handleModalConfirm = (): void => {
@@ -138,7 +164,9 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
   };
 
   const getButtonText = (): string => {
-    if (postMemberMutation.isPending) {
+    const isPending = selectedMember ? patchMemberMutation.isPending : postMemberMutation.isPending;
+
+    if (isPending) {
       return "처리 중...";
     }
 
