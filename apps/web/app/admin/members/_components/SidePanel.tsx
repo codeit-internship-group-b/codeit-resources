@@ -1,4 +1,3 @@
- 
 /* eslint-disable react/no-unescaped-entities */
 "use client";
 
@@ -170,7 +169,7 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
           </div>
 
           <form onSubmit={handleSubmit}>
-            <div className="mb-24">
+            <div className="w-154 mb-24">
               <Radio.Group value={formData.role} onChange={handleRoleChange}>
                 <Radio.Option value="멤버">{MEMBER_ROLES.MEMBER}</Radio.Option>
                 <Radio.Option value="어드민">{MEMBER_ROLES.ADMIN}</Radio.Option>
