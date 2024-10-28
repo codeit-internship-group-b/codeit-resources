@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Toast } from "@ui/index";
+import { getMembers } from "@/app/api/members";
 import { type MemberWithStaticImage } from "../types";
-import { getMembers } from "../api";
 import SidePanel from "./SidePanel";
 import Header from "./Header";
 import Navigation from "./Navigation";
