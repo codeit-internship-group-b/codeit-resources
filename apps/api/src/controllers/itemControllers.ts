@@ -87,7 +87,7 @@ export const updateItem = async (
 
   const { name, status, description, imageUrl, category, location, capacity } = req.body;
 
-  const target = await Item.findById({ itemId });
+  const target = await Item.findById(itemId);
   if (!target) {
     res.status(404).json({ message: "해당 아이템을 찾을 수 없습니다." });
     return;
