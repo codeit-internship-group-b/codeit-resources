@@ -81,7 +81,7 @@ export const updateItem = async (
   const { itemId } = req.params;
 
   if (!/^[0-9a-fA-F]{24}$/.test(itemId)) {
-    res.status(400).json({ message: "유효하지 않은 사용자 ID입니다." });
+    res.status(400).json({ message: "유효하지 않은 아이템 ID입니다." });
     return;
   }
 
@@ -133,7 +133,7 @@ export const deleteItem = async (
   const { itemId } = req.params;
 
   if (!/^[0-9a-fA-F]{24}$/.test(itemId)) {
-    res.status(400).json({ message: "유효하지 않은 사용자 ID입니다." });
+    res.status(400).json({ message: "유효하지 않은 아이템 ID입니다." });
     return;
   }
 
