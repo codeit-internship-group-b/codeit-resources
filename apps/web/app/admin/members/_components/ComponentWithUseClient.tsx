@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Toast } from "@ui/index";
 import { getMembers } from "@/api/members";
@@ -19,6 +19,22 @@ export default function Members(): JSX.Element {
     queryKey: ["members"],
     queryFn: getMembers,
   });
+
+  const teams = useMemo(() => {
+    if (!data) return ["전체"];
+
+    const allTeams = data.flatMap((member) => member.teams);
+    const uniqueTeams = ["전체", ...new Set(allTeams)];
+
+    return uniqueTeams;
+  }, [data]);
+
+  const filteredMembers = useMemo(() => {
+    if (!data) return [];
+    if (activeTab === "전체") return data;
+
+    return data.filter((member) => member.teams.includes(activeTab));
+  }, [data, activeTab]);
 
   const handleOpenSidePanel = (): void => {
     setIsSidePanelOpen(true);
@@ -41,15 +57,17 @@ export default function Members(): JSX.Element {
   return (
     <div>
       <Header onAddMember={handleOpenSidePanel} />
-      <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
+      <Navigation activeTab={activeTab} onTabChange={setActiveTab} teams={teams} />
       <main>
-        {data?.length === 0 ? (
+        {filteredMembers.length === 0 ? (
           <div className="min-h-400 flex items-center justify-center">
-            <p className="text-20 text-custom-black/60">등록된 멤버가 없습니다.</p>
+            <p className="text-20 text-custom-black/60">
+              {activeTab === "전체" ? "등록된 멤버가 없습니다." : `${activeTab} 팀에 속한 멤버가 없습니다.`}
+            </p>
           </div>
         ) : (
           <div className="flex flex-col gap-16">
-            {data?.map((member) => (
+            {filteredMembers.map((member) => (
               <MemberListItem key={member._id} member={member} onMemberClick={handleMemberClick} />
             ))}
           </div>

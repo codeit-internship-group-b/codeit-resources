@@ -8,9 +8,10 @@ import SortDropdown from "./SortDropdown";
 interface NavigationProps {
   activeTab: string;
   onTabChange: (category: string) => void;
+  teams: string[]; // MOCK_CATEGORIES 대신 실제 팀 목록 받기
 }
 
-export default function Navigation({ activeTab, onTabChange }: NavigationProps): JSX.Element {
+export default function Navigation({ activeTab, onTabChange, teams }: NavigationProps): JSX.Element {
   const [selectedSort, setSelectedSort] = useState(SORT_OPTIONS[0]);
 
   const handleSortChange = (value: string | boolean): void => {
@@ -26,13 +27,8 @@ export default function Navigation({ activeTab, onTabChange }: NavigationProps):
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         <ul className="flex flex-row gap-32 whitespace-nowrap">
-          {MOCK_CATEGORIES.map((category) => (
-            <CategoryTab
-              key={category}
-              category={category}
-              isActive={activeTab === category}
-              onClick={() => onTabChange(category)}
-            />
+          {teams.map((team) => (
+            <CategoryTab key={team} team={team} isActive={activeTab === team} onClick={() => onTabChange(team)} />
           ))}
         </ul>
         <SortDropdown selectedSort={selectedSort} onSortChange={handleSortChange} />
