@@ -1,3 +1,5 @@
+"use client";
+
 interface ScheduleTooltipProps {
   title: string;
 }

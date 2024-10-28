@@ -1,5 +1,6 @@
-// ScheduleRow.tsx
-import React, { useState } from "react";
+"use client";
+
+import { useState } from "react";
 import MobileReservationSheet from "../../Reservation/MobileReservationSheet";
 import DesktopReservationSheet from "../../Reservation/DesktopReservationSheet";
 import ScheduleSlot from "./ScheduleSlot";

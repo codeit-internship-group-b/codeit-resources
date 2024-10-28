@@ -1,3 +1,5 @@
+"use client";
+
 export default function TimeText(): JSX.Element {
   const times = Array.from({ length: 49 }, (_, index) => {
     if (index % 2 === 0) {
