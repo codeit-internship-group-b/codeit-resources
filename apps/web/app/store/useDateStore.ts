@@ -118,7 +118,7 @@ export const useDateStore = create<DateStore>((set) => ({
   handleNextMonth: () => {
     set((state) => {
       let { year, month, day } = state.selectedDate;
-      const currentMonth = new Date().getMonth() + 1; // 현재 월
+      const currentMonth = new Date().getMonth() + 1;
 
       month += 1;
 
@@ -132,7 +132,6 @@ export const useDateStore = create<DateStore>((set) => ({
       }
 
       const { dayOfWeek } = calculateNewDate(year, month, day);
-
       return {
         selectedDate: { ...state.selectedDate, year, month, day, dayOfWeek },
       };

@@ -3,9 +3,9 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import type { ReactNode } from "react";
 import { Toast } from "@ui/index";
-import { Providers } from "./providers";
 import Gnb from "@/components/Gnb";
 import MobileSizeWatcher from "@/components/MobileSizeWatcher";
+import { Providers } from "./providers";
 
 const spoqaHanSansNeo = localFont({
   src: [

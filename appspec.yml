@@ -1,23 +1,7 @@
 version: 0.0
 os: linux
-
-files:
-  - source: /
-    destination: /home/ubuntu/build
-
-# 배포 후 실행할 스크립트 정의
 hooks:
-  BeforeInstall: # 배포가 시작되기 전에 실행
-    - location: scripts/stop_server.sh # 기존 서버 중지
-      timeout: 300
-      runas: ubuntu
-
-  AfterInstall: # 파일이 인스턴스에 복사된 후 실행
-    - location: scripts/install_dependencies.sh # 의존성 설치 및 업데이트
-      timeout: 300
-      runas: ubuntu
-
-  ApplicationStart: # 애플리케이션이 시작되기 전에 실행
-    - location: scripts/start_server.sh # 새로운 서버 시작 (PM2)
+  ApplicationStart:
+    - location: deploy.sh
       timeout: 300
       runas: ubuntu

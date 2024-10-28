@@ -15,8 +15,8 @@ export default function Header({ page }: HeaderProps): JSX.Element {
   const isPrevMonthDisabled = selectedDate.year === today.getFullYear() && selectedDate.month === today.getMonth() + 1;
 
   return (
-    <div className="h-156 md:h-149 border-custom-black/20 pt-62 border-b border-solid bg-white pl-16 md:pl-64 md:pt-24">
-      <div className="flex">
+    <div className="h-176 md:h-149 border-custom-black/20 pt-62 border-b border-solid bg-white pl-16 md:pl-64 md:pt-24">
+      <div className="h-41 flex md:h-56">
         <h1 className="pr-13 !text-custom-black text-2xl-bold md:text-3xl-bold pb-13 md:pb-40 md:pr-24">
           {page === "meetings" ? "회의실 예약" : "좌석예약"}
         </h1>
