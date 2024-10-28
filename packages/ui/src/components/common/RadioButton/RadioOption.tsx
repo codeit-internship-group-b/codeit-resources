@@ -29,9 +29,7 @@ export function RadioOption({ value, children, description, disabled = false }: 
     }
   };
 
-  const labelClassName = `group flex items-start gap-6 px-10 ${
-    disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"
-  }`;
+  const labelClassName = `group flex items-start gap-6 ${disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`;
 
   let outerSpanClassName =
     "relative mt-4 flex h-16 w-16 items-center justify-center rounded-full border md:h-20 md:w-20";

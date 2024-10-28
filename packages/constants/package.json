@@ -1,0 +1,11 @@
+{
+  "name": "@repo/constants",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@repo/types": "workspace:*",
+    "@types/node": "^20",
+    "typescript": "5.2.2"
+  }
+}

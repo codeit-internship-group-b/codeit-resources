@@ -2,7 +2,9 @@ import "@repo/ui/styles/globals.css";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import type { ReactNode } from "react";
+import { Toast } from "@ui/index";
 import Gnb from "@/components/Gnb";
+import MobileSizeWatcher from "@/components/MobileSizeWatcher";
 import { Providers } from "./providers";
 
 const spoqaHanSansNeo = localFont({
@@ -29,10 +31,12 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className={spoqaHanSansNeo.variable}>
+        <MobileSizeWatcher />
         <Gnb />
         <Providers>
           <div className="md:ml-200">{children}</div>
         </Providers>
+        <Toast />
       </body>
     </html>
   );
