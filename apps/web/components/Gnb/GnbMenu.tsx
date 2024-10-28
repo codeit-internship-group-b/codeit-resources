@@ -1,6 +1,6 @@
 "use client";
 
-import { PersonIcon, MeetingIcon, SeatsIcon, EquipmentIcon, TeamIcon } from "@repo/ui/public";
+import { PersonIcon, MeetingIcon, SeatsIcon, TeamIcon, GearIcon } from "@repo/ui/public";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { clsx } from "clsx";
@@ -12,7 +12,7 @@ const NAV_ITEMS = [
   { href: PAGE_NAME.DASHBOARD, name: "대시보드", icon: PersonIcon },
   { href: PAGE_NAME.MEETINGS, name: "회의실", icon: MeetingIcon },
   { href: PAGE_NAME.SEATS, name: "좌석", icon: SeatsIcon },
-  { href: PAGE_NAME.EQUIPMENTS, name: "장비", icon: EquipmentIcon },
+  { href: "/", name: "설정", icon: GearIcon },
 ];
 
 const ADMIN_ITEMS = [
@@ -20,7 +20,6 @@ const ADMIN_ITEMS = [
   { href: PAGE_NAME.ADMIN_TEAMS, name: "팀 관리", icon: TeamIcon },
   { href: PAGE_NAME.ADMIN_MEETINGS, name: "회의실 설정", icon: MeetingIcon },
   { href: PAGE_NAME.ADMIN_SEATS, name: "좌석 설정", icon: SeatsIcon },
-  { href: PAGE_NAME.ADMIN_EQUIPMENTS, name: "장비 설정", icon: EquipmentIcon },
 ];
 
 interface GnbMenuProps {
@@ -44,6 +43,12 @@ export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element {
               (adminPath) => pathname.startsWith(adminPath) && adminPathMapping[adminPath] === href,
             )
           : pathname === href;
+
+        const iconClassName =
+          Icon === GearIcon
+            ? cn("fill-white/60", isActive ? "fill-white" : "fill-white/60")
+            : cn("stroke-white/60", isActive ? "stroke-white" : "stroke-white/60");
+
         return (
           <Link key={name} href={href}>
             <div
@@ -52,7 +57,7 @@ export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element {
                 isActive ? "md:bg-gray-300" : "md:hover:bg-gray-300",
               )}
             >
-              <Icon className={cn("stroke-white/60", isActive ? "stroke-white" : "stroke-white/60")} />
+              <Icon className={iconClassName} />
               <div className={clsx("text-12 md:text-16", isActive ? "text-white" : "text-white/60")}>{name}</div>
             </div>
           </Link>
