@@ -55,6 +55,12 @@ export const createItem = async (
     return;
   }
 
+  const nameExists = await Item.exists({ name });
+  if (nameExists) {
+    res.status(400).json({ message: "이미 등록된 아이템 이름입니다." });
+    return;
+  }
+
   let createdItem;
   switch (itemType) {
     case "room":
