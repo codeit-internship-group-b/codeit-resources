@@ -29,7 +29,7 @@ export default function HeaderTabs({ page }: HeaderProps): JSX.Element {
   };
 
   return (
-    <div className="h-45 relative top-4 flex items-end gap-24 overflow-auto md:static">
+    <div className="h-45 scrollbar-hidden relative top-4 flex items-end gap-24 overflow-auto md:static">
       {dates.map((date, index) => (
         <motion.div
           key={String(date)}

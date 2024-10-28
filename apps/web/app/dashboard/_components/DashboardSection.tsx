@@ -21,7 +21,7 @@ export default function DashboardSection({ type, data }: DashboardSectionProps):
       <h1 className="mb-16">{isMeeting ? "내 회의" : "내 장비"}</h1>
       <hr className="mb-16 border-gray-200/10" />
       {data.length > 0 ? (
-        <div className="flex gap-16 overflow-auto">
+        <div className="scrollbar-hidden flex gap-16 overflow-auto">
           {data.map((item) => (
             <div
               key={item.title}

@@ -1,6 +1,8 @@
 "use client";
 
-import { Chevron } from "@ui/public";
+import { Chevron, GearIcon } from "@ui/public";
+import Link from "next/link";
+import HeaderTabs from "./HeaderTabs";
 import { useDateStore } from "@/app/store/useDateStore";
 import HeaderTabs from "./HeaderTabs";
 
@@ -14,11 +16,16 @@ export default function Header({ page }: HeaderProps): JSX.Element {
   const isPrevMonthDisabled = selectedDate.year === today.getFullYear() && selectedDate.month === today.getMonth() + 1;
 
   return (
-    <div className="h-156 md:h-149 border-custom-black/20 pt-62 w-screen border-b border-solid px-16 md:px-64 md:pt-24">
+    <div className="h-156 md:h-149 border-custom-black/20 pt-62 border-b border-solid bg-white pl-16 md:pl-64 md:pt-24">
       <div className="flex">
         <h1 className="pr-13 !text-custom-black text-2xl-bold md:text-3xl-bold pb-13 md:pb-40 md:pr-24">
           {page === "meetings" ? "회의실 예약" : "좌석예약"}
         </h1>
+        {page === "seats" && (
+          <Link href="admin/seats">
+            <GearIcon className="gear-icon relative right-10 top-3 cursor-pointer md:hidden" />
+          </Link>
+        )}
         {page === "meetings" && (
           <div>
             <div className="flex items-center gap-16">
