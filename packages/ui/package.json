@@ -10,7 +10,6 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@repo/constants": "workspace:*",
     "@repo/types": "workspace:*",
     "@jest/globals": "^29.7.0",
     "@repo/eslint-config": "workspace:*",
@@ -40,6 +39,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
+    "@repo/constants": "workspace:*",
     "clsx": "^2.1.1",
     "framer-motion": "^11.11.9",
     "react": "^18.2.0",
