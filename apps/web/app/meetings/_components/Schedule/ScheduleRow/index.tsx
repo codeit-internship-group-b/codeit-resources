@@ -1,7 +1,7 @@
 // ScheduleRow.tsx
 import React, { useState } from "react";
-import { DesktopReservationSheet } from "../../Reservation/DesktopReservationSheet";
 import MobileReservationSheet from "../../Reservation/MobileReservationSheet";
+import DesktopReservationSheet from "../../Reservation/DesktopReservationSheet";
 import ScheduleSlot from "./ScheduleSlot";
 import ScheduleItem from "./ScheduleItem";
 import CurrentTimeIndicator from "./CurrentTimeIndicator";
@@ -32,7 +32,6 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
 
   const [isOpen, setIsOpen] = useState(false);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
-  const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(null);
   const [clickedSlotIndex, setClickedSlotIndex] = useState<number | null>(null);
 
   const currentUserId = "1";
@@ -44,7 +43,6 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
     const timeString = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
 
     setSelectedTime(timeString);
-    setSelectedSchedule(schedule ?? null);
     setClickedSlotIndex(index);
     setIsOpen(true);
 
@@ -56,7 +54,6 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
   const handleClose = (): void => {
     setIsOpen(false);
     setClickedSlotIndex(null);
-    setSelectedSchedule(null); // 선택된 스케줄 초기화
   };
 
   return (
@@ -104,7 +101,7 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
             isCurrentUser={isCurrentUser}
             onClick={() => {
               handleSlotClick(-1, schedule);
-            }} // 예약 클릭 시 -1로 구분
+            }}
           />
         );
       })}
@@ -112,21 +109,11 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
       {selectedTime ? (
         <>
           <div className="hidden md:block">
-            <DesktopReservationSheet
-              isOpen={isOpen}
-              onClose={handleClose}
-              selectedTime={selectedTime}
-              selectedSchedule={selectedSchedule} // 선택된 예약 정보 전달
-            />
+            <DesktopReservationSheet isOpen={isOpen} onClose={handleClose} selectedTime={selectedTime} />
           </div>
 
           <div className="block md:hidden">
-            <MobileReservationSheet
-              isOpen={isOpen}
-              onClose={handleClose}
-              selectedTime={selectedTime}
-              selectedSchedule={selectedSchedule} // 선택된 예약 정보 전달
-            />
+            <MobileReservationSheet isOpen={isOpen} onClose={handleClose} selectedTime={selectedTime} />
           </div>
         </>
       ) : null}

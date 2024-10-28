@@ -27,7 +27,7 @@ export default function ScheduleItem(props: ScheduleItemProps): JSX.Element {
       }}
       onClick={(e) => {
         e.stopPropagation();
-        onClick(); // 예약 클릭 시 onClick 함수 호출
+        onClick();
       }}
     >
       <div
