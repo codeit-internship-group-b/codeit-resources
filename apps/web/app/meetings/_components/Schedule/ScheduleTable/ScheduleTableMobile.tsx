@@ -1,9 +1,9 @@
 "use client";
 
+import { type ScheduleDate } from "@/app/types/scheduletypes";
 import RoomName from "../RoomName";
 import ScheduleRow from "../ScheduleRow";
 import TimeText from "../ScheduleRow/TimeText";
-import { type ScheduleDate } from "@/app/types/scheduletypes";
 
 type ScheduleTableMobileProps = ScheduleDate;
 

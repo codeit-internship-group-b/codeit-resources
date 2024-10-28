@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { type Schedule } from "@/app/types/scheduletypes";
 import MobileReservationSheet from "../../Reservation/MobileReservationSheet";
 import DesktopReservationSheet from "../../Reservation/DesktopReservationSheet";
 import ScheduleSlot from "./ScheduleSlot";
 import ScheduleItem from "./ScheduleItem";
 import CurrentTimeIndicator from "./CurrentTimeIndicator";
-import { type Schedule } from "@/app/types/scheduletypes";
 
 interface ScheduleRowProps {
   schedules: Schedule[];

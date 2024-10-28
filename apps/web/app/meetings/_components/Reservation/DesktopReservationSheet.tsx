@@ -2,9 +2,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import ReservationForm from "./ReservationForm";
 import Sidebar from "@/components/common/Sidebar";
 import { type ScheduleFormData, type Schedule } from "@/app/types/scheduletypes";
+import ReservationForm from "./ReservationForm";
 
 interface DesktopReservationSheetProps {
   isOpen: boolean;

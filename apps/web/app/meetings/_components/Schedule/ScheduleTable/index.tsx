@@ -1,8 +1,8 @@
 "use client";
 
+import { type ScheduleDate } from "@/app/types/scheduletypes";
 import ScheduleTableMobile from "./ScheduleTableMobile";
 import ScheduleTableDesktop from "./ScheduleTableDesktop";
-import { type ScheduleDate } from "@/app/types/scheduletypes";
 
 type ScheduleTableProps = ScheduleDate;
 

@@ -1,8 +1,8 @@
 "use client";
 
 import { Chevron } from "@ui/public";
-import HeaderTabs from "./HeaderTabs";
 import { useDateStore } from "@/app/store/useDateStore";
+import HeaderTabs from "./HeaderTabs";
 
 interface HeaderProps {
   page: "meetings" | "seats";

@@ -2,8 +2,8 @@
 "use client";
 
 import { Sheet } from "react-modal-sheet";
-import ReservationForm from "./ReservationForm";
 import { type ScheduleFormData, type Schedule } from "@/app/types/scheduletypes";
+import ReservationForm from "./ReservationForm";
 
 interface MobileReservationSheetProps {
   isOpen: boolean;

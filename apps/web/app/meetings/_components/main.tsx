@@ -1,8 +1,8 @@
 "use client";
 
+import { useDateStore } from "@/app/store/useDateStore";
 import { rooms } from "../../mocks/mockData";
 import ScheduleTable from "./Schedule/ScheduleTable";
-import { useDateStore } from "@/app/store/useDateStore";
 
 export default function MeetingRoomSchedule(): JSX.Element {
   const { selectedDate } = useDateStore();

@@ -3,8 +3,8 @@
 
 "use client";
 
-import ScheduleTooltip from "./ScheduleTooltip";
 import { type Schedule } from "@/app/types/scheduletypes";
+import ScheduleTooltip from "./ScheduleTooltip";
 
 interface ScheduleItemProps {
   schedule: Schedule;
