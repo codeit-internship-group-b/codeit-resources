@@ -8,6 +8,7 @@ import { User } from "../models";
 import { isMinuteValid } from "../utils/isMinuteValid";
 import { isValidDateFormat } from "../utils/isValidDateFormat";
 import { getStartAndEndOfDay } from "../utils/getStartAndEndOfDay";
+import { isOverlappedReservation } from "../utils/isOverlappedReservation";
 
 interface ReservationRequestBody {
   userId: string;
@@ -123,20 +124,7 @@ export const createReservation = async (
   }
 
   // 중복 예약 검사
-  const overlappingReservation = await Reservation.findOne({
-    itemId,
-    status: "reserved",
-    $or: [
-      // 신규 startAt < 기존 endAt && 신규 endAt > 기존 startAt
-      { startAt: { $lt: endAt }, endAt: { $gt: startAt } },
-    ],
-    $nor: [
-      // 새 예약의 시작시간 === 기존 예약의 종료시간
-      { startAt: { $eq: endAt } },
-      // 기존 예약의 시작시간 === 새 예약의 종료시간
-      { endAt: { $eq: startAt } },
-    ],
-  });
+  const overlappingReservation = await isOverlappedReservation(itemId, startAt, endAt);
   if (overlappingReservation) {
     res.status(409).json({ message: "해당 시간에 이미 예약이 존재합니다." });
     return;
@@ -195,14 +183,12 @@ export const updateReservation = async (
     return;
   }
 
-  const overlappingReservation = await Reservation.findOne({
-    itemId: targetReservation.itemId,
-    status: "reserved",
-    _id: { $ne: reservationId }, // 자신을 제외한 예약을 검사
-    $or: [{ startAt: { $lt: finalEndAt }, endAt: { $gt: finalStartAt } }],
-    $nor: [{ startAt: { $eq: finalEndAt } }, { endAt: { $eq: finalStartAt } }],
-  });
-
+  const overlappingReservation = await isOverlappedReservation(
+    targetReservation.itemId,
+    finalStartAt,
+    finalEndAt,
+    targetReservation._id,
+  );
   if (overlappingReservation) {
     res.status(409).json({ message: "해당 시간에 이미 예약이 존재합니다." });
     return;
