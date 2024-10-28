@@ -53,6 +53,7 @@ UserSchema.pre("save", function (next) {
 
   if (!user.isModified("password")) {
     next();
+    return;
   }
 
   genSalt(saltRounds, (err, salt) => {
