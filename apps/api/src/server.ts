@@ -2,7 +2,7 @@ import { exit } from "node:process";
 import cors from "cors";
 import { config } from "dotenv";
 import express, { json } from "express";
-import { connectDatabase } from "./database";
+import { connectDatabase } from "./utils/database";
 import router from "./routes";
 import { errorHandler } from "./middleware/errorHandler";
 
@@ -15,7 +15,7 @@ void connectDatabase().catch((error: unknown) => {
 
 const app = express();
 const PORT = process.env.PORT ?? 3000;
-const CORS_ORIGIN = process.env.CORS_ORIGIN?.split(",") ?? "http://localhost:3000";
+const CORS_ORIGIN = process.env.CORS_ORIGIN?.split(",") ?? "http://localhost:8080";
 
 const corsOptions = {
   origin: CORS_ORIGIN,
@@ -40,6 +40,7 @@ app.get("/health", (req, res) => {
     version: process.version,
   });
 });
+
 app.listen(PORT, () => {
-  console.log("Server is running on your env port");
+  console.log(`Server is running on ${PORT}`);
 });

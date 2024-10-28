@@ -1,7 +1,10 @@
 import { type Request, type Response } from "express";
-import { hash } from "bcryptjs";
-import { type TRole } from "@repo/types/userType";
+import { type IUser, type TRole } from "@repo/types";
+import { config } from "dotenv";
+import { compare } from "bcryptjs";
 import { User } from "../models/userModel";
+
+config();
 
 interface GetUsersRequest extends Request {
   query: {
@@ -14,23 +17,6 @@ interface GetUsersRequest extends Request {
 interface Filters {
   role?: TRole;
   team?: string;
-}
-
-interface GetUserRequest extends Request {
-  params: {
-    userId: string;
-  };
-}
-
-interface CreateUserRequest extends Request {
-  body: {
-    name: string;
-    email: string;
-    password: string;
-    role?: TRole;
-    teams?: string[];
-  };
-  file?: Express.Multer.File | Express.MulterS3.File;
 }
 
 // Get all users
@@ -56,6 +42,12 @@ export const getUsers = async (req: GetUsersRequest, res: Response): Promise<voi
   res.status(200).json(users);
 };
 
+interface GetUserRequest extends Request {
+  params: {
+    userId: string;
+  };
+}
+
 // Get a user by id
 export const getUser = async (req: GetUserRequest, res: Response): Promise<void> => {
   const { userId } = req.params;
@@ -68,6 +60,17 @@ export const getUser = async (req: GetUserRequest, res: Response): Promise<void>
 
   res.status(200).send(user);
 };
+
+interface CreateUserRequest extends Request {
+  body: {
+    name: string;
+    email: string;
+    password: string;
+    role?: TRole;
+    teams?: string[];
+  };
+  file?: Express.Multer.File | Express.MulterS3.File;
+}
 
 // Create a new user
 export const createUser = async (req: CreateUserRequest, res: Response): Promise<void> => {
@@ -86,8 +89,6 @@ export const createUser = async (req: CreateUserRequest, res: Response): Promise
 
   const newTeams = teams ?? [];
 
-  const hashedPassword = await hash(password, 10);
-
   const profileImageUrl = req.file
     ? (req.file as Express.MulterS3.File).location
     : process.env.DEFAULT_PROFILE_IMAGE_URL;
@@ -95,7 +96,7 @@ export const createUser = async (req: CreateUserRequest, res: Response): Promise
   const user = new User({
     name,
     email,
-    password: hashedPassword,
+    password,
     role: role ?? "member",
     profileImage: profileImageUrl,
     teams: newTeams,
@@ -105,84 +106,138 @@ export const createUser = async (req: CreateUserRequest, res: Response): Promise
   res.status(201).send({ message: "새로운 사용자가 생성되었습니다." });
 };
 
-// // Update a user by id
-// // admin 권한 필요
-// const updateUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-//   try {
-//     const { id } = req.params;
-//     const user = await User.findById(id);
-//     if (!user) {
-//       res.status(404).send({ message: "사용자를 찾을 수 없습니다." });
-//       return;
-//     }
+interface UpdateUserRequest extends Request {
+  params: {
+    userId: string;
+  };
+  body: {
+    name: string;
+    email: string;
+    role: TRole;
+    teams: string[];
+  };
+  file?: Express.Multer.File | Express.MulterS3.File;
+}
 
-//     user.username = req.body.username;
-//     user.email = req.body.email;
-//     user.role = req.body.role;
-//     await user.save();
+// Update a user by id
+export const updateUser = async (req: UpdateUserRequest, res: Response): Promise<void> => {
+  const { userId } = req.params;
+  const userInfo = await User.findById(userId);
 
-//     res.status(200).send({ message: "사용자 정보가 성공적으로 업데이트되었습니다." });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+  if (!userInfo) {
+    res.status(404).send({ message: "사용자를 찾을 수 없습니다." });
+    return;
+  }
 
-// const deleteUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-//   try {
-//     const { id } = req.params;
-//     await User.findByIdAndDelete(id);
+  const { email, name, teams, role } = req.body;
 
-//     res.status(200).send({ message: "사용자가 삭제되었습니다." });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+  if (!(email || name)) {
+    res.status(400).send({ message: "모든 필드값을 전송해주세요." });
+    return;
+  }
 
-// // Update a user password
-// const updatePassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-//   try {
-//     const { id } = req.params;
-//     const { currentPassword, newPassword } = req.body;
+  if (email) {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      res.status(409).send({ message: "이미 존재하는 이메일입니다." });
+      return;
+    }
+  }
 
-//     const user = await User.findById(id);
-//     if (!user) {
-//       res.status(404).send({ message: "사용자를 찾을 수 없습니다." });
-//       return;
-//     }
+  userInfo.role = role;
+  userInfo.name = name;
+  userInfo.email = email;
+  userInfo.teams = teams;
 
-//     const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
-//     if (!isPasswordValid) {
-//       res.status(400).send({ message: "현재 비밀번호가 일치하지 않습니다." });
-//       return;
-//     }
+  if (req.file) {
+    const profileImageUrl = (req.file as Express.MulterS3.File).location;
 
-//     const hashedPassword = await bcrypt.hash(newPassword, 10);
+    userInfo.profileImage = profileImageUrl;
+  }
 
-//     user.password = hashedPassword;
-//     await user.save();
+  await userInfo.save();
+  res.status(200).send({ message: "사용자 정보가 성공적으로 업데이트되었습니다." });
+};
 
-//     res.status(200).send({ message: "비밀번호가 성공적으로 변경되었습니다." });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+// Delete a user by id
+export const deleteUser = async (req: GetUserRequest, res: Response): Promise<void> => {
+  const { userId } = req.params;
+  const deletedUser = await User.findByIdAndDelete(userId);
 
-// const updateProfileImage = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-//   try {
-//     const { id } = req.params;
-//     const { profileImage } = req.body;
+  if (!deletedUser) {
+    res.status(404).send({ message: "사용자를 찾을 수 없습니다." });
+  }
 
-//     const user = await User.findById(id);
-//     if (!user) {
-//       res.status(404).send({ message: "사용자를 찾을 수 없습니다." });
-//       return;
-//     }
+  res.status(200).send({ message: "사용자가 삭제되었습니다." });
+};
 
-//     user.profileImage = profileImage;
-//     await user.save();
+interface UpdateProfileImageRequest extends Request {
+  user?: IUser;
+  file?: Express.Multer.File | Express.MulterS3.File;
+}
 
-//     res.status(200).send({ message: "프로필 이미지가 성공적으로 업데이트되었습니다." });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+export const updateProfileImage = async (req: UpdateProfileImageRequest, res: Response): Promise<void> => {
+  const userId = req.user?._id;
+  const profileImageUrl = (req.file as Express.MulterS3.File).location;
+
+  if (!userId) {
+    res.status(400).send({ message: "인증 토큰이 유효하지 않습니다." });
+    return;
+  }
+
+  if (!profileImageUrl) {
+    res.status(400).send({ message: "사진이 누락되었습니다." });
+    return;
+  }
+
+  const user = await User.findById(userId);
+
+  if (!user) {
+    res.status(404).send({ message: "사용자를 찾을 수 없습니다." });
+    return;
+  }
+
+  await User.findByIdAndUpdate(userId, { profileImage: profileImageUrl });
+  res.status(200).send({ message: "프로필 사진이 변경되었습니다." });
+};
+
+interface UpdateUserCredentialsRequest extends Request {
+  user?: IUser;
+  body: {
+    currentPassword: string;
+    newPassword: string;
+  };
+}
+
+export const updateUserCredentials = async (req: UpdateUserCredentialsRequest, res: Response): Promise<void> => {
+  const userId = req.user?._id;
+  const { currentPassword, newPassword } = req.body;
+
+  if (!userId) {
+    res.status(400).send({ message: "인증 토큰이 유효하지 않습니다." });
+    return;
+  }
+
+  if (!currentPassword || !newPassword) {
+    res.status(400).send({ message: "필수 정보가 누락되었습니다." });
+    return;
+  }
+
+  const user = await User.findById(userId);
+
+  if (!user) {
+    res.status(404).send({ message: "사용자를 찾을 수 없습니다." });
+    return;
+  }
+
+  const isMatch = await compare(currentPassword, user.password);
+  if (!isMatch) {
+    res.status(401).send({ message: "비밀번호가 일치하지 않습니다." });
+    return;
+  }
+
+  user.password = newPassword;
+  await user.save();
+
+  res.status(200).send({ message: "비밀번호가 변경되었습니다." });
+};

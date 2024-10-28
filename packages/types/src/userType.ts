@@ -1,4 +1,4 @@
-export const Roles = ["admin", "member"] as const;
+export const Roles = ["어드민", "멤버"] as const;
 export type TRole = (typeof Roles)[number];
 
 export interface IUser {

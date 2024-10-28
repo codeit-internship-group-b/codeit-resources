@@ -10,6 +10,7 @@
     "test": "jest"
   },
   "devDependencies": {
+    "@repo/types": "workspace:*",
     "@jest/globals": "^29.7.0",
     "@repo/eslint-config": "workspace:*",
     "@repo/jest-config": "workspace:*",
@@ -22,7 +23,7 @@
     "@turbo/gen": "^1.12.4",
     "@types/eslint": "^8.56.5",
     "@types/jest": "^29.5.12",
-    "@types/node": "^20.11.24",
+    "@types/node": "^20",
     "@types/react": "^18.3.11",
     "@types/react-dom": "^18.2.19",
     "autoprefixer": "^10.4.20",
@@ -38,7 +39,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@repo/types": "workspace:*",
+    "@repo/constants": "workspace:*",
     "clsx": "^2.1.1",
     "framer-motion": "^11.11.9",
     "react": "^18.2.0",

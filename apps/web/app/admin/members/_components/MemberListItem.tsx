@@ -4,16 +4,19 @@ import { Badge } from "@ui/index";
 import Dropdown from "@ui/src/components/common/Dropdown";
 import { MEMBER_ROLES } from "@repo/ui/src/utils/constants/memberRoles";
 import DefaultProfileImage from "@ui/public/images/image_default_profile.png";
-import { type MemberWithStaticImport } from "./ComponentWithUseClient.types";
+import { type IUser } from "@repo/types";
+import { type MemberWithStaticImage } from "../types";
 
 interface MemberListItemProps {
-  member: MemberWithStaticImport;
-  onMemberClick: (member: MemberWithStaticImport) => void;
+  member: MemberWithStaticImage;
+  onMemberClick: (member: MemberWithStaticImage) => void;
 }
 
 export default function MemberListItem({ member, onMemberClick }: MemberListItemProps): JSX.Element {
   const [currentRole, setCurrentRole] = useState(member.role);
   const [isImageError, setIsImageError] = useState(false);
+
+  const imageSource = isImageError ? DefaultProfileImage : (member.profileImage ?? DefaultProfileImage);
 
   const handleMemberClick = (e: MouseEvent<HTMLDivElement>): void => {
     const target = e.target as HTMLElement;
@@ -35,7 +38,7 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
 
   const handleRoleChange = (value: string | boolean): void => {
     if (typeof value === "string") {
-      setCurrentRole(value);
+      setCurrentRole(value as IUser["role"]);
     }
   };
 
@@ -53,7 +56,7 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
     >
       <div className="flex items-center gap-16">
         <Image
-          src={isImageError ? DefaultProfileImage : member.profileImage}
+          src={imageSource}
           alt={`${member.name}의 프로필`}
           width={40}
           height={40}
