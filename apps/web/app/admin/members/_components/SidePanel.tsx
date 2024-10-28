@@ -15,8 +15,6 @@ import DefaultProfileImage from "@ui/public/images/image_default_profile.png";
 import MultiSelectDropdown from "@repo/ui/src/components/common/Dropdown/MulitiSelectDropdown";
 import { type StaticImport } from "next/dist/shared/lib/get-img-props";
 import { type IUser } from "@repo/types";
-// TODO: 폼 제출 로직
-import { useForm } from "@tanstack/react-form";
 import { MOCK_TEAMS } from "../mockData";
 import { type MemberWithFileImage, type SidePanelFormData } from "../types";
 
