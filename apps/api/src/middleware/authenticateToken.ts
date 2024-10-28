@@ -12,7 +12,7 @@ interface AuthenticateTokenRequest extends Request {
   user?: IUser;
 }
 
-type CustomJwtPayload = JwtPayload & { id: string };
+type CustomJwtPayload = JwtPayload & { id: string; role: string };
 
 export const authenticateToken = async (
   req: AuthenticateTokenRequest,
