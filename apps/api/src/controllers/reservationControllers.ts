@@ -65,12 +65,11 @@ export const getReservationsByTypeAndDate = async (
     searchDate = today.toISOString().split("T")[0];
   }
 
-  const items = await Item.find({ type: itemType }, "_id");
-  if (items.length === 0) {
+  const itemIds = await Item.find({ itemType }, "_id");
+  if (itemIds.length === 0) {
     res.status(404).json({ message: "해당 타입의 아이템이 없습니다." });
     return;
   }
-  const itemIds = items.map((item) => item._id);
 
   const targetDate = new Date(`${searchDate}T00:00:00Z`);
   const { startOfDay, endOfDay } = getStartAndEndOfDay(targetDate);
