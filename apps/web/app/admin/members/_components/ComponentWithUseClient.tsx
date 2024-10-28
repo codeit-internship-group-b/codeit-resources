@@ -44,7 +44,7 @@ export default function Members(): JSX.Element {
       <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
       <main>
         {data?.length === 0 ? (
-          <div className="flex min-h-[400px] items-center justify-center">
+          <div className="min-h-400 flex items-center justify-center">
             <p className="text-20 text-custom-black/60">등록된 멤버가 없습니다.</p>
           </div>
         ) : (
