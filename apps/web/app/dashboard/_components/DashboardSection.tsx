@@ -1,4 +1,3 @@
-import cn from "@ui/src/utils/cn";
 import { type IReservation } from "@repo/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { notify } from "@ui/index";
@@ -37,9 +36,7 @@ export default function DashboardSection({ data = [] }: DashboardSectionProps): 
           {data.map((item) => (
             <div
               key={item._id}
-              className={cn(
-                "rounded-8 text-custom-black/80 min-w-259 w-259 h-148 md:w-275 md:h-172 mb-4 border border-solid border-gray-200/10 p-8",
-              )}
+              className="rounded-8 text-custom-black/80 min-w-259 w-259 h-148 md:w-275 md:h-172 mb-4 border border-solid border-gray-200/10 p-8"
             >
               <div className="relative bottom-6 text-right">
                 {isInProgress(item.startAt, item.endAt) ? (
@@ -50,7 +47,7 @@ export default function DashboardSection({ data = [] }: DashboardSectionProps): 
                   <span className="text-10 rounded-8 px-4 py-2 text-center font-medium text-white" />
                 )}
               </div>
-              <div className={cn("relative bottom-6 grid grid-rows-2 gap-4 pl-24 md:bottom-0 md:gap-8")}>
+              <div className="relative bottom-6 grid grid-rows-2 gap-4 pl-24 md:bottom-0 md:gap-8">
                 <div className="text-2lg-bold">{item.notes}</div>
                 <time className="text-13 leading-21 h-26">{`${formatTime(item.startAt)} ~ ${formatTime(item.endAt)}`}</time>
                 <div>
@@ -66,9 +63,7 @@ export default function DashboardSection({ data = [] }: DashboardSectionProps): 
                     onClick={() => {
                       handleEndMeeting(item._id);
                     }}
-                    className={cn(
-                      "rounded-6 text-sm-medium border-custom-black/20 hover:bg-custom-black/5 hover:text-custom-black relative -top-20 border border-solid px-12 py-5 transition-all duration-300 ease-linear md:-top-4",
-                    )}
+                    className="rounded-6 text-sm-medium border-custom-black/20 hover:bg-custom-black/5 hover:text-custom-black relative -top-20 border border-solid px-12 py-5 transition-all duration-300 ease-linear md:-top-4"
                   >
                     회의 종료
                   </button>
