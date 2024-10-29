@@ -99,3 +99,32 @@ export const isCurrentMonth = (selectedDate: { year: number; month: number }): b
   const today = new Date();
   return selectedDate.year === today.getFullYear() && selectedDate.month === today.getMonth() + 1;
 };
+
+/**
+ * 주어진 날짜 객체나 문자열을 "HH:mm" 형식의 문자열로 변환합니다.
+ *
+ * date - 변환할 날짜 또는 시간 문자열
+ * returns 변환된 시간 문자열 ("HH:mm" 형식)
+ */
+export function formatTime(date: Date | string): string {
+  const dateObj = typeof date === "string" ? new Date(date) : date;
+  return dateObj.toLocaleTimeString("ko-KR", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
+}
+
+/**
+ * 현재 시간이 주어진 시작 및 종료 시간 사이에 있는지 확인합니다.
+ *
+ * start - 시작 시간 또는 문자열
+ * end - 종료 시간 또는 문자열
+ * returns 현재 시간이 시작 및 종료 시간 사이에 있으면 true, 그렇지 않으면 false
+ */
+export function isInProgress(start: Date | string, end: Date | string): boolean {
+  const now = new Date();
+  const startTime = typeof start === "string" ? new Date(start) : start;
+  const endTime = typeof end === "string" ? new Date(end) : end;
+  return now >= startTime && now <= endTime;
+}
