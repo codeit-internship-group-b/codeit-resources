@@ -25,10 +25,10 @@ function ListItemSkeleton({ type = "team", thickness = "thick", color = "white" 
         {type === "member" && (
           <>
             <PersonEmptyIcon />
-            <LoadingBar width="w-44" />
+            <LoadingBar classNames="w-44 h-12" />
           </>
         )}
-        <LoadingBar width={type === "team" ? "w-100" : "w-200"} />
+        <LoadingBar classNames={type === "team" ? "w-100" : "w-200"} />
       </div>
     </ListItem>
   );
