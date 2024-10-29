@@ -7,6 +7,11 @@ module.exports = {
     project: "./tsconfig.json",
     tsconfigRootDir: __dirname,
   },
+  settings: {
+    react: {
+      version: "detect",
+    },
+  },
   ignorePatterns: [
     "postcss.config.js",
     "tailwind.config.ts",
