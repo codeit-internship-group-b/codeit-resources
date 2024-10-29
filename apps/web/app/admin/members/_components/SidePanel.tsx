@@ -68,12 +68,6 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
       await queryClient.invalidateQueries({ queryKey: ["members"] });
       onClose();
     },
-    onError: () => {
-      notify({
-        type: "error",
-        message: "멤버 추가에 실패했습니다.",
-      });
-    },
   });
 
   const patchMemberMutation = useMutation({
@@ -86,12 +80,6 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
       await queryClient.invalidateQueries({ queryKey: ["members"] });
       onClose();
     },
-    onError: () => {
-      notify({
-        type: "error",
-        message: selectedMember ? "멤버 수정에 실패했습니다." : "멤버 추가에 실패했습니다.",
-      });
-    },
   });
 
   const deleteMemberMutation = useMutation({
@@ -103,12 +91,6 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
       });
       await queryClient.invalidateQueries({ queryKey: ["members"] });
       onClose();
-    },
-    onError: (error) => {
-      notify({
-        type: "error",
-        message: error.message,
-      });
     },
   });
 
@@ -161,13 +143,7 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
   };
 
   const handleModalConfirm = (): void => {
-    if (!selectedMember?._id) {
-      notify({
-        type: "error",
-        message: "멤버 ID가 없습니다.",
-      });
-      return;
-    }
+    if (!selectedMember) return;
 
     deleteMemberMutation.mutate(selectedMember._id);
   };

@@ -20,7 +20,7 @@ export default function Members(): JSX.Element {
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<MemberWithStaticImage | null>(null);
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["members", selectedSort],
     queryFn: () => getMembers(selectedSort),
   });
@@ -87,8 +87,6 @@ export default function Members(): JSX.Element {
       </div>
     );
   }
-
-  if (error) return <div>Error🚨</div>;
 
   return (
     <div>
