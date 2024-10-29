@@ -40,7 +40,10 @@ export const getUserReservations = async (
   const userReservations: IReservation[] = await Reservation.find({
     userId,
     startAt: { $gte: startOfDay, $lte: endOfDay },
-  }).sort({ itemType: 1, startAt: 1 });
+  })
+    .populate("user", "name email")
+    .populate("item", "name itemType")
+    .sort({ itemType: 1, startAt: 1 });
 
   if (userReservations.length === 0) {
     res.status(200).json({ message: "해당 유저의 예약이 없습니다.", reservations: [] });
@@ -52,7 +55,7 @@ export const getUserReservations = async (
 
 // 아이템 타입 및 날짜에 대한 예약 조회
 export const getReservationsByTypeAndDate = async (
-  req: Request<{ itemType: string }, IReservation[], undefined, { date?: string; status?: string }>,
+  req: Request<{ itemType: string }, IReservation[], unknown, { date?: string; status?: string }>,
   res: Response,
 ): Promise<void> => {
   const { itemType } = req.params;
@@ -85,7 +88,10 @@ export const getReservationsByTypeAndDate = async (
     query.status = status;
   }
 
-  const reservations: IReservation[] = await Reservation.find(query).sort({ status: 1, startAt: 1 });
+  const reservations: IReservation[] = await Reservation.find(query)
+    .populate("user", "name email")
+    .populate("item", "name")
+    .sort({ status: 1, startAt: 1 });
 
   res.status(200).json(reservations);
 };
