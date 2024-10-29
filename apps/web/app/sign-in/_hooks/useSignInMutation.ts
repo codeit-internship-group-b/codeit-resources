@@ -1,4 +1,4 @@
-import { QueryClient, useMutation, useQueryClient, type UseMutationResult } from "@tanstack/react-query";
+import { useMutation, useQueryClient, type UseMutationResult } from "@tanstack/react-query";
 import { type FieldValues } from "react-hook-form";
 import { setCookie } from "cookies-next";
 import { notify } from "@ui/index";

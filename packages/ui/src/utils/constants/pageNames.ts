@@ -11,4 +11,5 @@ export const PAGE_NAME = {
   ADMIN_EQUIPMENTS: "/admin/equipments",
 
   SIGN_IN: "/sign-in",
+  PROFILE: "/profile",
 };
