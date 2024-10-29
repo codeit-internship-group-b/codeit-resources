@@ -9,4 +9,6 @@ export const PAGE_NAME = {
   ADMIN_MEETINGS: "/admin/meetings",
   ADMIN_SEATS: "/admin/seats",
   ADMIN_EQUIPMENTS: "/admin/equipments",
+
+  PROFILE: "/profile",
 };
