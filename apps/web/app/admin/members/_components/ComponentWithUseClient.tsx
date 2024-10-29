@@ -23,14 +23,19 @@ export default function Members(): JSX.Element {
     queryFn: () => getMembers(selectedSort),
   });
 
-  const teams = useMemo(() => {
-    if (!data) return ["전체"];
+  const { data: originalData } = useQuery({
+    queryKey: ["members", "newest"],
+    queryFn: () => getMembers("newest"),
+  });
 
-    const allTeams = data.flatMap((member) => member.teams);
+  const teams = useMemo(() => {
+    if (!originalData) return ["전체"];
+
+    const allTeams = originalData.flatMap((member) => member.teams);
     const uniqueTeams = ["전체", ...new Set(allTeams)];
 
     return uniqueTeams;
-  }, [data]);
+  }, [originalData]);
 
   const filteredMembers = useMemo(() => {
     if (!data) return [];
