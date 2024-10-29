@@ -14,13 +14,19 @@ import isObjectIdValid from "../utils/isObjectIdValid";
 interface ReservationRequestBody {
   userId: string;
   itemId: string;
-  itemName: string;
+  itemType: string;
   startAt: Date;
   endAt: Date;
   status?: TReservationStatus;
   notes?: string;
   attendees?: string[];
 }
+
+const itemTypeToModel: Record<"room" | "seat" | "equipment", string> = {
+  room: "Room",
+  seat: "Seat",
+  equipment: "Equipment",
+};
 
 // 특정 유저의 오늘 날짜 예약 전체 조회(dashboards)
 export const getUserReservations = async (
@@ -46,9 +52,9 @@ export const getUserReservations = async (
     .populate({
       path: "item",
       populate: [
-        { path: "room", select: "name itemType" },
-        { path: "seat", select: "name itemType" },
-        { path: "equipment", select: "name itemType" },
+        { path: itemTypeToModel.room, select: "name itemType" },
+        { path: itemTypeToModel.seat, select: "name itemType" },
+        { path: itemTypeToModel.equipment, select: "name itemType" },
       ],
     })
     .sort({ itemType: 1, startAt: 1 });
@@ -66,8 +72,14 @@ export const getReservationsByTypeAndDate = async (
   req: Request<{ itemType: string }, IReservation[], unknown, { date?: string; status?: string }>,
   res: Response,
 ): Promise<void> => {
-  const { itemType } = req.params;
   const { date, status } = req.query;
+
+  const itemType = req.params.itemType as keyof typeof itemTypeToModel;
+
+  if (!(itemType in itemTypeToModel)) {
+    res.status(400).json({ message: "유효하지 않은 아이템 타입입니다." });
+    return;
+  }
 
   let searchDate = date;
   if (!searchDate) {
@@ -78,17 +90,11 @@ export const getReservationsByTypeAndDate = async (
     return;
   }
 
-  const itemIds = await Item.find({ type: itemType }, "_id");
-  if (itemIds.length === 0) {
-    res.status(404).json({ message: "해당 타입의 아이템이 없습니다." });
-    return;
-  }
-
   const targetDate = new Date(`${searchDate}T00:00:00Z`);
   const { startOfDay, endOfDay } = getStartAndEndOfDay(targetDate);
 
   const query: FilterQuery<IReservation> = {
-    itemId: { $in: itemIds },
+    itemType,
     $or: [{ startAt: { $gte: startOfDay, $lte: endOfDay } }, { endAt: { $gte: startOfDay, $lte: endOfDay } }],
   };
 
@@ -96,7 +102,7 @@ export const getReservationsByTypeAndDate = async (
 
   const reservations: IReservation[] = await Reservation.find(query)
     .populate("user", "name email")
-    .populate({ path: "item", model: itemType, select: "name itemType" })
+    .populate({ path: "item", model: itemTypeToModel[itemType], select: "name" })
     .populate("attendees", "name email")
     .sort({ status: 1, startAt: 1 });
 
@@ -109,7 +115,7 @@ export const createReservation = async (
   res: Response,
 ): Promise<void> => {
   const { itemId } = req.params;
-  const { userId, startAt, endAt, status, notes, attendees } = req.body;
+  const { userId, itemType, startAt, endAt, status, notes, attendees } = req.body;
 
   if (!isObjectIdValid(userId)) {
     res.status(400).json({ message: "유효하지 않은 사용자 ID입니다." });
@@ -148,6 +154,7 @@ export const createReservation = async (
   const newReservation = new Reservation({
     user: userId,
     item: itemId,
+    itemType,
     startAt,
     endAt,
     status: status ?? "reserved",
