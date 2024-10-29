@@ -1,9 +1,11 @@
+/* eslint-disable react/no-array-index-key */
 "use client";
 
 import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Toast } from "@ui/index";
 import { getMembers } from "@/api/members";
+import ListItemSkeleton from "@/components/common/Skeleton/ListItemSkeleton";
 import { type MemberWithStaticImage } from "../types";
 import SidePanel from "./SidePanel";
 import Header from "./Header";
@@ -62,8 +64,30 @@ export default function Members(): JSX.Element {
     setIsSidePanelOpen(true);
   };
 
-  // TODO: 스켈레톤 UI로 변경
-  if (isLoading) return <div>Loading...💫</div>;
+  if (isLoading) {
+    return (
+      <div>
+        <Header onAddMember={handleOpenSidePanel} />
+        <Navigation
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          teams={teams}
+          selectedSort={selectedSort}
+          onSortChange={handleSortChange}
+          isLoading={isLoading}
+        />
+        <main>
+          <div className="flex flex-col gap-16">
+            {Array.from({ length: 8 }).map((_, index) => (
+              <ListItemSkeleton key={index} type="member" thickness="thick" color="white" showHamburger={false} />
+            ))}
+          </div>
+        </main>
+        <Toast />
+      </div>
+    );
+  }
+
   if (error) return <div>Error🚨</div>;
 
   return (

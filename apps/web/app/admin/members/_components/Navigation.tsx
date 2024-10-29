@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
+import LoadingBar from "@/components/common/Skeleton/LoadingBar";
 import Tab from "./Tab";
 import SortDropdown from "./SortDropdown";
 
@@ -8,6 +9,7 @@ interface NavigationProps {
   teams: string[];
   selectedSort: string;
   onSortChange: (value: string | boolean) => void;
+  isLoading?: boolean;
 }
 
 export default function Navigation({
@@ -16,6 +18,7 @@ export default function Navigation({
   teams,
   selectedSort,
   onSortChange,
+  isLoading,
 }: NavigationProps): JSX.Element {
   return (
     <nav className="relative mb-24">
@@ -24,9 +27,23 @@ export default function Navigation({
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         <ul className="flex flex-row gap-32 whitespace-nowrap">
-          {teams.map((team) => (
-            <Tab key={team} team={team} isActive={activeTab === team} onClick={() => onTabChange(team)} />
-          ))}
+          {isLoading ? (
+            <>
+              <li className="py-8">
+                <LoadingBar width="w-60" />
+              </li>
+              <li className="py-8">
+                <LoadingBar width="w-60" />
+              </li>
+              <li className="py-8">
+                <LoadingBar width="w-60" />
+              </li>
+            </>
+          ) : (
+            teams.map((team) => (
+              <Tab key={team} team={team} isActive={activeTab === team} onClick={() => onTabChange(team)} />
+            ))
+          )}
         </ul>
         <SortDropdown selectedSort={selectedSort} onSortChange={onSortChange} />
       </div>
