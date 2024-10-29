@@ -187,7 +187,7 @@ export const updateReservation = async (
   }
 
   const overlappingReservation = await isOverlappedReservation(
-    targetReservation.itemId,
+    targetReservation.item._id,
     finalStartAt,
     finalEndAt,
     targetReservation._id,

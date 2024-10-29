@@ -1,3 +1,5 @@
+import { ICategory } from "./categoryType";
+
 export const ItemStatus = ["available", "reserved", "in-use", "unavailable"] as const; // 예약가능, 예약됨, 대여중, 사용불가
 export type TItemStatus = (typeof ItemStatus)[number];
 
@@ -16,7 +18,7 @@ export interface TBaseItem {
 
 export interface IRoom extends TBaseItem {
   itemType: "room";
-  category: string;
+  category: ICategory;
   location?: string;
   capacity?: number;
 }
@@ -27,5 +29,5 @@ export interface ISeat extends TBaseItem {
 
 export interface IEquipment extends TBaseItem {
   itemType: "equipment";
-  category: string;
+  category: ICategory;
 }
