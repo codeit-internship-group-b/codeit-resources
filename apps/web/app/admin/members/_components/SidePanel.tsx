@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
 
-import { useState, useEffect, type ChangeEvent } from "react";
+import { useState, useEffect, useRef, type ChangeEvent } from "react";
 import { useForm, Controller } from "react-hook-form";
 import Image from "next/image";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -14,6 +14,7 @@ import { NOTIFICATION_MESSAGES } from "@repo/ui/src/utils/constants/notification
 import DefaultProfileImage from "@ui/public/images/image_default_profile.png";
 import MultiSelectDropdown from "@repo/ui/src/components/common/Dropdown/MulitiSelectDropdown";
 import { type StaticImport } from "next/dist/shared/lib/get-img-props";
+import { useOnClickOutside } from "@ui/src/hooks/useOnClickOutside";
 import { patchMember, postMember, deleteMember } from "@/api/members";
 import { MOCK_TEAMS } from "../mockData";
 import { type MemberWithFileImage, type SidePanelFormData } from "../types";
@@ -43,6 +44,7 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
   const queryClient = useQueryClient();
   const [imageObjectUrl, setImageObjectUrl] = useState<string>("");
   const [isImageError, setIsImageError] = useState(false);
+  const sidePanelRef = useRef<HTMLDivElement>(null);
 
   const {
     register,
@@ -211,6 +213,12 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
     return roleOptions[value];
   };
 
+  useOnClickOutside(sidePanelRef, () => {
+    if (isOpen) {
+      onClose();
+    }
+  });
+
   // 멤버 수정 시, 폼 데이터 초기화 및 사이드 패널 상태 관리
   useEffect(() => {
     if (!isOpen) {
@@ -245,6 +253,7 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
   return (
     <Modal.Root>
       <div
+        ref={sidePanelRef}
         className={`w-414 fixed right-0 top-0 z-10 h-full transform border-l border-[#33323633] bg-white shadow-[0px_2px_14px_0px_rgba(0,0,0,0.08)] transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
@@ -275,8 +284,10 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
                 rules={{ required: "역할을 선택해주세요" }}
                 render={({ field: { value, onChange } }) => (
                   <Radio.Group
-                    value={getRoleDisplay(value as RoleOption)}
-                    onChange={(displayText) => onChange(getRoleValue(displayText))}
+                    value={getRoleDisplay(value)}
+                    onChange={(displayText) => {
+                      onChange(getRoleValue(displayText));
+                    }}
                   >
                     <Radio.Option value={roleOptions.member}>{roleOptions.member}</Radio.Option>
                     <Radio.Option value={roleOptions.admin}>{roleOptions.admin}</Radio.Option>
