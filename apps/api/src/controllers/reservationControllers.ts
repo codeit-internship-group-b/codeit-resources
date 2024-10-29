@@ -42,7 +42,12 @@ export const getUserReservations = async (
     startAt: { $gte: startOfDay, $lte: endOfDay },
   })
     .populate("user", "name email")
-    .populate("item", "name itemType")
+    .populate([
+      { path: "item", model: "Room", match: { itemType: "room" }, select: "name itemType" },
+      { path: "item", model: "Seat", match: { itemType: "seat" }, select: "name itemType" },
+      { path: "item", model: "Equipment", match: { itemType: "equipment" }, select: "name itemType" },
+    ])
+    .populate("attendees", "name email")
     .sort({ itemType: 1, startAt: 1 });
 
   if (userReservations.length === 0) {
@@ -70,7 +75,7 @@ export const getReservationsByTypeAndDate = async (
     return;
   }
 
-  const itemIds = await Item.find({ itemType }, "_id");
+  const itemIds = await Item.find({ type: itemType }, "_id");
   if (itemIds.length === 0) {
     res.status(404).json({ message: "해당 타입의 아이템이 없습니다." });
     return;
@@ -90,7 +95,8 @@ export const getReservationsByTypeAndDate = async (
 
   const reservations: IReservation[] = await Reservation.find(query)
     .populate("user", "name email")
-    .populate("item", "name")
+    .populate({ path: "item", model: itemType, select: "name itemType" })
+    .populate("attendees", "name email")
     .sort({ status: 1, startAt: 1 });
 
   res.status(200).json(reservations);
@@ -139,10 +145,8 @@ export const createReservation = async (
   }
 
   const newReservation = new Reservation({
-    userId,
-    itemId,
-    itemName: itemExists.name,
-    itemType: itemExists.itemType,
+    user: userId,
+    item: itemId,
     startAt,
     endAt,
     status: status ?? "reserved",
@@ -163,8 +167,7 @@ export const updateReservation = async (
   const { startAt, endAt } = req.body;
 
   // 예약 존재여부 확인
-  const targetReservation: IReservation | null =
-    await Reservation.findById(reservationId).select("startAt endAt itemId");
+  const targetReservation: IReservation | null = await Reservation.findById(reservationId).select("startAt endAt item");
   if (!targetReservation) {
     res.status(404).json({ message: "예약을 찾을 수 없습니다." });
     return;
@@ -186,18 +189,12 @@ export const updateReservation = async (
     res.status(400).json({ message: "endAt 시간은 10분 단위로 설정해야 합니다." });
     return;
   }
-
   if (finalStartAt >= finalEndAt) {
     res.status(400).json({ message: "시작 시간은 종료 시간보다 이전이어야 합니다." });
     return;
   }
-
-  const overlappingReservation = await isOverlappedReservation(
-    targetReservation.item._id,
-    finalStartAt,
-    finalEndAt,
-    targetReservation._id,
-  );
+  const itemId = (targetReservation.item as string).toString();
+  const overlappingReservation = await isOverlappedReservation(itemId, finalStartAt, finalEndAt, targetReservation._id);
   if (overlappingReservation) {
     res.status(409).json({ message: "해당 시간에 이미 예약이 존재합니다." });
     return;

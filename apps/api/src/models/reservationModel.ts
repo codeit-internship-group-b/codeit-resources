@@ -33,7 +33,7 @@ const ReservationSchema: Schema = new Schema(
     },
     status: { type: String, enum: ReservationStatus, required: true },
     notes: { type: String },
-    attendees: { type: [Schema.Types.ObjectId], ref: "User" },
+    attendees: [{ type: Schema.Types.ObjectId, ref: "User" }],
   },
   {
     timestamps: true,

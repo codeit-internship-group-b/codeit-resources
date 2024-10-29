@@ -9,7 +9,7 @@ export const isOverlappedReservation = async (
   excludeReservationId?: string,
 ): Promise<boolean> => {
   const query: FilterQuery<IReservation> = {
-    itemId,
+    item: itemId,
     status: "reserved",
     $or: [
       // 신규 startAt < 기존 endAt && 신규 endAt > 기존 startAt
