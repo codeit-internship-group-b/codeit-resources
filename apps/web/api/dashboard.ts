@@ -1,3 +1,4 @@
+import { API_ENDPOINTS } from "@repo/constants";
 import { type IReservation } from "@repo/types";
 import { axiosRequester } from "../app/lib/axios";
 
@@ -12,22 +13,7 @@ export const getDashboard = async ({ userId }: GetDashboardProps): Promise<IRese
   const { data } = await axiosRequester<IReservation[]>({
     options: {
       method: "GET",
-      url: `/reservations/dashboard/${userId}`,
-    },
-  });
-
-  return data;
-};
-
-/**
- * 아이템 아이디로 아이템을 조회하는 API 함수입니다.
- * @returns IItem 배열을 반환합니다.
- */
-export const getItem = async ({ userId }: GetDashboardProps): Promise<IReservation[]> => {
-  const { data } = await axiosRequester<IReservation[]>({
-    options: {
-      method: "GET",
-      url: `/reservations/dashboard/${userId}`,
+      url: API_ENDPOINTS.RESERVATION.GET_USER_RESERVATIONS(userId),
     },
   });
 
@@ -42,7 +28,7 @@ export const patchMeetingStatus = async (_id: string): Promise<Partial<IReservat
   const { data } = await axiosRequester<Partial<IReservation>>({
     options: {
       method: "PATCH",
-      url: `/reservations/${_id}`,
+      url: API_ENDPOINTS.RESERVATION.UPDATE_RESERVATION(_id),
       data: {
         status: "completed",
       },
