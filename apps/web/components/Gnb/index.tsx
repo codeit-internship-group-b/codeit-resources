@@ -2,12 +2,21 @@
 
 import { usePathname } from "next/navigation";
 import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { type ResponseType } from "@repo/types/src/responseType";
+import { type IUser } from "@repo/types";
+import { getUser } from "@/app/api/user";
 import Profile from "../common/Profile";
 import GnbMenu from "./GnbMenu";
 import GnbLogo from "./GnbLogo";
 
 export default function Gnb(): JSX.Element | null {
   const pathname = usePathname();
+  // const { data } = useQuery<UseQueryResult<ResponseType<IUser>>>({
+  //   queryKey: ["userData"],
+  //   queryFn: (userId: string) => getUser(userId),
+  // });
+
   const name = "강영훈"; // mockData
   const isAdmin = true;
 

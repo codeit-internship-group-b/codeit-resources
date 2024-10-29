@@ -17,7 +17,7 @@ const spoqaHanSansNeo = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "코드잇 | 배움의 기쁨을 세상 모두에게 :)",
+  title: "코드잇 | resources",
   description: "codeit-resources",
 };
 
