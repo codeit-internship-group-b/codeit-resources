@@ -8,6 +8,10 @@ import { useSignInForm } from "../_hooks/useSignInForm";
 import { useSignInMutation } from "../_hooks/useSignInMutation";
 
 export default function SignInForm(): JSX.Element {
+  // TODO : 토큰 유무에 따른 로그인페이지 핸들링
+  // TODO : 토큰 유무에 따른 redirect 처리
+  // TODO : 모바일 구현
+  // TODO : front cicd 환경변수
   const { handleSubmit, registers } = useSignInForm();
   const { mutate: postSignInMutate } = useSignInMutation();
 

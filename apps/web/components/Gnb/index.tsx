@@ -2,26 +2,15 @@
 
 import { usePathname } from "next/navigation";
 import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { type IUser } from "@repo/types";
-import { type AxiosError } from "axios";
 import Link from "next/link";
-import { getUser } from "@/app/api/users";
 import Profile from "../common/Profile";
 import GnbMenu from "./GnbMenu";
 import GnbLogo from "./GnbLogo";
+import { useUser } from "./hooks/useUser";
 
 export default function Gnb(): JSX.Element | null {
   const pathname = usePathname();
-  const queryClient = useQueryClient();
-
-  const cachedUserData = queryClient.getQueryData<IUser>(["userData"]);
-
-  const { data: userResponse } = useQuery<IUser, AxiosError<{ message?: string }>>({
-    queryKey: ["userData", { userId: cachedUserData?._id }],
-    queryFn: () => getUser(cachedUserData?._id ?? ""),
-    enabled: Boolean(cachedUserData?._id),
-  });
+  const { data: userResponse } = useUser();
 
   if (pathname === PAGE_NAME.SIGN_IN) {
     return null;
@@ -38,7 +27,7 @@ export default function Gnb(): JSX.Element | null {
         <GnbMenu isAdmin={userResponse?.role === "admin"} />
       </div>
       <Link href={PAGE_NAME.PROFILE} className="hidden px-16 py-10 md:block">
-        <Profile name={userResponse?.name} />
+        <Profile src={userResponse?.profileImage} name={userResponse?.name} />
       </Link>
     </nav>
   );
