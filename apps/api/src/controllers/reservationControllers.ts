@@ -27,7 +27,6 @@ const itemTypeToModel: Record<"room" | "seat" | "equipment", string> = {
   seat: "Seat",
   equipment: "Equipment",
 };
-
 // 특정 유저의 오늘 날짜 예약 전체 조회(dashboards)
 export const getUserReservations = async (
   req: Request<{ userId: string }, IReservation[]>,
@@ -51,11 +50,7 @@ export const getUserReservations = async (
     .populate("attendees", "name email")
     .populate({
       path: "item",
-      populate: [
-        { path: itemTypeToModel.room, select: "name itemType" },
-        { path: itemTypeToModel.seat, select: "name itemType" },
-        { path: itemTypeToModel.equipment, select: "name itemType" },
-      ],
+      select: "name itemType",
     })
     .sort({ itemType: 1, startAt: 1 });
 
