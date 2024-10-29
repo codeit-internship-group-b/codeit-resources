@@ -2,8 +2,8 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 
 "use client";
-import { useSidebarStore } from "@/app/store/useSidebarStore";
 import { useEffect, useState } from "react";
+import { useSidebarStore } from "@/app/store/useSidebarStore";
 
 interface ScheduleSlotProps {
   index: number;

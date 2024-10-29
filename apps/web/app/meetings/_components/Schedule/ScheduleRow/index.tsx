@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { type Schedule } from "@/app/types/scheduletypes";
+import { useSidebarStore } from "@/app/store/useSidebarStore";
 import MobileReservationSheet from "../../Reservation/MobileReservationSheet";
 import DesktopReservationSheet from "../../Reservation/DesktopReservationSheet";
 import ScheduleSlot from "./ScheduleSlot";
 import ScheduleItem from "./ScheduleItem";
 import CurrentTimeIndicator from "./CurrentTimeIndicator";
-import { useSidebarStore } from "@/app/store/useSidebarStore";
 
 interface ScheduleRowProps {
   schedules: Schedule[];
