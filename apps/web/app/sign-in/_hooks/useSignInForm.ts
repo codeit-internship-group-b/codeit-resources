@@ -1,12 +1,7 @@
-import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
-import { useSignInMutation } from "./useSignInMutation";
+import { type FieldValues, useForm } from "react-hook-form";
 
 export const useSignInForm = (): FieldValues => {
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-  } = useForm({
+  const { register, handleSubmit } = useForm({
     mode: "onBlur",
     defaultValues: {
       email: "",
@@ -19,11 +14,5 @@ export const useSignInForm = (): FieldValues => {
     password: register("password"),
   };
 
-  const { mutate: postSignInMutate } = useSignInMutation();
-
-  const onSignInSubmit: SubmitHandler<FieldValues> = (payload) => {
-    postSignInMutate(payload);
-  };
-
-  return { registers, errors, onSignInSubmit, handleSubmit };
+  return { registers, handleSubmit };
 };

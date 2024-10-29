@@ -2,10 +2,22 @@
 
 import { LogoCodeitIcon, LogoTextIcon } from "@repo/ui/public/index";
 import { Button, Input } from "@repo/ui";
+import { type FieldValues, type SubmitHandler } from "react-hook-form";
+import { debounce } from "es-toolkit";
 import { useSignInForm } from "../_hooks/useSignInForm";
+import { useSignInMutation } from "../_hooks/useSignInMutation";
 
 export default function SignInForm(): JSX.Element {
-  const { errors, handleSubmit, onSignInSubmit, registers } = useSignInForm();
+  const { handleSubmit, registers } = useSignInForm();
+  const { mutate: postSignInMutate } = useSignInMutation();
+
+  const onSignInSubmit: SubmitHandler<FieldValues> = (payload: FieldValues) => {
+    postSignInMutate(payload);
+  };
+
+  const debouncedSubmit = debounce((payload: FieldValues) => {
+    onSignInSubmit(payload);
+  }, 500);
 
   /**
    * Form submit handler that wraps `handleSubmit` to suppress the "Promise-returning function
@@ -23,27 +35,23 @@ export default function SignInForm(): JSX.Element {
    */
 
   return (
-    <form className="min-w-372 flex flex-col gap-32" onSubmit={(...rest) => void handleSubmit(onSignInSubmit)(...rest)}>
+    <form
+      className="min-w-372 flex flex-col gap-32"
+      onSubmit={(...rest) => void handleSubmit(debouncedSubmit)(...rest)}
+    >
       <div className="flex flex-col items-center justify-center gap-24">
         <LogoCodeitIcon className="w-78 h-78" />
         <LogoTextIcon className="w-256 h-32 fill-black" />
       </div>
       <div>
         <div className="flex flex-col gap-8">
-          <Input
-            id="email"
-            type="email"
-            placeholder="회사 메일"
-            isError={Boolean(errors.email)}
-            errorMessage={errors.email?.message}
-            {...registers.email}
-          />
+          <Input id="email" name="email" type="email" placeholder="회사 메일" {...registers.email} />
           <Input
             id="password"
+            name="password"
             type="password"
             placeholder="비밀번호"
-            isError={Boolean(errors.password)}
-            errorMessage={errors.password?.message}
+            autoComplete="current-password"
             {...registers.password}
           />
         </div>
