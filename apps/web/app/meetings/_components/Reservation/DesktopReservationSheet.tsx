@@ -1,36 +1,40 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+// DesktopReservationSheet.tsx
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Sidebar from "@/components/common/Sidebar";
 import { type ScheduleFormData, type Schedule } from "@/app/types/scheduletypes";
+import { useSidebarStore } from "@/app/store/useSidebarStore";
 import ReservationForm from "./ReservationForm";
 
 interface DesktopReservationSheetProps {
-  isOpen: boolean;
   onClose: () => void;
   selectedTime: string;
-  selectedSchedule?: Schedule;
+  selectedSchedule?: Schedule | null;
 }
 
 export default function DesktopReservationSheet(props: DesktopReservationSheetProps): JSX.Element {
-  const { isOpen, onClose, selectedTime, selectedSchedule } = props;
-  const [isSidebarOpen, setIsSidebarOpen] = useState(isOpen);
+  const { onClose, selectedTime, selectedSchedule } = props;
+
+  const { isSidebarOpen, closeSidebar } = useSidebarStore();
 
   const handleSubmit = (data: ScheduleFormData): void => {
+    closeSidebar();
     onClose();
   };
 
   useEffect(() => {
-    setIsSidebarOpen(isOpen);
-  }, [isOpen]);
+    if (!isSidebarOpen) {
+      closeSidebar();
+    }
+  }, [isSidebarOpen, closeSidebar]);
 
   return (
     <div className="hidden md:block">
       <Sidebar
-        isOpen={isSidebarOpen}
+        isOpen={isSidebarOpen} // 전역 상태 사용
         onClose={() => {
-          setIsSidebarOpen(false);
+          closeSidebar();
           onClose();
         }}
       >

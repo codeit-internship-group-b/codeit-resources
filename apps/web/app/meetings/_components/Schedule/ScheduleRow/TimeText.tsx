@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 "use client";
 
 export default function TimeText(): JSX.Element {
@@ -11,8 +12,8 @@ export default function TimeText(): JSX.Element {
 
   return (
     <div className="flex w-full">
-      {times.map((time, _) => (
-        <div key={time} className="flex min-w-72 items-center justify-center">
+      {times.map((time, index) => (
+        <div key={`time-${time}-${index}`} className="flex min-w-72 items-center justify-center">
           {time ? <span className="text-custom-black/50 text-xs-semibold">{time}</span> : null}
         </div>
       ))}

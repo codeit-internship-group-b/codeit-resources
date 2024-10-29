@@ -57,7 +57,7 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
         render={({ field }) => (
           <Dropdown
             selectedValue={field.value}
-            onSelect={(value: string) => {
+            onSelect={(value: string | boolean) => {
               field.onChange(value);
             }}
             isError={Boolean(errors.selectedRoom)}
@@ -84,7 +84,7 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
             render={({ field }) => (
               <Dropdown
                 selectedValue={field.value}
-                onSelect={(value: string) => {
+                onSelect={(value: string | boolean) => {
                   field.onChange(value);
                 }}
                 isError={Boolean(errors.startTime)}
@@ -120,7 +120,7 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
             render={({ field }) => (
               <Dropdown
                 selectedValue={field.value}
-                onSelect={(value: string) => {
+                onSelect={(value: string | boolean) => {
                   field.onChange(value);
                 }}
                 isError={Boolean(errors.endTime)}

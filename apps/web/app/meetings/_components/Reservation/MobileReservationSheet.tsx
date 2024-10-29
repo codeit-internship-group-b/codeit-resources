@@ -9,7 +9,7 @@ interface MobileReservationSheetProps {
   isOpen: boolean;
   onClose: () => void;
   selectedTime: string;
-  selectedSchedule?: Schedule;
+  selectedSchedule?: Schedule | null;
 }
 
 export default function MobileReservationSheet(props: MobileReservationSheetProps): JSX.Element {

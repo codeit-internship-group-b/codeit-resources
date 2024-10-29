@@ -24,7 +24,7 @@ export default function ScheduleTableDesktop(props: ScheduleTableDesktopProps): 
         <div className="no-scrollbar relative h-full w-3/4 overflow-x-scroll">
           <TimeText />
           {rooms.map((room) => (
-            <div className="mb-30 ml-36 mt-10" key={room.id}>
+            <div className="mb-30 ml-36 mt-10" key={room.title}>
               <ScheduleRow
                 schedules={room.schedules.filter((schedule) => schedule.date === selectedDate)}
                 slotWidth={72}
