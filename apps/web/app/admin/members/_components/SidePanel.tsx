@@ -24,7 +24,7 @@ interface AddMemberSidePanelProps {
 }
 
 const initialFormData: SidePanelFormData = {
-  role: "멤버",
+  role: "member",
   name: "",
   email: "",
   teams: [],

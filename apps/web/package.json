@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
+    "@repo/constants": "workspace:*",
     "@repo/eslint-config": "workspace:*",
     "@repo/jest-config": "workspace:*",
     "@repo/tailwind-config": "workspace:*",

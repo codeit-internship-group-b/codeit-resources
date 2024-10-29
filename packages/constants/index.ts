@@ -1,4 +1,4 @@
-import { type TItemType } from "@repo/types";
+import { TItemType } from "@repo/types/src/itemType";
 
 export const API_ENDPOINTS = {
   AUTH: {
@@ -25,5 +25,11 @@ export const API_ENDPOINTS = {
     CREATE_ITEM: `/items`, // 아이템 생성
     UPDATE_ITEM: (itemId: string | number) => `/items/${itemId}`, // 아이템 수정
     DELETE_ITEM: (itemId: string | number) => `/items/${itemId}`, // 아이템 삭제
+  },
+  CATEGORIES: {
+    GET_ALL: `/categories`, // 카테고리 전체 조회
+    CREATE_CATEGORY: `/categories`, // 카테고리 생성
+    UPDATE_CATEGORY: (categoryId: string | number) => `/categories/${categoryId}`, // 카테고리 이름 수정
+    DELETE_CATEGORY: (categoryId: string | number) => `/categories/${categoryId}`, // 카테고리 삭제 (하위 아이템 전체 삭제됨)
   },
 };
