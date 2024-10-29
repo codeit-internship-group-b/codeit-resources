@@ -1,29 +1,11 @@
 "use client";
 
-import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
 import { LogoCodeitIcon, LogoTextIcon } from "@repo/ui/public/index";
 import { Button, Input } from "@repo/ui";
-import { useSignIn } from "../_hooks/useSignIn";
+import { useSignInForm } from "../_hooks/useSignInForm";
 
 export default function SignInForm(): JSX.Element {
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-  } = useForm({
-    mode: "onBlur",
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
-
-  const registers = {
-    email: register("email"),
-    password: register("password"),
-  };
-
-  const { mutate: postSignInMutate } = useSignIn();
+  const { errors, handleSubmit, onSignInSubmit, registers } = useSignInForm();
 
   /**
    * Form submit handler that wraps `handleSubmit` to suppress the "Promise-returning function
@@ -40,12 +22,8 @@ export default function SignInForm(): JSX.Element {
    * - 공식 문서 이슈: https://github.com/orgs/react-hook-form/discussions/8020
    */
 
-  const onSubmit: SubmitHandler<FieldValues> = (payload) => {
-    postSignInMutate(payload);
-  };
-
   return (
-    <form className="min-w-372 flex flex-col gap-32" onSubmit={(...rest) => void handleSubmit(onSubmit)(...rest)}>
+    <form className="min-w-372 flex flex-col gap-32" onSubmit={(...rest) => void handleSubmit(onSignInSubmit)(...rest)}>
       <div className="flex flex-col items-center justify-center gap-24">
         <LogoCodeitIcon className="w-78 h-78" />
         <LogoTextIcon className="w-256 h-32 fill-black" />

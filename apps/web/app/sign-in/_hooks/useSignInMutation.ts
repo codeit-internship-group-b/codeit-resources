@@ -6,16 +6,16 @@ import { type AxiosError } from "axios";
 import { type SignInResponseType } from "@repo/types/src/responseType";
 import { postSignIn } from "@/app/api/auth";
 
-export const useSignIn = (): UseMutationResult<
+export const useSignInMutation = (): UseMutationResult<
   SignInResponseType<string>,
-  AxiosError<{ message: string }>,
+  AxiosError<{ message?: string }>,
   FieldValues
 > => {
   return useMutation({
     mutationFn: (payload: FieldValues) => postSignIn(payload),
     onSuccess: (res) => {
       setCookie("accessToken", res.accessToken);
-      if (res.message) notify({ type: "success", message: res.message });
+      if (typeof res.message === "string") notify({ type: "success", message: res.message });
     },
     onError: (error) => {
       const err = error as AxiosError<{ message: string }>;
