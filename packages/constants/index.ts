@@ -1,4 +1,4 @@
-import { type TItemType } from "@repo/types";
+import { TItemType } from "@repo/types/src/itemType";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ??

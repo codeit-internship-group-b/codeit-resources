@@ -63,3 +63,12 @@ h1 {
 .gear-icon:hover {
   animation: halfRotate 0.4s ease-out;
 }
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}

@@ -1,5 +1,5 @@
 import { type Request, type Response } from "express";
-import { type IEquipment, type IRoom, type ISeat } from "@repo/types";
+import { type IRoom, type ISeat, type IEquipment } from "@repo/types/itemType";
 import { Item, Room, Seat, Equipment } from "../models";
 import isObjectIdValid from "../utils/isObjectIdValid";
 

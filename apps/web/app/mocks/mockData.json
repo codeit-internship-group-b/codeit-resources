@@ -1,0 +1,85 @@
+{
+  "rooms": [
+    {
+      "id": "roomA",
+      "title": "회의실 A",
+      "schedules": [
+        {
+          "id": "scheduleA1",
+          "date": "2024-10-21",
+          "start_time": "09:00",
+          "end_time": "09:30",
+          "title": "팀 미팅"
+        },
+        {
+          "id": "scheduleA2",
+          "date": "2024-10-22",
+          "start_time": "10:00",
+          "end_time": "10:30",
+          "title": "프로젝트 회의"
+        },
+        {
+          "id": "scheduleA3",
+          "date": "2024-10-23",
+          "start_time": "11:00",
+          "end_time": "11:30",
+          "title": "개발 회의"
+        }
+      ]
+    },
+    {
+      "id": "roomB",
+      "title": "회의실 B",
+      "schedules": [
+        {
+          "id": "scheduleB1",
+          "date": "2024-10-21",
+          "start_time": "10:00",
+          "end_time": "10:30",
+          "title": "기획 회의"
+        },
+        {
+          "id": "scheduleB2",
+          "date": "2024-10-22",
+          "start_time": "13:00",
+          "end_time": "13:30",
+          "title": "마케팅 회의"
+        },
+        {
+          "id": "scheduleB3",
+          "date": "2024-10-23",
+          "start_time": "15:00",
+          "end_time": "15:30",
+          "title": "고객 지원 회의"
+        }
+      ]
+    },
+    {
+      "id": "roomC",
+      "title": "회의실 C",
+      "schedules": [
+        {
+          "id": "scheduleC1",
+          "date": "2024-10-21",
+          "start_time": "11:00",
+          "end_time": "11:30",
+          "title": "인사 회의"
+        },
+        {
+          "id": "scheduleC2",
+          "date": "2024-10-22",
+          "start_time": "09:00",
+          "end_time": "09:30",
+          "title": "프로젝트 시작 회의"
+        },
+        {
+          "id": "scheduleC3",
+          "date": "2024-10-23",
+          "start_time": "10:00",
+          "end_time": "10:30",
+          "title": "파트너 미팅"
+        }
+      ]
+    }
+  ]
+}

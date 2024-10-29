@@ -1,11 +1,7 @@
 {
   "name": "@repo/types",
   "version": "1.0.0",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "scripts": {
-    "build": "tsc -p tsconfig.json"
-  },
+  "main": "index.ts",
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
     "typescript": "5.2.2"
