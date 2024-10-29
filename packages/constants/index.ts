@@ -34,9 +34,9 @@ export const API_ENDPOINTS = {
     DELETE_ITEM: (itemId: string | number) => `${API_BASE_URL}/items/${itemId}`, // 아이템 삭제
   },
   CATEGORIES: {
-    GET_ALL: `${API_BASE_URL}/categories`,
-    CREATE_CATEGORY: `${API_BASE_URL}/categories`,
-    UPDATE_CATEGORY: (categoryId: string | number) => `${API_BASE_URL}/${categoryId}`,
-    DELETE_CATEGORY: (categoryId: string | number) => `${API_BASE_URL}/${categoryId}`,
+    GET_ALL: `${API_BASE_URL}/categories`, // 카테고리 전체 조회
+    CREATE_CATEGORY: `${API_BASE_URL}/categories`, // 카테고리 생성
+    UPDATE_CATEGORY: (categoryId: string | number) => `${API_BASE_URL}/${categoryId}`, // 카테고리 이름 수정
+    DELETE_CATEGORY: (categoryId: string | number) => `${API_BASE_URL}/${categoryId}`, // 카테고리 삭제 (하위 아이템 전체 삭제됨)
   },
 };

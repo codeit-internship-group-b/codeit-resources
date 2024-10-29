@@ -1,7 +1,9 @@
 import { type Request, type Response } from "express";
 import { type ICategory } from "@repo/types/categoryType";
+import { startSession } from "mongoose";
 import { Category } from "../models/categoryModel";
 import isObjectIdValid from "../utils/isObjectIdValid";
+import { Item, Reservation } from "../models";
 
 interface CategoryRequestBody {
   name: string;
@@ -63,12 +65,24 @@ export const deleteCategory = async (req: Request<{ categoryId: string }>, res: 
     return;
   }
 
-  const deletedCategory = await Category.findByIdAndDelete(categoryId);
+  const session = await startSession();
+  session.startTransaction();
+
+  const itemIds = await Item.find({ category: categoryId }).session(session);
+  const reservedItems = await Reservation.exists({ itemID: { $in: itemIds } }).session(session);
+  if (reservedItems) {
+    await session.abortTransaction();
+    res.status(400).json({
+      message: "카테고리 하위 아이템에 예약이 존재합니다.",
+    });
+  }
+  await Item.deleteMany({ category: categoryId }).session(session);
+  const deletedCategory = await Category.findByIdAndDelete(categoryId).session(session);
 
   if (!deletedCategory) {
     res.status(404).json({ message: "카테고리를 찾을 수 없습니다." });
     return;
   }
 
-  res.status(200).json({ message: "카테고리가 성공적으로 삭제되었습니다." });
+  res.status(200).json({ message: "카테고리와 하위 아이템이 성공적으로 삭제되었습니다." });
 };
