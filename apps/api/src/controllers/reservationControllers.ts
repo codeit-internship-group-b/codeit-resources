@@ -14,7 +14,7 @@ import isObjectIdValid from "../utils/isObjectIdValid";
 interface ReservationRequestBody {
   userId: string;
   item: string;
-  itemType: string;
+  itemType: "room" | "seat" | "equipment";
   startAt: Date;
   endAt: Date;
   status?: TReservationStatus;
@@ -44,7 +44,7 @@ export const getUserReservations = async (
   const { startOfDay, endOfDay } = getStartAndEndOfDay(today);
 
   const userReservations: IReservation[] = await Reservation.find({
-    userId,
+    user: userId,
     startAt: { $gte: startOfDay, $lte: endOfDay },
   })
     .populate("user", "name email")
@@ -102,8 +102,8 @@ export const getReservationsByTypeAndDate = async (
 
   const reservations: IReservation[] = await Reservation.find(query)
     .populate("user", "name email")
-    .populate({ path: "item", model: itemTypeToModel[itemType], select: "name" })
     .populate("attendees", "name email")
+    .populate({ path: "item", select: "name", model: itemTypeToModel[itemType] })
     .sort({ status: 1, startAt: 1 });
 
   res.status(200).json(reservations);
@@ -174,6 +174,12 @@ export const updateReservation = async (
   const { reservationId } = req.params;
   const { startAt, endAt } = req.body;
   const status = req.body.status;
+
+  const allowedStatuses: TReservationStatus[] = ["reserved", "completed", "canceled"];
+  if (status && !allowedStatuses.includes(status)) {
+    res.status(400).json({ message: "유효하지 않은 상태 값입니다." });
+    return;
+  }
 
   // 예약 존재여부 확인
   const targetReservation: IReservation | null = await Reservation.findById(reservationId).select("startAt endAt item");
