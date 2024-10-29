@@ -1,6 +1,7 @@
 import { type Request, type Response } from "express";
 import { type IEquipment, type IRoom, type ISeat } from "@repo/types";
 import { Item, Room, Seat, Equipment } from "../models";
+import isObjectIdValid from "../utils/isObjectIdValid";
 
 interface ItemRequestBody {
   name: string;
@@ -49,8 +50,14 @@ export const createItem = async (
   const { itemType } = req.params;
   const { name, description, status, imageUrl, category, capacity, location } = req.body;
 
-  if (!name || !category) {
+  if (!name) {
     res.status(400).json({ message: "필수 필드가 누락되었습니다." });
+    return;
+  }
+
+  const nameExists = await Item.exists({ name });
+  if (nameExists) {
+    res.status(400).json({ message: "이미 등록된 아이템 이름입니다." });
     return;
   }
 
@@ -60,7 +67,7 @@ export const createItem = async (
       createdItem = await Room.create({ name, description, status, imageUrl, category, capacity, location });
       break;
     case "seat":
-      createdItem = await Seat.create({ name, description, status, imageUrl, category });
+      createdItem = await Seat.create({ name, description, status, imageUrl });
       break;
     case "equipment":
       createdItem = await Equipment.create({ name, description, status, imageUrl, category });
@@ -80,14 +87,14 @@ export const updateItem = async (
 ): Promise<void> => {
   const { itemId } = req.params;
 
-  if (!/^[0-9a-fA-F]{24}$/.test(itemId)) {
+  if (!isObjectIdValid(itemId)) {
     res.status(400).json({ message: "유효하지 않은 사용자 ID입니다." });
     return;
   }
 
   const { name, status, description, imageUrl, category, location, capacity } = req.body;
 
-  const target = await Item.findById({ itemId });
+  const target = await Item.findById(itemId);
   if (!target) {
     res.status(404).json({ message: "해당 아이템을 찾을 수 없습니다." });
     return;
@@ -132,7 +139,7 @@ export const deleteItem = async (
 ): Promise<void> => {
   const { itemId } = req.params;
 
-  if (!/^[0-9a-fA-F]{24}$/.test(itemId)) {
+  if (!isObjectIdValid(itemId)) {
     res.status(400).json({ message: "유효하지 않은 사용자 ID입니다." });
     return;
   }

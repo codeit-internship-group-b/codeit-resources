@@ -4,5 +4,5 @@ export type TCategoryType = (typeof CategoryType)[number];
 export interface ICategory {
   _id: string;
   name: string;
-  type: TCategoryType;
+  itemType: TCategoryType;
 }

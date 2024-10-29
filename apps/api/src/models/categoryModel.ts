@@ -5,8 +5,8 @@ interface CategoryDoc extends Omit<ICategory, "_id">, Document {}
 
 const CategorySchema = new Schema<CategoryDoc>(
   {
-    name: { type: String, unique: true, required: true },
-    type: { type: String, required: true, enum: ["room", "equipment"] },
+    name: { type: String, unique: true, required: true, trim: true },
+    itemType: { type: String, required: true, enum: ["room", "equipment"] },
   },
   {
     timestamps: true,

@@ -9,6 +9,7 @@ const ReservationSchema: Schema = new Schema(
   {
     userId: { type: String, required: true },
     itemId: { type: String, required: true },
+    itemName: { type: String, required: true },
     itemType: { type: String, required: true },
     startAt: {
       type: Date,
@@ -39,7 +40,6 @@ const ReservationSchema: Schema = new Schema(
     timestamps: true,
   },
 );
-ReservationSchema.index({ startAt: 1 });
 ReservationSchema.index({ status: 1, startAt: 1 });
 ReservationSchema.index({ itemType: 1, startAt: 1 });
 
