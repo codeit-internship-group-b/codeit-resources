@@ -5,7 +5,7 @@ import { getDashboard } from "@/api/dashboard";
 import DashboardSection from "./DashboardSection";
 import DashboardSectionLoading from "./DashboardSectionLoading";
 
-const userId = "671f4d6e0d69d0c517181aa1";
+const userId = "6720d4822ba282d39d8a4ea7";
 
 export default function DashboardProvider(): JSX.Element {
   const { data: dashboardData, isLoading: dashboardIsLoading } = useQuery<IReservation[]>({
