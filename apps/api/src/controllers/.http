@@ -1,0 +1,151 @@
+### Bulk Seat Creation
+POST http://localhost:8080/items/seats/bulk
+Content-Type: application/json
+
+{
+  "seats": [
+    { "name": "A1", "status": "available" },
+    { "name": "A2", "status": "available" },
+    { "name": "A3", "status": "available" },
+    { "name": "A4", "status": "available" },
+    
+    { "name": "B1", "status": "available" },
+    { "name": "B2", "status": "available" },
+    { "name": "B3", "status": "available" },
+    { "name": "B4", "status": "available" },
+    { "name": "B5", "status": "available" },
+
+    { "name": "C1", "status": "available" },
+    { "name": "C2", "status": "available" },
+    { "name": "C3", "status": "available" },
+    { "name": "C4", "status": "available" },
+    { "name": "C5", "status": "available" },
+    { "name": "C6", "status": "available" },
+    { "name": "C7", "status": "available" },
+    { "name": "C8", "status": "available" },
+    { "name": "C9", "status": "available" },
+    { "name": "C10", "status": "available" },
+
+    { "name": "D1", "status": "available" },
+    { "name": "D2", "status": "available" },
+    { "name": "D3", "status": "available" },
+    { "name": "D4", "status": "available" },
+    { "name": "D5", "status": "available" },
+    { "name": "D6", "status": "available" },
+    { "name": "D7", "status": "available" },
+    { "name": "D8", "status": "available" },
+    { "name": "D9", "status": "available" },
+    { "name": "D10", "status": "available" },
+
+    { "name": "E1", "status": "available" },
+    { "name": "E2", "status": "available" },
+    { "name": "E3", "status": "available" },
+    { "name": "E4", "status": "available" },
+    { "name": "E5", "status": "available" },
+    { "name": "E6", "status": "available" },
+    { "name": "E7", "status": "available" },
+    { "name": "E8", "status": "available" },
+    { "name": "E9", "status": "available" },
+    { "name": "E10", "status": "available" },
+
+    { "name": "F1", "status": "available" },
+    { "name": "F2", "status": "available" },
+    { "name": "F3", "status": "available" },
+    { "name": "F4", "status": "available" },
+    { "name": "F5", "status": "available" },
+    { "name": "F6", "status": "available" },
+    { "name": "F7", "status": "available" },
+    { "name": "F8", "status": "available" },
+    { "name": "F9", "status": "available" },
+    { "name": "F10", "status": "available" },
+
+    { "name": "G1", "status": "available" },
+    { "name": "G2", "status": "available" },
+    { "name": "G3", "status": "available" },
+    { "name": "G4", "status": "available" },
+    { "name": "G5", "status": "available" },
+    { "name": "G6", "status": "available" },
+    { "name": "G7", "status": "available" },
+    { "name": "G8", "status": "available" },
+    { "name": "G9", "status": "available" },
+    { "name": "G10", "status": "available" },
+
+    { "name": "H1", "status": "available" },
+    { "name": "H2", "status": "available" },
+    { "name": "H3", "status": "available" },
+    { "name": "H4", "status": "available" },
+    { "name": "H5", "status": "available" },
+    { "name": "H6", "status": "available" },
+    { "name": "H7", "status": "available" },
+    { "name": "H8", "status": "available" },
+    { "name": "H9", "status": "available" },
+    { "name": "H10", "status": "available" },
+
+    { "name": "I1", "status": "available" },
+    { "name": "I2", "status": "available" },
+    { "name": "I3", "status": "available" },
+    { "name": "I4", "status": "available" },
+    { "name": "I5", "status": "available" },
+
+    { "name": "J1", "status": "available" },
+    { "name": "J2", "status": "available" },
+    { "name": "J3", "status": "available" },
+    { "name": "J4", "status": "available" },
+    { "name": "J5", "status": "available" }
+  ]
+}
+
+### 카테고리 추가
+POST http://localhost:8080/categories
+Content-Type: application/json
+
+{
+  "name" : "회의실",
+  "itemType": "room"
+}
+
+### 회의실 추가
+POST http://localhost:8080/items/room
+Content-Type: application/json
+
+{
+  "name": "회의실 D",
+  "description": "중형 회의실",
+  "status": "available",
+  "category": "6720d2582ba282d39d8a4e8a",
+  "capacity": 5,
+  "location": "10층"
+}
+
+### 모든 아이템 조회
+GET http://localhost:8080/items/seat
+Content-Type: application/json
+
+### 유저생성
+POST http://localhost:8080/users/create
+Content-Type: application/json
+
+{
+  "name": "영준이",
+  "email": "test@test.test",
+  "password": "rmaksrkwurk123!",
+  "role": "멤버"
+}
+
+### 유저 검색
+GET http://localhost:8080/users
+
+### 특정 아이템에 대한 예약 생성
+POST http://localhost:8080/reservations/6720d2662ba282d39d8a4e8d
+Content-Type: application/json
+
+{
+  "userId": "6720d4822ba282d39d8a4ea7",
+  "itemType": "room",
+  "startAt": "2024-10-30T15:00:00Z",
+  "endAt": "2024-10-30T16:00:00Z",
+  "status": "canceled",
+  "notes": "밥약속",
+  "attendees": ["6720cfd0b5d1b6f87df4ea0f"]
+}
+
