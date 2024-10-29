@@ -13,7 +13,7 @@ import isObjectIdValid from "../utils/isObjectIdValid";
 
 interface ReservationRequestBody {
   userId: string;
-  itemId: string;
+  item: string;
   itemType: string;
   startAt: Date;
   endAt: Date;

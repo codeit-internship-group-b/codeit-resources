@@ -81,7 +81,7 @@ export const deleteCategory = async (req: Request<{ categoryId: string }>, res: 
   session.startTransaction();
 
   const itemIds = await Item.find({ category: categoryId }, { _id: 1 }).session(session);
-  const reservedItems = await Reservation.exists({ itemID: { $in: itemIds } }).session(session);
+  const reservedItems = await Reservation.exists({ item: { $in: itemIds } }).session(session);
   if (reservedItems) {
     await session.abortTransaction();
     await session.endSession();
