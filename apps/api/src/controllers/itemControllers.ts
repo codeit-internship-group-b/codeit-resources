@@ -7,6 +7,7 @@ interface ItemRequestBody {
   name: string;
   description?: string;
   status?: string;
+  user?: string;
   imageUrl?: string;
   category?: string;
   capacity?: string;
@@ -24,20 +25,20 @@ export const getAllItems = async (
   if (itemType) {
     switch (itemType) {
       case "room":
-        items = await Room.find();
+        items = await Room.find().populate("category", "name");
         break;
       case "seat":
         items = await Seat.find();
         break;
       case "equipment":
-        items = await Equipment.find();
+        items = await Equipment.find().populate("category", "name");
         break;
       default:
         res.status(400).json({ message: "유효하지 않은 타입입니다." });
         return;
     }
   } else {
-    items = await Item.find();
+    items = await Item.find().populate("category", "name");
   }
   res.status(200).json(items);
 };
@@ -92,7 +93,7 @@ export const updateItem = async (
     return;
   }
 
-  const { name, status, description, imageUrl, category, location, capacity } = req.body;
+  const { name, status, user, description, imageUrl, category, location, capacity } = req.body;
 
   const target = await Item.findById(itemId);
   if (!target) {
@@ -113,7 +114,7 @@ export const updateItem = async (
     case "seat":
       updatedItem = await Seat.findByIdAndUpdate(
         itemId,
-        { name, status, description, imageUrl },
+        { name, status, user, description, imageUrl },
         { new: true, runValidators: true },
       );
       break;

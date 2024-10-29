@@ -1,19 +1,19 @@
-export const ReservationStatus = ["reserved", "cancelled", "completed"] as const; // 예약됨, 취소, 완료
-export type TReservationStatus = (typeof ReservationStatus)[number];
+import { IEquipment, IRoom, ISeat } from "./itemType";
+import { IUser } from "./userType";
 
-export type UserId = string;
+export const ReservationStatus = ["reserved", "canceled", "completed"] as const; // 예약됨, 취소, 완료
+export type TReservationStatus = (typeof ReservationStatus)[number];
 
 export interface IReservation {
   _id: string;
-  userId: UserId; // 예약한 사용자 ID (User의 id)
-  itemId: string; // 예약된 리소스 ID (Item의 id)
-  itemName: string; // 예약된 리소스 Name (Item의 name)
-  itemType: string;
+  user: IUser; // 예약한 사용자 (User)
+  item: string | IRoom | ISeat | IEquipment; // 예약된 리소스 (Item)
+  itemType: "room" | "seat" | "equipment";
   startAt: Date;
   endAt: Date;
   status: TReservationStatus;
   createdAt: Date;
   updatedAt: Date;
   notes?: string; // Optional
-  attendees?: UserId[]; // Optional 참여자 ID (User의 id)
+  attendees?: IUser[]; // Optional 참여자 (User)
 }

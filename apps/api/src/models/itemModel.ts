@@ -30,7 +30,9 @@ const RoomSchema: Schema = new Schema({
 export const Room = Item.discriminator<IRoom>("Room", RoomSchema, "room");
 
 // Seat 타입 하위 스키마
-const SeatSchema: Schema = new Schema({});
+const SeatSchema: Schema = new Schema({
+  user: { type: Schema.Types.ObjectId, ref: "User" },
+});
 export const Seat = Item.discriminator<ISeat>("Seat", SeatSchema, "seat");
 
 // Equipment 타입 하위 스키마
