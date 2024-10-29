@@ -74,7 +74,7 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
           alt={`${member.name}의 프로필`}
           width={40}
           height={40}
-          className="rounded-full"
+          className="size-40 rounded-full"
           onError={handleImageError}
         />
         <span className="text-custom-black">{member.name}</span>

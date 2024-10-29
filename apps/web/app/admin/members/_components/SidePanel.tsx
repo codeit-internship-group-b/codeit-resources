@@ -347,7 +347,7 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
               />
             </div>
 
-            <div className="mb-[262px] flex items-center gap-24">
+            <div className="mb-262 flex items-center gap-24">
               <Image
                 src={getImageSource()}
                 alt={watch("profileImage") ? "프로필 이미지 미리보기" : "기본 프로필 이미지"}
