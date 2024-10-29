@@ -299,6 +299,7 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
             <Input
               id="name"
               type="text"
+              value={selectedMember?.name}
               placeholder="멤버 이름"
               isError={Boolean(errors.name)}
               errorMessage={errors.name?.message}
@@ -314,6 +315,7 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
             <Input
               id="email"
               type="email"
+              value={selectedMember?.email}
               placeholder="멤버 이메일"
               isError={Boolean(errors.email)}
               errorMessage={errors.email?.message}
@@ -347,7 +349,7 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
               />
             </div>
 
-            <div className="mb-262 flex items-center gap-24">
+            <div className="mb-[262px] flex items-center gap-24">
               <Image
                 src={getImageSource()}
                 alt={watch("profileImage") ? "프로필 이미지 미리보기" : "기본 프로필 이미지"}
