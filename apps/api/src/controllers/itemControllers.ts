@@ -7,6 +7,7 @@ interface ItemRequestBody {
   name: string;
   description?: string;
   status?: string;
+  user?: string;
   imageUrl?: string;
   category?: string;
   capacity?: string;
@@ -92,7 +93,7 @@ export const updateItem = async (
     return;
   }
 
-  const { name, status, description, imageUrl, category, location, capacity } = req.body;
+  const { name, status, user, description, imageUrl, category, location, capacity } = req.body;
 
   const target = await Item.findById(itemId);
   if (!target) {
@@ -113,7 +114,7 @@ export const updateItem = async (
     case "seat":
       updatedItem = await Seat.findByIdAndUpdate(
         itemId,
-        { name, status, description, imageUrl },
+        { name, status, user, description, imageUrl },
         { new: true, runValidators: true },
       );
       break;
