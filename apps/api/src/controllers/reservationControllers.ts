@@ -42,12 +42,15 @@ export const getUserReservations = async (
     startAt: { $gte: startOfDay, $lte: endOfDay },
   })
     .populate("user", "name email")
-    .populate([
-      { path: "item", model: "Room", match: { itemType: "room" }, select: "name itemType" },
-      { path: "item", model: "Seat", match: { itemType: "seat" }, select: "name itemType" },
-      { path: "item", model: "Equipment", match: { itemType: "equipment" }, select: "name itemType" },
-    ])
     .populate("attendees", "name email")
+    .populate({
+      path: "item",
+      populate: [
+        { path: "room", select: "name itemType" },
+        { path: "seat", select: "name itemType" },
+        { path: "equipment", select: "name itemType" },
+      ],
+    })
     .sort({ itemType: 1, startAt: 1 });
 
   if (userReservations.length === 0) {
@@ -89,9 +92,7 @@ export const getReservationsByTypeAndDate = async (
     $or: [{ startAt: { $gte: startOfDay, $lte: endOfDay } }, { endAt: { $gte: startOfDay, $lte: endOfDay } }],
   };
 
-  if (status) {
-    query.status = status;
-  }
+  if (status) query.status = status;
 
   const reservations: IReservation[] = await Reservation.find(query)
     .populate("user", "name email")
@@ -165,6 +166,7 @@ export const updateReservation = async (
 ): Promise<void> => {
   const { reservationId } = req.params;
   const { startAt, endAt } = req.body;
+  const status = req.body.status;
 
   // 예약 존재여부 확인
   const targetReservation: IReservation | null = await Reservation.findById(reservationId).select("startAt endAt item");
@@ -173,31 +175,38 @@ export const updateReservation = async (
     return;
   }
 
-  // 기존 startAt, endAt 값을 가져옴
-  const existingStartAt = targetReservation.startAt;
-  const existingEndAt = targetReservation.endAt;
-
   // startAt이나 endAt 중 하나만 수정된 경우 기존 값을 유지
-  const finalStartAt = startAt ? startAt : existingStartAt;
-  const finalEndAt = endAt ? endAt : existingEndAt;
+  const finalStartAt = startAt ? startAt : targetReservation.startAt;
+  let finalEndAt = endAt ? endAt : targetReservation.endAt;
 
-  if (!isMinuteValid(finalStartAt)) {
-    res.status(400).json({ message: "startAt 시간은 10분 단위로 설정해야 합니다." });
-    return;
-  }
-  if (!isMinuteValid(finalEndAt)) {
-    res.status(400).json({ message: "endAt 시간은 10분 단위로 설정해야 합니다." });
-    return;
-  }
-  if (finalStartAt >= finalEndAt) {
-    res.status(400).json({ message: "시작 시간은 종료 시간보다 이전이어야 합니다." });
-    return;
-  }
-  const itemId = (targetReservation.item as string).toString();
-  const overlappingReservation = await isOverlappedReservation(itemId, finalStartAt, finalEndAt, targetReservation._id);
-  if (overlappingReservation) {
-    res.status(409).json({ message: "해당 시간에 이미 예약이 존재합니다." });
-    return;
+  if (status === "completed") {
+    // 종료 시간이 현재 시간의 다음 10분으로 설정
+    const currentTime = new Date();
+    const nextRoundedTime = new Date(Math.ceil(currentTime.getTime() / (10 * 60 * 1000)) * (10 * 60 * 1000));
+    finalEndAt = nextRoundedTime;
+  } else if (status !== "canceled") {
+    // 일반 예약일 경우, 유효성 검사 및 중복 검사
+    if (!isMinuteValid(finalStartAt) || !isMinuteValid(finalEndAt)) {
+      res.status(400).json({ message: "시간은 10분 단위로 설정해야 합니다." });
+      return;
+    }
+    if (finalStartAt >= finalEndAt) {
+      res.status(400).json({ message: "시작 시간은 종료 시간보다 이전이어야 합니다." });
+      return;
+    }
+
+    // 중복 예약 검사
+    const itemId = (targetReservation.item as string).toString();
+    const overlappingReservation = await isOverlappedReservation(
+      itemId,
+      finalStartAt,
+      finalEndAt,
+      targetReservation._id,
+    );
+    if (overlappingReservation) {
+      res.status(409).json({ message: "해당 시간에 이미 예약이 존재합니다." });
+      return;
+    }
   }
 
   const updatedReservation: IReservation | null = await Reservation.findByIdAndUpdate(

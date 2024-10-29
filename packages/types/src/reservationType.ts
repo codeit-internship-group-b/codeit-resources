@@ -1,7 +1,7 @@
 import { IEquipment, IRoom, ISeat } from "./itemType";
 import { IUser } from "./userType";
 
-export const ReservationStatus = ["reserved", "cancelled", "completed"] as const; // 예약됨, 취소, 완료
+export const ReservationStatus = ["reserved", "canceled", "completed"] as const; // 예약됨, 취소, 완료
 export type TReservationStatus = (typeof ReservationStatus)[number];
 
 export interface IReservation {

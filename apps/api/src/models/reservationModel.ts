@@ -15,8 +15,11 @@ const ReservationSchema: Schema = new Schema(
       required: true,
       validate: {
         validator(this: ReservationDoc, startAt: Date): boolean {
-          const timeWithBuffer = new Date(new Date().getTime() - TEN_MIN_BUFFER);
-          return startAt >= timeWithBuffer; // 예약 시간이 현재 시간 이후인지 확인(10분 여유)
+          if (this.status === "reserved") {
+            const timeWithBuffer = new Date(new Date().getTime() - TEN_MIN_BUFFER);
+            return startAt >= timeWithBuffer;
+          } // 예약 시간이 현재 시간 이후인지 확인(10분 여유)
+          return true;
         },
         message: "시작 시간은 10분 전까지 설정 가능합니다.",
       },
@@ -26,7 +29,11 @@ const ReservationSchema: Schema = new Schema(
       required: true,
       validate: {
         validator(this: ReservationDoc, endAt: Date): boolean {
-          return endAt > this.startAt; // 종료 시간이 시작 시간보다 이후여야 함
+          if (this.status === "reserved") {
+            return endAt > this.startAt;
+          }
+          // 종료 시간이 시작 시간보다 이후여야 함
+          return true;
         },
         message: "종료 시간은 시작 시간 이후로 설정 가능합니다.",
       },
