@@ -81,13 +81,13 @@ export const updateItem = async (
   const { itemId } = req.params;
 
   if (!/^[0-9a-fA-F]{24}$/.test(itemId)) {
-    res.status(400).json({ message: "유효하지 않은 사용자 ID입니다." });
+    res.status(400).json({ message: "유효하지 않은 아이템 ID입니다." });
     return;
   }
 
   const { name, status, description, imageUrl, category, location, capacity } = req.body;
 
-  const target = await Item.findById({ itemId });
+  const target = await Item.findById(itemId);
   if (!target) {
     res.status(404).json({ message: "해당 아이템을 찾을 수 없습니다." });
     return;
@@ -133,7 +133,7 @@ export const deleteItem = async (
   const { itemId } = req.params;
 
   if (!/^[0-9a-fA-F]{24}$/.test(itemId)) {
-    res.status(400).json({ message: "유효하지 않은 사용자 ID입니다." });
+    res.status(400).json({ message: "유효하지 않은 아이템 ID입니다." });
     return;
   }
 
