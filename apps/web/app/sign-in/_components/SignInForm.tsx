@@ -1,36 +1,15 @@
 "use client";
 
-import { LogoCodeitIcon, LogoTextIcon } from "@repo/ui/public/index";
-import { Button, Input, notify } from "@repo/ui";
-import { useMutation } from "@tanstack/react-query";
 import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
-import { setCookie } from "cookies-next";
-import { type AxiosError } from "axios";
-import { postSignIn } from "@/app/api/signIn";
+import { LogoCodeitIcon, LogoTextIcon } from "@repo/ui/public/index";
+import { Button, Input } from "@repo/ui";
+import { useSignIn } from "../_hooks/useSignIn";
 
 export default function SignInForm(): JSX.Element {
-  const { mutate: postSignInMutate } = useMutation({
-    mutationFn: (payload: FieldValues) => postSignIn(payload),
-    onSuccess: (res) => {
-      setCookie("accessToken", res.accessToken);
-    },
-    onError: (error) => {
-      const err = error as AxiosError<{ message: string }>;
-      const errMessage = err.response?.data.message;
-
-      if (errMessage) {
-        notify({ type: "error", message: errMessage });
-        setError("email", { message: errMessage });
-        setError("password", { message: errMessage });
-      }
-    },
-  });
-
   const {
     register,
     formState: { errors },
     handleSubmit,
-    setError,
   } = useForm({
     mode: "onBlur",
     defaultValues: {
@@ -40,20 +19,33 @@ export default function SignInForm(): JSX.Element {
   });
 
   const registers = {
-    email: register("email", {
-      required: "이메일을 입력해주세요.",
-    }),
-    password: register("password", {
-      required: "비밀번호를 입력해주세요.",
-    }),
+    email: register("email"),
+    password: register("password"),
   };
+
+  const { mutate: postSignInMutate } = useSignIn();
+
+  /**
+   * Form submit handler that wraps `handleSubmit` to suppress the "Promise-returning function
+   * provided to attribute where a void return was expected" warning.
+   *
+   * ## Issue:
+   * `react-hook-form`의 `handleSubmit`이 `Promise`를 반환할 때 발생하는 경고:
+   * "Promise-returning function provided to attribute where a void return was expected".
+   *
+   * ## Solution:
+   * `void` 키워드를 사용하여 `Promise` 반환을 무시하고, 함수가 `void`를 반환하도록 함.
+   *
+   * ## 참고:
+   * - 공식 문서 이슈: https://github.com/orgs/react-hook-form/discussions/8020
+   */
 
   const onSubmit: SubmitHandler<FieldValues> = (payload) => {
     postSignInMutate(payload);
   };
 
   return (
-    <form className="min-w-372 flex flex-col gap-32" onSubmit={handleSubmit(onSubmit)}>
+    <form className="min-w-372 flex flex-col gap-32" onSubmit={(...rest) => void handleSubmit(onSubmit)(...rest)}>
       <div className="flex flex-col items-center justify-center gap-24">
         <LogoCodeitIcon className="w-78 h-78" />
         <LogoTextIcon className="w-256 h-32 fill-black" />
