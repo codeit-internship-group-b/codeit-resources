@@ -11,13 +11,19 @@ import Button from "@ui/src/components/common/Button";
 import { DoubleChevron } from "@ui/public";
 import { IMAGE_TYPES, MAX_SIZE } from "@repo/ui/src/utils/constants/image";
 import { NOTIFICATION_MESSAGES } from "@repo/ui/src/utils/constants/notificationMessage";
-import { MEMBER_ROLES } from "@ui/src/utils/constants/memberRoles";
 import DefaultProfileImage from "@ui/public/images/image_default_profile.png";
 import MultiSelectDropdown from "@repo/ui/src/components/common/Dropdown/MulitiSelectDropdown";
 import { type StaticImport } from "next/dist/shared/lib/get-img-props";
 import { patchMember, postMember, deleteMember } from "@/api/members";
 import { MOCK_TEAMS } from "../mockData";
 import { type MemberWithFileImage, type SidePanelFormData } from "../types";
+
+const roleOptions = {
+  member: "멤버",
+  admin: "어드민",
+} as const;
+
+type RoleOption = keyof typeof roleOptions;
 
 interface AddMemberSidePanelProps {
   isOpen: boolean;
@@ -26,7 +32,7 @@ interface AddMemberSidePanelProps {
 }
 
 const initialFormData: SidePanelFormData = {
-  role: "멤버",
+  role: "member",
   name: "",
   email: "",
   teams: [],
@@ -196,6 +202,15 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
     return selectedMember ? "수정하기" : "추가하기";
   };
 
+  const getRoleValue = (displayText: string): RoleOption => {
+    const entry = Object.entries(roleOptions).find(([_, value]) => value === displayText);
+    return entry?.[0] as RoleOption;
+  };
+
+  const getRoleDisplay = (value: RoleOption): string => {
+    return roleOptions[value];
+  };
+
   // 멤버 수정 시, 폼 데이터 초기화 및 사이드 패널 상태 관리
   useEffect(() => {
     if (!isOpen) {
@@ -259,9 +274,12 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
                 control={control}
                 rules={{ required: "역할을 선택해주세요" }}
                 render={({ field: { value, onChange } }) => (
-                  <Radio.Group value={value} onChange={onChange}>
-                    <Radio.Option value="멤버">{MEMBER_ROLES.MEMBER}</Radio.Option>
-                    <Radio.Option value="어드민">{MEMBER_ROLES.ADMIN}</Radio.Option>
+                  <Radio.Group
+                    value={getRoleDisplay(value as RoleOption)}
+                    onChange={(displayText) => onChange(getRoleValue(displayText))}
+                  >
+                    <Radio.Option value={roleOptions.member}>{roleOptions.member}</Radio.Option>
+                    <Radio.Option value={roleOptions.admin}>{roleOptions.admin}</Radio.Option>
                   </Radio.Group>
                 )}
               />
