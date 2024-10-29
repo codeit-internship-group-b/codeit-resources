@@ -28,6 +28,12 @@ export const createCategory = async (
     return;
   }
 
+  const existingCategory = await Category.findOne({ name });
+  if (existingCategory) {
+    res.status(400).json({ message: "이미 존재하는 카테고리 이름입니다." });
+    return;
+  }
+
   const newCategory = new Category({ name, itemType });
   await newCategory.save();
   res.status(201).json(newCategory);
@@ -43,6 +49,12 @@ export const updateCategory = async (
 
   if (!isObjectIdValid(categoryId)) {
     res.status(400).json({ message: "유효하지 않은 카테고리 ID입니다." });
+    return;
+  }
+
+  const existingCategory = await Category.findOne({ name });
+  if (existingCategory) {
+    res.status(400).json({ message: "이미 존재하는 카테고리 이름입니다." });
     return;
   }
 
@@ -72,6 +84,7 @@ export const deleteCategory = async (req: Request<{ categoryId: string }>, res: 
   const reservedItems = await Reservation.exists({ itemID: { $in: itemIds } }).session(session);
   if (reservedItems) {
     await session.abortTransaction();
+    await session.endSession();
     res.status(400).json({
       message: "카테고리 하위 아이템에 예약이 존재합니다.",
     });
@@ -80,9 +93,13 @@ export const deleteCategory = async (req: Request<{ categoryId: string }>, res: 
   const deletedCategory = await Category.findByIdAndDelete(categoryId).session(session);
 
   if (!deletedCategory) {
+    await session.abortTransaction();
+    await session.endSession();
     res.status(404).json({ message: "카테고리를 찾을 수 없습니다." });
     return;
   }
 
+  await session.commitTransaction();
+  await session.endSession();
   res.status(200).json({ message: "카테고리와 하위 아이템이 성공적으로 삭제되었습니다." });
 };
