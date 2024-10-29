@@ -74,10 +74,10 @@ interface CreateUserRequest extends Request {
 
 // Create a new user
 export const createUser = async (req: CreateUserRequest, res: Response): Promise<void> => {
-  const { name, email, password, role, teams } = req.body;
+  const { name, email, role, teams } = req.body;
 
-  if (!name || !email || !password) {
-    res.status(400).send({ message: "이름, 이메일, 비밀번호는 필수 항목입니다." });
+  if (!name || !email) {
+    res.status(400).send({ message: "이름, 이메일은 필수 항목입니다." });
     return;
   }
 
@@ -96,14 +96,13 @@ export const createUser = async (req: CreateUserRequest, res: Response): Promise
   const user = new User({
     name,
     email,
-    password,
     role: role ?? "member",
     profileImage: profileImageUrl,
     teams: newTeams,
   });
 
   await user.save();
-  res.status(201).send({ message: "새로운 사용자가 생성되었습니다." });
+  res.status(201).send({ message: "새로운 사용자가 생성되었습니다.", user });
 };
 
 interface UpdateUserRequest extends Request {
