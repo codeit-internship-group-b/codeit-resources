@@ -8,16 +8,25 @@ import { User } from "../models";
 import { isMinuteValid } from "../utils/isMinuteValid";
 import { isValidDateFormat } from "../utils/isValidDateFormat";
 import { getStartAndEndOfDay } from "../utils/getStartAndEndOfDay";
+import { isOverlappedReservation } from "../utils/isOverlappedReservation";
+import isObjectIdValid from "../utils/isObjectIdValid";
 
 interface ReservationRequestBody {
   userId: string;
-  itemId: string;
+  item: string;
+  itemType: "room" | "seat" | "equipment";
   startAt: Date;
   endAt: Date;
   status?: TReservationStatus;
   notes?: string;
   attendees?: string[];
 }
+
+const itemTypeToModel: Record<"room" | "seat" | "equipment", string> = {
+  room: "Room",
+  seat: "Seat",
+  equipment: "Equipment",
+};
 
 // 특정 유저의 오늘 날짜 예약 전체 조회(dashboards)
 export const getUserReservations = async (
@@ -26,7 +35,7 @@ export const getUserReservations = async (
 ): Promise<void> => {
   const { userId } = req.params;
 
-  if (!/^[0-9a-fA-F]{24}$/.test(userId)) {
+  if (!isObjectIdValid(userId)) {
     res.status(400).json({ message: "유효하지 않은 사용자 ID입니다." });
     return;
   }
@@ -35,9 +44,20 @@ export const getUserReservations = async (
   const { startOfDay, endOfDay } = getStartAndEndOfDay(today);
 
   const userReservations: IReservation[] = await Reservation.find({
-    userId,
+    user: userId,
     startAt: { $gte: startOfDay, $lte: endOfDay },
-  }).sort({ itemType: 1, startAt: 1 });
+  })
+    .populate("user", "name email")
+    .populate("attendees", "name email")
+    .populate({
+      path: "item",
+      populate: [
+        { path: itemTypeToModel.room, select: "name itemType" },
+        { path: itemTypeToModel.seat, select: "name itemType" },
+        { path: itemTypeToModel.equipment, select: "name itemType" },
+      ],
+    })
+    .sort({ itemType: 1, startAt: 1 });
 
   if (userReservations.length === 0) {
     res.status(200).json({ message: "해당 유저의 예약이 없습니다.", reservations: [] });
@@ -49,42 +69,42 @@ export const getUserReservations = async (
 
 // 아이템 타입 및 날짜에 대한 예약 조회
 export const getReservationsByTypeAndDate = async (
-  req: Request<{ itemType: string }, IReservation[], undefined, { date?: string; status?: string }>,
+  req: Request<{ itemType: string }, IReservation[], unknown, { date?: string; status?: string }>,
   res: Response,
 ): Promise<void> => {
-  const { itemType } = req.params;
   const { date, status } = req.query;
 
-  let searchDate = date;
-  if (typeof searchDate !== "string" || !isValidDateFormat(searchDate)) {
-    res.status(400).json({ message: "날짜 형식이 잘못되었습니다." });
+  const itemType = req.params.itemType as keyof typeof itemTypeToModel;
+
+  if (!(itemType in itemTypeToModel)) {
+    res.status(400).json({ message: "유효하지 않은 아이템 타입입니다." });
     return;
   }
+
+  let searchDate = date;
   if (!searchDate) {
     const today = new Date();
     searchDate = today.toISOString().split("T")[0];
-  }
-
-  const items = await Item.find({ type: itemType }, "_id");
-  if (items.length === 0) {
-    res.status(404).json({ message: "해당 타입의 아이템이 없습니다." });
+  } else if (!isValidDateFormat(searchDate)) {
+    res.status(400).json({ message: "날짜 형식이 잘못되었습니다. YYYY-MM-DD 형식으로 입력해주세요." });
     return;
   }
-  const itemIds = items.map((item) => item._id);
 
   const targetDate = new Date(`${searchDate}T00:00:00Z`);
   const { startOfDay, endOfDay } = getStartAndEndOfDay(targetDate);
 
   const query: FilterQuery<IReservation> = {
-    itemId: { $in: itemIds },
+    itemType,
     $or: [{ startAt: { $gte: startOfDay, $lte: endOfDay } }, { endAt: { $gte: startOfDay, $lte: endOfDay } }],
   };
 
-  if (status) {
-    query.status = status;
-  }
+  if (status) query.status = status;
 
-  const reservations: IReservation[] = await Reservation.find(query).sort({ status: 1, startAt: 1 });
+  const reservations: IReservation[] = await Reservation.find(query)
+    .populate("user", "name email")
+    .populate("attendees", "name email")
+    .populate({ path: "item", select: "name", model: itemTypeToModel[itemType] })
+    .sort({ status: 1, startAt: 1 });
 
   res.status(200).json(reservations);
 };
@@ -95,9 +115,9 @@ export const createReservation = async (
   res: Response,
 ): Promise<void> => {
   const { itemId } = req.params;
-  const { userId, startAt, endAt, status, notes, attendees } = req.body;
+  const { userId, itemType, startAt, endAt, status, notes, attendees } = req.body;
 
-  if (!/^[0-9a-fA-F]{24}$/.test(userId)) {
+  if (!isObjectIdValid(userId)) {
     res.status(400).json({ message: "유효하지 않은 사용자 ID입니다." });
     return;
   }
@@ -108,7 +128,7 @@ export const createReservation = async (
     return;
   }
 
-  const itemExists = await Item.findById(itemId).select("_id itemType");
+  const itemExists = await Item.findById(itemId).select("_id itemType name");
   if (!itemExists) {
     res.status(404).json({ message: "존재하지 않는 아이템입니다." });
     return;
@@ -125,29 +145,16 @@ export const createReservation = async (
   }
 
   // 중복 예약 검사
-  const overlappingReservation = await Reservation.findOne({
-    itemId,
-    status: "reserved",
-    $or: [
-      // 신규 startAt < 기존 endAt && 신규 endAt > 기존 startAt
-      { startAt: { $lt: endAt }, endAt: { $gt: startAt } },
-    ],
-    $nor: [
-      // 새 예약의 시작시간 === 기존 예약의 종료시간
-      { startAt: { $eq: endAt } },
-      // 기존 예약의 시작시간 === 새 예약의 종료시간
-      { endAt: { $eq: startAt } },
-    ],
-  });
+  const overlappingReservation = await isOverlappedReservation(itemId, startAt, endAt);
   if (overlappingReservation) {
     res.status(409).json({ message: "해당 시간에 이미 예약이 존재합니다." });
     return;
   }
 
   const newReservation = new Reservation({
-    userId,
-    itemId,
-    itemType: itemExists.itemType,
+    user: userId,
+    item: itemId,
+    itemType,
     startAt,
     endAt,
     status: status ?? "reserved",
@@ -166,48 +173,53 @@ export const updateReservation = async (
 ): Promise<void> => {
   const { reservationId } = req.params;
   const { startAt, endAt } = req.body;
+  const status = req.body.status;
+
+  const allowedStatuses: TReservationStatus[] = ["reserved", "completed", "canceled"];
+  if (status && !allowedStatuses.includes(status)) {
+    res.status(400).json({ message: "유효하지 않은 상태 값입니다." });
+    return;
+  }
 
   // 예약 존재여부 확인
-  const targetReservation: IReservation | null =
-    await Reservation.findById(reservationId).select("startAt endAt itemId");
+  const targetReservation: IReservation | null = await Reservation.findById(reservationId).select("startAt endAt item");
   if (!targetReservation) {
     res.status(404).json({ message: "예약을 찾을 수 없습니다." });
     return;
   }
 
-  // 기존 startAt, endAt 값을 가져옴
-  const existingStartAt = targetReservation.startAt;
-  const existingEndAt = targetReservation.endAt;
-
   // startAt이나 endAt 중 하나만 수정된 경우 기존 값을 유지
-  const finalStartAt = startAt ? startAt : existingStartAt;
-  const finalEndAt = endAt ? endAt : existingEndAt;
+  const finalStartAt = startAt ? startAt : targetReservation.startAt;
+  let finalEndAt = endAt ? endAt : targetReservation.endAt;
 
-  if (!isMinuteValid(finalStartAt)) {
-    res.status(400).json({ message: "startAt 시간은 10분 단위로 설정해야 합니다." });
-    return;
-  }
-  if (!isMinuteValid(finalEndAt)) {
-    res.status(400).json({ message: "endAt 시간은 10분 단위로 설정해야 합니다." });
-    return;
-  }
+  if (status === "completed") {
+    // 종료 시간이 현재 시간의 다음 10분으로 설정
+    const currentTime = new Date();
+    const nextRoundedTime = new Date(Math.ceil(currentTime.getTime() / (10 * 60 * 1000)) * (10 * 60 * 1000));
+    finalEndAt = nextRoundedTime;
+  } else if (status !== "canceled") {
+    // 일반 예약일 경우, 유효성 검사 및 중복 검사
+    if (!isMinuteValid(finalStartAt) || !isMinuteValid(finalEndAt)) {
+      res.status(400).json({ message: "시간은 10분 단위로 설정해야 합니다." });
+      return;
+    }
+    if (finalStartAt >= finalEndAt) {
+      res.status(400).json({ message: "시작 시간은 종료 시간보다 이전이어야 합니다." });
+      return;
+    }
 
-  if (finalStartAt >= finalEndAt) {
-    res.status(400).json({ message: "시작 시간은 종료 시간보다 이전이어야 합니다." });
-    return;
-  }
-
-  const overlappingReservation = await Reservation.findOne({
-    itemId: targetReservation.itemId,
-    status: "reserved",
-    _id: { $ne: reservationId }, // 자신을 제외한 예약을 검사
-    $or: [{ startAt: { $lt: finalEndAt }, endAt: { $gt: finalStartAt } }],
-    $nor: [{ startAt: { $eq: finalEndAt } }, { endAt: { $eq: finalStartAt } }],
-  });
-
-  if (overlappingReservation) {
-    res.status(409).json({ message: "해당 시간에 이미 예약이 존재합니다." });
-    return;
+    // 중복 예약 검사
+    const itemId = (targetReservation.item as string).toString();
+    const overlappingReservation = await isOverlappedReservation(
+      itemId,
+      finalStartAt,
+      finalEndAt,
+      targetReservation._id,
+    );
+    if (overlappingReservation) {
+      res.status(409).json({ message: "해당 시간에 이미 예약이 존재합니다." });
+      return;
+    }
   }
 
   const updatedReservation: IReservation | null = await Reservation.findByIdAndUpdate(
