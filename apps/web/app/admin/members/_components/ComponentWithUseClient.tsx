@@ -10,14 +10,17 @@ import Header from "./Header";
 import Navigation from "./Navigation";
 import MemberListItem from "./MemberListItem";
 
+type SortOption = "newest" | "oldest" | "alphabetical";
+
 export default function Members(): JSX.Element {
   const [activeTab, setActiveTab] = useState("전체");
+  const [selectedSort, setSelectedSort] = useState<SortOption>("newest");
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<MemberWithStaticImage | null>(null);
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["members"],
-    queryFn: getMembers,
+    queryKey: ["members", selectedSort],
+    queryFn: () => getMembers(selectedSort),
   });
 
   const teams = useMemo(() => {
@@ -31,10 +34,14 @@ export default function Members(): JSX.Element {
 
   const filteredMembers = useMemo(() => {
     if (!data) return [];
-    if (activeTab === "전체") return data;
+    const members = activeTab === "전체" ? data : data.filter((member) => member.teams.includes(activeTab));
 
-    return data.filter((member) => member.teams.includes(activeTab));
+    return members;
   }, [data, activeTab]);
+
+  const handleSortChange = (value: string | boolean): void => {
+    setSelectedSort(value as SortOption);
+  };
 
   const handleOpenSidePanel = (): void => {
     setIsSidePanelOpen(true);
@@ -57,7 +64,13 @@ export default function Members(): JSX.Element {
   return (
     <div>
       <Header onAddMember={handleOpenSidePanel} />
-      <Navigation activeTab={activeTab} onTabChange={setActiveTab} teams={teams} />
+      <Navigation
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        teams={teams}
+        selectedSort={selectedSort}
+        onSortChange={handleSortChange}
+      />
       <main>
         {filteredMembers.length === 0 ? (
           <div className="min-h-400 flex items-center justify-center">

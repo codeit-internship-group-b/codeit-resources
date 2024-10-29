@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
-import { useState } from "react";
-import { SORT_OPTIONS } from "@ui/src/utils/constants/sortOptions";
 import Tab from "./Tab";
 import SortDropdown from "./SortDropdown";
 
@@ -8,17 +6,17 @@ interface NavigationProps {
   activeTab: string;
   onTabChange: (category: string) => void;
   teams: string[];
+  selectedSort: string;
+  onSortChange: (value: string | boolean) => void;
 }
 
-export default function Navigation({ activeTab, onTabChange, teams }: NavigationProps): JSX.Element {
-  const [selectedSort, setSelectedSort] = useState(SORT_OPTIONS[0]);
-
-  const handleSortChange = (value: string | boolean): void => {
-    if (typeof value === "string") {
-      setSelectedSort(value);
-    }
-  };
-
+export default function Navigation({
+  activeTab,
+  onTabChange,
+  teams,
+  selectedSort,
+  onSortChange,
+}: NavigationProps): JSX.Element {
   return (
     <nav className="relative mb-24">
       <div
@@ -30,7 +28,7 @@ export default function Navigation({ activeTab, onTabChange, teams }: Navigation
             <Tab key={team} team={team} isActive={activeTab === team} onClick={() => onTabChange(team)} />
           ))}
         </ul>
-        <SortDropdown selectedSort={selectedSort} onSortChange={handleSortChange} />
+        <SortDropdown selectedSort={selectedSort} onSortChange={onSortChange} />
       </div>
     </nav>
   );

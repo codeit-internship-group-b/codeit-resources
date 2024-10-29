@@ -1,11 +1,16 @@
 import { type MemberWithStaticImage } from "@/app/admin/members/types";
 import { axiosRequester } from "@/lib/axios";
 
-export const getMembers = async (): Promise<MemberWithStaticImage[]> => {
+type SortOption = "newest" | "oldest" | "alphabetical";
+
+export const getMembers = async (sortOption: SortOption): Promise<MemberWithStaticImage[]> => {
   const { data } = await axiosRequester<MemberWithStaticImage[]>({
     options: {
       method: "GET",
       url: "users",
+      params: {
+        sortOption,
+      },
     },
   });
 
