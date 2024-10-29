@@ -52,7 +52,7 @@ export const updateCategory = async (
     return;
   }
 
-  const existingCategory = await Category.findOne({ name });
+  const existingCategory = await Category.findOne({ name, _id: { $ne: categoryId } });
   if (existingCategory) {
     res.status(400).json({ message: "이미 존재하는 카테고리 이름입니다." });
     return;
@@ -80,7 +80,7 @@ export const deleteCategory = async (req: Request<{ categoryId: string }>, res: 
   const session = await startSession();
   session.startTransaction();
 
-  const itemIds = await Item.find({ category: categoryId }).session(session);
+  const itemIds = await Item.find({ category: categoryId }, { _id: 1 }).session(session);
   const reservedItems = await Reservation.exists({ itemID: { $in: itemIds } }).session(session);
   if (reservedItems) {
     await session.abortTransaction();
@@ -88,6 +88,7 @@ export const deleteCategory = async (req: Request<{ categoryId: string }>, res: 
     res.status(400).json({
       message: "카테고리 하위 아이템에 예약이 존재합니다.",
     });
+    return;
   }
   await Item.deleteMany({ category: categoryId }).session(session);
   const deletedCategory = await Category.findByIdAndDelete(categoryId).session(session);
