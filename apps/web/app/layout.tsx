@@ -34,7 +34,7 @@ export default function RootLayout({
         <MobileSizeWatcher />
         <Gnb />
         <Providers>
-          <div className="md:ml-200">{children}</div>
+          <div>{children}</div>
         </Providers>
         <Toast />
       </body>
