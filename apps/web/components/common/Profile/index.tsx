@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { memo } from "react";
 import { clsx } from "clsx";
 import { ProfileDefaultIcon } from "@ui/public";

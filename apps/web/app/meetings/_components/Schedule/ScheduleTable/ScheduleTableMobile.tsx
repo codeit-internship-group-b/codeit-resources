@@ -18,7 +18,10 @@ export default function ScheduleTableMobile(props: ScheduleTableMobileProps): JS
           <div className="mt-30 no-scrollbar overflow-x-auto pb-20">
             <TimeText />
             <div className="ml-36 mt-8">
-              <ScheduleRow schedules={room.schedules.filter((schedule) => schedule.date === selectedDate)} />
+              <ScheduleRow
+                schedules={room.schedules.filter((schedule) => schedule.date === selectedDate)}
+                room={room.title}
+              />
             </div>
           </div>
         </div>
