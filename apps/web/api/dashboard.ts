@@ -1,6 +1,6 @@
 import { API_ENDPOINTS } from "@repo/constants";
 import { type IReservation } from "@repo/types";
-import { axiosRequester } from "../app/lib/axios";
+import { axiosRequester } from "@/lib/axios";
 
 interface GetDashboardProps {
   userId: string;
