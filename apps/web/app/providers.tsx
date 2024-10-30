@@ -1,11 +1,32 @@
 "use client";
 
-import { isServer, QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { isServer, QueryClient, QueryClientProvider, QueryCache, MutationCache } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { type ReactNode } from "react";
+import notify from "@repo/ui/src/components/common/Toast/notify";
 
 interface ProvidersProps {
   children: ReactNode;
+}
+
+interface ErrorResponse {
+  response?: {
+    data?: {
+      message?: string;
+    };
+    status?: number;
+  };
+  message?: string;
+}
+
+function getErrorMessage(error: ErrorResponse): string {
+  // 서버에서 보낸 에러 메시지
+  if (error.response?.data?.message) {
+    return error.response.data.message;
+  }
+
+  // 기본 에러 메시지
+  return error.message ?? "요청 처리 중 오류가 발생했습니다.";
 }
 
 function makeQueryClient(): QueryClient {
@@ -15,6 +36,22 @@ function makeQueryClient(): QueryClient {
         staleTime: 60 * 1000,
       },
     },
+    queryCache: new QueryCache({
+      onError: (error: ErrorResponse) => {
+        notify({
+          type: "error",
+          message: getErrorMessage(error),
+        });
+      },
+    }),
+    mutationCache: new MutationCache({
+      onError: (error: ErrorResponse) => {
+        notify({
+          type: "error",
+          message: getErrorMessage(error),
+        });
+      },
+    }),
   });
 }
 

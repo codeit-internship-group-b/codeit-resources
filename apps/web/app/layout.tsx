@@ -33,9 +33,7 @@ export default function RootLayout({
       <body className={spoqaHanSansNeo.variable}>
         <MobileSizeWatcher />
         <Gnb />
-        <Providers>
-          <div className="md:ml-200">{children}</div>
-        </Providers>
+        <Providers>{children}</Providers>
         <Toast />
       </body>
     </html>
