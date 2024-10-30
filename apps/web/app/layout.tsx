@@ -31,7 +31,7 @@ export default function RootLayout({
       <body className={spoqaHanSansNeo.variable}>
         <Providers>
           <Gnb />
-          <div>{children}</div>
+          {children}
         </Providers>
       </body>
     </html>

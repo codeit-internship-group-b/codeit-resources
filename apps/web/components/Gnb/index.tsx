@@ -3,14 +3,15 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
+import { useUserStore } from "@/app/store/useUserStore";
 import Profile from "../common/Profile";
 import GnbMenu from "./GnbMenu";
 import GnbLogo from "./GnbLogo";
-import { useUser } from "./hooks/useUser";
 
 export default function Gnb(): JSX.Element | null {
   const pathname = usePathname();
-  const { data: userResponse } = useUser();
+  const user = useUserStore((state) => state.user);
+  console.log(user);
 
   if (pathname === PAGE_NAME.SIGN_IN) {
     return null;

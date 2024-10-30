@@ -1,3 +1,9 @@
+import SignInForm from "./_components/SignInForm";
+
 export default function Home(): JSX.Element {
-  return <div />;
+  return (
+    <div className="flex h-screen w-screen items-center justify-center">
+      <SignInForm />
+    </div>
+  );
 }

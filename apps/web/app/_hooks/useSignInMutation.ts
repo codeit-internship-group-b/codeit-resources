@@ -7,6 +7,7 @@ import { type SignInResponseType } from "@repo/types/src/responseType";
 import { useRouter } from "next/navigation";
 import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
 import { postSignIn } from "@/app/api/auth";
+import { useUserStore } from "../store/useUserStore";
 
 export const useSignInMutation = (): UseMutationResult<
   SignInResponseType<string>,
@@ -15,12 +16,19 @@ export const useSignInMutation = (): UseMutationResult<
 > => {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const setUser = useUserStore((state) => state.setUser);
 
   return useMutation({
     mutationFn: (payload: FieldValues) => postSignIn(payload),
     onSuccess: (res) => {
+      // user 정보 zustand store 저장
+      if (res.user) setUser(res.user);
+      // accessToken을 client cookie에 저장
       setCookie("accessToken", res.accessToken);
+      // user 정보 캐싱
       queryClient.setQueryData(["userData"], res.user);
+
+      // 피드백 토스트
       if (typeof res.message === "string") notify({ type: "success", message: res.message });
 
       setTimeout(() => {
