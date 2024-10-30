@@ -2,8 +2,8 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 
 "use client";
-import { useSidebarStore } from "@/app/store/useSidebarStore";
 import { useEffect, useState } from "react";
+import { useSidebarStore } from "@/app/store/useSidebarStore";
 
 interface ScheduleSlotProps {
   index: number;
@@ -41,7 +41,7 @@ export default function ScheduleSlot(props: ScheduleSlotProps): JSX.Element {
     >
       <div className="transition-linear hover:bg-gray-60 h-full w-full cursor-pointer" />
       {index % 2 === 0 ? (
-        <div className="border-gray-10 absolute left-0 top-0 h-full border-l-2" />
+        <div className="border-gray-10 md:h-110 absolute left-0 top-0 h-full border-l-2" />
       ) : (
         <div className="border-gray-10 absolute bottom-0 left-0 h-24 border-l" />
       )}

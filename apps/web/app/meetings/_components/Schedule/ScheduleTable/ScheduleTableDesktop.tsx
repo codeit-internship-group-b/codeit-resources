@@ -21,7 +21,7 @@ export default function ScheduleTableDesktop(props: ScheduleTableDesktopProps): 
             </div>
           ))}
         </div>
-        <div className="no-scrollbar relative h-full w-3/4 overflow-x-scroll">
+        <div className="no-scrollbar relative h-full w-3/4 overflow-y-hidden overflow-x-scroll">
           <TimeText />
           {rooms.map((room) => (
             <div className="mb-30 ml-36 mt-10" key={room.title}>
