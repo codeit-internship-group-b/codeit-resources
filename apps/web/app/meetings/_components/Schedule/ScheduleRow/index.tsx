@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { type Schedule } from "@/app/types/scheduletypes";
 import { useSidebarStore } from "@/app/store/useSidebarStore";
 import MobileReservationSheet from "../../Reservation/MobileReservationSheet";
@@ -18,7 +18,7 @@ interface ScheduleRowProps {
 }
 
 export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
-  const { schedules, room, slotHeight = 80, slotWidth = 72, onSlotClick } = props;
+  const { schedules, room, slotHeight = 80, slotWidth = 72 } = props;
 
   const startHour = 0;
   const endHour = 24;
@@ -52,7 +52,7 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
     const timeString = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
 
     setSelectedTime(timeString);
-    setSelectedSchedule(schedule || null);
+    setSelectedSchedule(schedule ?? null);
     setSelectedRoom(room);
     openSidebar();
   };
@@ -71,11 +71,13 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
       <div className="absolute left-0 top-0 flex">
         {Array.from({ length: totalSlots }).map((_, index) => (
           <ScheduleSlot
-            key={`slot-${index}-${startHour}-${room}`}
+            key={`slot-${startHour}-${room}`}
             index={index}
             slotWidth={slotWidth}
             slotHeight={slotHeight}
-            onClick={() => handleSlotClick(index)}
+            onClick={() => {
+              handleSlotClick(index);
+            }}
           />
         ))}
       </div>
@@ -107,7 +109,9 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
             leftPosition={leftPosition}
             scheduleWidth={scheduleWidth}
             isCurrentUser={schedule.userId === "1"}
-            onClick={() => handleSlotClick(-1, schedule)}
+            onClick={() => {
+              handleSlotClick(-1, schedule);
+            }}
           />
         );
       })}

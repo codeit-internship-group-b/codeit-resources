@@ -1,4 +1,3 @@
-// ScheduleSlot.tsx
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 
 "use client";
@@ -15,10 +14,10 @@ interface ScheduleSlotProps {
 export default function ScheduleSlot(props: ScheduleSlotProps): JSX.Element {
   const { index, slotHeight, slotWidth, onClick } = props;
 
-  const { isSidebarOpen, openSidebar, closeSidebar } = useSidebarStore();
+  const { isSidebarOpen, openSidebar } = useSidebarStore();
   const [isClicked, setIsClicked] = useState(false);
 
-  const handleClick = () => {
+  const handleClick = (): void => {
     setIsClicked(true);
     openSidebar();
     onClick(index);

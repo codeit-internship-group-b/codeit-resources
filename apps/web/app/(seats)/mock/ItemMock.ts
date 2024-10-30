@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 const ItemStatus = ["available", "reserved", "in-use", "unavailable"] as const;
 type TItemStatus = (typeof ItemStatus)[number];
 
