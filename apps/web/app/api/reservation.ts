@@ -1,6 +1,6 @@
 // apps/web/app/api/reservations.ts
 import { type IReservation, type TReservationStatus } from "@repo/types/src/reservationType";
-import { axiosRequester } from "@/app/lib/axios";
+import { axiosRequester } from "@/lib/axios";
 
 // 특정 유저의 오늘 날짜 예약 전체 조회
 interface GetUserReservationsParams {
