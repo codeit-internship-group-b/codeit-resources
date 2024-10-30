@@ -275,7 +275,7 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
             <Input
               id="name"
               type="text"
-              value={selectedMember?.name}
+              value={selectedMember ? selectedMember.name : " "}
               placeholder="멤버 이름"
               isError={Boolean(errors.name)}
               errorMessage={errors.name?.message}
@@ -291,7 +291,7 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
             <Input
               id="email"
               type="email"
-              value={selectedMember?.email}
+              value={selectedMember ? selectedMember.email : " "}
               placeholder="멤버 이메일"
               isError={Boolean(errors.email)}
               errorMessage={errors.email?.message}
