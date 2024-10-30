@@ -33,12 +33,13 @@ export default function ScheduleSlot(props: ScheduleSlotProps): JSX.Element {
 
   return (
     <div
-      className={`relative ${isClicked ? "bg-gray-60" : ""}`}
+      className={`relative ${isClicked ? "bg-purple-200" : ""}`}
       style={{ width: slotWidth, height: slotHeight }}
       onClick={handleClick}
       role="button"
       tabIndex={0}
     >
+      {isClicked ? <div className="mt-20 h-20 bg-purple-400" /> : null}
       <div className="transition-linear hover:bg-gray-60 h-full w-full cursor-pointer" />
       {index % 2 === 0 ? (
         <div className="border-gray-10 md:h-110 absolute left-0 top-0 h-full border-l-2" />

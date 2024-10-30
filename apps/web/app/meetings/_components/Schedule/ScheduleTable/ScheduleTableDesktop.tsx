@@ -33,7 +33,9 @@ export default function ScheduleTableDesktop(props: ScheduleTableDesktopProps): 
               />
             </div>
           ))}
-          <CurrentTimeIndicator slotWidth={72} startHour={0} endHour={24} />
+          <div className="ml-36">
+            <CurrentTimeIndicator slotWidth={72} startHour={0} endHour={24} />
+          </div>
         </div>
       </div>
     </div>
