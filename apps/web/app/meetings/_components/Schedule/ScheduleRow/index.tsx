@@ -11,13 +11,14 @@ import { useSidebarStore } from "@/app/store/useSidebarStore";
 
 interface ScheduleRowProps {
   schedules: Schedule[];
+  room: string;
   slotWidth?: number;
   slotHeight?: number;
-  onSlotClick?: (time: string, schedule?: Schedule) => void;
+  onSlotClick?: (time: string, schedule?: Schedule, room?: string) => void; // room 추가
 }
 
 export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
-  const { schedules, slotHeight = 80, slotWidth = 72, onSlotClick } = props;
+  const { schedules, room, slotHeight = 80, slotWidth = 72, onSlotClick } = props;
 
   const startHour = 0;
   const endHour = 24;
@@ -37,6 +38,7 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(null);
   const [clickedSlotIndex, setClickedSlotIndex] = useState<number | null>(null);
+  const [selectedRoom, setSelectedRoom] = useState<string | null>(room || null); // 미팅룸 상태 추가
 
   // zustand 스토어에서 Sidebar 열고 닫기 메서드 가져오기
   const openSidebar = useSidebarStore((state) => state.openSidebar);
@@ -52,6 +54,7 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
     setSelectedTime(timeString);
     setSelectedSchedule(schedule || null);
     setClickedSlotIndex(index);
+    setSelectedRoom(room); // 클릭한 슬롯의 미팅룸 설정
   };
 
   // selectedTime 또는 selectedSchedule이 변경된 후 Sidebar 열기
@@ -66,6 +69,8 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
     closeSidebar();
     setClickedSlotIndex(null);
     setSelectedSchedule(null);
+    setSelectedTime(null);
+    setSelectedRoom(null); // 미팅룸 상태 초기화
   };
 
   return (
@@ -75,11 +80,11 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
         {Array.from({ length: totalSlots }).map((_, index) => {
           return (
             <ScheduleSlot
-              key={`slot-${index}-${startHour}`} // 고유한 문자열 추가
+              key={`slot-${index}-${startHour}-${room}`} // 고유한 키에 room 추가
               index={index}
               slotWidth={slotWidth}
               slotHeight={slotHeight}
-              onClick={handleSlotClick}
+              onClick={(i) => handleSlotClick(i)}
             />
           );
         })}
@@ -120,13 +125,14 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
       })}
 
       {/* Reservation 시트 */}
-      {selectedTime ? (
+      {selectedTime && selectedRoom ? ( // selectedRoom 추가
         <>
           <div className="!hidden md:block">
             <DesktopReservationSheet
               onClose={handleClose}
               selectedTime={selectedTime}
               selectedSchedule={selectedSchedule}
+              selectedRoom={selectedRoom} // 미팅룸 전달
             />
           </div>
 
@@ -136,6 +142,7 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
               onClose={handleClose}
               selectedTime={selectedTime}
               selectedSchedule={selectedSchedule}
+              selectedRoom={selectedRoom} // 미팅룸 전달
             />
           </div>
         </>

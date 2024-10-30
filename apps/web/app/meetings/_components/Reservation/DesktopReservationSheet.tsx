@@ -1,4 +1,3 @@
-// DesktopReservationSheet.tsx
 "use client";
 
 import { useEffect } from "react";
@@ -11,14 +10,17 @@ interface DesktopReservationSheetProps {
   onClose: () => void;
   selectedTime: string;
   selectedSchedule?: Schedule | null;
+  selectedRoom: string; // 새로운 prop 추가
 }
 
 export default function DesktopReservationSheet(props: DesktopReservationSheetProps): JSX.Element {
-  const { onClose, selectedTime, selectedSchedule } = props;
+  const { onClose, selectedTime, selectedSchedule, selectedRoom } = props;
 
   const { isSidebarOpen, closeSidebar } = useSidebarStore();
 
   const handleSubmit = (data: ScheduleFormData): void => {
+    // 예약 로직 처리
+    console.log("예약 데이터:", { ...data, selectedRoom });
     closeSidebar();
     onClose();
   };
@@ -32,13 +34,18 @@ export default function DesktopReservationSheet(props: DesktopReservationSheetPr
   return (
     <div className="hidden md:block">
       <Sidebar
-        isOpen={isSidebarOpen} // 전역 상태 사용
+        isOpen={isSidebarOpen}
         onClose={() => {
           closeSidebar();
           onClose();
         }}
       >
-        <ReservationForm onSubmit={handleSubmit} selectedTime={selectedTime} selectedSchedule={selectedSchedule} />
+        <ReservationForm
+          onSubmit={handleSubmit}
+          selectedTime={selectedTime}
+          selectedSchedule={selectedSchedule}
+          selectedRoom={selectedRoom} // 미팅룸 전달
+        />
       </Sidebar>
     </div>
   );
