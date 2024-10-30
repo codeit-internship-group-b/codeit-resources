@@ -2,10 +2,15 @@ import { useState, type MouseEvent, type KeyboardEvent } from "react";
 import Image from "next/image";
 import { Badge } from "@ui/index";
 import Dropdown from "@ui/src/components/common/Dropdown";
-import { MEMBER_ROLES } from "@repo/ui/src/utils/constants/memberRoles";
 import DefaultProfileImage from "@ui/public/images/image_default_profile.png";
-import { type IUser } from "@repo/types";
 import { type MemberWithStaticImage } from "../types";
+
+const roleOptions = {
+  member: "멤버",
+  admin: "어드민",
+} as const;
+
+type RoleOption = keyof typeof roleOptions;
 
 interface MemberListItemProps {
   member: MemberWithStaticImage;
@@ -13,8 +18,17 @@ interface MemberListItemProps {
 }
 
 export default function MemberListItem({ member, onMemberClick }: MemberListItemProps): JSX.Element {
-  const [currentRole, setCurrentRole] = useState(member.role);
+  const [currentRole, setCurrentRole] = useState<RoleOption>(member.role);
   const [isImageError, setIsImageError] = useState(false);
+
+  const getRoleValue = (displayText: string): RoleOption => {
+    const entry = Object.entries(roleOptions).find(([_, value]) => value === displayText);
+    return entry?.[0] as RoleOption;
+  };
+
+  const getRoleDisplay = (value: RoleOption): string => {
+    return roleOptions[value];
+  };
 
   const imageSource = isImageError ? DefaultProfileImage : (member.profileImage ?? DefaultProfileImage);
 
@@ -38,7 +52,7 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
 
   const handleRoleChange = (value: string | boolean): void => {
     if (typeof value === "string") {
-      setCurrentRole(value as IUser["role"]);
+      setCurrentRole(getRoleValue(value));
     }
   };
 
@@ -60,7 +74,7 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
           alt={`${member.name}의 프로필`}
           width={40}
           height={40}
-          className="rounded-full"
+          className="size-40 rounded-full"
           onError={handleImageError}
         />
         <span className="text-custom-black">{member.name}</span>
@@ -73,14 +87,13 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
           </Badge>
         ))}
       </div>
-
       <div data-dropdown="true">
-        <Dropdown selectedValue={currentRole} onSelect={handleRoleChange} size="sm">
-          <Dropdown.Toggle>{currentRole}</Dropdown.Toggle>
+        <Dropdown selectedValue={getRoleDisplay(currentRole)} onSelect={handleRoleChange} size="sm">
+          <Dropdown.Toggle>{getRoleDisplay(currentRole)}</Dropdown.Toggle>
           <Dropdown.Wrapper className="top-42">
-            {Object.values(MEMBER_ROLES).map((role) => (
-              <Dropdown.Item hoverStyle="purple" key={role} value={role}>
-                {role}
+            {Object.entries(roleOptions).map(([value, label]) => (
+              <Dropdown.Item hoverStyle="purple" key={value} value={label}>
+                {label}
               </Dropdown.Item>
             ))}
           </Dropdown.Wrapper>

@@ -1,24 +1,25 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
-import { useState } from "react";
-import { SORT_OPTIONS } from "@ui/src/utils/constants/sortOptions";
-import { MOCK_CATEGORIES } from "../mockData";
-import CategoryTab from "./CategoryTab";
+import LoadingBar from "@/components/common/Skeleton/LoadingBar";
+import Tab from "./Tab";
 import SortDropdown from "./SortDropdown";
 
 interface NavigationProps {
   activeTab: string;
   onTabChange: (category: string) => void;
+  teams: string[];
+  selectedSort: string;
+  onSortChange: (value: string | boolean) => void;
+  isLoading?: boolean;
 }
 
-export default function Navigation({ activeTab, onTabChange }: NavigationProps): JSX.Element {
-  const [selectedSort, setSelectedSort] = useState(SORT_OPTIONS[0]);
-
-  const handleSortChange = (value: string | boolean): void => {
-    if (typeof value === "string") {
-      setSelectedSort(value);
-    }
-  };
-
+export default function Navigation({
+  activeTab,
+  onTabChange,
+  teams,
+  selectedSort,
+  onSortChange,
+  isLoading,
+}: NavigationProps): JSX.Element {
   return (
     <nav className="relative mb-24">
       <div
@@ -26,16 +27,25 @@ export default function Navigation({ activeTab, onTabChange }: NavigationProps):
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         <ul className="flex flex-row gap-32 whitespace-nowrap">
-          {MOCK_CATEGORIES.map((category) => (
-            <CategoryTab
-              key={category}
-              category={category}
-              isActive={activeTab === category}
-              onClick={() => onTabChange(category)}
-            />
-          ))}
+          {isLoading ? (
+            <>
+              <li className="py-8">
+                <LoadingBar width="w-60" />
+              </li>
+              <li className="py-8">
+                <LoadingBar width="w-60" />
+              </li>
+              <li className="py-8">
+                <LoadingBar width="w-60" />
+              </li>
+            </>
+          ) : (
+            teams.map((team) => (
+              <Tab key={team} team={team} isActive={activeTab === team} onClick={() => onTabChange(team)} />
+            ))
+          )}
         </ul>
-        <SortDropdown selectedSort={selectedSort} onSortChange={handleSortChange} />
+        <SortDropdown selectedSort={selectedSort} onSortChange={onSortChange} />
       </div>
     </nav>
   );

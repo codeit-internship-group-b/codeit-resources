@@ -1,8 +1,8 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
 import Link from "next/link";
+import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
 import Profile from "../common/Profile";
 import GnbMenu from "./GnbMenu";
 import GnbLogo from "./GnbLogo";

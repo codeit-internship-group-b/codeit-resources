@@ -32,7 +32,7 @@ const UserSchema = new Schema<UserDocument>(
         message: "유효한 이메일 주소를 입력해 주세요.",
       },
     },
-    password: { type: String, required: true, minlength: 4, trim: true },
+    password: { type: String, minlength: 4, trim: true },
     role: { type: String, enum: Roles, default: Roles[1] },
     teams: {
       type: [String],
