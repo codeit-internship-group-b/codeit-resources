@@ -20,15 +20,17 @@ export default function useSeatStatus(data: ISeat[] | undefined): UseSeatStatusR
   const seatMap = useMemo(() => {
     const map = new Map<string, SeatStatus>();
 
-    data?.forEach((seat) => {
-      if (seat.status === "in-use") {
-        map.set(seat.name, { status: "in-use", user: seat.userName ?? null });
-      } else if (seat.status === "unavailable") {
-        map.set(seat.name, { status: "unavailable", user: null });
-      } else if (seat.status === "reserved") {
-        map.set(seat.name, { status: "reserved", user: null });
-      }
-    });
+    if (Array.isArray(data)) {
+      data.forEach((seat) => {
+        if (seat.status === "in-use") {
+          map.set(seat.name, { status: "in-use", user: seat.userName ?? null });
+        } else if (seat.status === "unavailable") {
+          map.set(seat.name, { status: "unavailable", user: null });
+        } else if (seat.status === "reserved") {
+          map.set(seat.name, { status: "reserved", user: null });
+        }
+      });
+    }
 
     return map;
   }, [data]);
