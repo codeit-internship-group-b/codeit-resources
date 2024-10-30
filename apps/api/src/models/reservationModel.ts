@@ -8,7 +8,7 @@ const TEN_MIN_BUFFER = 10 * 60 * 1000;
 const ReservationSchema: Schema = new Schema(
   {
     user: { type: Schema.Types.ObjectId, required: true, ref: "User" },
-    item: { type: Schema.Types.ObjectId, required: true },
+    item: { type: Schema.Types.ObjectId, required: true, ref: "Item" },
     itemType: { type: String, enum: ["room", "seat", "equipment"], required: true },
     startAt: {
       type: Date,

@@ -25,6 +25,8 @@ jobs:
         run: pnpm install
 
       - name: Build
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
         run: pnpm -filter=web build
 
       - name: Configure AWS credentials

@@ -1,14 +1,20 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
 import Profile from "../common/Profile";
 import GnbMenu from "./GnbMenu";
 import GnbLogo from "./GnbLogo";
+import { useUser } from "./hooks/useUser";
 
-export default function Gnb(): JSX.Element {
-  const name = "강영훈"; // mockData
-  const isAdmin = true;
+export default function Gnb(): JSX.Element | null {
+  const pathname = usePathname();
+  const { data: userResponse } = useUser();
+
+  if (pathname === PAGE_NAME.SIGN_IN) {
+    return null;
+  }
 
   return (
     <nav
@@ -18,12 +24,10 @@ export default function Gnb(): JSX.Element {
       <div>
         <GnbLogo />
         <hr className="hidden border-white/10 pb-10 md:block" />
-        <GnbMenu isAdmin={isAdmin} />
+        <GnbMenu isAdmin={userResponse?.role === "admin"} />
       </div>
-      <Link href={PAGE_NAME.PROFILE}>
-        <div className="hidden px-16 py-10 md:block">
-          <Profile name={name} />
-        </div>
+      <Link href={PAGE_NAME.PROFILE} className="hidden px-16 py-10 md:block">
+        <Profile src={userResponse?.profileImage} name={userResponse?.name} />
       </Link>
     </nav>
   );
