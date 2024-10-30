@@ -72,10 +72,10 @@ export function Providers({ children }: ProvidersProps): JSX.Element {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <MobileSizeWatcher />
       {children}
-      <Toast />
+      <MobileSizeWatcher />
       <ReactQueryDevtools initialIsOpen={false} />
+      <Toast />
     </QueryClientProvider>
   );
 }

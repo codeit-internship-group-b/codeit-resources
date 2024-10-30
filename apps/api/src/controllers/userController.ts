@@ -96,6 +96,7 @@ export const createUser = async (req: CreateUserRequest, res: Response): Promise
   const user = new User({
     name,
     email,
+    password: "1234",
     role: role ?? "member",
     profileImage: profileImageUrl,
     teams: newTeams,

@@ -1,7 +1,11 @@
 import { type FieldValues, useForm } from "react-hook-form";
 
 export const useSignInForm = (): FieldValues => {
-  const { register, handleSubmit } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     mode: "onBlur",
     defaultValues: {
       email: "",
@@ -14,5 +18,5 @@ export const useSignInForm = (): FieldValues => {
     password: register("password"),
   };
 
-  return { registers, handleSubmit };
+  return { registers, handleSubmit, errors };
 };

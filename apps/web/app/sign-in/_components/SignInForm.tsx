@@ -13,7 +13,7 @@ export default function SignInForm(): JSX.Element {
   // TODO : 모바일 구현
   // TODO : front cicd 환경변수
   // TODO : 회원 추가시 default 비밀번호
-  const { handleSubmit, registers } = useSignInForm();
+  const { handleSubmit, registers, errors } = useSignInForm();
   const { mutate: postSignInMutate } = useSignInMutation();
 
   const onSignInSubmit: SubmitHandler<FieldValues> = (payload: FieldValues) => {
@@ -50,12 +50,22 @@ export default function SignInForm(): JSX.Element {
       </div>
       <div>
         <div className="flex flex-col gap-8">
-          <Input id="email" name="email" type="email" placeholder="회사 메일" {...registers.email} />
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="회사 메일"
+            isError={Boolean(errors.email)}
+            errorMessage={errors.email?.message as string}
+            {...registers.email}
+          />
           <Input
             id="password"
             name="password"
             type="password"
             placeholder="비밀번호"
+            isError={Boolean(errors.password)}
+            errorMessage={errors.password?.message as string}
             autoComplete="current-password"
             {...registers.password}
           />
