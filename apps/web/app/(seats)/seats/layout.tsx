@@ -16,7 +16,9 @@ export default function Layout({
   return (
     <>
       <Header page="seats" />
-      <div className="bg-custom-black/5 md:px-118 md:py-83 h-screen overflow-auto px-16 py-28">{children}</div>
+      <div className="bg-custom-black/5 md:px-118 md:py-83 md:ml-200 h-screen overflow-auto px-16 py-28">
+        {children}
+      </div>
     </>
   );
 }

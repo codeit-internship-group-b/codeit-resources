@@ -14,7 +14,7 @@ export default function Layout({
   children: ReactNode;
 }>): JSX.Element {
   return (
-    <div className="">
+    <div>
       <Header page="meetings" />
       {children}
     </div>
