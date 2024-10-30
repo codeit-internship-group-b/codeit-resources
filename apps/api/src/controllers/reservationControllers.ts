@@ -103,7 +103,7 @@ export const getReservationsByTypeAndDate = async (
   const reservations: IReservation[] = await Reservation.find(query)
     .populate("user", "name email")
     .populate("attendees", "name email")
-    .populate({ path: "item", select: "name", model: itemTypeToModel[itemType] })
+    .populate("item", "name itemType")
     .sort({ status: 1, startAt: 1 });
 
   res.status(200).json(reservations);
