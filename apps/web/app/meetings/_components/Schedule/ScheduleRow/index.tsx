@@ -2,19 +2,19 @@
 
 import { useEffect, useState } from "react";
 import { type Schedule } from "@/app/types/scheduletypes";
+import { useSidebarStore } from "@/app/store/useSidebarStore";
 import MobileReservationSheet from "../../Reservation/MobileReservationSheet";
 import DesktopReservationSheet from "../../Reservation/DesktopReservationSheet";
 import ScheduleSlot from "./ScheduleSlot";
 import ScheduleItem from "./ScheduleItem";
 import CurrentTimeIndicator from "./CurrentTimeIndicator";
-import { useSidebarStore } from "@/app/store/useSidebarStore";
 
 interface ScheduleRowProps {
   schedules: Schedule[];
   room: string;
   slotWidth?: number;
   slotHeight?: number;
-  onSlotClick?: (time: string, schedule?: Schedule, room?: string) => void; // room 추가
+  onSlotClick?: (time: string, schedule?: Schedule, room?: string) => void;
 }
 
 export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
@@ -26,7 +26,7 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
   const minutesPerSlot = 30;
   const totalMinutes = (endHour - startHour) * 60;
 
-  // 시간 문자열을 분으로 변환하는 함수
+  // Convert time string to total minutes
   const timeToMinutes = (time: string): number => {
     const [hoursStr, minutesStr] = time.split(":");
     const hours = Number(hoursStr);
@@ -34,17 +34,17 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
     return hours * 60 + minutes;
   };
 
-  // 선택된 시간과 스케줄 상태 관리
+  // State to manage selected slot information
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(null);
-  const [clickedSlotIndex, setClickedSlotIndex] = useState<number | null>(null);
-  const [selectedRoom, setSelectedRoom] = useState<string | null>(room || null); // 미팅룸 상태 추가
+  const [selectedRoom, setSelectedRoom] = useState<string | null>(room || null);
 
-  // zustand 스토어에서 Sidebar 열고 닫기 메서드 가져오기
+  // Sidebar management using Zustand
   const openSidebar = useSidebarStore((state) => state.openSidebar);
   const closeSidebar = useSidebarStore((state) => state.closeSidebar);
   const isSidebarOpen = useSidebarStore((state) => state.isSidebarOpen);
 
+  // Handle slot click to set selected schedule and open sidebar
   const handleSlotClick = (index: number, schedule?: Schedule): void => {
     const clickedTimeMinutes = startHour * 60 + index * minutesPerSlot;
     const hours = Math.floor(clickedTimeMinutes / 60);
@@ -53,60 +53,50 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
 
     setSelectedTime(timeString);
     setSelectedSchedule(schedule || null);
-    setClickedSlotIndex(index);
-    setSelectedRoom(room); // 클릭한 슬롯의 미팅룸 설정
+    setSelectedRoom(room);
+    openSidebar();
   };
 
-  // selectedTime 또는 selectedSchedule이 변경된 후 Sidebar 열기
-  useEffect(() => {
-    if (selectedTime || selectedSchedule) {
-      openSidebar();
-    }
-  }, [selectedTime, selectedSchedule, openSidebar]);
-
-  // Sidebar 닫기 함수
+  // Close sidebar and reset selection
   const handleClose = (): void => {
     closeSidebar();
-    setClickedSlotIndex(null);
     setSelectedSchedule(null);
     setSelectedTime(null);
-    setSelectedRoom(null); // 미팅룸 상태 초기화
+    setSelectedRoom(null);
   };
 
   return (
     <div className="relative my-4 mb-10" style={{ height: slotHeight }}>
-      {/* 스케줄 슬롯 생성 */}
+      {/* Generate schedule slots */}
       <div className="absolute left-0 top-0 flex">
-        {Array.from({ length: totalSlots }).map((_, index) => {
-          return (
-            <ScheduleSlot
-              key={`slot-${index}-${startHour}-${room}`} // 고유한 키에 room 추가
-              index={index}
-              slotWidth={slotWidth}
-              slotHeight={slotHeight}
-              onClick={(i) => handleSlotClick(i)}
-            />
-          );
-        })}
+        {Array.from({ length: totalSlots }).map((_, index) => (
+          <ScheduleSlot
+            key={`slot-${index}-${startHour}-${room}`}
+            index={index}
+            slotWidth={slotWidth}
+            slotHeight={slotHeight}
+            onClick={() => handleSlotClick(index)}
+          />
+        ))}
       </div>
 
-      {/* 현재 시간 표시기 */}
+      {/* Current time indicator for mobile view */}
       <div className="block md:hidden">
         <CurrentTimeIndicator slotWidth={slotWidth} startHour={startHour} endHour={endHour} />
       </div>
 
-      {/* 스케줄 아이템 표시 */}
+      {/* Display schedule items */}
       {schedules.map((schedule) => {
         const startMinutes = timeToMinutes(schedule.start_time) - startHour * 60;
         const endMinutes = timeToMinutes(schedule.end_time) - startHour * 60;
         const scheduleDuration = endMinutes - startMinutes;
 
-        // 스케줄이 타임라인 범위를 벗어날 경우 표시하지 않음
+        // Skip schedules out of range
         if (startMinutes < 0 || endMinutes > totalMinutes) {
           return null;
         }
 
-        // 스케줄 위치 및 너비 계산
+        // Calculate position and width of schedule
         const leftPosition = (startMinutes / totalMinutes) * (slotWidth * totalSlots);
         const scheduleWidth = (scheduleDuration / totalMinutes) * (slotWidth * totalSlots);
 
@@ -117,22 +107,20 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
             leftPosition={leftPosition}
             scheduleWidth={scheduleWidth}
             isCurrentUser={schedule.userId === "1"}
-            onClick={() => {
-              handleSlotClick(-1, schedule);
-            }}
+            onClick={() => handleSlotClick(-1, schedule)}
           />
         );
       })}
 
-      {/* Reservation 시트 */}
-      {selectedTime && selectedRoom ? ( // selectedRoom 추가
+      {/* Reservation sheet */}
+      {selectedTime && selectedRoom ? (
         <>
           <div className="!hidden md:block">
             <DesktopReservationSheet
               onClose={handleClose}
               selectedTime={selectedTime}
               selectedSchedule={selectedSchedule}
-              selectedRoom={selectedRoom} // 미팅룸 전달
+              selectedRoom={selectedRoom}
             />
           </div>
 
@@ -142,7 +130,7 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
               onClose={handleClose}
               selectedTime={selectedTime}
               selectedSchedule={selectedSchedule}
-              selectedRoom={selectedRoom} // 미팅룸 전달
+              selectedRoom={selectedRoom}
             />
           </div>
         </>
