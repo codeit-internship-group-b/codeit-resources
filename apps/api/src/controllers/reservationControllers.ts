@@ -48,10 +48,7 @@ export const getUserReservations = async (
   })
     .populate("user", "name email")
     .populate("attendees", "name email")
-    .populate({
-      path: "item",
-      select: "name itemType",
-    })
+    .populate("item", "name itemType")
     .sort({ itemType: 1, startAt: 1 });
 
   if (userReservations.length === 0) {
@@ -98,7 +95,7 @@ export const getReservationsByTypeAndDate = async (
   const reservations: IReservation[] = await Reservation.find(query)
     .populate("user", "name email")
     .populate("attendees", "name email")
-    .populate({ path: "item", select: "name", model: itemTypeToModel[itemType] })
+    .populate("item", "name")
     .sort({ status: 1, startAt: 1 });
 
   res.status(200).json(reservations);
