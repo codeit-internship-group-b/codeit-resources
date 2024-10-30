@@ -52,12 +52,12 @@ export default function CurrentTimeIndicator(props: CurrentTimeIndicatorProps): 
   return (
     <div>
       <div
-        className="border-custom-black md:top-30 absolute top-0 z-0 h-full border-l-2 md:h-[84%]"
+        className="border-custom-black md:top-30 absolute top-0 z-30 h-full border-l-2 md:ml-36"
         style={{ left: `${String(currentPosition)}px` }}
       />
 
       <div
-        className="text-xs-semibold text-custom-black absolute -bottom-24 z-0 -ml-16 rounded bg-none md:bottom-0"
+        className="text-xs-semibold text-custom-black absolute -bottom-24 z-30 -ml-16 rounded bg-none md:-bottom-20 md:block"
         style={{ left: `${String(currentPosition)}px` }}
       >
         {currentTime}

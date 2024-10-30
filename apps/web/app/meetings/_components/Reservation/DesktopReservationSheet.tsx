@@ -1,26 +1,29 @@
-// DesktopReservationSheet.tsx
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "@/components/common/Sidebar";
 import { type ScheduleFormData, type Schedule } from "@/app/types/scheduletypes";
 import { useSidebarStore } from "@/app/store/useSidebarStore";
 import ReservationForm from "./ReservationForm";
+import ReservationModal from "./ReservationModal";
 
 interface DesktopReservationSheetProps {
   onClose: () => void;
   selectedTime: string;
   selectedSchedule?: Schedule | null;
+  selectedRoom: string;
 }
 
 export default function DesktopReservationSheet(props: DesktopReservationSheetProps): JSX.Element {
-  const { onClose, selectedTime, selectedSchedule } = props;
+  const { onClose, selectedTime, selectedSchedule, selectedRoom } = props;
 
   const { isSidebarOpen, closeSidebar } = useSidebarStore();
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const handleSubmit = (data: ScheduleFormData): void => {
-    closeSidebar();
-    onClose();
+    setIsModalOpen(true);
   };
 
   useEffect(() => {
@@ -32,14 +35,29 @@ export default function DesktopReservationSheet(props: DesktopReservationSheetPr
   return (
     <div className="hidden md:block">
       <Sidebar
-        isOpen={isSidebarOpen} // 전역 상태 사용
+        isOpen={isSidebarOpen}
         onClose={() => {
           closeSidebar();
           onClose();
         }}
       >
-        <ReservationForm onSubmit={handleSubmit} selectedTime={selectedTime} selectedSchedule={selectedSchedule} />
+        <ReservationForm
+          onSubmit={handleSubmit}
+          selectedTime={selectedTime}
+          selectedSchedule={selectedSchedule}
+          selectedRoom={selectedRoom}
+        />
       </Sidebar>
+      <ReservationModal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+        }}
+        onConfirm={() => {
+          setIsModalOpen(false);
+          onClose();
+        }}
+      />
     </div>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { PersonIcon, MeetingIcon, SeatsIcon, EquipmentIcon, TeamIcon } from "@repo/ui/public";
+import { PersonIcon, MeetingIcon, SeatsIcon, TeamIcon, GearIcon } from "@repo/ui/public";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { clsx } from "clsx";
@@ -12,15 +12,16 @@ const NAV_ITEMS = [
   { href: PAGE_NAME.DASHBOARD, name: "대시보드", icon: PersonIcon },
   { href: PAGE_NAME.MEETINGS, name: "회의실", icon: MeetingIcon },
   { href: PAGE_NAME.SEATS, name: "좌석", icon: SeatsIcon },
-  { href: PAGE_NAME.EQUIPMENTS, name: "장비", icon: EquipmentIcon },
 ];
+
+const SETTINGS_ITEM = { href: PAGE_NAME.SETTINGS, name: "설정", icon: GearIcon };
+const SettingsIcon = SETTINGS_ITEM.icon;
 
 const ADMIN_ITEMS = [
   { href: PAGE_NAME.ADMIN_MEMBERS, name: "멤버 관리", icon: PersonIcon },
   { href: PAGE_NAME.ADMIN_TEAMS, name: "팀 관리", icon: TeamIcon },
   { href: PAGE_NAME.ADMIN_MEETINGS, name: "회의실 설정", icon: MeetingIcon },
   { href: PAGE_NAME.ADMIN_SEATS, name: "좌석 설정", icon: SeatsIcon },
-  { href: PAGE_NAME.ADMIN_EQUIPMENTS, name: "장비 설정", icon: EquipmentIcon },
 ];
 
 interface GnbMenuProps {
@@ -44,6 +45,12 @@ export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element {
               (adminPath) => pathname.startsWith(adminPath) && adminPathMapping[adminPath] === href,
             )
           : pathname === href;
+
+        const iconClassName =
+          Icon === GearIcon
+            ? cn("fill-white/60", isActive ? "fill-white" : "fill-white/60")
+            : cn("stroke-white/60", isActive ? "stroke-white" : "stroke-white/60");
+
         return (
           <Link key={name} href={href}>
             <div
@@ -52,12 +59,33 @@ export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element {
                 isActive ? "md:bg-gray-300" : "md:hover:bg-gray-300",
               )}
             >
-              <Icon className={cn("stroke-white/60", isActive ? "stroke-white" : "stroke-white/60")} />
+              <Icon className={iconClassName} />
               <div className={clsx("text-12 md:text-16", isActive ? "text-white" : "text-white/60")}>{name}</div>
             </div>
           </Link>
         );
       })}
+
+      {isMobile ? (
+        <Link key={SETTINGS_ITEM.name} href={SETTINGS_ITEM.href}>
+          <div
+            className={clsx(
+              "rounded-10 flex size-full w-48 flex-col items-center md:w-full md:flex-row md:gap-10 md:px-16 md:py-8",
+              pathname === SETTINGS_ITEM.href ? "md:bg-gray-300" : "md:hover:bg-gray-300",
+            )}
+          >
+            <SettingsIcon
+              className={cn("fill-white/60", pathname === SETTINGS_ITEM.href ? "fill-white" : "fill-white/60")}
+            />
+            <div
+              className={clsx("text-12 md:text-16", pathname === SETTINGS_ITEM.href ? "text-white" : "text-white/60")}
+            >
+              {SETTINGS_ITEM.name}
+            </div>
+          </div>
+        </Link>
+      ) : null}
+
       {isAdmin ? (
         <>
           <hr className="hidden border-white/10 pb-10 md:block" />

@@ -3,7 +3,9 @@
 import { isServer, QueryClient, QueryClientProvider, QueryCache, MutationCache } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { type ReactNode } from "react";
+import { Toast } from "@ui/index";
 import notify from "@repo/ui/src/components/common/Toast/notify";
+import MobileSizeWatcher from "@/components/MobileSizeWatcher";
 
 interface ProvidersProps {
   children: ReactNode;
@@ -71,7 +73,9 @@ export function Providers({ children }: ProvidersProps): JSX.Element {
   return (
     <QueryClientProvider client={queryClient}>
       {children}
+      <MobileSizeWatcher />
       <ReactQueryDevtools initialIsOpen={false} />
+      <Toast />
     </QueryClientProvider>
   );
 }
