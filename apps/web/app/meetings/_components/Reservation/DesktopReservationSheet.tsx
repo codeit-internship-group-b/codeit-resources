@@ -1,16 +1,18 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "@/components/common/Sidebar";
 import { type ScheduleFormData, type Schedule } from "@/app/types/scheduletypes";
 import { useSidebarStore } from "@/app/store/useSidebarStore";
 import ReservationForm from "./ReservationForm";
+import ReservationModal from "./ReservationModal";
 
 interface DesktopReservationSheetProps {
   onClose: () => void;
   selectedTime: string;
   selectedSchedule?: Schedule | null;
-  selectedRoom: string; // 새로운 prop 추가
+  selectedRoom: string;
 }
 
 export default function DesktopReservationSheet(props: DesktopReservationSheetProps): JSX.Element {
@@ -18,11 +20,10 @@ export default function DesktopReservationSheet(props: DesktopReservationSheetPr
 
   const { isSidebarOpen, closeSidebar } = useSidebarStore();
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const handleSubmit = (data: ScheduleFormData): void => {
-    // 예약 로직 처리
-    console.log("예약 데이터:", { ...data, selectedRoom });
-    closeSidebar();
-    onClose();
+    setIsModalOpen(true);
   };
 
   useEffect(() => {
@@ -44,9 +45,19 @@ export default function DesktopReservationSheet(props: DesktopReservationSheetPr
           onSubmit={handleSubmit}
           selectedTime={selectedTime}
           selectedSchedule={selectedSchedule}
-          selectedRoom={selectedRoom} // 미팅룸 전달
+          selectedRoom={selectedRoom}
         />
       </Sidebar>
+      <ReservationModal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+        }}
+        onConfirm={() => {
+          setIsModalOpen(false);
+          onClose();
+        }}
+      />
     </div>
   );
 }

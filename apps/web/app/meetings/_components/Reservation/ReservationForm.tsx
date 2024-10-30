@@ -14,11 +14,10 @@ interface ReservationFormProps {
   onSubmit: (data: ScheduleFormData) => void;
   selectedTime: string;
   selectedSchedule?: Schedule | null;
-  resetTrigger?: number; // 새로 추가된 prop
-  selectedRoom?: string | null; // 새로운 prop 추가
+  resetTrigger?: number;
+  selectedRoom?: string | null;
 }
 
-// 시간 문자열에 분을 더하는 함수
 const addMinutes = (time: string, minutesToAdd: number): string => {
   const parts = time.split(":");
 
@@ -35,7 +34,7 @@ const addMinutes = (time: string, minutesToAdd: number): string => {
   }
 
   const totalMinutes = hours * 60 + minutes + minutesToAdd;
-  const newHours = Math.floor(totalMinutes / 60) % 24; // 24시간 형식 유지
+  const newHours = Math.floor(totalMinutes / 60) % 24;
   const newMinutes = totalMinutes % 60;
   const formattedHours = newHours.toString().padStart(2, "0");
   const formattedMinutes = newMinutes.toString().padStart(2, "0");
@@ -55,7 +54,7 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
   } = useForm<ScheduleFormData>({
     defaultValues: {
       meetingTitle: "",
-      selectedRoom: selectedRoom || "", // selectedRoom 초기값 설정
+      selectedRoom: selectedRoom ?? "",
       startTime: selectedTime,
       customStartTime: "",
       endTime: "",
@@ -87,7 +86,7 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
   useEffect(() => {
     reset({
       meetingTitle: "",
-      selectedRoom: selectedRoom || "", // selectedRoom 포함
+      selectedRoom: selectedRoom ?? "", // selectedRoom 포함
       startTime: selectedTime,
       customStartTime: "",
       endTime: "",
@@ -111,8 +110,7 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
         const newEndTime = addMinutes(currentStartTime, 30);
         setValue("endTime", newEndTime, { shouldValidate: true });
       } catch (error) {
-        console.error(error);
-        // 필요 시 사용자에게 오류 메시지를 표시할 수 있습니다.
+        null;
       }
     }
   }, [startTimeValue, customStartTimeValue, setValue, selectedTime]);
@@ -282,8 +280,10 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
       <Button
         variant="Primary"
         className="mt-20 h-48 w-full"
-        onClick={() => void handleSubmit(onSubmit)()}
-        isActive={isValid && participantsSelected} // 모든 필드가 유효하고 참여자가 선택된 경우에만 활성화
+        onClick={() => {
+          void handleSubmit(onSubmit)();
+        }}
+        isActive={isValid ? participantsSelected : undefined} // 모든 필드가 유효하고 참여자가 선택된 경우에만 활성화
       >
         예약하기
       </Button>
