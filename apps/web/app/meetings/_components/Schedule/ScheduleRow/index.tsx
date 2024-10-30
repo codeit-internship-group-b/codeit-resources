@@ -26,7 +26,6 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
   const minutesPerSlot = 30;
   const totalMinutes = (endHour - startHour) * 60;
 
-  // Convert time string to total minutes
   const timeToMinutes = (time: string): number => {
     const [hoursStr, minutesStr] = time.split(":");
     const hours = Number(hoursStr);
@@ -34,17 +33,14 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
     return hours * 60 + minutes;
   };
 
-  // State to manage selected slot information
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(null);
   const [selectedRoom, setSelectedRoom] = useState<string | null>(room || null);
 
-  // Sidebar management using Zustand
   const openSidebar = useSidebarStore((state) => state.openSidebar);
   const closeSidebar = useSidebarStore((state) => state.closeSidebar);
   const isSidebarOpen = useSidebarStore((state) => state.isSidebarOpen);
 
-  // Handle slot click to set selected schedule and open sidebar
   const handleSlotClick = (index: number, schedule?: Schedule): void => {
     const clickedTimeMinutes = startHour * 60 + index * minutesPerSlot;
     const hours = Math.floor(clickedTimeMinutes / 60);
@@ -57,7 +53,6 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
     openSidebar();
   };
 
-  // Close sidebar and reset selection
   const handleClose = (): void => {
     closeSidebar();
     setSelectedSchedule(null);
@@ -67,7 +62,6 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
 
   return (
     <div className="relative my-4 mb-10" style={{ height: slotHeight }}>
-      {/* Generate schedule slots */}
       <div className="absolute left-0 top-0 flex">
         {Array.from({ length: totalSlots }).map((_, index) => (
           <ScheduleSlot
@@ -82,23 +76,17 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
         ))}
       </div>
 
-      {/* Current time indicator for mobile view */}
       <div className="block md:hidden">
         <CurrentTimeIndicator slotWidth={slotWidth} startHour={startHour} endHour={endHour} />
       </div>
 
-      {/* Display schedule items */}
       {schedules.map((schedule) => {
         const startMinutes = timeToMinutes(schedule.start_time) - startHour * 60;
         const endMinutes = timeToMinutes(schedule.end_time) - startHour * 60;
         const scheduleDuration = endMinutes - startMinutes;
 
-        // Skip schedules out of range
-        if (startMinutes < 0 || endMinutes > totalMinutes) {
-          return null;
-        }
+        if (startMinutes < 0 || endMinutes > totalMinutes) return null;
 
-        // Calculate position and width of schedule
         const leftPosition = (startMinutes / totalMinutes) * (slotWidth * totalSlots);
         const scheduleWidth = (scheduleDuration / totalMinutes) * (slotWidth * totalSlots);
 
@@ -116,7 +104,6 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
         );
       })}
 
-      {/* Reservation sheet */}
       {selectedTime && selectedRoom ? (
         <>
           <div className="!hidden md:block">

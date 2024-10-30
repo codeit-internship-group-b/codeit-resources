@@ -50,7 +50,9 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
     watch,
     formState: { errors, isValid },
     reset,
-    setValue, // setValue 추가
+    setError,
+    setValue,
+    clearErrors,
   } = useForm<ScheduleFormData>({
     defaultValues: {
       meetingTitle: "",
@@ -114,6 +116,32 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
       }
     }
   }, [startTimeValue, customStartTimeValue, setValue, selectedTime]);
+
+  useEffect(() => {
+    const compareTimes = (start: string, end: string): boolean => {
+      const [startHour = 0, startMinute = 0] = start.split(":").map((value) => {
+        const num = parseInt(value, 10);
+        return isNaN(num) ? 0 : num;
+      });
+
+      const [endHour = 0, endMinute = 0] = end.split(":").map((value) => {
+        const num = parseInt(value, 10);
+        return isNaN(num) ? 0 : num;
+      });
+
+      return startHour > endHour || (startHour === endHour && startMinute >= endMinute);
+    };
+
+    const currentStartTime = startTimeValue === "custom-start" ? customStartTimeValue : startTimeValue;
+    if (currentStartTime && endTimeValue && compareTimes(currentStartTime, endTimeValue)) {
+      setError("endTime", {
+        type: "manual",
+        message: "종료 시간은 시작 시간보다 이후여야 합니다.",
+      });
+    } else {
+      clearErrors("endTime");
+    }
+  }, [startTimeValue, customStartTimeValue, endTimeValue, setError, clearErrors]);
 
   return (
     <div className="px-16">
@@ -209,8 +237,6 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
               >
                 <Dropdown.Toggle title="종료 시간">{field.value || "종료 시간 선택"}</Dropdown.Toggle>
                 <Dropdown.Wrapper className="max-h-160 md:max-h-300 no-scrollbar overflow-y-auto">
-                  {" "}
-                  {/* 스크롤 추가 */}
                   <Dropdown.Item value="custom-end">직접입력</Dropdown.Item>
                   {timeOptions.map((time) => (
                     <Dropdown.Item key={time} value={time}>
