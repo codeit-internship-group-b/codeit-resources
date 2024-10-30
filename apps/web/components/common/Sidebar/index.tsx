@@ -24,7 +24,7 @@ export default function Sidebar(props: SidebarProps): JSX.Element | null {
       {isOpen ? <div className="fixed inset-0 z-40" onClick={onClose} /> : null}
 
       <div
-        className={`min-w-400 border-l-1 border-custom-black/20 fixed right-0 top-0 z-50 hidden h-full transform bg-white shadow-lg transition-transform duration-300 md:block ${
+        className={`min-w-500 max-w-500 border-l-1 border-custom-black/20 transition-linear transition-linear fixed right-0 top-0 z-50 hidden h-full bg-white shadow-lg md:block ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
