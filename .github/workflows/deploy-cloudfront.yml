@@ -24,6 +24,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Generate Environment Variables File
+        run: |
+          echo "NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL" >> .env.local
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+
       - name: Build
         run: pnpm -filter=web build
 

@@ -7,6 +7,7 @@ interface ListItemSkeletonProps {
   type?: "team" | "member";
   thickness?: "thin" | "thick";
   color?: "white" | "gray";
+  showHamburger?: boolean;
 }
 
 /**
@@ -18,17 +19,22 @@ interface ListItemSkeletonProps {
  * @returns JSX 요소를 반환합니다.
  */
 
-function ListItemSkeleton({ type = "team", thickness = "thick", color = "white" }: ListItemSkeletonProps): JSX.Element {
+function ListItemSkeleton({
+  type = "team",
+  thickness = "thick",
+  color = "white",
+  showHamburger = true,
+}: ListItemSkeletonProps): JSX.Element {
   return (
-    <ListItem thickness={thickness} color={color}>
+    <ListItem thickness={thickness} color={color} showHamburger={showHamburger}>
       <div className="flex flex-grow items-center gap-32 text-left">
         {type === "member" && (
           <>
             <PersonEmptyIcon />
-            <LoadingBar width="w-44" />
+            <LoadingBar classNames="w-44 h-12" />
           </>
         )}
-        <LoadingBar width={type === "team" ? "w-100" : "w-200"} />
+        <LoadingBar classNames={type === "team" ? "w-100" : "w-200"} />
       </div>
     </ListItem>
   );

@@ -1,19 +1,23 @@
 "use client";
 
-import { useState } from "react";
 import { SEAT_GRID } from "@ui/src/utils/constants/seats";
 import useSeatStatus from "@ui/src/hooks/useSeatStatus";
+import { useQuery } from "@tanstack/react-query";
+import { type ISeat } from "@repo/types";
+import { getAllSeats } from "@/api/seats";
 import { SeatProvider } from "../context/SeatContext";
-import { seatsMock } from "../mock/ItemMock";
 import SeatBlock from "./SeatBlock";
 
 export default function SeatGrid(): JSX.Element {
   // 탠스택쿼리로 바꿀 예정 (data / Loading)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [data, setData] = useState(seatsMock);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [isLoading, setIsLoading] = useState(false);
-  const { getSeatStatus } = useSeatStatus(data);
+
+  // const [data, setData] = useState(seatsMock);
+  const { data: seatsData, isLoading } = useQuery<ISeat[]>({
+    queryKey: ["dashboard"],
+    queryFn: () => getAllSeats(),
+  });
+
+  const { getSeatStatus } = useSeatStatus(seatsData);
 
   return (
     <SeatProvider>

@@ -28,7 +28,7 @@ export const getAllItems = async (
         items = await Room.find().populate("category", "name");
         break;
       case "seat":
-        items = await Seat.find();
+        items = await Seat.find().populate("user", "name");
         break;
       case "equipment":
         items = await Equipment.find().populate("category", "name");

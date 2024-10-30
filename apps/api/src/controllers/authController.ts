@@ -36,5 +36,5 @@ export const signIn = async (req: SignInRequest, res: Response): Promise<void> =
     sameSite: "none",
   });
 
-  res.status(200).send({ accessToken, message: "배움의 기쁨을 세상 모두에게. 오늘도 환영합니다 :)" });
+  res.status(200).send({ accessToken, user, message: "배움의 기쁨을 세상 모두에게. 오늘도 환영합니다 :)" });
 };

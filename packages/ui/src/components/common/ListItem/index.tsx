@@ -8,6 +8,7 @@ interface ListItemProps {
   color?: "white" | "gray";
   isModify?: boolean;
   onClick?: () => void;
+  showHamburger?: boolean;
 }
 
 /**
@@ -28,6 +29,7 @@ export default function ListItem({
   children,
   isModify,
   onClick,
+  showHamburger = true,
 }: ListItemProps): JSX.Element {
   return (
     <div
@@ -40,7 +42,7 @@ export default function ListItem({
         thickness === "thick" ? "h-72" : "h-56",
       )}
     >
-      <BurgerIcon className="mr-32 cursor-pointer" onClick={onClick} />
+      {showHamburger && <BurgerIcon className="mr-32 cursor-pointer" onClick={onClick} />}
       {children}
     </div>
   );

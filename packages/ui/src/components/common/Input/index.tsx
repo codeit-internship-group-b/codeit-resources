@@ -72,7 +72,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             })}
           />
         </label>
-        {isError && <ErrorMessage className="-bottom-6 left-20" message={errorMessage} />}
+        {isError && <ErrorMessage className="left-20" message={errorMessage} />}
       </div>
     );
   },
