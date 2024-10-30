@@ -49,7 +49,7 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
     control,
     handleSubmit,
     watch,
-    formState: { errors },
+    formState: { errors, isValid },
     reset,
     setValue, // setValue 추가
   } = useForm<ScheduleFormData>({
@@ -81,6 +81,7 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
   const startTimeValue = watch("startTime");
   const customStartTimeValue = watch("customStartTime");
   const endTimeValue = watch("endTime");
+  const participantsSelected = watch("participants").length > 0;
 
   // resetTrigger가 변경될 때마다 폼을 리셋
   useEffect(() => {
@@ -125,7 +126,6 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
         rules={{ required: "미팅 제목을 입력해주세요." }}
         render={({ field }) => <Input id="meeting-title" placeholder="미팅 제목" {...field} />}
       />
-
       {/* 미팅룸 선택 */}
       <Controller
         name="selectedRoom"
@@ -153,7 +153,6 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
           </Dropdown>
         )}
       />
-
       {/* 시작 시간 및 종료 시간 선택 */}
       <div className="my-16 flex justify-between gap-16">
         {/* 시작 시간 */}
@@ -234,7 +233,6 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
           )}
         </div>
       </div>
-
       {/* 참여자 선택 */}
       <Controller
         name="participants"
@@ -281,9 +279,12 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
           </MultiSelectDropdown>
         )}
       />
-
-
-      <Button variant="Primary" className="mt-20 h-48 w-full" onClick={() => void handleSubmit(onSubmit)()}>
+      <Button
+        variant="Primary"
+        className="mt-20 h-48 w-full"
+        onClick={() => void handleSubmit(onSubmit)()}
+        isActive={isValid && participantsSelected} // 모든 필드가 유효하고 참여자가 선택된 경우에만 활성화
+      >
         예약하기
       </Button>
     </div>
