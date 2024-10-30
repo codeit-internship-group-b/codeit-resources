@@ -1,6 +1,6 @@
 import { API_ENDPOINTS } from "@repo/constants";
 import { type IUser } from "@repo/types";
-import { axiosRequester } from "../lib/axios";
+import { axiosRequester } from "@/lib/axios";
 
 export const getUser = async (userId: string): Promise<IUser> => {
   const { data } = await axiosRequester<IUser>({
