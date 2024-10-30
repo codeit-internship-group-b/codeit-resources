@@ -1,15 +1,15 @@
 import { type IUser } from "@repo/types";
-import { useQuery, useQueryClient, type UseQueryResult } from "@tanstack/react-query";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import { type AxiosError } from "axios";
+import { getCookie } from "cookies-next";
 import { getUser } from "@/app/api/users";
 
 export const useUser = (): UseQueryResult<IUser> => {
-  const queryClient = useQueryClient();
-  const cachedUserData = queryClient.getQueryData<IUser>(["userData"]);
+  const accessToken = getCookie("accessToken");
 
   return useQuery<IUser, AxiosError<{ message?: string }>>({
-    queryKey: ["userData", { userId: cachedUserData?._id }],
-    queryFn: () => getUser(cachedUserData?._id ?? ""),
-    enabled: Boolean(cachedUserData?._id),
+    queryKey: ["userResponse"],
+    queryFn: () => getUser(),
+    enabled: Boolean(accessToken),
   });
 };

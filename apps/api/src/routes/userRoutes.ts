@@ -10,13 +10,13 @@ import {
   updateUserCredentials,
 } from "../controllers/userController";
 import { upload } from "../utils/multerConfig";
-// import { adminCheckMiddleware } from "../middleware/adminCheckMiddleware";
+import { authenticateToken } from "../middleware/authenticateToken";
 
 const userRouter: Router = Router();
 
 // 유저 정렬
 userRouter.get("/", asyncHandler(getUsers));
-userRouter.get("/:userId", asyncHandler(getUser));
+userRouter.get("/user", asyncHandler(authenticateToken), asyncHandler(getUser));
 
 // 유저 정보 변경
 // TODO : admin middleware 추가

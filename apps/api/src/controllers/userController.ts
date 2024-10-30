@@ -43,6 +43,7 @@ export const getUsers = async (req: GetUsersRequest, res: Response): Promise<voi
 };
 
 interface GetUserRequest extends Request {
+  user?: IUser;
   params: {
     userId: string;
   };
@@ -50,7 +51,7 @@ interface GetUserRequest extends Request {
 
 // Get a user by id
 export const getUser = async (req: GetUserRequest, res: Response): Promise<void> => {
-  const { userId } = req.params;
+  const userId = req.user?._id;
   const user = await User.findById(userId).select("-password");
 
   if (!user) {
@@ -96,7 +97,6 @@ export const createUser = async (req: CreateUserRequest, res: Response): Promise
   const user = new User({
     name,
     email,
-    password: "1234",
     role: role ?? "member",
     profileImage: profileImageUrl,
     teams: newTeams,

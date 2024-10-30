@@ -3,15 +3,14 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
-import { useUserStore } from "@/app/store/useUserStore";
 import Profile from "../common/Profile";
 import GnbMenu from "./GnbMenu";
 import GnbLogo from "./GnbLogo";
+import { useUser } from "./hooks/useUser";
 
 export default function Gnb(): JSX.Element | null {
   const pathname = usePathname();
-  const user = useUserStore((state) => state.user);
-  console.log(user);
+  const { data: userResponse } = useUser();
 
   if (pathname === PAGE_NAME.SIGN_IN) {
     return null;
@@ -25,11 +24,16 @@ export default function Gnb(): JSX.Element | null {
       <div>
         <GnbLogo />
         <hr className="hidden border-white/10 pb-10 md:block" />
-        <GnbMenu isAdmin />
+        <GnbMenu isAdmin={userResponse?.role === "admin"} />
       </div>
-      <Link href={PAGE_NAME.PROFILE} className="hidden px-16 py-10 md:block">
-        <Profile name="영준이" />
-      </Link>
+      {userResponse ? (
+        <Link
+          href={PAGE_NAME.PROFILE}
+          className="rounded-10 hidden px-16 py-10 hover:bg-[#3D3C40] active:bg-[#3D3C40] md:block"
+        >
+          <Profile src={userResponse.profileImage} name={userResponse.name} />
+        </Link>
+      ) : null}
     </nav>
   );
 }
