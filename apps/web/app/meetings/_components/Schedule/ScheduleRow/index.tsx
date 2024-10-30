@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 "use client";
 
 import { useState } from "react";
@@ -65,7 +66,7 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
       <div className="absolute left-0 top-0 flex">
         {Array.from({ length: totalSlots }).map((_, index) => (
           <ScheduleSlot
-            key={`slot-${startHour}-${room}`}
+            key={`slot-${startHour}-${room}-${index}`}
             index={index}
             slotWidth={slotWidth}
             slotHeight={slotHeight}
