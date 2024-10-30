@@ -265,9 +265,6 @@ importers:
       '@repo/constants':
         specifier: workspace:*
         version: link:../../packages/constants
-      '@repo/types':
-        specifier: workspace:*
-        version: link:../../packages/types
       '@repo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -317,6 +314,9 @@ importers:
       '@repo/tailwind-config':
         specifier: workspace:*
         version: link:../../packages/tailwind-config
+      '@repo/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
