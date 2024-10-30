@@ -30,13 +30,13 @@ export default function Navigation({
           {isLoading ? (
             <>
               <li className="py-8">
-                <LoadingBar width="w-60" />
+                <LoadingBar classNames="w-60 h-12" />
               </li>
               <li className="py-8">
-                <LoadingBar width="w-60" />
+                <LoadingBar classNames="w-60 h-12" />
               </li>
               <li className="py-8">
-                <LoadingBar width="w-60" />
+                <LoadingBar classNames="w-60 h-12" />
               </li>
             </>
           ) : (
