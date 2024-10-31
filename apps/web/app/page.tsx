@@ -1,9 +1,9 @@
-import SignInForm from "./_components/SignInForm";
+import AuthGuard from "./_components/AuthGuard";
 
 export default function Home(): JSX.Element {
   return (
     <div className="flex h-screen w-screen items-center justify-center">
-      <SignInForm />
+      <AuthGuard />
     </div>
   );
 }

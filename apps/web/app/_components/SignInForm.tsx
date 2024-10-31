@@ -4,14 +4,21 @@ import { LogoCodeitIcon, LogoTextIcon } from "@repo/ui/public/index";
 import { Button, Input } from "@repo/ui";
 import { type FieldValues, type SubmitHandler } from "react-hook-form";
 import { debounce } from "es-toolkit";
+import { useRouter } from "next/navigation";
+import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
+import { useUser } from "@/components/Gnb/hooks/useUser";
 import { useSignInForm } from "../_hooks/useSignInForm";
 import { useSignInMutation } from "../_hooks/useSignInMutation";
 
 export default function SignInForm(): JSX.Element {
+  // const router = useRouter();
+  // const { isSuccess } = useUser();
+
+  // if (isSuccess) router.replace(PAGE_NAME.DASHBOARD);
+
   // TODO : 토큰 유무에 따른 로그인페이지 핸들링
   // TODO : 토큰 유무에 따른 redirect 처리
   // TODO : 모바일 구현
-  // TODO : front cicd 환경변수
   // TODO : 회원 추가시 default 비밀번호
   const { handleSubmit, registers, errors } = useSignInForm();
   const { mutate: postSignInMutate } = useSignInMutation();
@@ -23,21 +30,6 @@ export default function SignInForm(): JSX.Element {
   const debouncedSubmit = debounce((payload: FieldValues) => {
     onSignInSubmit(payload);
   }, 500);
-
-  /**
-   * Form submit handler that wraps `handleSubmit` to suppress the "Promise-returning function
-   * provided to attribute where a void return was expected" warning.
-   *
-   * ## Issue:
-   * `react-hook-form`의 `handleSubmit`이 `Promise`를 반환할 때 발생하는 경고:
-   * "Promise-returning function provided to attribute where a void return was expected".
-   *
-   * ## Solution:
-   * `void` 키워드를 사용하여 `Promise` 반환을 무시하고, 함수가 `void`를 반환하도록 함.
-   *
-   * ## 참고:
-   * - 공식 문서 이슈: https://github.com/orgs/react-hook-form/discussions/8020
-   */
 
   return (
     <form
