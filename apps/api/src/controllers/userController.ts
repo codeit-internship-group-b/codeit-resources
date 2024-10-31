@@ -411,7 +411,7 @@ interface UpdateProfileImageRequest extends Request {
 /**
  * @swagger
  * /users/me/image:
- *   put:
+ *   patch:
  *     tags: [Users]
  *     summary: 프로필 사진 업데이트
  *     description: 현재 사용자의 프로필 사진을 업데이트합니다.
@@ -470,7 +470,7 @@ interface UpdateUserCredentialsRequest extends Request {
 /**
  * @swagger
  * /users/credentials:
- *   put:
+ *   patch:
  *     tags: [Users]
  *     summary: 사용자 비밀번호 업데이트
  *     description: 현재 사용자의 비밀번호를 변경합니다.
