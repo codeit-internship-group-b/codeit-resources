@@ -214,7 +214,7 @@ export const createItem = async (
  *       200:
  *         description: 아이템 정보가 업데이트되었습니다.
  *       400:
- *         description: 잘못된 사용자 ID 또는 요청 데이터 오류.
+ *         description: 잘못된 아이템 ID 또는 요청 데이터 오류.
  */
 export const updateItem = async (
   req: Request<{ itemId: string }, IRoom | ISeat | IEquipment, Partial<ItemRequestBody>>,
@@ -223,7 +223,7 @@ export const updateItem = async (
   const { itemId } = req.params;
 
   if (!isObjectIdValid(itemId)) {
-    res.status(400).json({ message: "유효하지 않은 사용자 ID입니다." });
+    res.status(400).json({ message: "유효하지 않은 아이템 ID입니다." });
     return;
   }
 
@@ -284,7 +284,7 @@ export const updateItem = async (
  *       200:
  *         description: 아이템이 성공적으로 삭제되었습니다.
  *       400:
- *         description: 유효하지 않은 사용자 ID입니다.
+ *         description: 유효하지 않은 아이템 ID입니다.
  *       404:
  *         description: 해당 아이템을 찾을 수 없습니다.
  */
@@ -295,7 +295,7 @@ export const deleteItem = async (
   const { itemId } = req.params;
 
   if (!isObjectIdValid(itemId)) {
-    res.status(400).json({ message: "유효하지 않은 사용자 ID입니다." });
+    res.status(400).json({ message: "유효하지 않은 아이템 ID입니다." });
     return;
   }
 
