@@ -16,7 +16,7 @@ export const useSignInMutation = (): UseMutationResult<
 > => {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { login, setUser } = useAuthStore();
+  const { login } = useAuthStore();
 
   return useMutation({
     mutationFn: (payload: FieldValues) => postSignIn(payload),
@@ -27,8 +27,7 @@ export const useSignInMutation = (): UseMutationResult<
       queryClient.setQueryData(["userResponse"], res.user);
       // localStorage 및 store에 저장
       if (res.user) {
-        setUser(res.user);
-        login();
+        login(res.user);
       }
 
       // 피드백 토스트
