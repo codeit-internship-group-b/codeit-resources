@@ -150,7 +150,7 @@ export const createItem = async (
 /**
  * @swagger
  * /items/{itemId}:
- *   put:
+ *   patch:
  *     tags: [Items]
  *     summary: 아이템 정보 수정
  *     description: 아이템 정보를 수정합니다.

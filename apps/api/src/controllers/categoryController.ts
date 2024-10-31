@@ -108,7 +108,7 @@ export const createCategory = async (
 /**
  * @swagger
  * /categories/{categoryId}:
- *   put:
+ *   patch:
  *     tags: [Categories]
  *     summary: 카테고리 이름 수정
  *     description: 특정 카테고리의 이름을 수정합니다.

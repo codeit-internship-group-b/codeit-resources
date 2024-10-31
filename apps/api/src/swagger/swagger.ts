@@ -24,7 +24,7 @@ export const swaggerOption = {
         description: "아이템 관련 API",
       },
       {
-        name: "Category",
+        name: "Categories",
         description: "아이템 분류 관련 API",
       },
     ],
