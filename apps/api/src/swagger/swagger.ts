@@ -17,7 +17,7 @@ export const swaggerOption = {
       },
       {
         name: "Reservations",
-        description: "아이템 관련 API",
+        description: "예약 관련 API",
       },
       {
         name: "Items",
@@ -25,7 +25,7 @@ export const swaggerOption = {
       },
       {
         name: "Category",
-        description: "아이템 관련 API",
+        description: "아이템 분류 관련 API",
       },
     ],
     servers: [
