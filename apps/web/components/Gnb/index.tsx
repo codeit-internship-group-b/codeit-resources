@@ -4,18 +4,14 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
 import { type AuthStore } from "@repo/types";
+import { getLocalStorage } from "@/app/_utils/getLocalStorage";
 import Profile from "../common/Profile";
 import GnbMenu from "./GnbMenu";
 import GnbLogo from "./GnbLogo";
 
 export default function Gnb(): JSX.Element | null {
   const pathname = usePathname();
-
-  let userStorage: AuthStore | null = null;
-  if (typeof window !== "undefined") {
-    const storeData = localStorage.getItem("userResponseStorage");
-    userStorage = storeData ? (JSON.parse(storeData) as AuthStore) : null;
-  }
+  const userStorage = getLocalStorage<AuthStore>("userResponseStorage");
 
   const { isLoggedIn, user } = userStorage ?? { isLoggedIn: false, user: null };
 
