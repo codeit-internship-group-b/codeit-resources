@@ -75,3 +75,40 @@ UserSchema.pre("save", function (next) {
 });
 
 export const User = model<UserDocument>("User", UserSchema);
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           description: 사용자 ID
+ *         name:
+ *           type: string
+ *           description: 사용자 이름
+ *           example: "홍길동"
+ *         email:
+ *           type: string
+ *           format: email
+ *           description: 이메일 주소
+ *           example: "example@example.com"
+ *         password:
+ *           type: string
+ *           description: 비밀번호
+ *           example: "mypassword"
+ *         role:
+ *           type: string
+ *           description: 사용자 역할
+ *           example: "USER"
+ *         team:
+ *           type: string
+ *           description: 부서
+ *           example: "HR"
+ *         profileImage:
+ *           type: string
+ *           description: 프로필 이미지 URL
+ *           example: "http://example.com/image.jpg"
+ */

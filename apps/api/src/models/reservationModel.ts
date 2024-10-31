@@ -59,13 +59,9 @@ export const Reservation = model<IReservation>("Reservation", ReservationSchema)
  *       type: object
  *       properties:
  *         user:
- *           type: string
- *           description: 예약한 사용자 ID
- *           example: "60f72b2f3b60d8b43f12c8e1"
+ *           $ref: '#/components/schemas/User'
  *         item:
- *           type: string
- *           description: 예약된 아이템 ID
- *           example: "60f72b2f3b60d8b43f12c8e2"
+ *           $ref: '#/components/schemas/Item'
  *         itemType:
  *           type: string
  *           enum: ["room", "seat", "equipment"]
@@ -93,9 +89,7 @@ export const Reservation = model<IReservation>("Reservation", ReservationSchema)
  *         attendees:
  *           type: array
  *           items:
- *             type: string
- *             description: 참석자 ID
- *             example: "60f72b2f3b60d8b43f12c8e3"
+ *             $ref: '#/components/schemas/User'
  *       required:
  *         - user
  *         - item
