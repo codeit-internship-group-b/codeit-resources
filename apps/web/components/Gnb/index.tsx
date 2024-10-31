@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
-import { type AuthStore } from "@repo/types";
+import { type StorageType } from "@repo/types";
 import { getLocalStorage } from "@/app/_utils/getLocalStorage";
 import Profile from "../common/Profile";
 import GnbMenu from "./GnbMenu";
@@ -11,9 +11,10 @@ import GnbLogo from "./GnbLogo";
 
 export default function Gnb(): JSX.Element | null {
   const pathname = usePathname();
-  const userStorage = getLocalStorage<AuthStore>("userResponseStorage");
+  const userResponseStorage = getLocalStorage<StorageType>("userResponseStorage");
 
-  const { isLoggedIn, user } = userStorage ?? { isLoggedIn: false, user: null };
+  const authState = userResponseStorage?.state;
+  const { isLoggedIn, user } = authState ?? { isLoggedIn: false, user: null };
 
   if (pathname === PAGE_NAME.SIGN_IN) {
     return null;

@@ -6,3 +6,7 @@ export interface AuthStore {
   login: (user: IUser) => void;
   logout: () => void;
 }
+
+export interface StorageType {
+  state?: AuthStore | null;
+}

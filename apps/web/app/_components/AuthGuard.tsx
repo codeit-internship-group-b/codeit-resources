@@ -2,16 +2,17 @@
 
 import { useRouter } from "next/navigation";
 import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
-import { type AuthStore } from "@repo/types";
+import { type StorageType } from "@repo/types";
 import { useEffect } from "react";
 import { getLocalStorage } from "../_utils/getLocalStorage";
 import SignInForm from "./SignInForm";
 
 export default function AuthGuard(): JSX.Element | null {
   const router = useRouter();
-  const userStorage = getLocalStorage<AuthStore>("userResponseStore");
+  const userResponseStorage = getLocalStorage<StorageType>("userResponseStorage");
 
-  const { isLoggedIn } = userStorage ?? { isLoggedIn: false };
+  const authState = userResponseStorage?.state;
+  const { isLoggedIn } = authState ?? { isLoggedIn: false };
 
   useEffect(() => {
     if (isLoggedIn) router.replace(PAGE_NAME.DASHBOARD);
