@@ -30,6 +30,10 @@ app.set("port", PORT);
 
 app.use("/", router);
 
+// swagger
+const specs = swaggerJSDoc(swaggerOption);
+app.use("/api", serve, setup(specs));
+
 // errorHandler 항상 실행
 app.use(errorHandler);
 
@@ -47,7 +51,3 @@ app.get("/health", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on ${PORT}`);
 });
-
-// swagger
-const specs = swaggerJSDoc(swaggerOption);
-app.use("/api", serve, setup(specs));

@@ -38,6 +38,17 @@ interface ItemRequestBody {
  *               type: array
  *               items:
  *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                     description: 아이템의 고유 식별자
+ *                   name:
+ *                     type: string
+ *                     description: 아이템 이름
+ *                   itemType:
+ *                     type: string
+ *                     enum: [room, seat, equipment]
+ *                     description: 아이템 유형
  *       400:
  *         description: 잘못된 타입 요청입니다.
  */
@@ -92,10 +103,17 @@ export const getAllItems = async (
  *             properties:
  *               name:
  *                 type: string
+ *                 required: true
+ *                 description: 아이템 이름
  *               description:
  *                 type: string
  *               status:
  *                 type: string
+ *                 enum: [available, in-use, maintenance]
+ *                 description:
+ *                   - available: 사용 가능
+ *                   - in-use: 사용 중
+ *                   - maintenance: 점검 중
  *               imageUrl:
  *                 type: string
  *               category:
@@ -169,8 +187,17 @@ export const createItem = async (
  *             properties:
  *               name:
  *                 type: string
+ *                 required: true
+ *                 description: 아이템 이름
+ *                 minLength: 1
+ *                 maxLength: 100
  *               status:
  *                 type: string
+ *                 enum: [available, in-use, maintenance]
+ *                 description:
+ *                   - available: 사용 가능
+ *                   - in-use: 사용 중
+ *                   - maintenance: 점검 중
  *               user:
  *                 type: string
  *               description:

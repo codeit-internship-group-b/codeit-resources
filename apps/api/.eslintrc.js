@@ -18,7 +18,4 @@ module.exports = {
       },
     },
   ],
-  rules: {
-    "tsdoc/syntax": "off",
-  },
 };

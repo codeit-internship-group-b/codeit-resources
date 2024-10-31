@@ -15,6 +15,7 @@ interface SignInRequest extends Request {
  * /sign-in:
  *   post:
  *     tags: [Auth]
+ *     security: []
  *     summary: 사용자 로그인
  *     description: 사용자가 이메일과 비밀번호로 로그인합니다.
  *     requestBody:
@@ -23,6 +24,9 @@ interface SignInRequest extends Request {
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - email
+ *               - password
  *             properties:
  *               email:
  *                 type: string
@@ -37,6 +41,10 @@ interface SignInRequest extends Request {
  *           application/json:
  *             schema:
  *               type: object
+ *               required:
+ *                 - accessToken
+ *                 - user
+ *                 - message
  *               properties:
  *                 accessToken:
  *                   type: string

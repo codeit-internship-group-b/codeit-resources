@@ -90,23 +90,27 @@ export const User = model<UserDocument>("User", UserSchema);
  *           type: string
  *           description: 사용자 이름
  *           example: "홍길동"
+ *           required: true
  *         email:
  *           type: string
  *           format: email
  *           description: 이메일 주소
+ *           required: true
  *           example: "example@example.com"
  *         password:
  *           type: string
  *           description: 비밀번호
- *           example: "mypassword"
+ *           required: true
  *         role:
  *           type: string
  *           description: 사용자 역할
- *           example: "USER"
- *         team:
- *           type: string
- *           description: 부서
- *           example: "HR"
+ *           enum: ["ADMIN", "USER"]
+ *           default: "USER"
+ *         teams:
+ *           type: array
+ *           items:
+ *             type: string
+ *           description: 소속부서
  *         profileImage:
  *           type: string
  *           description: 프로필 이미지 URL

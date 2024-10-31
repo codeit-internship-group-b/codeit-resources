@@ -66,5 +66,6 @@ module.exports = {
     "@typescript-eslint/no-unsafe-member-access": "off", // error 타입에서 객체의 속성에 접근하려고 할 때 발생하는 에러 끄기
     "node/no-unpublished-import": "off", // npm에 게시되지 않은 패키지 사용 => 모노레포 혹은 로컬 패키지와 같은 구조에서는 불필요하므로 끄기
     "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_", varsIgnorePattern: "^size$" }], // tailwind className에서 "-" 사용시 나오는 경고 off
+    "tsdoc/syntax": "off", // swagger 태그 인식 오류로 문서 작성을 위해 설정
   },
 };
