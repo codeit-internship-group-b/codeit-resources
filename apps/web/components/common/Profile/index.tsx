@@ -24,11 +24,10 @@ interface ProfileProps {
 function Profile({ src, name, className, textColor = "white" }: ProfileProps): JSX.Element {
   const [isError, setIsError] = useState(false);
 
-  let renderImage;
-  if (isError || !src) {
-    renderImage = <ProfileDefaultIcon className="h-32 w-32 rounded-full" />;
-  } else {
-    renderImage = (
+  const renderImage =
+    isError || !src ? (
+      <ProfileDefaultIcon className="h-32 w-32 rounded-full" />
+    ) : (
       <Image
         src={src}
         width={32}
@@ -40,7 +39,6 @@ function Profile({ src, name, className, textColor = "white" }: ProfileProps): J
         alt="프로필 이미지"
       />
     );
-  }
 
   return (
     <div className={clsx(name && "flex items-center gap-10", className)}>
