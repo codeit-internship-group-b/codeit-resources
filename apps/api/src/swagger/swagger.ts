@@ -1,4 +1,4 @@
-const options = {
+export const swaggerOption = {
   swaggerDefinition: {
     openapi: "3.0.0",
     info: {
@@ -8,10 +8,9 @@ const options = {
     },
     servers: [
       {
-        url: "http://localhost:5000/api",
+        url: "http://localhost:8080",
       },
     ],
   },
   apis: ["**/*.ts"],
 };
-export default options;
