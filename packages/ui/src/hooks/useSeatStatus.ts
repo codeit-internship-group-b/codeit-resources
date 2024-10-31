@@ -1,15 +1,10 @@
 "use client";
 import { useMemo } from "react";
+import { type ISeat } from "@repo/types/src/itemType";
 
 interface SeatStatus {
   status: "in-use" | "unavailable" | "reserved" | "available";
   user: string | null;
-}
-
-interface ISeat {
-  name: string;
-  status: string;
-  userName?: string;
 }
 
 interface UseSeatStatusReturn {
@@ -23,11 +18,9 @@ export default function useSeatStatus(data: ISeat[] | undefined): UseSeatStatusR
     if (Array.isArray(data)) {
       data.forEach((seat) => {
         if (seat.status === "in-use") {
-          map.set(seat.name, { status: "in-use", user: seat.userName ?? null });
+          map.set(seat.name, { status: "in-use", user: seat.user?.name ?? null });
         } else if (seat.status === "unavailable") {
           map.set(seat.name, { status: "unavailable", user: null });
-        } else if (seat.status === "reserved") {
-          map.set(seat.name, { status: "reserved", user: null });
         }
       });
     }
