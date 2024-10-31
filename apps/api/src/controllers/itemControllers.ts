@@ -18,8 +18,7 @@ interface ItemRequestBody {
  * @swagger
  * /items/{itemType}:
  *   get:
- *     tags:
- *       - "Items"
+ *     tags: [Items]
  *     summary: 특정 타입의 아이템 조회
  *     description: 아이템 타입(room, seat, equipment)에 따라 아이템 목록을 조회합니다.
  *     parameters:
@@ -74,8 +73,7 @@ export const getAllItems = async (
  * @swagger
  * /items/{itemType}:
  *   post:
- *     tags:
- *       - "Items"
+ *     tags: [Items]
  *     summary: 새로운 아이템 생성
  *     description: 새로운 방, 좌석, 장비 아이템을 생성합니다.
  *     parameters:
@@ -153,8 +151,7 @@ export const createItem = async (
  * @swagger
  * /items/{itemId}:
  *   put:
- *     tags:
- *       - "Items"
+ *     tags: [Items]
  *     summary: 아이템 정보 수정
  *     description: 아이템 정보를 수정합니다.
  *     parameters:
@@ -247,8 +244,7 @@ export const updateItem = async (
  * @swagger
  * /items/{itemId}:
  *   delete:
- *     tags:
- *       - "Items"
+ *     tags: [Items]
  *     summary: 아이템 삭제
  *     description: 특정 아이템을 삭제합니다.
  *     parameters:

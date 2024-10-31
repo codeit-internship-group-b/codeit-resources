@@ -14,8 +14,7 @@ interface CategoryRequestBody {
  * @swagger
  * /categories:
  *   get:
- *     tags:
- *       - "Categories"
+ *     tags: [Categories]
  *     summary: 모든 카테고리 조회
  *     description: 모든 카테고리 정보를 조회합니다.
  *     responses:
@@ -47,8 +46,7 @@ export const getAllCategories = async (req: Request, res: Response): Promise<voi
  * @swagger
  * /categories:
  *   post:
- *     tags:
- *       - "Categories"
+ *     tags: [Categories]
  *     summary: 카테고리 추가
  *     description: 새로운 카테고리를 추가합니다.
  *     requestBody:
@@ -111,8 +109,7 @@ export const createCategory = async (
  * @swagger
  * /categories/{categoryId}:
  *   put:
- *     tags:
- *       - "Categories"
+ *     tags: [Categories]
  *     summary: 카테고리 이름 수정
  *     description: 특정 카테고리의 이름을 수정합니다.
  *     parameters:
@@ -183,8 +180,7 @@ export const updateCategory = async (
  * @swagger
  * /categories/{categoryId}:
  *   delete:
- *     tags:
- *       - "Categories"
+ *     tags: [Categories]
  *     summary: 카테고리 삭제
  *     description: 특정 카테고리를 삭제합니다. 하위 아이템에 예약이 존재하는 경우 삭제할 수 없습니다.
  *     parameters:

@@ -32,8 +32,7 @@ const itemTypeToModel: Record<"room" | "seat" | "equipment", string> = {
  * @swagger
  * /reservations/dashboard/{userId}:
  *   get:
- *     tags:
- *       - "Reservations"
+ *     tags: [Reservations]
  *     summary: 특정 유저의 오늘 날짜 예약 전체 조회
  *     description: Dashboard에 필요한 데이터를 위해 오늘의 전체 예약을 조회합니다.
  *     parameters:
@@ -92,8 +91,7 @@ export const getUserReservations = async (
  * @swagger
  * /reservations/{itemType}:
  *   get:
- *     tags:
- *       - "Reservations"
+ *     tags: [Reservations]
  *     summary: 아이템 타입 및 날짜에 대한 예약 조회
  *     description: 특정 아이템 타입에 대한 예약을 날짜, 상태별로 조회합니다.
  *     parameters:
@@ -174,8 +172,7 @@ export const getReservationsByTypeAndDate = async (
  * @swagger
  * /reservations/{itemId}:
  *   post:
- *     tags:
- *       - "Reservations"
+ *     tags: [Reservations]
  *     summary: 특정 아이템에 대한 예약 생성
  *     description: 새 예약을 생성합니다.
  *     parameters:
@@ -300,8 +297,7 @@ export const createReservation = async (
  * @swagger
  * /reservations/{reservationId}:
  *   patch:
- *     tags:
- *       - "Reservations"
+ *     tags: [Reservations]
  *     summary: 특정 예약 수정
  *     description: 특정 예약을 수정합니다.
  *     parameters:
@@ -422,8 +418,7 @@ export const updateReservation = async (
  * @swagger
  * /reservations/{reservationId}:
  *   delete:
- *     tags:
- *       - "Reservations"
+ *     tags: [Reservations]
  *     summary: 특정 예약 삭제
  *     description: 특정 예약을 삭제합니다. 관리자 용도로 사용하는게 좋을 것 같습니다.
  *     parameters:
