@@ -58,6 +58,7 @@
     "nodemon": "^3.1.0",
     "supertest": "^7.0.0",
     "swagger-cli": "^4.0.4",
+    "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "ts-jest": "^29.2.5",
     "typescript": "^5.2.2",
