@@ -49,7 +49,7 @@ const itemTypeToModel: Record<"room" | "seat" | "equipment", string> = {
  *             schema:
  *               type: array
  *               items:
- *                 type: object
+ *                 $ref: '#/components/schemas/Reservation'
  *       400:
  *         description: 유효하지 않은 사용자 ID입니다.
  */
@@ -123,7 +123,7 @@ export const getUserReservations = async (
  *             schema:
  *               type: array
  *               items:
- *                 type: object
+ *                 $ref: '#/components/schemas/Reservation'
  *       400:
  *         description: 유효하지 않은 아이템 타입 또는 날짜 형식입니다.
  */
@@ -227,7 +227,7 @@ export const getReservationsByTypeAndDate = async (
  *                 message:
  *                   type: string
  *                 savedReservation:
- *                   type: object
+ *                   $ref: '#/components/schemas/Reservation'
  *       400:
  *         description: 유효하지 않은 데이터입니다.
  *       404:
@@ -336,7 +336,7 @@ export const createReservation = async (
  *         content:
  *           application/json:
  *             schema:
- *               type: object
+ *               $ref: '#/components/schemas/Reservation'
  *       400:
  *         description: 유효하지 않은 요청입니다.
  *       404:
