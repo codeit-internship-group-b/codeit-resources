@@ -15,7 +15,7 @@ const ReservationSchema: Schema = new Schema(
       required: true,
       validate: {
         validator(this: ReservationDoc, startAt: Date): boolean {
-          if (this.status === "reserved") {
+          if (this.status === "reserved" || this.itemType !== "seat") {
             const timeWithBuffer = new Date(new Date().getTime() - TEN_MIN_BUFFER);
             return startAt >= timeWithBuffer;
           } // 예약 시간이 현재 시간 이후인지 확인(10분 여유)

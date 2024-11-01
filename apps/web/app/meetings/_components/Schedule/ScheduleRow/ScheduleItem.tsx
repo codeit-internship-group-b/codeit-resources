@@ -1,6 +1,5 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 "use client";
 
 import { type Schedule } from "@/app/types/scheduletypes";
@@ -29,7 +28,7 @@ export default function ScheduleItem(props: ScheduleItemProps): JSX.Element {
       }}
       onClick={(e) => {
         e.stopPropagation();
-        onClick();
+        if (isCurrentUser) onClick();
       }}
     >
       <div

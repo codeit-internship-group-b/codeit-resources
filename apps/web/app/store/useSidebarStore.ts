@@ -10,7 +10,13 @@ interface SidebarState {
 
 export const useSidebarStore = create<SidebarState>((set) => ({
   isSidebarOpen: false,
-  openSidebar: () => { set({ isSidebarOpen: true }); },
-  closeSidebar: () => { set({ isSidebarOpen: false }); },
-  resetClickedSlot: () => { set({ isSidebarOpen: false }); }, // 닫힐 때 초기화
+  openSidebar: () => {
+    set({ isSidebarOpen: true });
+  },
+  closeSidebar: () => {
+    set({ isSidebarOpen: false });
+  },
+  resetClickedSlot: () => {
+    set({ isSidebarOpen: false });
+  }, // 닫힐 때 초기화
 }));

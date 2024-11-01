@@ -24,10 +24,10 @@ export default function Gnb(): JSX.Element | null {
       <div>
         <GnbLogo />
         <hr className="hidden border-white/10 pb-10 md:block" />
-        <GnbMenu isAdmin={userResponse?.role === "admin"} />
+        <GnbMenu isAdmin />
       </div>
       <Link href={PAGE_NAME.PROFILE} className="hidden px-16 py-10 md:block">
-        <Profile src={userResponse?.profileImage} name={userResponse?.name} />
+        <Profile name="영준이" />
       </Link>
     </nav>
   );

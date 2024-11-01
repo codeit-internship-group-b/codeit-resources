@@ -4,9 +4,9 @@ import { SEAT_GRID } from "@ui/src/utils/constants/seats";
 import useSeatStatus from "@ui/src/hooks/useSeatStatus";
 import { useQuery } from "@tanstack/react-query";
 import { type ISeat } from "@repo/types";
-import { getAllSeats } from "@/api/seats";
 import { SeatProvider } from "../context/SeatContext";
 import SeatBlock from "./SeatBlock";
+import { getAllSeats } from "@/api/seats";
 
 export default function SeatGrid(): JSX.Element {
   // 탠스택쿼리로 바꿀 예정 (data / Loading)

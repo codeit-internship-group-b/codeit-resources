@@ -27,7 +27,9 @@ export default function DashboardSection({ data = [] }: DashboardSectionProps): 
     patchMeetingStatusMutate(_id);
   };
 
-  const upcomingMeetings = data.filter((item) => item.status !== "completed" && new Date(item.endAt) > new Date());
+  const upcomingMeetings = Array.isArray(data)
+    ? data.filter((item) => item.status !== "completed" && new Date(item.endAt) > new Date())
+    : [];
 
   return (
     <div>

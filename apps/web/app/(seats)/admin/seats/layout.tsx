@@ -12,5 +12,7 @@ export default function Layout({
 }: Readonly<{
   children: ReactNode;
 }>): JSX.Element {
-  return <div className="bg-custom-black/5 md:px-118 md:py-83 h-screen overflow-auto px-16 py-28">{children}</div>;
+  return (
+    <div className="bg-custom-black/5 md:px-118 md:ml-200 md:py-83 h-screen overflow-auto px-16 py-28">{children}</div>
+  );
 }
