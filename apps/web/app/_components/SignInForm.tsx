@@ -4,24 +4,13 @@ import { LogoCodeitIcon, LogoTextIcon } from "@repo/ui/public/index";
 import { Button, Input } from "@repo/ui";
 import { type FieldValues, type SubmitHandler } from "react-hook-form";
 import { debounce } from "es-toolkit";
-import { useRouter } from "next/navigation";
-import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
-import { useUser } from "@/components/Gnb/hooks/useUser";
 import { useSignInForm } from "../_hooks/useSignInForm";
 import { useSignInMutation } from "../_hooks/useSignInMutation";
+import { useAuthStore } from "../store/useAuthStore";
 
 export default function SignInForm(): JSX.Element {
-  // const router = useRouter();
-  // const { isSuccess } = useUser();
-
-  // if (isSuccess) router.replace(PAGE_NAME.DASHBOARD);
-
-  // TODO : 토큰 유무에 따른 로그인페이지 핸들링
-  // TODO : 토큰 유무에 따른 redirect 처리
-  // TODO : 모바일 구현
-  // TODO : 회원 추가시 default 비밀번호
   const { handleSubmit, registers, errors } = useSignInForm();
-  const { mutate: postSignInMutate } = useSignInMutation();
+  const { mutate: postSignInMutate, isPending } = useSignInMutation();
 
   const onSignInSubmit: SubmitHandler<FieldValues> = (payload: FieldValues) => {
     postSignInMutate(payload);
@@ -32,13 +21,10 @@ export default function SignInForm(): JSX.Element {
   }, 500);
 
   return (
-    <form
-      className="min-w-372 flex flex-col gap-32"
-      onSubmit={(...rest) => void handleSubmit(debouncedSubmit)(...rest)}
-    >
+    <form className="w-372 flex flex-col gap-32" onSubmit={(...rest) => void handleSubmit(debouncedSubmit)(...rest)}>
       <div className="flex flex-col items-center justify-center gap-24">
-        <LogoCodeitIcon className="w-78 h-78" />
-        <LogoTextIcon className="w-256 h-32 fill-black" />
+        <LogoCodeitIcon className="md:w-78 md:h-78 h-60 w-60" />
+        <LogoTextIcon className="w-194 md:w-256 h-24 fill-black md:h-32" />
       </div>
       <div>
         <div className="flex flex-col gap-8">
@@ -62,7 +48,7 @@ export default function SignInForm(): JSX.Element {
             {...registers.password}
           />
         </div>
-        <Button className="w-full" type="submit" variant="Primary">
+        <Button className="h-42 w-full" type="submit" variant="Primary" isPending={isPending}>
           로그인
         </Button>
       </div>

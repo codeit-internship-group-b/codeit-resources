@@ -43,15 +43,12 @@ export const getUsers = async (req: GetUsersRequest, res: Response): Promise<voi
 };
 
 interface GetUserRequest extends Request {
-  user?: IUser;
-  params: {
-    userId: string;
-  };
+  user: IUser;
 }
 
 // Get a user by id
 export const getUser = async (req: GetUserRequest, res: Response): Promise<void> => {
-  const userId = req.user?._id;
+  const userId = req.user._id;
   const user = await User.findById(userId).select("-password");
 
   if (!user) {
