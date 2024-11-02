@@ -7,6 +7,6 @@ export interface AuthStore {
   logout: () => void;
 }
 
-export interface StorageType {
-  state?: AuthStore | null;
+export interface StorageType<T = unknown> {
+  state?: T | null;
 }
