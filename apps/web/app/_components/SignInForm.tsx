@@ -6,7 +6,6 @@ import { type FieldValues, type SubmitHandler } from "react-hook-form";
 import { debounce } from "es-toolkit";
 import { useSignInForm } from "../_hooks/useSignInForm";
 import { useSignInMutation } from "../_hooks/useSignInMutation";
-import { useAuthStore } from "../store/useAuthStore";
 
 export default function SignInForm(): JSX.Element {
   const { handleSubmit, registers, errors } = useSignInForm();
