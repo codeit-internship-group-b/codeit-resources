@@ -43,12 +43,12 @@ export const getUsers = async (req: GetUsersRequest, res: Response): Promise<voi
 };
 
 interface GetUserRequest extends Request {
-  user: IUser;
+  user?: IUser;
 }
 
 // Get a user by id
 export const getUser = async (req: GetUserRequest, res: Response): Promise<void> => {
-  const userId = req.user._id;
+  const userId = req.user?._id;
   const user = await User.findById(userId).select("-password");
 
   if (!user) {
@@ -156,8 +156,14 @@ export const updateUser = async (req: UpdateUserRequest, res: Response): Promise
   res.status(200).send({ message: "사용자 정보가 성공적으로 업데이트되었습니다." });
 };
 
+interface DeleteUserRequest extends Request {
+  params: {
+    userId: string;
+  };
+}
+
 // Delete a user by id
-export const deleteUser = async (req: GetUserRequest, res: Response): Promise<void> => {
+export const deleteUser = async (req: DeleteUserRequest, res: Response): Promise<void> => {
   const { userId } = req.params;
   const deletedUser = await User.findByIdAndDelete(userId);
 
