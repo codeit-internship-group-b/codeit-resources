@@ -2,9 +2,12 @@ import { exit } from "node:process";
 import cors from "cors";
 import { config } from "dotenv";
 import express, { json } from "express";
+import swaggerJSDoc from "swagger-jsdoc";
+import { serve, setup } from "swagger-ui-express";
 import { connectDatabase } from "./utils/database";
 import router from "./routes";
 import { errorHandler } from "./middleware/errorHandler";
+import { swaggerOption } from "./swagger/swagger";
 
 config();
 
@@ -26,6 +29,10 @@ app.use(json());
 app.set("port", PORT);
 
 app.use("/", router);
+
+// swagger
+const specs = swaggerJSDoc(swaggerOption);
+app.use("/api", serve, setup(specs));
 
 // errorHandler 항상 실행
 app.use(errorHandler);

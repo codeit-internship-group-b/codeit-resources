@@ -51,5 +51,6 @@ module.exports = {
     "unicorn/filename-case": "off", // 파일명 케밥케이스로 요구하는 규칙 끄기
     "import/no-default-export": "off", // 기본 내보내기 사용 허용 규칙 끄기
     "@typescript-eslint/naming-convention": "off", // type 네이밍 규칙 끄기
+    "tsdoc/syntax": "off", // swagger 태그 인식 오류로 문서 작성을 위해 설정
   },
 };
