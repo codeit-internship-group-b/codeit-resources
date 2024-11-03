@@ -4,9 +4,9 @@
     "strict": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"],
+      "@ui/*": ["../../packages/ui/*"],
+      "@/public/*": ["./public/*"]
     }
   },
   "include": [
@@ -16,6 +16,7 @@
     "expo-env.d.ts",
     ".eslintrc.js",
     "babel.config.js",
-    "nativewind-env.d.ts"
+    "nativewind-env.d.ts",
+    "tailwind.config.js"
   ]
 }

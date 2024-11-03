@@ -1,3 +1,4 @@
+import { Input } from "@ui/index";
 import { Image, StyleSheet, Platform } from "react-native";
 
 import { HelloWave } from "@/components/HelloWave";
@@ -14,6 +15,7 @@ export default function HomeScreen() {
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Welcome!</ThemedText>
         <div className="size-40 bg-purple-50">tailwind 확인용</div>
+        <Input id="email" type="email" placeholder="tailwind 확인용" />
         <HelloWave />
       </ThemedView>
       <ThemedView style={styles.stepContainer}>

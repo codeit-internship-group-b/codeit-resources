@@ -8,15 +8,16 @@ const monorepoRoot = path.resolve(projectRoot, "../..");
 /** @type {import('expo/metro-config').MetroConfig} */
 const config = getDefaultConfig(projectRoot);
 
-const monorepoPackages = {
-  "@repo/ui": path.resolve(monorepoRoot, "packages/ui"),
-  "@repo/types": path.resolve(monorepoRoot, "packages/types"),
-  "@repo/constants": path.resolve(monorepoRoot, "packages/constants"),
-  "@repo/eslint-config": path.resolve(monorepoRoot, "packages/eslint-config"),
-};
+// const monorepoPackages = {
+//   "@repo/ui": path.resolve(monorepoRoot, "packages/ui"),
+//   "@repo/types": path.resolve(monorepoRoot, "packages/types"),
+//   "@repo/constants": path.resolve(monorepoRoot, "packages/constants"),
+//   "@repo/eslint-config": path.resolve(monorepoRoot, "packages/eslint-config"),
+// };
 
-config.resolver.extraNodeModules = monorepoPackages;
-config.watchFolders = [monorepoRoot, ...Object.values(monorepoPackages)];
+// config.resolver.extraNodeModules = monorepoPackages;
+// config.watchFolders = [monorepoRoot, ...Object.values(monorepoPackages)];
+config.watchFolders = [monorepoRoot];
 
 config.resolver.nodeModulesPaths = [
   path.resolve(projectRoot, "node_modules"),
