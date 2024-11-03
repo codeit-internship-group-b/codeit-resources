@@ -4,6 +4,7 @@ import ListItem from "@ui/src/components/common/ListItem";
 import { useOnClickOutside } from "@ui/src/hooks/useOnClickOutside";
 import { useRef, useState } from "react";
 import { motion } from "framer-motion";
+import { PlusIcon, TriangleIcon } from "@ui/public";
 import CategoryEditDropdown from "./CategoryEditDropdown";
 import ConfirmationModal from "./ConfirmationModal";
 import CategoryListSubItem from "./CategoryListSubItem";
@@ -30,7 +31,7 @@ export default function CategoryListItem({ title }: CategoryListItemProps): JSX.
 
   return (
     <>
-      <ListItem color="gray" thickness="thick" onClick={toggleListItem}>
+      <ListItem color="gray" thickness="thick">
         <span className="flex flex-grow items-center gap-32 text-left">
           {isModifying ? (
             <input
@@ -52,9 +53,27 @@ export default function CategoryListItem({ title }: CategoryListItemProps): JSX.
             title
           )}
         </span>
-        <ConfirmationModal Title={title}>
-          <CategoryEditDropdown isModifying={isModifying} setIsModifying={setIsModifying} />
-        </ConfirmationModal>
+        <div className="flex gap-12">
+          <button
+            className="hover:bg-custom-black/5 flex size-32 cursor-pointer justify-center rounded-full transition-colors duration-300 ease-in-out"
+            type="button"
+          >
+            <PlusIcon width={20} fill="true" />
+          </button>
+          <ConfirmationModal Title={title}>
+            <CategoryEditDropdown isModifying={isModifying} setIsModifying={setIsModifying} />
+          </ConfirmationModal>
+        </div>
+        <button
+          className="hover:bg-custom-black/5 ml-40 flex size-32 cursor-pointer justify-center rounded-full transition-colors duration-300 ease-in-out"
+          type="button"
+          onClick={toggleListItem}
+        >
+          <TriangleIcon
+            width={16}
+            className={`transition-transform duration-300 ${isOpen ? "rotate-180" : "rotate-0"}`}
+          />
+        </button>
       </ListItem>
       {isOpen ? (
         <motion.div
