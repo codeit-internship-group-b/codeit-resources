@@ -41,7 +41,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           onBlur={onBlur}
           onChange={onChange}
           disabled={disabled}
-          ref={ref ?? regRef}
+          ref={regRef}
           {...args}
         />
         <label
