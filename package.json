@@ -6,7 +6,7 @@
     "clean": "turbo run clean",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "format": "prettier exec --write \"**/*.{ts,tsx,md}\"",
     "lint:fix": "turbo run lint -- --fix",
     "prepare": "husky install",
     "test:web": "pnpm test --filter=web",
@@ -14,6 +14,7 @@
     "test:ui": "pnpm test --filter=ui"
   },
   "devDependencies": {
+    "@org/prettier-config": "workspace:*",
     "eslint": "^8.57.1",
     "husky": "^9.1.6",
     "prettier": "^3.3.3",

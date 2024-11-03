@@ -16,6 +16,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@repo/ui": "workspace:*",
     "@expo/vector-icons": "^14.0.2",
     "@react-navigation/native": "^6.0.2",
     "expo": "~51.0.28",
@@ -37,6 +38,9 @@
     "react-native-web": "~0.19.10"
   },
   "devDependencies": {
+    "@repo/types": "workspace:*",
+    "@repo/constants": "workspace:*",
+    "@repo/eslint-config": "workspace:*",
     "@babel/core": "^7.20.0",
     "@types/jest": "^29.5.12",
     "@types/react": "~18.2.45",

@@ -1,5 +1,12 @@
+/** @type {import("eslint").Linter.Config} */
 // https://docs.expo.dev/guides/using-eslint/
 module.exports = {
-  extends: ["expo"],
-  ignorePatterns: ["metro.config.js"],
+  root: true,
+  extends: ["expo", "@repo/eslint-config/react-native.js"],
+  parser: "@typescript-eslint/parser",
+  parserOptions: {
+    project: "./tsconfig.json",
+    tsconfigRootDir: __dirname,
+  },
+  ignorePatterns: ["metro.config.js", "/.expo", "scripts/"],
 };
