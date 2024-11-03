@@ -8,5 +8,5 @@ module.exports = {
     project: "./tsconfig.json",
     tsconfigRootDir: __dirname,
   },
-  ignorePatterns: ["metro.config.js", "/.expo", "scripts/"],
+  ignorePatterns: ["metro.config.js", "/.expo", "scripts/", "tailwind.config.js"],
 };
