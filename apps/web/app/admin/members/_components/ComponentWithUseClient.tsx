@@ -2,49 +2,41 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { Toast } from "@ui/index";
-import { getMembers } from "@/api/members";
 import ListItemSkeleton from "@/components/common/Skeleton/ListItemSkeleton";
-import { type MemberWithStaticImage } from "../types";
+import { type MemberWithStaticImage, type SortOption, SORT_OPTIONS } from "../types";
+import { useMembersQuery } from "../_hooks/useMembersQuery";
 import SidePanel from "./SidePanel";
 import Header from "./Header";
 import Navigation from "./Navigation";
 import MemberListItem from "./MemberListItem";
 
-type SortOption = "newest" | "oldest" | "alphabetical";
-
 export default function Members(): JSX.Element {
   const [activeTab, setActiveTab] = useState("전체");
-  const [selectedSort, setSelectedSort] = useState<SortOption>("newest");
+  const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS.NEWEST);
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<MemberWithStaticImage | null>(null);
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["members", selectedSort],
-    queryFn: () => getMembers(selectedSort),
-  });
-
-  const { data: originalData } = useQuery({
-    queryKey: ["members", "newest"],
-    queryFn: () => getMembers("newest"),
-  });
+  const { data: sortedMembers, isLoading } = useMembersQuery(selectedSort);
+  const { data: allMembers } = useMembersQuery(SORT_OPTIONS.NEWEST);
 
   const teams = useMemo(() => {
-    if (!originalData) return ["전체"];
+    if (!allMembers) return ["전체"];
 
-    const allTeams = originalData.flatMap((member) => member.teams);
+    const allTeams = allMembers.flatMap((member) => member.teams);
     const uniqueTeams = ["전체", ...new Set(allTeams)];
 
     return uniqueTeams;
-  }, [originalData]);
+  }, [allMembers]);
 
   const filteredMembers = useMemo(() => {
-    if (!data) return [];
-    const members = activeTab === "전체" ? data : data.filter((member) => member.teams.includes(activeTab));
+    if (!sortedMembers) return [];
+
+    const members =
+      activeTab === "전체" ? sortedMembers : sortedMembers.filter((member) => member.teams.includes(activeTab));
 
     return members;
-  }, [data, activeTab]);
+  }, [sortedMembers, activeTab]);
 
   const handleSortChange = (value: string | boolean): void => {
     setSelectedSort(value as SortOption);
@@ -89,7 +81,7 @@ export default function Members(): JSX.Element {
   }
 
   return (
-    <div>
+    <>
       <Header onAddMember={handleOpenSidePanel} />
       <Navigation
         activeTab={activeTab}
@@ -115,6 +107,6 @@ export default function Members(): JSX.Element {
       </main>
       <SidePanel isOpen={isSidePanelOpen} onClose={handleCloseSidePanel} selectedMember={selectedMember} />
       <Toast />
-    </div>
+    </>
   );
 }
