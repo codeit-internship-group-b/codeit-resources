@@ -1,9 +1,7 @@
-/* eslint-disable react/no-array-index-key */
 "use client";
 
 import { useState, useMemo } from "react";
 import { Toast } from "@ui/index";
-import ListItemSkeleton from "@/components/common/Skeleton/ListItemSkeleton";
 import { type MemberWithStaticImage, type SortOption, SORT_OPTIONS } from "../types";
 import { useMembersQuery } from "../_hooks/useMembersQuery";
 import SidePanel from "./SidePanel";
@@ -11,6 +9,7 @@ import Header from "./Header";
 import Navigation from "./Navigation";
 import MemberListItem from "./MemberListItem";
 import EmptyState from "./EmptyState";
+import SkeletonList from "./SkeletonList";
 
 export default function Members(): JSX.Element {
   const [activeTab, setActiveTab] = useState("전체");
@@ -57,29 +56,21 @@ export default function Members(): JSX.Element {
     setIsSidePanelOpen(true);
   };
 
-  if (isLoading) {
-    return (
-      <div>
-        <Header onAddMember={handleOpenSidePanel} />
-        <Navigation
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-          teams={teams}
-          selectedSort={selectedSort}
-          onSortChange={handleSortChange}
-          isLoading={isLoading}
-        />
-        <main>
-          <div className="flex flex-col gap-16">
-            {Array.from({ length: 8 }).map((_, index) => (
-              <ListItemSkeleton key={index} type="member" thickness="thick" color="white" showHamburger={false} />
-            ))}
-          </div>
-        </main>
-        <Toast />
+  const renderContent = (): JSX.Element => {
+    if (isLoading) {
+      return <SkeletonList />;
+    }
+
+    return filteredMembers.length === 0 ? (
+      <EmptyState activeTab={activeTab} />
+    ) : (
+      <div className="flex flex-col gap-16">
+        {filteredMembers.map((member) => (
+          <MemberListItem key={member._id} member={member} onMemberClick={handleMemberClick} />
+        ))}
       </div>
     );
-  }
+  };
 
   return (
     <>
@@ -91,17 +82,7 @@ export default function Members(): JSX.Element {
         selectedSort={selectedSort}
         onSortChange={handleSortChange}
       />
-      <main>
-        {filteredMembers.length === 0 ? (
-          <EmptyState activeTab={activeTab} />
-        ) : (
-          <div className="flex flex-col gap-16">
-            {filteredMembers.map((member) => (
-              <MemberListItem key={member._id} member={member} onMemberClick={handleMemberClick} />
-            ))}
-          </div>
-        )}
-      </main>
+      <main>{renderContent()}</main>
       <SidePanel isOpen={isSidePanelOpen} onClose={handleCloseSidePanel} selectedMember={selectedMember} />
       <Toast />
     </>
