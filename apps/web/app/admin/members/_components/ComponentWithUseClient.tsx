@@ -1,15 +1,13 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Toast } from "@ui/index";
+import { Toast, Button } from "@ui/index";
 import { type MemberWithStaticImage, type SortOption, SORT_OPTIONS } from "../types";
 import { useMembersQuery } from "../_hooks/useMembersQuery";
 import SidePanel from "./SidePanel";
-import Header from "./Header";
-import Navigation from "./Navigation";
-import MemberListItem from "./MemberListItem";
-import EmptyState from "./EmptyState";
-import SkeletonList from "./SkeletonList";
+import { Tabs } from "./Tabs";
+import SortDropdown from "./SortDropdown";
+import MemberList from "./MemberList";
 
 export default function Members(): JSX.Element {
   const [activeTab, setActiveTab] = useState("전체");
@@ -56,33 +54,38 @@ export default function Members(): JSX.Element {
     setIsSidePanelOpen(true);
   };
 
-  const renderContent = (): JSX.Element => {
-    if (isLoading) {
-      return <SkeletonList />;
-    }
-
-    return filteredMembers.length === 0 ? (
-      <EmptyState activeTab={activeTab} />
-    ) : (
-      <div className="flex flex-col gap-16">
-        {filteredMembers.map((member) => (
-          <MemberListItem key={member._id} member={member} onMemberClick={handleMemberClick} />
-        ))}
-      </div>
-    );
-  };
-
   return (
     <>
-      <Header onAddMember={handleOpenSidePanel} />
-      <Navigation
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-        teams={teams}
-        selectedSort={selectedSort}
-        onSortChange={handleSortChange}
-      />
-      <main>{renderContent()}</main>
+      <header className="flex justify-between">
+        <h1 className="text-3xl-bold mb-40">멤버 관리</h1>
+        <Button
+          onClick={handleOpenSidePanel}
+          variant="Secondary"
+          className="w-122 h-42 text-lg-medium text-custom-black/80"
+        >
+          + 멤버 추가
+        </Button>
+      </header>
+
+      <nav className="relative mb-24">
+        <div
+          className="w-full overflow-x-auto border-b border-gray-200/10"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
+          <Tabs activeTab={activeTab} onTabChange={setActiveTab} teams={teams} isLoading={isLoading} />
+          <SortDropdown selectedSort={selectedSort} onSortChange={handleSortChange} />
+        </div>
+      </nav>
+
+      <main>
+        <MemberList
+          isLoading={isLoading}
+          members={filteredMembers}
+          activeTab={activeTab}
+          onMemberClick={handleMemberClick}
+        />
+      </main>
+
       <SidePanel isOpen={isSidePanelOpen} onClose={handleCloseSidePanel} selectedMember={selectedMember} />
       <Toast />
     </>
