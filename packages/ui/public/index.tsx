@@ -21,8 +21,10 @@ import ProfileDefaultIcon from "./svgs/ic_profile-default.svg";
 import SearchIcon from "./svgs/ic_search.svg";
 import TeamIcon from "./svgs/ic_team.svg";
 import PersonEmptyIcon from "./svgs/ic_person-empty.svg";
+import SpinnerIcon from "./svgs/ic_spinner.svg";
 
 export {
+  SpinnerIcon,
   PersonEmptyIcon,
   TeamIcon,
   SearchIcon,

@@ -3,14 +3,16 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
+import { useAuthState } from "@/app/_hooks/useAuthState";
 import Profile from "../common/Profile";
 import GnbMenu from "./GnbMenu";
 import GnbLogo from "./GnbLogo";
-import { useUser } from "./hooks/useUser";
 
 export default function Gnb(): JSX.Element | null {
   const pathname = usePathname();
-  const { data: userResponse } = useUser();
+  const authState = useAuthState();
+
+  const { isLoggedIn, user } = authState ?? { isLoggedIn: false, user: null };
 
   if (pathname === PAGE_NAME.SIGN_IN) {
     return null;
@@ -24,11 +26,17 @@ export default function Gnb(): JSX.Element | null {
       <div>
         <GnbLogo />
         <hr className="hidden border-white/10 pb-10 md:block" />
-        <GnbMenu isAdmin />
+        <GnbMenu isAdmin={user?.role === "admin"} />
       </div>
-      <Link href={PAGE_NAME.PROFILE} className="hidden px-16 py-10 md:block">
-        <Profile name="영준이" />
-      </Link>
+      {isLoggedIn ? (
+        <Link
+          href={PAGE_NAME.PROFILE}
+          className="rounded-10 hidden px-16 py-10 hover:bg-[#3D3C40] active:bg-[#3D3C40] md:block"
+          aria-label={`${user?.name}님의 프로필로 이동`}
+        >
+          <Profile src={user?.profileImage} name={user?.name} />
+        </Link>
+      ) : null}
     </nav>
   );
 }

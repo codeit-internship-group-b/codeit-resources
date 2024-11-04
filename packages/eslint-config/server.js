@@ -48,5 +48,6 @@ module.exports = {
     "@typescript-eslint/restrict-template-expressions": "off", // 템플릿 리터럴 내에서 string이 아닌 값 (예: number)을 허용하지 않도록 하는 설정
     "func-names": "off", // 익명 함수사용 가능으로 설정
     "node/no-unpublished-import": "off", // npm에 게시되지 않은 패키지 사용 => 모노레포 혹은 로컬 패키지와 같은 구조에서는 불필요하므로 끄기
+    "tsdoc/syntax": "off", // swagger 태그 인식 오류로 문서 작성을 위해 설정
   },
 };

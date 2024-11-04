@@ -1,6 +1,6 @@
 import React, { ComponentPropsWithoutRef, ElementType, ReactNode } from "react";
 import cn from "@ui/src/utils/cn";
-import { LogoCodeitIcon } from "@ui/public";
+import { LogoCodeitIcon, SpinnerIcon } from "@ui/public";
 
 interface ButtonProps {
   variant: "Action" | "Primary" | "Secondary" | "Tertiary" | "TertiaryColor" | "Text" | "TextColor";
@@ -94,7 +94,7 @@ export default function Button<C extends ElementType = "button">(props: Polymorp
   };
 
   // 스피너 아이콘 스타일
-  const spinnerStyles = "animate-spin text-current transition-opacity duration-300 w-16 h-16";
+  const spinnerStyles = "animate-spin text-current transition-opacity duration-300 w-20 h-20";
 
   // 버튼의 실제 활성화 상태를 결정
   const isButtonActive = isActive && !isPending;
@@ -110,8 +110,8 @@ export default function Button<C extends ElementType = "button">(props: Polymorp
   return (
     <Component className={classes} {...rest} disabled={!isActive || isPending}>
       <div className={cn("flex items-center transition-all duration-300", isPending ? "gap-10" : "gap-0")}>
-        {isPending && <LogoCodeitIcon className={spinnerStyles} />}
-        <span className="transition-all duration-300">{isPending ? "수정 중..." : children}</span>
+        {isPending && <SpinnerIcon className={spinnerStyles} />}
+        <span className="transition-all duration-300">{children}</span>
       </div>
     </Component>
   );

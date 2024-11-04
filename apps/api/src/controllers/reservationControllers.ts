@@ -27,7 +27,32 @@ const itemTypeToModel: Record<"room" | "seat" | "equipment", string> = {
   seat: "Seat",
   equipment: "Equipment",
 };
-// 특정 유저의 오늘 날짜 예약 전체 조회(dashboards)
+
+/**
+ * @swagger
+ * /reservations/dashboard/{userId}:
+ *   get:
+ *     tags: [Reservations]
+ *     summary: 특정 유저의 오늘 날짜 예약 전체 조회
+ *     description: Dashboard에 필요한 데이터를 위해 오늘의 전체 예약을 조회합니다.
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: 조회할 유저의 id
+ *     responses:
+ *       200:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Reservation'
+ *       400:
+ *         description: 유효하지 않은 사용자 ID입니다.
+ */
 export const getUserReservations = async (
   req: Request<{ userId: string }, IReservation[]>,
   res: Response,
@@ -62,7 +87,46 @@ export const getUserReservations = async (
   res.status(200).json(userReservations);
 };
 
-// 아이템 타입 및 날짜에 대한 예약 조회
+/**
+ * @swagger
+ * /reservations/{itemType}:
+ *   get:
+ *     tags: [Reservations]
+ *     summary: 아이템 타입 및 날짜에 대한 예약 조회
+ *     description: 특정 아이템 타입에 대한 예약을 날짜, 상태별로 조회합니다.
+ *     parameters:
+ *       - in: path
+ *         name: itemType
+ *         required: true
+ *         schema:
+ *           type: string
+ *           enum: ["room", "seat", "equipment"]
+ *         description: 조회할 아이템 타입
+ *       - in: query
+ *         name: date
+ *         required: false
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: 조회할 날짜 (YYYY-MM-DD 형식)
+ *       - in: query
+ *         name: status
+ *         required: false
+ *         schema:
+ *           type: string
+ *           enum: ["reserved", "completed", "canceled"]
+ *         description: 예약 상태 필터
+ *     responses:
+ *       200:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Reservation'
+ *       400:
+ *         description: 유효하지 않은 아이템 타입 또는 날짜 형식입니다.
+ */
 export const getReservationsByTypeAndDate = async (
   req: Request<{ itemType: string }, IReservation[], unknown, { date?: string; status?: string }>,
   res: Response,
@@ -104,7 +168,73 @@ export const getReservationsByTypeAndDate = async (
   res.status(200).json(reservations);
 };
 
-// 특정 아이템에 대한 예약 생성
+/**
+ * @swagger
+ * /reservations/{itemId}:
+ *   post:
+ *     tags: [Reservations]
+ *     summary: 특정 아이템에 대한 예약 생성
+ *     description: 새 예약을 생성합니다.
+ *     parameters:
+ *       - in: path
+ *         name: itemId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: 예약할 아이템의 ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: string
+ *                 description: 예약을 생성하는 사용자 ID
+ *               itemType:
+ *                 type: string
+ *                 enum: ["room", "seat", "equipment"]
+ *                 description: 아이템 타입
+ *               startAt:
+ *                 type: string
+ *                 format: date-time
+ *                 description: 예약 시작 시간
+ *               endAt:
+ *                 type: string
+ *                 format: date-time
+ *                 description: 예약 종료 시간
+ *               status:
+ *                 type: string
+ *                 description: 예약 상태
+ *                 default : "reserved"
+ *               notes:
+ *                 type: string
+ *                 description: 추가 메모
+ *               attendees:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 description: 참석자 목록
+ *     responses:
+ *       201:
+ *         description: 예약에 성공했습니다.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 savedReservation:
+ *                   $ref: '#/components/schemas/Reservation'
+ *       400:
+ *         description: 유효하지 않은 데이터입니다.
+ *       404:
+ *         description: 사용자 또는 아이템을 찾을 수 없습니다.
+ *       409:
+ *         description: 해당 시간에 이미 예약이 존재합니다.
+ */
 export const createReservation = async (
   req: Request<{ itemId: string }, IReservation, ReservationRequestBody>,
   res: Response,
@@ -163,7 +293,57 @@ export const createReservation = async (
   res.status(201).json({ message: "예약에 성공했습니다.", savedReservation });
 };
 
-// 특정 예약 수정
+/**
+ * @swagger
+ * /reservations/{reservationId}:
+ *   patch:
+ *     tags: [Reservations]
+ *     summary: 특정 예약 수정
+ *     description: 특정 예약을 수정합니다.
+ *     parameters:
+ *       - in: path
+ *         name: reservationId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: 수정할 예약의 ID
+ *     requestBody:
+ *       required: true
+ *       description: 수정을 원하는 값만 전달하면 됩니다.
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               startAt:
+ *                 type: string
+ *                 format: date-time
+ *               endAt:
+ *                 type: string
+ *                 format: date-time
+ *               status:
+ *                 type: string
+ *                 enum: [reserved, completed, canceled]
+ *               notes:
+ *                 type: string
+ *               attendees:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *     responses:
+ *       200:
+ *         description: 예약이 수정되었습니다.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Reservation'
+ *       400:
+ *         description: 유효하지 않은 요청입니다.
+ *       404:
+ *         description: 예약을 찾을 수 없습니다.
+ *       409:
+ *         description: 해당 시간에 이미 예약이 존재합니다.
+ */
 export const updateReservation = async (
   req: Request<{ reservationId: string }, IReservation, Partial<ReservationRequestBody>>,
   res: Response,
@@ -234,7 +414,26 @@ export const updateReservation = async (
   res.status(200).json(updatedReservation);
 };
 
-// 특정 예약 삭제(만들긴 했는데, updateReservation으로 cancelled 상태로 전환하는게 맞는듯)
+/**
+ * @swagger
+ * /reservations/{reservationId}:
+ *   delete:
+ *     tags: [Reservations]
+ *     summary: 특정 예약 삭제
+ *     description: 특정 예약을 삭제합니다. 관리자 용도로 사용하는게 좋을 것 같습니다.
+ *     parameters:
+ *       - in: path
+ *         name: reservationId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: 삭제할 예약의 ID
+ *     responses:
+ *       200:
+ *         description: 예약이 삭제되었습니다.
+ *       404:
+ *         description: 예약을 찾을 수 없습니다.
+ */
 export const deleteReservation = async (
   req: Request<{ reservationId: string }, unknown, unknown>,
   res: Response,

@@ -1,4 +1,5 @@
 import axios, { type AxiosRequestConfig, type AxiosResponse, type AxiosRequestHeaders } from "axios";
+import { getCookie } from "cookies-next";
 
 export const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -16,14 +17,7 @@ type AxiosRequester = <T>(params: AxiosRequesterParams<T>) => Promise<AxiosRespo
 
 export const axiosRequester: AxiosRequester = async ({ options }) => {
   const headers = { ...options.headers } as AxiosRequestHeaders;
-
-  // TODO: access token을 localStorage 또는 cookie에서 가져오는 로직
-  const accessToken = document.cookie
-    .split("; ")
-    .find((row) => {
-      return row.startsWith("accessToken=");
-    })
-    ?.split("=")[1];
+  const accessToken = getCookie("accessToken");
 
   if (accessToken) {
     headers.Authorization = `Bearer ${accessToken}`;

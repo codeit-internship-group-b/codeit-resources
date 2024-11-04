@@ -6,7 +6,7 @@ export const API_ENDPOINTS = {
   },
   USERS: {
     GET_ALL: `/users`, // 전체 유저 조회
-    GET_USER: (userId: string | number) => `/users/${userId}`, // id로 유저 조회
+    GET_USER: () => `/users/user`, // id로 유저 조회
     PATCH_USER: (userId: string | number) => `/users/${userId}`, // 유저 정보 수정
     DELETE_USER: (userId: string | number) => `/users/${userId}`, // 유저 삭제
     CREATE_USER: `/users/create`, // 유저 생성
