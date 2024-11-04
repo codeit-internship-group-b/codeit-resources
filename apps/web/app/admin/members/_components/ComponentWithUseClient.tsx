@@ -10,6 +10,7 @@ import SidePanel from "./SidePanel";
 import Header from "./Header";
 import Navigation from "./Navigation";
 import MemberListItem from "./MemberListItem";
+import EmptyState from "./EmptyState";
 
 export default function Members(): JSX.Element {
   const [activeTab, setActiveTab] = useState("전체");
@@ -92,11 +93,7 @@ export default function Members(): JSX.Element {
       />
       <main>
         {filteredMembers.length === 0 ? (
-          <div className="min-h-400 flex items-center justify-center">
-            <p className="text-20 text-custom-black/60">
-              {activeTab === "전체" ? "등록된 멤버가 없습니다." : `${activeTab} 팀에 속한 멤버가 없습니다.`}
-            </p>
-          </div>
+          <EmptyState activeTab={activeTab} />
         ) : (
           <div className="flex flex-col gap-16">
             {filteredMembers.map((member) => (
