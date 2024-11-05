@@ -7,7 +7,41 @@ interface GetTeamsRequest extends Request {
   };
 }
 
-// Get all teams
+/**
+ * @swagger
+ * /teams:
+ *   get:
+ *     tags: [Teams]
+ *     summary: 모든 팀 조회
+ *     description: 필터링 및 정렬 옵션을 사용하여 모든 팀을 조회합니다.
+ *     parameters:
+ *       - in: query
+ *         name: sortOption
+ *         schema:
+ *           type: string
+ *           enum: [newest, oldest, alphabetical]
+ *         description: 정렬 옵션을 선택합니다.
+ *     responses:
+ *       200:
+ *         description: 팀 목록이 성공적으로 반환되었습니다.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                   name:
+ *                     type: string
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *                   updatedAt:
+ *                     type: string
+ *                     format: date-time
+ */
 export const getTeams = async (req: GetTeamsRequest, res: Response): Promise<void> => {
   const { sortOption = "newest" } = req.query;
 
@@ -31,6 +65,32 @@ interface CreateTeamRequest extends Request {
   };
 }
 
+/**
+ * @swagger
+ * /teams:
+ *   post:
+ *     tags: [Teams]
+ *     summary: 새로운 팀 생성
+ *     description: 새로운 팀을 생성합니다.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: 팀 이름
+ *                 example: "Development Team"
+ *     responses:
+ *       201:
+ *         description: 새로운 팀이 생성되었습니다.
+ *       400:
+ *         description: 팀 이름이 제공되지 않았습니다.
+ *       409:
+ *         description: 이미 존재하는 팀 이름입니다.
+ */
 export const createTeam = async (req: CreateTeamRequest, res: Response): Promise<void> => {
   const { name } = req.body;
 
@@ -60,6 +120,41 @@ interface UpdateTeamRequest extends Request {
   };
 }
 
+/**
+ * @swagger
+ * /teams/{teamId}:
+ *   put:
+ *     tags: [Teams]
+ *     summary: 팀 정보 업데이트
+ *     description: 팀 ID를 사용하여 팀 이름을 업데이트합니다.
+ *     parameters:
+ *       - in: path
+ *         name: teamId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: 업데이트할 팀 ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: 새로운 팀 이름
+ *                 example: "Updated Team Name"
+ *     responses:
+ *       200:
+ *         description: 팀 이름이 성공적으로 업데이트되었습니다.
+ *       400:
+ *         description: 팀 이름이 제공되지 않았습니다.
+ *       404:
+ *         description: 팀을 찾을 수 없습니다.
+ *       409:
+ *         description: 이미 존재하는 팀 이름입니다.
+ */
 export const updateTeam = async (req: UpdateTeamRequest, res: Response): Promise<void> => {
   const { teamId } = req.params;
   const { name } = req.body;
@@ -92,6 +187,26 @@ interface DeleteTeamRequest extends Request {
   };
 }
 
+/**
+ * @swagger
+ * /teams/{teamId}:
+ *   delete:
+ *     tags: [Teams]
+ *     summary: 팀 삭제
+ *     description: 팀 ID를 사용하여 팀을 삭제합니다.
+ *     parameters:
+ *       - in: path
+ *         name: teamId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: 삭제할 팀 ID
+ *     responses:
+ *       200:
+ *         description: 팀이 삭제되었습니다.
+ *       404:
+ *         description: 팀을 찾을 수 없습니다.
+ */
 export const deleteTeam = async (req: DeleteTeamRequest, res: Response): Promise<void> => {
   const { teamId } = req.params;
   const deletedTeam = await Team.findByIdAndDelete(teamId);
