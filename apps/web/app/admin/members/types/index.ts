@@ -22,3 +22,17 @@ export type SidePanelFormData = Omit<
 > & {
   profileImage: ProfileImageType;
 };
+
+export const SORT_OPTIONS = {
+  NEWEST: "newest",
+  OLDEST: "oldest",
+  ALPHABETICAL: "alphabetical",
+} as const;
+
+export type SortOption = (typeof SORT_OPTIONS)[keyof typeof SORT_OPTIONS];
+
+export const SORT_LABELS: Record<SortOption, string> = {
+  newest: "최신순",
+  oldest: "오래된순",
+  alphabetical: "가나다순",
+} as const;
