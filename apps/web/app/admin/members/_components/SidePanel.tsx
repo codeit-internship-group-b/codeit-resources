@@ -1,30 +1,22 @@
-/* eslint-disable react/no-unescaped-entities */
 "use client";
 
 import { useState, useEffect, useRef, type ChangeEvent } from "react";
 import { useForm, Controller } from "react-hook-form";
 import Image from "next/image";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { notify, Modal, Radio } from "@ui/index";
 import Input from "@ui/src/components/common/Input";
 import Button from "@ui/src/components/common/Button";
 import { DoubleChevron } from "@ui/public";
-import { IMAGE_TYPES, MAX_SIZE } from "@repo/ui/src/utils/constants/image";
-import { NOTIFICATION_MESSAGES } from "@repo/ui/src/utils/constants/notificationMessage";
+import { BLUR_DATA_URL, IMAGE_TYPES, MAX_SIZE } from "@repo/ui/src/utils/constants/image";
+import { TOAST_MESSAGES, MEMBER_FORM_MESSAGES, MODAL_MESSAGES } from "@repo/ui/src/utils/constants/notificationMessage";
 import DefaultProfileImage from "@ui/public/images/image_default_profile.png";
 import MultiSelectDropdown from "@repo/ui/src/components/common/Dropdown/MulitiSelectDropdown";
 import { type StaticImport } from "next/dist/shared/lib/get-img-props";
 import { useOnClickOutside } from "@ui/src/hooks/useOnClickOutside";
-import { patchMember, postMember, deleteMember } from "@/api/members";
+import { REGEXP_PATTERNS } from "@repo/ui/src/utils/constants/regexp";
 import { MOCK_TEAMS } from "../mockData";
-import { type MemberWithFileImage, type SidePanelFormData } from "../types";
-
-const roleOptions = {
-  member: "멤버",
-  admin: "어드민",
-} as const;
-
-type RoleOption = keyof typeof roleOptions;
+import { type MemberWithFileImage, type SidePanelFormData, ROLE_LABELS, type RoleOption } from "../types";
+import { useMemberMutations } from "../_hooks/useMemberMutation";
 
 interface AddMemberSidePanelProps {
   isOpen: boolean;
@@ -41,7 +33,6 @@ const initialFormData: SidePanelFormData = {
 };
 
 export default function SidePanel({ isOpen, onClose, selectedMember }: AddMemberSidePanelProps): JSX.Element {
-  const queryClient = useQueryClient();
   const [imageObjectUrl, setImageObjectUrl] = useState<string>("");
   const [isImageError, setIsImageError] = useState(false);
   const sidePanelRef = useRef<HTMLDivElement>(null);
@@ -58,40 +49,8 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
     defaultValues: initialFormData,
   });
 
-  const postMemberMutation = useMutation({
-    mutationFn: postMember,
-    onSuccess: async () => {
-      notify({
-        type: "success",
-        message: selectedMember ? NOTIFICATION_MESSAGES.MEMBER_UPDATE : NOTIFICATION_MESSAGES.MEMBER_ADD,
-      });
-      await queryClient.invalidateQueries({ queryKey: ["members"] });
-      onClose();
-    },
-  });
-
-  const patchMemberMutation = useMutation({
-    mutationFn: (data: FormData) => (selectedMember ? patchMember(selectedMember._id, data) : postMember(data)),
-    onSuccess: async () => {
-      notify({
-        type: "success",
-        message: selectedMember ? NOTIFICATION_MESSAGES.MEMBER_UPDATE : NOTIFICATION_MESSAGES.MEMBER_ADD,
-      });
-      await queryClient.invalidateQueries({ queryKey: ["members"] });
-      onClose();
-    },
-  });
-
-  const deleteMemberMutation = useMutation({
-    mutationFn: (userId: string) => deleteMember(userId),
-    onSuccess: async () => {
-      notify({
-        type: "success",
-        message: NOTIFICATION_MESSAGES.MEMBER_DELETE,
-      });
-      await queryClient.invalidateQueries({ queryKey: ["members"] });
-      onClose();
-    },
+  const { handleSubmitMutation, removeMember, isPending } = useMemberMutations({
+    onSuccess: onClose,
   });
 
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>): void => {
@@ -101,7 +60,7 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
     if (!IMAGE_TYPES.includes(file.type)) {
       notify({
         type: "error",
-        message: NOTIFICATION_MESSAGES.INVALID_IMAGE_TYPE,
+        message: TOAST_MESSAGES.INVALID_IMAGE_TYPE,
       });
       e.target.value = "";
       return;
@@ -110,7 +69,7 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
     if (file.size > MAX_SIZE) {
       notify({
         type: "error",
-        message: NOTIFICATION_MESSAGES.INVAILD_IMAGE_SIZE,
+        message: TOAST_MESSAGES.INVAILD_IMAGE_SIZE,
       });
       e.target.value = "";
       return;
@@ -135,17 +94,13 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
       formData.append("profileImage", data.profileImage);
     }
 
-    if (selectedMember) {
-      patchMemberMutation.mutate(formData);
-    } else {
-      postMemberMutation.mutate(formData);
-    }
+    handleSubmitMutation({ formData, selectedMember });
   };
 
   const handleModalConfirm = (): void => {
     if (!selectedMember) return;
 
-    deleteMemberMutation.mutate(selectedMember._id);
+    removeMember(selectedMember._id);
   };
 
   const handleImageError = (): void => {
@@ -171,22 +126,20 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
   };
 
   const getButtonText = (): string => {
-    const isPending = selectedMember ? patchMemberMutation.isPending : postMemberMutation.isPending;
-
     if (isPending) {
-      return "처리 중...";
+      return MEMBER_FORM_MESSAGES.BUTTON.SUBMIT.PROCESSING;
     }
 
-    return selectedMember ? "수정하기" : "추가하기";
+    return selectedMember ? MEMBER_FORM_MESSAGES.BUTTON.SUBMIT.UPDATE : MEMBER_FORM_MESSAGES.BUTTON.SUBMIT.ADD;
   };
 
   const getRoleValue = (displayText: string): RoleOption => {
-    const entry = Object.entries(roleOptions).find(([_, value]) => value === displayText);
+    const entry = Object.entries(ROLE_LABELS).find(([_, value]) => value === displayText);
     return entry?.[0] as RoleOption;
   };
 
   const getRoleDisplay = (value: RoleOption): string => {
-    return roleOptions[value];
+    return ROLE_LABELS[value];
   };
 
   useOnClickOutside(sidePanelRef, () => {
@@ -239,14 +192,16 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
         </button>
         <div className="mx-32 mb-40">
           <div className={selectedMember ? "flex justify-between" : ""}>
-            <h1 className="text-3xl-bold mb-32">{selectedMember ? "멤버 수정" : "멤버 추가"}</h1>
+            <h1 className="text-3xl-bold mb-32">
+              {selectedMember ? MEMBER_FORM_MESSAGES.TITLE.UPDATE : MEMBER_FORM_MESSAGES.TITLE.ADD}
+            </h1>
             {selectedMember ? (
               <Modal.Trigger>
                 <button
                   type="button"
                   className="text-sm-medium text-custom-black/80 hover:bg-custom-black/5 hover:text-custom-black w-71 rounded-6 border-custom-black/20 h-32 border transition-all duration-300"
                 >
-                  탈퇴하기
+                  {MEMBER_FORM_MESSAGES.BUTTON.WITHDRAW}
                 </button>
               </Modal.Trigger>
             ) : null}
@@ -257,7 +212,7 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
               <Controller
                 name="role"
                 control={control}
-                rules={{ required: "역할을 선택해주세요" }}
+                rules={{ required: MEMBER_FORM_MESSAGES.VALIDATION.ROLE.REQUIRED }}
                 render={({ field: { value, onChange } }) => (
                   <Radio.Group
                     value={getRoleDisplay(value)}
@@ -265,34 +220,33 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
                       onChange(getRoleValue(displayText));
                     }}
                   >
-                    <Radio.Option value={roleOptions.member}>{roleOptions.member}</Radio.Option>
-                    <Radio.Option value={roleOptions.admin}>{roleOptions.admin}</Radio.Option>
+                    <Radio.Option value={ROLE_LABELS.member}>{ROLE_LABELS.member}</Radio.Option>
+                    <Radio.Option value={ROLE_LABELS.admin}>{ROLE_LABELS.admin}</Radio.Option>
                   </Radio.Group>
                 )}
               />
             </div>
 
             <Input
-              placeholder="멤버 이름"
+              placeholder={MEMBER_FORM_MESSAGES.PLACEHOLDER.NAME}
               error={errors.name}
               {...register("name", {
-                required: "이름을 입력해주세요",
+                required: MEMBER_FORM_MESSAGES.VALIDATION.NAME.REQUIRED,
                 minLength: {
                   value: 2,
-                  message: "이름은 2자 이상이어야 합니다",
+                  message: MEMBER_FORM_MESSAGES.VALIDATION.NAME.MIN_LENGTH,
                 },
               })}
             />
 
             <Input
-              type="email"
-              placeholder="멤버 이메일"
+              placeholder={MEMBER_FORM_MESSAGES.PLACEHOLDER.EMAIL}
               error={errors.email}
               {...register("email", {
-                required: "이메일을 입력해주세요",
+                required: MEMBER_FORM_MESSAGES.VALIDATION.EMAIL.REQUIRED,
                 pattern: {
-                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  message: "올바른 이메일 형식이 아닙니다",
+                  value: REGEXP_PATTERNS.EMAIL,
+                  message: MEMBER_FORM_MESSAGES.VALIDATION.EMAIL.PATTERN,
                 },
               })}
             />
@@ -304,7 +258,7 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
                 render={({ field: { value, onChange } }) => (
                   <MultiSelectDropdown selectedValue={value} onSelect={onChange}>
                     <MultiSelectDropdown.Toggle>
-                      {value.length > 0 ? value.join(", ") : "팀"}
+                      {value.length > 0 ? value.join(", ") : MEMBER_FORM_MESSAGES.PLACEHOLDER.TEAM}
                     </MultiSelectDropdown.Toggle>
                     <MultiSelectDropdown.Wrapper>
                       {MOCK_TEAMS.map((team) => (
@@ -321,17 +275,23 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
             <div className="mb-[262px] flex items-center gap-24">
               <Image
                 src={getImageSource()}
-                alt={watch("profileImage") ? "프로필 이미지 미리보기" : "기본 프로필 이미지"}
+                alt={
+                  watch("profileImage")
+                    ? MEMBER_FORM_MESSAGES.IMAGE.PREVIEW_ALT
+                    : MEMBER_FORM_MESSAGES.IMAGE.DEFAULT_ALT
+                }
                 width={120}
                 height={120}
-                className="size-120 rounded-full object-cover"
+                placeholder="blur"
+                blurDataURL={BLUR_DATA_URL}
                 onError={handleImageError}
+                className="size-120 rounded-full object-cover"
               />
               <label
                 htmlFor="profileImage"
                 className="w-86 border-custom-black/20 rounded-6 text-sm-medium text-custom-black/80 flex h-32 cursor-pointer items-center justify-center border transition-colors duration-300 hover:border-purple-400 hover:text-purple-400"
               >
-                사진 업로드
+                {MEMBER_FORM_MESSAGES.BUTTON.UPLOAD_PHOTO}
                 <input
                   id="profileImage"
                   type="file"
@@ -342,7 +302,7 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
               </label>
             </div>
 
-            <Button variant="Primary" type="submit" className="w-full" disabled={postMemberMutation.isPending}>
+            <Button variant="Primary" type="submit" className="w-full" disabled={isPending}>
               {getButtonText()}
             </Button>
           </form>
@@ -350,11 +310,13 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
       </div>
 
       <Modal.Content>
-        <Modal.Title>'{selectedMember?.name}'님을 탈퇴시킬까요?</Modal.Title>
-        <Modal.Description>
-          탈퇴 시, 해당 멤버는 더 이상 목록에서 보이지 않으며, 해당 계정으로 로그인이 불가합니다.
-        </Modal.Description>
-        <Modal.Close onConfirm={handleModalConfirm} confirmText="탈퇴하기" cancelText="취소하기" />
+        <Modal.Title>{MODAL_MESSAGES.WITHDRAW.TITLE(selectedMember?.name)}</Modal.Title>
+        <Modal.Description>{MODAL_MESSAGES.WITHDRAW.DESCRIPTION}</Modal.Description>
+        <Modal.Close
+          onConfirm={handleModalConfirm}
+          confirmText={MODAL_MESSAGES.WITHDRAW.CONFIRM}
+          cancelText={MODAL_MESSAGES.WITHDRAW.CANCEL}
+        />
       </Modal.Content>
     </Modal.Root>
   );
