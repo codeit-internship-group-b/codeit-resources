@@ -6,7 +6,7 @@ import { type AxiosError } from "axios";
 import { type SignInResponseType } from "@repo/types/src/responseType";
 import { useRouter } from "next/navigation";
 import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
-import { postSignIn } from "@/app/api/auth";
+import { postSignIn } from "@/api/auth";
 import { useAuthStore } from "../store/useAuthStore";
 
 export const useSignInMutation = (): UseMutationResult<
