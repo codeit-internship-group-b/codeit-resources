@@ -93,7 +93,7 @@ export const getUsers = async (req: GetUsersRequest, res: Response): Promise<voi
   }
 
   const users = await query.exec();
-  res.status(200).json(users);
+  res.status(200).send(users);
 };
 
 interface GetUserRequest extends Request {
