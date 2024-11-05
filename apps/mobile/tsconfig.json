@@ -13,10 +13,9 @@
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts",
-    ".eslintrc.js",
-    "babel.config.js",
     "nativewind-env.d.ts",
-    "tailwind.config.js"
+    "**/__tests__/**/*.ts",
+    "**/__tests__/**/*.tsx",
+    "**/*.d.ts"
   ]
 }
