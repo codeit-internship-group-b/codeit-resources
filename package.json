@@ -6,7 +6,7 @@
     "clean": "turbo run clean",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "format": "prettier exec --write \"**/*.{ts,tsx,md}\"",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint:fix": "turbo run lint -- --fix",
     "prepare": "husky install",
     "test:web": "pnpm test --filter=web",

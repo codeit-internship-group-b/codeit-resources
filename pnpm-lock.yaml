@@ -186,6 +186,9 @@ importers:
       '@repo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      babel-preset-expo:
+        specifier: ^11.0.15
+        version: 11.0.15(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))
       expo:
         specifier: ~51.0.28
         version: 51.0.38(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))
@@ -763,7 +766,7 @@ importers:
         specifier: ^8.4.47
         version: 8.4.47
       react-test-renderer:
-        specifier: ^18.3.1
+        specifier: ^18.2.0
         version: 18.3.1(react@18.2.0)
       tailwind-merge:
         specifier: ^2.5.3
