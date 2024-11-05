@@ -401,6 +401,7 @@ export const deleteUser = async (req: DeleteUserRequest, res: Response): Promise
 
   if (!deletedUser) {
     res.status(404).send({ message: "사용자를 찾을 수 없습니다." });
+    return;
   }
 
   res.status(200).send({ message: "사용자가 삭제되었습니다." });
