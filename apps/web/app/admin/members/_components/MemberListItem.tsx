@@ -3,14 +3,8 @@ import Image from "next/image";
 import { Badge } from "@ui/index";
 import Dropdown from "@ui/src/components/common/Dropdown";
 import DefaultProfileImage from "@ui/public/images/image_default_profile.png";
-import { type MemberWithStaticImage } from "../types";
-
-const roleOptions = {
-  member: "멤버",
-  admin: "어드민",
-} as const;
-
-type RoleOption = keyof typeof roleOptions;
+import { BLUR_DATA_URL } from "@ui/src/utils/constants/image";
+import { type MemberWithStaticImage, ROLE_LABELS, type RoleOption } from "../types";
 
 interface MemberListItemProps {
   member: MemberWithStaticImage;
@@ -21,19 +15,21 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
   const [currentRole, setCurrentRole] = useState<RoleOption>(member.role);
   const [isImageError, setIsImageError] = useState(false);
 
+  const imageSource = isImageError ? DefaultProfileImage : (member.profileImage ?? DefaultProfileImage);
+
   const getRoleValue = (displayText: string): RoleOption => {
-    const entry = Object.entries(roleOptions).find(([_, value]) => value === displayText);
+    const entry = Object.entries(ROLE_LABELS).find(([_, value]) => value === displayText);
+
     return entry?.[0] as RoleOption;
   };
 
   const getRoleDisplay = (value: RoleOption): string => {
-    return roleOptions[value];
+    return ROLE_LABELS[value];
   };
-
-  const imageSource = isImageError ? DefaultProfileImage : (member.profileImage ?? DefaultProfileImage);
 
   const handleMemberClick = (e: MouseEvent<HTMLDivElement>): void => {
     const target = e.target as HTMLElement;
+
     if (!target.closest('[data-dropdown="true"]')) {
       onMemberClick(member);
     }
@@ -42,6 +38,7 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
   const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>): void => {
     if (e.key === "Escape") {
       e.currentTarget.blur();
+
       return;
     }
 
@@ -62,6 +59,7 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
 
   return (
     <div
+      // 하위에 버튼 요소가 포함되어 있어 div에 role="button"을 사용함
       role="button"
       tabIndex={0}
       onClick={handleMemberClick}
@@ -74,12 +72,15 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
           alt={`${member.name}의 프로필`}
           width={40}
           height={40}
-          className="size-40 rounded-full"
+          placeholder="blur"
+          blurDataURL={BLUR_DATA_URL}
           onError={handleImageError}
+          className="size-40 rounded-full"
         />
         <span className="text-custom-black">{member.name}</span>
         <span className="text-custom-black/60 max-w-200 overflow-wrap-break-word mr-16 break-all">{member.email}</span>
       </div>
+
       <div className="mr-16 flex flex-grow flex-wrap gap-16">
         {member.teams.map((team) => (
           <Badge key={team} color="purple" colorApplyTo="font" shape="round">
@@ -87,11 +88,12 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
           </Badge>
         ))}
       </div>
+
       <div data-dropdown="true">
         <Dropdown selectedValue={getRoleDisplay(currentRole)} onSelect={handleRoleChange} size="sm">
           <Dropdown.Toggle>{getRoleDisplay(currentRole)}</Dropdown.Toggle>
           <Dropdown.Wrapper className="top-42">
-            {Object.entries(roleOptions).map(([value, label]) => (
+            {Object.entries(ROLE_LABELS).map(([value, label]) => (
               <Dropdown.Item hoverStyle="purple" key={value} value={label}>
                 {label}
               </Dropdown.Item>

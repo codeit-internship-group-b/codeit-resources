@@ -36,3 +36,15 @@ export const SORT_LABELS: Record<SortOption, string> = {
   oldest: "오래된순",
   alphabetical: "가나다순",
 } as const;
+
+export const ROLE_OPTIONS = {
+  MEMBER: "member",
+  ADMIN: "admin",
+} as const;
+
+export type RoleOption = (typeof ROLE_OPTIONS)[keyof typeof ROLE_OPTIONS];
+
+export const ROLE_LABELS: Record<RoleOption, string> = {
+  member: "멤버",
+  admin: "어드민",
+} as const;
