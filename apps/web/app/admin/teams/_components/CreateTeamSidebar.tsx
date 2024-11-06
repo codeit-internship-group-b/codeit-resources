@@ -4,14 +4,14 @@ import { debounce } from "es-toolkit";
 import Sidebar from "@/components/common/Sidebar";
 import { useCreateTeam } from "../_hooks/useCreateTeam";
 
-interface AddTeamSideberProps {
+interface CreateTeamSideberProps {
   isOpen: boolean;
   onClick: () => void;
 }
 
-export default function AddTeamSidebar({ isOpen, onClick }: AddTeamSideberProps): JSX.Element {
+export default function CreateTeamSidebar({ isOpen, onClick }: CreateTeamSideberProps): JSX.Element {
   const [teamName, setTeamName] = useState("");
-  const { mutate: postCreateTeamMutate } = useCreateTeam();
+  const { mutate: postCreateTeamMutate, isPending } = useCreateTeam();
 
   const debouncedSetTeamName = debounce((value: string) => {
     setTeamName(value);
@@ -33,7 +33,7 @@ export default function AddTeamSidebar({ isOpen, onClick }: AddTeamSideberProps)
           <h1>팀 추가</h1>
           <Input id="teamName" placeholder="팀 이름" onChange={handleChange} />
         </div>
-        <Button className="w-full" variant="Primary" type="submit">
+        <Button className="h-42 w-full" variant="Primary" type="submit" isPending={isPending}>
           추가하기
         </Button>
       </form>

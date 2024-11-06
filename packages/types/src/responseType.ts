@@ -1,7 +1,7 @@
 import { IUser } from "./userType";
 
 export interface ResponseType<T> {
-  data: T;
+  data?: T;
   message?: string;
   status?: "success" | "error";
 }

@@ -2,7 +2,7 @@
 
 import Button from "@ui/src/components/common/Button";
 import { useState } from "react";
-import AddTeamSidebar from "./AddTeamSidebar";
+import CreateTeamSidebar from "./CreateTeamSidebar";
 
 export default function TeamListHeader(): JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,7 +20,7 @@ export default function TeamListHeader(): JSX.Element {
         </Button>
       </div>
 
-      <AddTeamSidebar isOpen={isOpen} onClick={handleButtonClick} />
+      <CreateTeamSidebar isOpen={isOpen} onClick={handleButtonClick} />
     </>
   );
 }
