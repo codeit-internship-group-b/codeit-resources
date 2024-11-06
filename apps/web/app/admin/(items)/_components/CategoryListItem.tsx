@@ -4,10 +4,11 @@ import ListItem from "@ui/src/components/common/ListItem";
 import { useOnClickOutside } from "@ui/src/hooks/useOnClickOutside";
 import { useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { PlusIcon, TriangleIcon } from "@ui/public";
+import { TriangleIcon } from "@ui/public";
 import CategoryEditDropdown from "./CategoryEditDropdown";
 import ConfirmationModal from "./ConfirmationModal";
 import CategoryListSubItem from "./CategoryListSubItem";
+import AddItemButton from "./AddItemButton";
 
 interface CategoryListItemProps {
   title: string;
@@ -54,12 +55,7 @@ export default function CategoryListItem({ title }: CategoryListItemProps): JSX.
           )}
         </span>
         <div className="flex gap-12">
-          <button
-            className="hover:bg-custom-black/5 flex size-32 cursor-pointer justify-center rounded-full transition-colors duration-300 ease-in-out"
-            type="button"
-          >
-            <PlusIcon width={20} fill="true" />
-          </button>
+          <AddItemButton />
           <ConfirmationModal Title={title}>
             <CategoryEditDropdown isModifying={isModifying} setIsModifying={setIsModifying} />
           </ConfirmationModal>
