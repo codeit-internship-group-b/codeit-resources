@@ -108,7 +108,7 @@ export const createTeam = async (req: CreateTeamRequest, res: Response): Promise
   const newTeam = new Team({ name });
 
   await newTeam.save();
-  res.status(201).send({ message: `새로운 팀 ${name}이 생성되었습니다.`, newTeam });
+  res.status(201).send({ message: `새로운 팀 ${name}이 생성되었습니다.`, data: newTeam });
 };
 
 interface UpdateTeamRequest extends Request {
