@@ -1,6 +1,6 @@
-import { Button, Input, notify } from "@ui/index";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Button, Input } from "@ui/index";
 import { type ChangeEvent, useState, type FormEvent } from "react";
+import { debounce } from "es-toolkit";
 import Sidebar from "@/components/common/Sidebar";
 import { useCreateTeam } from "../_hooks/useCreateTeam";
 
@@ -13,17 +13,17 @@ export default function AddTeamSidebar({ isOpen, onClick }: AddTeamSideberProps)
   const [teamName, setTeamName] = useState("");
   const { mutate: postCreateTeamMutate } = useCreateTeam();
 
+  const debouncedSetTeamName = debounce((value: string) => {
+    setTeamName(value);
+  }, 300);
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    // TODO: debouce 적용
-    setTeamName(e.target.value);
-    console.log(e.target.value);
+    debouncedSetTeamName(e.target.value);
   };
 
   const handleSubmit = (e: FormEvent): void => {
     e.preventDefault();
-    if (teamName) {
-      postCreateTeamMutate(teamName);
-    }
+    if (teamName) postCreateTeamMutate({ name: teamName });
   };
 
   return (
