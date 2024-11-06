@@ -1,11 +1,15 @@
+import { Suspense } from "react";
 import TeamList from "./_components/TeamList";
 import TeamListHeader from "./_components/TeamListHeader";
+import TeamListSkeletonGroup from "./_components/skeleton/TeamListSkeletonGroup";
 
-export default function Teams(): JSX.Element {
+export default function TeamsPage(): JSX.Element {
   return (
     <>
       <TeamListHeader />
-      <TeamList />
+      <Suspense fallback={<TeamListSkeletonGroup />}>
+        <TeamList />
+      </Suspense>
     </>
   );
 }

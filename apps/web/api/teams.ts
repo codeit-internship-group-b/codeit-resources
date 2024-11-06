@@ -3,10 +3,10 @@ import { type ResponseType, type ITeam } from "@repo/types";
 import axios from "axios";
 import { axiosRequester } from "@/lib/axios";
 
-export const postCreateTeam = async (teamName: ITeam): Promise<ResponseType<ITeam>> => {
-  const headers = new axios.AxiosHeaders();
-  headers.set("Content-Type", "application/json");
+const headers = new axios.AxiosHeaders();
+headers.set("Content-Type", "application/json");
 
+export const postCreateTeam = async (teamName: ITeam): Promise<ResponseType<ITeam>> => {
   const { data } = await axiosRequester<ITeam>({
     options: {
       method: "POST",
@@ -17,4 +17,15 @@ export const postCreateTeam = async (teamName: ITeam): Promise<ResponseType<ITea
   });
 
   return data as ResponseType<ITeam>;
+};
+
+export const getTeams = async (): Promise<ITeam[]> => {
+  const { data } = await axiosRequester({
+    options: {
+      method: "GET",
+      url: API_ENDPOINTS.TEAMS.GET_ALL,
+    },
+  });
+
+  return data as ITeam[];
 };

@@ -44,6 +44,7 @@ export default function TeamListItem({ teamName }: TeamSettingsDropdownProps): J
           teamName
         )}
       </span>
+
       <Modal.Root>
         <Dropdown
           selectedValue={isModify}
