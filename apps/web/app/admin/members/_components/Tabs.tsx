@@ -5,11 +5,11 @@ import Tab from "./Tab";
 interface TabsProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
-  teams: string[];
+  filteredTeams: string[];
   isLoading?: boolean;
 }
 
-export function Tabs({ activeTab, onTabChange, teams, isLoading }: TabsProps): JSX.Element {
+export function Tabs({ activeTab, onTabChange, filteredTeams, isLoading }: TabsProps): JSX.Element {
   if (isLoading) {
     return (
       <ul className="flex flex-row gap-32 whitespace-nowrap">
@@ -24,7 +24,7 @@ export function Tabs({ activeTab, onTabChange, teams, isLoading }: TabsProps): J
 
   return (
     <ul className="flex flex-row gap-32 whitespace-nowrap">
-      {teams.map((team) => (
+      {filteredTeams.map((team) => (
         <Tab
           key={team}
           team={team}
