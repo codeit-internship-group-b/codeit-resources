@@ -1,6 +1,6 @@
 "use client";
 
-import React, { type ReactNode, useState } from "react";
+import { type ReactNode, useState } from "react";
 import Sidebar from "./index";
 
 interface SideLayoutProps {
