@@ -52,7 +52,12 @@ export function useMemberMutations({ onSuccess }: UseMemberMutationsProps): Memb
         type: "success",
         message: TOAST_MESSAGES.MEMBER_UPDATE,
       });
-      await handleSuccess();
+
+      await queryClient.invalidateQueries({
+        queryKey: ["members"],
+        exact: true, // 정확히 ["members"]와 일치하는 쿼리만 무효화
+      });
+      onSuccess();
     },
   });
 

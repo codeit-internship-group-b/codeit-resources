@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { useState, type MouseEvent, type KeyboardEvent } from "react";
 import Image from "next/image";
 import { Badge } from "@ui/index";
@@ -5,6 +6,7 @@ import Dropdown from "@ui/src/components/common/Dropdown";
 import DefaultProfileImage from "@ui/public/images/image_default_profile.png";
 import { BLUR_DATA_URL } from "@ui/src/utils/constants/image";
 import { type MemberWithStaticImage, ROLE_LABELS, type RoleOption } from "../types";
+import { useMemberMutations } from "../_hooks/useMemberMutation";
 
 interface MemberListItemProps {
   member: MemberWithStaticImage;
@@ -14,6 +16,10 @@ interface MemberListItemProps {
 export default function MemberListItem({ member, onMemberClick }: MemberListItemProps): JSX.Element {
   const [currentRole, setCurrentRole] = useState<RoleOption>(member.role);
   const [isImageError, setIsImageError] = useState(false);
+
+  const { updateMember } = useMemberMutations({
+    onSuccess: () => {},
+  });
 
   const imageSource = isImageError ? DefaultProfileImage : (member.profileImage ?? DefaultProfileImage);
 
@@ -49,7 +55,18 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
 
   const handleRoleChange = (value: string | boolean): void => {
     if (typeof value === "string") {
-      setCurrentRole(getRoleValue(value));
+      const newRole = getRoleValue(value);
+      setCurrentRole(newRole);
+
+      if (newRole === currentRole) return;
+
+      const formData = new FormData();
+      formData.append("role", newRole);
+
+      updateMember({
+        id: member._id,
+        data: formData,
+      });
     }
   };
 
