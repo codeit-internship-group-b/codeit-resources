@@ -319,11 +319,15 @@ interface UpdateUserRequest extends Request {
  *                 items:
  *                   type: string
  *                 description: 사용자가 속할 팀
+ *               profileImage:
+ *                 type: string
+ *                 format: binary
+ *                 description: 새로운 프로필 이미지 파일
  *     responses:
  *       200:
  *         description: 사용자 정보가 성공적으로 업데이트되었습니다.
  *       400:
- *         description: 모든 필드값을 전송해주세요.
+ *         description: 하나 이상의 필드를 수정해주세요.
  *       404:
  *         description: 사용자를 찾을 수 없습니다.
  *       409:
@@ -331,21 +335,28 @@ interface UpdateUserRequest extends Request {
  */
 export const updateUser = async (req: UpdateUserRequest, res: Response): Promise<void> => {
   const { userId } = req.params;
-  const userInfo = await User.findById(userId);
+  const { email, name, teams, role } = req.body;
 
+  const userInfo = await User.findById(userId);
   if (!userInfo) {
     res.status(404).send({ message: "사용자를 찾을 수 없습니다." });
     return;
   }
 
-  const { email, name, teams, role } = req.body;
+  const isEmailChanged = email !== userInfo.email;
+  const isNameChanged = name !== userInfo.name;
+  const isRoleChanged = role !== userInfo.role;
+  const isTeamsChanged = JSON.stringify(teams) !== JSON.stringify(userInfo.teams);
+  const isProfileImageChanged = Boolean(req.file);
 
-  if (!(email || name)) {
-    res.status(400).send({ message: "모든 필드값을 전송해주세요." });
+  const hasChanges = isEmailChanged || isNameChanged || isRoleChanged || isTeamsChanged || isProfileImageChanged;
+
+  if (!hasChanges) {
+    res.status(400).send({ message: "하나 이상의 필드를 수정해주세요." });
     return;
   }
 
-  if (email) {
+  if (isEmailChanged) {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       res.status(409).send({ message: "이미 존재하는 이메일입니다." });
@@ -353,21 +364,24 @@ export const updateUser = async (req: UpdateUserRequest, res: Response): Promise
     }
   }
 
-  userInfo.role = role;
-  userInfo.name = name;
-  userInfo.email = email;
-  userInfo.teams = teams;
+  const updateFields: Partial<IUser> = {};
 
-  if (req.file) {
+  if (isEmailChanged) updateFields.email = email;
+  if (isNameChanged) updateFields.name = name;
+  if (isRoleChanged) updateFields.role = role;
+  if (isTeamsChanged) updateFields.teams = teams;
+  if (isProfileImageChanged) {
     const profileImageUrl = (req.file as Express.MulterS3.File).location;
-
-    userInfo.profileImage = profileImageUrl;
+    updateFields.profileImage = profileImageUrl;
   }
 
-  await userInfo.save();
-  res.status(200).send({ message: "사용자 정보가 성공적으로 업데이트되었습니다." });
-};
+  const updatedUser = await User.findByIdAndUpdate(userId, { $set: updateFields }, { new: true, runValidators: false });
 
+  res.status(200).send({
+    message: "사용자 정보가 성공적으로 업데이트되었습니다.",
+    user: updatedUser,
+  });
+};
 interface DeleteUserRequest extends Request {
   params: {
     userId: string;
