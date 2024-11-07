@@ -15,6 +15,6 @@
     "types": ["node"],
     "moduleResolution": "NodeNext"
   },
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "swagger.ts"],
   "include": ["src/**/*", "../../packages/types/src/*.ts"]
 }

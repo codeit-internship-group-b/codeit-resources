@@ -20,6 +20,60 @@ interface Filters {
 }
 
 // Get all users
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     tags: [Users]
+ *     summary: 모든 사용자 조회
+ *     description: 필터링 및 정렬 옵션을 사용하여 모든 사용자를 조회합니다.
+ *     parameters:
+ *       - in: query
+ *         name: role
+ *         schema:
+ *           type: string
+ *         description: 사용자의 역할로 필터링합니다.
+ *       - in: query
+ *         name: team
+ *         schema:
+ *           type: string
+ *         description: 팀으로 필터링합니다.
+ *       - in: query
+ *         name: sortOption
+ *         schema:
+ *           type: string
+ *           enum: [newest, oldest, alphabetical]
+ *         description: 정렬 옵션을 선택합니다.
+ *     responses:
+ *       200:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                     description: 사용자 ID
+ *                   name:
+ *                     type: string
+ *                     description: 사용자 이름
+ *                   email:
+ *                     type: string
+ *                     description: 사용자 이메일
+ *                   role:
+ *                     type: string
+ *                     description: 사용자 역할
+ *                   teams:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                     description: 사용자가 속한 팀
+ *                   profileImage:
+ *                     type: string
+ *                     description: 프로필 이미지 URL
+ */
 export const getUsers = async (req: GetUsersRequest, res: Response): Promise<void> => {
   const { role, team, sortOption } = req.query;
 
@@ -43,14 +97,56 @@ export const getUsers = async (req: GetUsersRequest, res: Response): Promise<voi
 };
 
 interface GetUserRequest extends Request {
-  params: {
-    userId: string;
-  };
+  user?: IUser;
 }
 
 // Get a user by id
+/**
+ * @swagger
+ * /users
+ *   get:
+ *     tags: [Users]
+ *     summary: 사용자 ID로 사용자 조회
+ *     description: 주어진 사용자 ID로 사용자의 상세 정보를 조회합니다.
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: 조회할 사용자 ID
+ *     responses:
+ *       200:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                   description: 사용자 ID
+ *                 name:
+ *                   type: string
+ *                   description: 사용자 이름
+ *                 email:
+ *                   type: string
+ *                   description: 사용자 이메일
+ *                 role:
+ *                   type: string
+ *                   description: 사용자 역할
+ *                 teams:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                   description: 사용자가 속한 팀
+ *                 profileImage:
+ *                   type: string
+ *                   description: 프로필 이미지 URL
+ *       404:
+ *         description: 사용자를 찾을 수 없습니다.
+ */
 export const getUser = async (req: GetUserRequest, res: Response): Promise<void> => {
-  const { userId } = req.params;
+  const userId = req.user?._id;
   const user = await User.findById(userId).select("-password");
 
   if (!user) {
@@ -73,6 +169,75 @@ interface CreateUserRequest extends Request {
 }
 
 // Create a new user
+/**
+ * @swagger
+ * /users/create:
+ *   post:
+ *     tags: [Users]
+ *     summary: 새로운 사용자 생성
+ *     description: 새로운 사용자를 생성합니다.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: 사용자 이름
+ *               email:
+ *                 type: string
+ *                 description: 사용자 이메일
+ *               password:
+ *                 type: string
+ *                 description: 사용자 비밀번호
+ *               role:
+ *                 type: string
+ *                 description: 사용자 역할
+ *                 default: member
+ *               teams:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 description: 사용자가 속할 팀
+ *     responses:
+ *       201:
+ *         description: 새로운 사용자가 생성되었습니다.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                       description: 생성된 사용자 ID
+ *                     name:
+ *                       type: string
+ *                       description: 생성된 사용자 이름
+ *                     email:
+ *                       type: string
+ *                       description: 생성된 사용자 이메일
+ *                     role:
+ *                       type: string
+ *                       description: 생성된 사용자 역할
+ *                     teams:
+ *                       type: array
+ *                       items:
+ *                         type: string
+ *                     profileImage:
+ *                       type: string
+ *                       description: 프로필 이미지 URL
+ *       400:
+ *         description: 이름 또는 이메일이 누락되었습니다.
+ *       409:
+ *         description: 이미 존재하는 이메일입니다.
+ */
 export const createUser = async (req: CreateUserRequest, res: Response): Promise<void> => {
   const { name, email, role, teams } = req.body;
 
@@ -96,7 +261,6 @@ export const createUser = async (req: CreateUserRequest, res: Response): Promise
   const user = new User({
     name,
     email,
-    password: "1234",
     role: role ?? "member",
     profileImage: profileImageUrl,
     teams: newTeams,
@@ -120,6 +284,51 @@ interface UpdateUserRequest extends Request {
 }
 
 // Update a user by id
+/**
+ * @swagger
+ * /users/{userId}:
+ *   put:
+ *     tags: [Users]
+ *     summary: 사용자 정보 업데이트
+ *     description: 주어진 사용자 ID로 사용자의 정보를 업데이트합니다.
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: 업데이트할 사용자 ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: 새로운 사용자 이름
+ *               email:
+ *                 type: string
+ *                 description: 새로운 사용자 이메일
+ *               role:
+ *                 type: string
+ *                 description: 새로운 사용자 역할
+ *               teams:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 description: 사용자가 속할 팀
+ *     responses:
+ *       200:
+ *         description: 사용자 정보가 성공적으로 업데이트되었습니다.
+ *       400:
+ *         description: 모든 필드값을 전송해주세요.
+ *       404:
+ *         description: 사용자를 찾을 수 없습니다.
+ *       409:
+ *         description: 이미 존재하는 이메일입니다.
+ */
 export const updateUser = async (req: UpdateUserRequest, res: Response): Promise<void> => {
   const { userId } = req.params;
   const userInfo = await User.findById(userId);
@@ -159,8 +368,34 @@ export const updateUser = async (req: UpdateUserRequest, res: Response): Promise
   res.status(200).send({ message: "사용자 정보가 성공적으로 업데이트되었습니다." });
 };
 
+interface DeleteUserRequest extends Request {
+  params: {
+    userId: string;
+  };
+}
+
 // Delete a user by id
-export const deleteUser = async (req: GetUserRequest, res: Response): Promise<void> => {
+/**
+ * @swagger
+ * /users/{userId}:
+ *   delete:
+ *     tags: [Users]
+ *     summary: 사용자 삭제
+ *     description: 주어진 사용자 ID로 사용자를 삭제합니다.
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: 삭제할 사용자 ID
+ *     responses:
+ *       200:
+ *         description: 사용자가 삭제되었습니다.
+ *       404:
+ *         description: 사용자를 찾을 수 없습니다.
+ */
+export const deleteUser = async (req: DeleteUserRequest, res: Response): Promise<void> => {
   const { userId } = req.params;
   const deletedUser = await User.findByIdAndDelete(userId);
 
@@ -176,6 +411,32 @@ interface UpdateProfileImageRequest extends Request {
   file?: Express.Multer.File | Express.MulterS3.File;
 }
 
+/**
+ * @swagger
+ * /users/me/image:
+ *   patch:
+ *     tags: [Users]
+ *     summary: 프로필 사진 업데이트
+ *     description: 현재 사용자의 프로필 사진을 업데이트합니다.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *                 description: 새 프로필 이미지 파일
+ *     responses:
+ *       200:
+ *         description: 프로필 사진이 성공적으로 업데이트되었습니다.
+ *       400:
+ *         description: 인증 토큰이 유효하지 않거나 사진이 누락되었습니다.
+ *       404:
+ *         description: 사용자를 찾을 수 없습니다.
+ */
 export const updateProfileImage = async (req: UpdateProfileImageRequest, res: Response): Promise<void> => {
   const userId = req.user?._id;
   const profileImageUrl = (req.file as Express.MulterS3.File).location;
@@ -209,6 +470,36 @@ interface UpdateUserCredentialsRequest extends Request {
   };
 }
 
+/**
+ * @swagger
+ * /users/credentials:
+ *   patch:
+ *     tags: [Users]
+ *     summary: 사용자 비밀번호 업데이트
+ *     description: 현재 사용자의 비밀번호를 변경합니다.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               currentPassword:
+ *                 type: string
+ *                 description: 현재 비밀번호
+ *               newPassword:
+ *                 type: string
+ *                 description: 새 비밀번호
+ *     responses:
+ *       200:
+ *         description: 비밀번호가 변경되었습니다.
+ *       400:
+ *         description: 필수 정보가 누락되었습니다.
+ *       401:
+ *         description: 비밀번호가 일치하지 않습니다.
+ *       404:
+ *         description: 사용자를 찾을 수 없습니다.
+ */
 export const updateUserCredentials = async (req: UpdateUserCredentialsRequest, res: Response): Promise<void> => {
   const userId = req.user?._id;
   const { currentPassword, newPassword } = req.body;

@@ -10,13 +10,79 @@ interface CategoryRequestBody {
   itemType: "room" | "equipment";
 }
 
-// 모든 카테고리 조회
+/**
+ * @swagger
+ * /categories:
+ *   get:
+ *     tags: [Categories]
+ *     summary: 모든 카테고리 조회
+ *     description: 모든 카테고리 정보를 조회합니다.
+ *     responses:
+ *       200:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     description: 카테고리 ID
+ *                   name:
+ *                     type: string
+ *                     description: 카테고리 이름
+ *                   itemType:
+ *                     type: string
+ *                     enum: ["room", "equipment"]
+ *                     description: 아이템 타입
+ */
 export const getAllCategories = async (req: Request, res: Response): Promise<void> => {
   const categories = await Category.find();
   res.status(200).json(categories);
 };
 
-// 카테고리 추가
+/**
+ * @swagger
+ * /categories:
+ *   post:
+ *     tags: [Categories]
+ *     summary: 카테고리 추가
+ *     description: 새로운 카테고리를 추가합니다.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: 카테고리 이름
+ *               itemType:
+ *                 type: string
+ *                 enum: ["room", "equipment"]
+ *                 description: 아이템 타입
+ *     responses:
+ *       201:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                   description: 추가된 카테고리 ID
+ *                 name:
+ *                   type: string
+ *                   description: 추가된 카테고리 이름
+ *                 itemType:
+ *                   type: string
+ *                   enum: ["room", "equipment"]
+ *                   description: 아이템 타입
+ *       400:
+ *         description: 유효하지 않은 카테고리 타입이거나 이미 존재하는 카테고리 이름입니다.
+ */
 export const createCategory = async (
   req: Request<unknown, ICategory, CategoryRequestBody>,
   res: Response,
@@ -39,7 +105,49 @@ export const createCategory = async (
   res.status(201).json(newCategory);
 };
 
-// 카테고리 이름 수정
+/**
+ * @swagger
+ * /categories/{categoryId}:
+ *   patch:
+ *     tags: [Categories]
+ *     summary: 카테고리 이름 수정
+ *     description: 특정 카테고리의 이름을 수정합니다.
+ *     parameters:
+ *       - in: path
+ *         name: categoryId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: 수정할 카테고리의 ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: 새로운 카테고리 이름
+ *     responses:
+ *       200:
+ *         description: 카테고리 이름이 성공적으로 수정되었습니다.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                   description: 수정된 카테고리 ID
+ *                 name:
+ *                   type: string
+ *                   description: 수정된 카테고리 이름
+ *       400:
+ *         description: 유효하지 않은 카테고리 ID 또는 이미 존재하는 카테고리 이름입니다.
+ *       404:
+ *         description: 카테고리를 찾을 수 없습니다.
+ */
 export const updateCategory = async (
   req: Request<{ categoryId: string }, ICategory, Partial<CategoryRequestBody>>,
   res: Response,
@@ -68,7 +176,28 @@ export const updateCategory = async (
   res.status(200).json(updatedCategory);
 };
 
-// 카테고리 삭제
+/**
+ * @swagger
+ * /categories/{categoryId}:
+ *   delete:
+ *     tags: [Categories]
+ *     summary: 카테고리 삭제
+ *     description: 특정 카테고리를 삭제합니다. 하위 아이템에 예약이 존재하는 경우 삭제할 수 없습니다.
+ *     parameters:
+ *       - in: path
+ *         name: categoryId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: 삭제할 카테고리의 ID
+ *     responses:
+ *       200:
+ *         description: 카테고리와 하위 아이템이 성공적으로 삭제되었습니다.
+ *       400:
+ *         description: 카테고리 하위 아이템에 예약이 존재합니다.
+ *       404:
+ *         description: 카테고리를 찾을 수 없습니다.
+ */
 export const deleteCategory = async (req: Request<{ categoryId: string }>, res: Response): Promise<void> => {
   const { categoryId } = req.params;
 

@@ -9,11 +9,7 @@
     ".next/types/**/*.ts",
     "../../packages/types/src/*.ts"
   ],
-  "exclude": [
-    "node_modules",
-    "out",
-    ".next"
-  ],
+  "exclude": ["node_modules", "out", ".next"],
   "compilerOptions": {
     "jsx": "preserve",
     "plugins": [
@@ -23,19 +19,10 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./*"
-      ],
-      "@ui/*": [
-        "../../packages/ui/*"
-      ],
-      "@/public/*": [
-        "./public/*"
-      ]
+      "@/*": ["./*"],
+      "@ui/*": ["../../packages/ui/*"],
+      "@/public/*": ["./public/*"]
     },
-    "typeRoots": [
-      "../packages/ui",
-      "./node_modules/@types"
-    ]
+    "typeRoots": ["../packages/ui", "./node_modules/@types"]
   }
 }
