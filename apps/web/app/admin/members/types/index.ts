@@ -1,26 +1,29 @@
+import { type StaticImageData } from "next/image";
 import { type IUser } from "@repo/types";
-import { type StaticImport } from "next/dist/shared/lib/get-img-props";
 
-type BaseImageType = string | StaticImport | null;
+// 이미지 타입
+export type ImageUrlType = string;
+export type StaticImageType = StaticImageData;
+export type ImageFileType = File;
 
-type ProfileImageType = BaseImageType | File;
+// 조합 타입
+export type DisplayImageType = ImageUrlType | StaticImageType;
+export type FormImageType = DisplayImageType | ImageFileType | null;
 
-// 리스트용 멤버 타입 (File 제외)
+// 멤버 타입
 export type MemberWithStaticImage = Omit<IUser, "profileImage"> & {
-  profileImage?: BaseImageType;
+  profileImage?: DisplayImageType;
 };
-
-// 사이드 패널용 멤버 타입 (모든 타입 허용)
 export type MemberWithFileImage = Omit<IUser, "profileImage"> & {
-  profileImage?: ProfileImageType;
+  profileImage?: FormImageType;
 };
 
-// 사이드 패널 폼 데이터 타입 (필수 필드)
+// 폼 타입
 export type SidePanelFormData = Omit<
   IUser,
   "_id" | "createdAt" | "updatedAt" | "department" | "password" | "profileImage"
 > & {
-  profileImage: ProfileImageType;
+  profileImage: FormImageType;
 };
 
 export const SORT_OPTIONS = {
