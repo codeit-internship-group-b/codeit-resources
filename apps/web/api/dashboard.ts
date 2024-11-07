@@ -24,8 +24,8 @@ export const getDashboard = async ({ userId }: GetDashboardProps): Promise<IRese
  * 대시보드 페이지의 회의를 종료하는 API 함수입니다.
  * @returns
  */
-export const patchMeetingStatus = async (_id: string): Promise<Partial<IReservation>> => {
-  const { data } = await axiosRequester<Partial<IReservation>>({
+export const patchMeetingStatus = async (_id: string): Promise<IReservation> => {
+  const { data } = await axiosRequester<IReservation>({
     options: {
       method: "PATCH",
       url: API_ENDPOINTS.RESERVATION.UPDATE_RESERVATION(_id),
