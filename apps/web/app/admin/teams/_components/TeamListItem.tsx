@@ -1,11 +1,12 @@
 "use client";
 
-import { useRef, useState } from "react";
-import Dropdown from "@ui/src/components/common/Dropdown";
+import { type ChangeEvent, useEffect, useRef, useState } from "react";
+import { debounce } from "es-toolkit";
 import { Modal } from "@ui/index";
 import { useOnClickOutside } from "@ui/src/hooks/useOnClickOutside";
 import ListItem from "@ui/src/components/common/ListItem";
 import { type TeamType } from "@repo/types";
+import Dropdown from "@ui/src/components/common/Dropdown";
 import { useDeleteTeam } from "../_hooks/useDeleteTeam";
 import { useUpdateTeam } from "../_hooks/useUpdateTeam";
 
@@ -26,17 +27,30 @@ export default function TeamListItem({ team }: TeamListItemProps): JSX.Element {
     }
   });
 
+  useEffect(() => {
+    if (isModify && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isModify]);
+
   const { mutate: deleteTeamMutate } = useDeleteTeam();
+  const { mutate: updateTeamMutate } = useUpdateTeam();
 
   const handleDeleteTeam = (): void => {
     deleteTeamMutate(_id);
   };
 
-  const { mutate: updateTeamMutate } = useUpdateTeam();
-
-  const handleChangeTeam = (): void => {
+  const handleUpdateTeam = (): void => {
     updateTeamMutate({ teamId: _id, newName: changeName });
     setIsModify(false);
+  };
+
+  const debouncedChangeHandler = debounce((value: string) => {
+    setChangeName(value);
+  }, 300);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    debouncedChangeHandler(e.target.value);
   };
 
   return (
@@ -47,12 +61,10 @@ export default function TeamListItem({ team }: TeamListItemProps): JSX.Element {
             className="placeholder:text-custom-black/50 w-full placeholder:underline placeholder:underline-offset-4 focus:outline-none"
             ref={inputRef}
             placeholder="팀 이름"
-            onChange={(e) => {
-              setChangeName(e.target.value);
-            }}
+            onChange={handleChange}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                handleChangeTeam();
+                handleUpdateTeam();
               }
             }}
           />
