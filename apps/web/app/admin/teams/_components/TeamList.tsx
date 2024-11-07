@@ -9,7 +9,7 @@ export default function TeamList(): JSX.Element {
   return (
     <div className="mt-40">
       {teams.map((team) => (
-        <TeamListItem key={team.name} teamName={team.name} />
+        <TeamListItem key={team.name} team={team} />
       ))}
     </div>
   );

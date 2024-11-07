@@ -5,12 +5,16 @@ import Dropdown from "@ui/src/components/common/Dropdown";
 import { Modal } from "@ui/index";
 import { useOnClickOutside } from "@ui/src/hooks/useOnClickOutside";
 import ListItem from "@ui/src/components/common/ListItem";
+import { type TeamType } from "@repo/types";
+import { useDeleteTeam } from "../_hooks/useDeleteTeam";
 
 interface TeamSettingsDropdownProps {
-  teamName: string;
+  team: TeamType;
 }
 
-export default function TeamListItem({ teamName }: TeamSettingsDropdownProps): JSX.Element {
+export default function TeamListItem({ team }: TeamSettingsDropdownProps): JSX.Element {
+  const { name, _id } = team;
+
   const [isModify, setIsModify] = useState(false);
   const [changeName, setChangeName] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -20,6 +24,12 @@ export default function TeamListItem({ teamName }: TeamSettingsDropdownProps): J
       setIsModify(false);
     }
   });
+
+  const { mutate: deleteTeamMutate } = useDeleteTeam();
+
+  const handleDeleteTeam = (): void => {
+    deleteTeamMutate(_id);
+  };
 
   return (
     <ListItem isModify={isModify}>
@@ -41,7 +51,7 @@ export default function TeamListItem({ teamName }: TeamSettingsDropdownProps): J
             }}
           />
         ) : (
-          teamName
+          name
         )}
       </span>
 
@@ -68,18 +78,12 @@ export default function TeamListItem({ teamName }: TeamSettingsDropdownProps): J
           </Dropdown.Wrapper>
         </Dropdown>
         <Modal.Content>
-          <Modal.Title>{teamName} 팀을 삭제하시겠습니까?</Modal.Title>
+          <Modal.Title>{name} 팀을 삭제하시겠습니까?</Modal.Title>
           <Modal.Description>
             삭제 시, 해당 팀은 더 이상 목록에서 보이지 않으며,
             <br className="hidden md:block" /> 해당 계정으로 로그인이 불가합니다.
           </Modal.Description>
-          <Modal.Close
-            onConfirm={() => {
-              // TODO: 삭제 로직 작성
-            }}
-            confirmText="확인"
-            cancelText="취소"
-          >
+          <Modal.Close onConfirm={handleDeleteTeam} confirmText="확인" cancelText="취소">
             예
           </Modal.Close>
         </Modal.Content>
