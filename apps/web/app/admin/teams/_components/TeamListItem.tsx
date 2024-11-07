@@ -7,12 +7,13 @@ import { useOnClickOutside } from "@ui/src/hooks/useOnClickOutside";
 import ListItem from "@ui/src/components/common/ListItem";
 import { type TeamType } from "@repo/types";
 import { useDeleteTeam } from "../_hooks/useDeleteTeam";
+import { useUpdateTeam } from "../_hooks/useUpdateTeam";
 
-interface TeamSettingsDropdownProps {
+interface TeamListItemProps {
   team: TeamType;
 }
 
-export default function TeamListItem({ team }: TeamSettingsDropdownProps): JSX.Element {
+export default function TeamListItem({ team }: TeamListItemProps): JSX.Element {
   const { name, _id } = team;
 
   const [isModify, setIsModify] = useState(false);
@@ -31,22 +32,27 @@ export default function TeamListItem({ team }: TeamSettingsDropdownProps): JSX.E
     deleteTeamMutate(_id);
   };
 
+  const { mutate: updateTeamMutate } = useUpdateTeam();
+
+  const handleChangeTeam = (): void => {
+    updateTeamMutate({ teamId: _id, newName: changeName });
+    setIsModify(false);
+  };
+
   return (
     <ListItem isModify={isModify}>
       <span className="flex flex-grow items-center gap-32 text-left">
         {isModify ? (
           <input
+            className="placeholder:text-custom-black/50 w-full placeholder:underline placeholder:underline-offset-4 focus:outline-none"
             ref={inputRef}
             placeholder="팀 이름"
-            className="placeholder:text-custom-black/50 w-full placeholder:underline placeholder:underline-offset-4 focus:outline-none"
             onChange={(e) => {
               setChangeName(e.target.value);
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                // TODO: input 데이터 patch
-                // eslint-disable-next-line no-console
-                console.log(changeName);
+                handleChangeTeam();
               }
             }}
           />

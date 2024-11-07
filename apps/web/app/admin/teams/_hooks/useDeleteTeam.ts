@@ -10,7 +10,7 @@ interface DeleteResponse {
 export const useDeleteTeam = (): UseMutationResult<DeleteResponse, AxiosError<{ message?: string }>, string> => {
   const queryClient = useQueryClient();
 
-  return useMutation<DeleteResponse, AxiosError<{ message?: string }>, string>({
+  return useMutation({
     mutationFn: (teamId: string) => deleteTeam(teamId),
     onSuccess: (res) => {
       // 토스트 피드백

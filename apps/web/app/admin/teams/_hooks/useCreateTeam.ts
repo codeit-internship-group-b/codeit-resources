@@ -7,7 +7,7 @@ import { postCreateTeam } from "@/api/teams";
 export const useCreateTeam = (): UseMutationResult<ResponseType<ITeam>, AxiosError<{ message?: string }>, ITeam> => {
   const queryClient = useQueryClient();
 
-  return useMutation<ResponseType<ITeam>, AxiosError<{ message?: string }>, ITeam>({
+  return useMutation({
     mutationFn: (name: ITeam) => postCreateTeam(name),
     onSuccess: (res) => {
       // 토스트 피드백

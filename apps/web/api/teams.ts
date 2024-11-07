@@ -3,10 +3,6 @@ import { type ResponseType, type ITeam, type TeamType } from "@repo/types";
 import axios from "axios";
 import { axiosRequester } from "@/lib/axios";
 
-interface DeleteResponse {
-  message: string;
-}
-
 const headers = new axios.AxiosHeaders();
 headers.set("Content-Type", "application/json");
 
@@ -14,8 +10,8 @@ export const postCreateTeam = async (teamName: ITeam): Promise<ResponseType<ITea
   const { data } = await axiosRequester({
     options: {
       method: "POST",
-      url: API_ENDPOINTS.TEAMS.CREATE_TEAM,
       headers,
+      url: API_ENDPOINTS.TEAMS.CREATE_TEAM,
       data: teamName,
     },
   });
@@ -34,7 +30,11 @@ export const getTeams = async (): Promise<TeamType[]> => {
   return data as TeamType[];
 };
 
-export const deleteTeam = async (teamId: string): Promise<DeleteResponse> => {
+interface MessageResponse {
+  message: string;
+}
+
+export const deleteTeam = async (teamId: string): Promise<MessageResponse> => {
   const { data } = await axiosRequester({
     options: {
       method: "DELETE",
@@ -42,5 +42,23 @@ export const deleteTeam = async (teamId: string): Promise<DeleteResponse> => {
     },
   });
 
-  return data as DeleteResponse;
+  return data as MessageResponse;
+};
+
+interface UpdateRequest {
+  teamId: string;
+  newName: string;
+}
+
+export const updateTeam = async ({ teamId, newName }: UpdateRequest): Promise<MessageResponse> => {
+  const { data } = await axiosRequester({
+    options: {
+      method: "PUT",
+      headers,
+      url: API_ENDPOINTS.TEAMS.UPDATE_TEAM(teamId),
+      data: { name: newName },
+    },
+  });
+
+  return data as unknown as MessageResponse;
 };
