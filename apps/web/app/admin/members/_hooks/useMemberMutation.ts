@@ -29,47 +29,29 @@ interface UseMemberMutationsProps {
 export function useMemberMutations({ onSuccess }: UseMemberMutationsProps): MemberMutationsReturn {
   const queryClient = useQueryClient();
 
-  const handleSuccess = async (): Promise<void> => {
+  const handleSuccess = async (message: string): Promise<void> => {
+    notify({
+      type: "success",
+      message,
+    });
+
     await queryClient.invalidateQueries({ queryKey: ["members"] });
     onSuccess();
   };
 
   const { mutate: createMember, isPending: isCreateMemberPending } = useMutation({
     mutationFn: postMember,
-    onSuccess: async () => {
-      notify({
-        type: "success",
-        message: TOAST_MESSAGES.MEMBER_ADD,
-      });
-      await handleSuccess();
-    },
+    onSuccess: () => handleSuccess(TOAST_MESSAGES.MEMBER_ADD),
   });
 
   const { mutate: updateMember, isPending: isUpdateMemberPending } = useMutation({
     mutationFn: ({ id, data }: UpdateMemberParams) => patchMember(id, data),
-    onSuccess: async () => {
-      notify({
-        type: "success",
-        message: TOAST_MESSAGES.MEMBER_UPDATE,
-      });
-
-      await queryClient.invalidateQueries({
-        queryKey: ["members"],
-        exact: true, // 정확히 ["members"]와 일치하는 쿼리만 무효화
-      });
-      onSuccess();
-    },
+    onSuccess: () => handleSuccess(TOAST_MESSAGES.MEMBER_UPDATE),
   });
 
   const { mutate: removeMember, isPending: isRemoveMemberPending } = useMutation({
     mutationFn: (userId: string) => deleteMember(userId),
-    onSuccess: async () => {
-      notify({
-        type: "success",
-        message: TOAST_MESSAGES.MEMBER_DELETE,
-      });
-      await handleSuccess();
-    },
+    onSuccess: () => handleSuccess(TOAST_MESSAGES.MEMBER_DELETE),
   });
 
   const handleSubmitMutation = ({ selectedMember, formData }: HandleSubmitMutationParams): void => {
