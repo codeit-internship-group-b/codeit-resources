@@ -2,21 +2,18 @@
 
 import cn from "@ui/src/utils/cn";
 import { InputHTMLAttributes, forwardRef } from "react";
-import { FieldError, UseFormRegisterReturn } from "react-hook-form";
+import { FieldError } from "react-hook-form";
 import ErrorMessage from "../ErrorMessage";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   placeholder: string;
   type?: "text" | "password" | "number" | "email";
   className?: string;
-  register?: UseFormRegisterReturn;
   error?: FieldError;
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ placeholder, type = "text", className, error, register, ...args }, ref) => {
-    const { onChange, onBlur, disabled, name, ref: regRef } = register ?? {};
-
+  ({ placeholder, type = "text", className, error, ...props }, ref) => {
     const isError = Boolean(error);
     const errorMessage = error?.message;
     return (
@@ -26,8 +23,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         })}
       >
         <input
-          id={name}
-          name={name}
+          id={props.name}
           type={type}
           className={cn(
             "transition-linear border-custom-black/40 hover:bg-custom-black/5 peer w-full rounded-lg border border-solid p-14 placeholder-transparent focus:hover:bg-purple-700/5",
@@ -38,14 +34,11 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           )}
           style={{ outline: "none" }}
           placeholder={placeholder}
-          onBlur={onBlur}
-          onChange={onChange}
-          disabled={disabled}
-          ref={regRef}
-          {...args}
+          ref={ref}
+          {...props}
         />
         <label
-          htmlFor={name}
+          htmlFor={props.name}
           className={cn(
             "peer-[:not(:placeholder-shown)]:-translate-y-27 peer-[:not(:placeholder-shown)]:text-13 bottom-39 transition-linear text-custom-black/80 peer-focus:-translate-y-27 peer-focus:!text-13 relative left-16 z-10 bg-transparent p-0 leading-none peer-placeholder-shown:translate-y-0 peer-focus:bg-white peer-focus:px-3 peer-[:not(:placeholder-shown)]:px-3",
             {
@@ -74,5 +67,4 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
 );
 
 Input.displayName = "Input";
-
 export default Input;
