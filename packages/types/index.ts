@@ -5,3 +5,4 @@ export * from "./src/teamType";
 export * from "./src/userType";
 export * from "./src/responseType";
 export * from "./src/storeType";
+export * from "./src/seatsType";
