@@ -1,4 +1,5 @@
 import { type Request, type Response } from "express";
+import { Types } from "mongoose";
 import { Team } from "../models/teamModel";
 
 interface GetTeamsRequest extends Request {
@@ -158,6 +159,11 @@ interface UpdateTeamRequest extends Request {
 export const updateTeam = async (req: UpdateTeamRequest, res: Response): Promise<void> => {
   const { teamId } = req.params;
   const { name } = req.body;
+
+  if (!Types.ObjectId.isValid(teamId)) {
+    res.status(400).send({ message: "유효하지 않은 팀 ID 입니다." });
+    return;
+  }
 
   if (!name) {
     res.status(400).send({ message: "팀 이름은 필수 항목입니다." });
