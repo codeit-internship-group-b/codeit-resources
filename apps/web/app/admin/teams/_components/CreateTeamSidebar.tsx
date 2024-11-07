@@ -4,12 +4,12 @@ import { debounce } from "es-toolkit";
 import Sidebar from "@/components/common/Sidebar";
 import { useCreateTeam } from "../_hooks/useCreateTeam";
 
-interface CreateTeamSideberProps {
+interface CreateTeamSidebarProps {
   isOpen: boolean;
   onClick: () => void;
 }
 
-export default function CreateTeamSidebar({ isOpen, onClick }: CreateTeamSideberProps): JSX.Element {
+export default function CreateTeamSidebar({ isOpen, onClick }: CreateTeamSidebarProps): JSX.Element {
   const [teamName, setTeamName] = useState("");
   const { mutate: postCreateTeamMutate, isPending } = useCreateTeam();
 

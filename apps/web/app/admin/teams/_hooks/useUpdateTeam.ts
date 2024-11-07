@@ -38,7 +38,7 @@ export const useUpdateTeam = (): UseMutationResult<MessageResponse, AxiosError<{
       if (typeof res.message === "string") notify({ type: "success", message: res.message });
     },
     onError: (error) => {
-      if (prevTeamsRef.current) void queryClient.setQueryData(["teamsResponse"], prevTeamsRef.current);
+      if (prevTeamsRef.current) void queryClient.setQueryData<TeamType[]>(["teamsResponse"], prevTeamsRef.current);
 
       const err = error as AxiosError<{ message: string }>;
       const errMessage = err.response?.data.message;

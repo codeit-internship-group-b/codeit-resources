@@ -61,6 +61,7 @@ export default function TeamListItem({ team }: TeamListItemProps): JSX.Element {
             className="placeholder:text-custom-black/50 w-full placeholder:underline placeholder:underline-offset-4 focus:outline-none"
             ref={inputRef}
             placeholder="팀 이름"
+            defaultValue={name}
             onChange={handleChange}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
