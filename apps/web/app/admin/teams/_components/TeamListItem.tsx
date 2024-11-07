@@ -41,6 +41,11 @@ export default function TeamListItem({ team }: TeamListItemProps): JSX.Element {
   };
 
   const handleUpdateTeam = (): void => {
+    if (!changeName) {
+      setIsModify(false);
+      return;
+    }
+
     updateTeamMutate({ teamId: _id, newName: changeName });
     setIsModify(false);
   };
