@@ -6,6 +6,7 @@ import { type ISeat, type IReservation, type IRoom, type IEquipment } from "@rep
 interface SeatStatus {
   status: "in-use" | "unavailable" | "reserved" | "available";
   user: string | null;
+  itemId: string;
 }
 
 interface UseSeatStatusReturn {
@@ -22,11 +23,11 @@ export default function useSeatStatus(
     if (Array.isArray(data)) {
       data.forEach((seat) => {
         if (seat.status === "in-use") {
-          map.set(seat.name, { status: "in-use", user: seat.user?.name ?? null });
+          map.set(seat.name, { status: "in-use", itemId: seat._id, user: seat.user?.name ?? null });
         } else if (seat.status === "unavailable") {
-          map.set(seat.name, { status: "unavailable", user: null });
+          map.set(seat.name, { status: "unavailable", itemId: seat._id, user: null });
         } else {
-          map.set(seat.name, { status: "available", user: null });
+          map.set(seat.name, { status: "available", itemId: seat._id, user: null });
         }
       });
     }
@@ -38,7 +39,11 @@ export default function useSeatStatus(
     if (Array.isArray(reservedData)) {
       reservedData.forEach((reservation) => {
         if (reservation.itemType === "seat" && isISeat(reservation.item)) {
-          map.set(reservation.item.name, { status: "reserved", user: reservation.user.name });
+          map.set(reservation.item.name, {
+            status: "reserved",
+            itemId: reservation.item._id,
+            user: reservation.user.name,
+          });
         }
       });
     }
@@ -47,7 +52,7 @@ export default function useSeatStatus(
   }, [data, reservedData]);
 
   const getSeatStatus = (seatNum: string): SeatStatus => {
-    return seatMap.get(seatNum) ?? { status: "available", user: null };
+    return seatMap.get(seatNum) ?? { status: "available", itemId: "", user: null };
   };
 
   return { getSeatStatus };

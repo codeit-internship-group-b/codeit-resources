@@ -1,9 +1,9 @@
 export interface ReservationRequestBody {
-  userId: string;
-  itemType: "seat" | "room" | "equipment";
+  userId: string | undefined;
+  itemType: string;
   startAt: string;
   endAt: string;
-  status?: string;
+  status: string;
   notes?: string;
   attendees?: string[];
 }

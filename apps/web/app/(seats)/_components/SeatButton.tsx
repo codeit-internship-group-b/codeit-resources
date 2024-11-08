@@ -6,37 +6,73 @@ import { notify } from "@ui/index";
 import AlertModal from "@ui/src/components/common/ConditionalActionModal/AlertModal";
 import { usePathname } from "next/navigation";
 import { Sheet } from "react-modal-sheet";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { type ReservationRequestBody } from "@repo/types";
+import { formatSelectedDate } from "@ui/src/utils/date";
 import useIsMobileStore from "@/app/store/useIsMobileStore";
 import Sidebar from "@/components/common/Sidebar";
+import { createSeatReservationData } from "@/api/seats";
+import { useDateStore } from "@/app/store/useDateStore";
+import { useAuthStore } from "@/src/stores/useAuthStore";
 import { useSeatContext } from "../context/SeatContext";
 import AdminSeatSetting from "./AdminSeatSetting";
 
 interface SeatButtonProps {
   isLoading?: boolean;
   status: "in-use" | "unavailable" | "available" | "reserved";
+  itemId: string;
   user?: string | null;
   seatNum: string;
 }
 
-export default function SeatButton({ isLoading, status = "available", user, seatNum }: SeatButtonProps): JSX.Element {
+export default function SeatButton({
+  isLoading,
+  status = "available",
+  itemId,
+  user,
+  seatNum,
+}: SeatButtonProps): JSX.Element {
   const { checkedSeat, handleSelectSeat } = useSeatContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
+  const { selectedDate } = useDateStore();
+  const { user: authUser } = useAuthStore();
   const pathname = usePathname();
   const isAdmin = useMemo(() => pathname.includes("admin"), [pathname]);
   const isMobile = useIsMobileStore();
   const isChecked = checkedSeat === seatNum;
   const isDisabled = !isAdmin && (checkedSeat === seatNum || status !== "available" || isLoading);
 
+  const queryClient = useQueryClient();
+
+  const { mutate: createSeatReservationMutate } = useMutation({
+    mutationFn: ({ seatId, reservationData }: { seatId: string | null; reservationData: ReservationRequestBody }) =>
+      createSeatReservationData({ seatId, reservationData }),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["seats"] });
+      notify({ type: "success", message: "자리 예약 성공!" });
+    },
+    onError: (error) => {
+      notify({ type: "error", message: `오류 발생: ${error.message}` });
+    },
+  });
+
+  const reservationData = {
+    userId: authUser?._id,
+    itemType: "seat",
+    startAt: `${formatSelectedDate(selectedDate)}T14:00:00Z`,
+    endAt: `${formatSelectedDate(selectedDate)}T14:59:59Z`,
+    status: "reserved",
+  };
+
   const handleButtonClick = (): void => {
     if (checkedSeat && checkedSeat !== seatNum) {
       setIsModalOpen(true);
     } else {
       // post api 연결
+      createSeatReservationMutate({ seatId: itemId, reservationData });
       handleSelectSeat(seatNum);
-      notify({ type: "success", message: "자리 예약 성공!" });
     }
   };
 

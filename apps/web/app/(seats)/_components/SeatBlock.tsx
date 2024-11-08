@@ -5,6 +5,7 @@ import SeatButton from "./SeatButton";
 interface Seat {
   seatNum: string;
   status: "in-use" | "unavailable" | "available" | "reserved";
+  itemId: string;
   user: string | null;
 }
 

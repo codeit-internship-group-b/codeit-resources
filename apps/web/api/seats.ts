@@ -1,5 +1,5 @@
 import { API_ENDPOINTS } from "@repo/constants";
-import { type ISeat, type IReservation } from "@repo/types";
+import { type ISeat, type IReservation, type ReservationRequestBody } from "@repo/types";
 import { axiosRequester } from "@/lib/axios";
 
 /**
@@ -36,5 +36,27 @@ export const getReservedSeats = async (date: string): Promise<IReservation[]> =>
     },
   });
 
+  return data;
+};
+
+export interface ReservedResponse {
+  message: string;
+  savedReservation: ReservationRequestBody;
+}
+
+export const createSeatReservationData = async ({
+  seatId,
+  reservationData,
+}: {
+  seatId: string;
+  reservationData: ReservationRequestBody;
+}): Promise<ReservedResponse> => {
+  const { data } = await axiosRequester<ReservedResponse>({
+    options: {
+      method: "POST",
+      url: API_ENDPOINTS.RESERVATION.CREATE_RESERVATION(seatId),
+      data: reservationData,
+    },
+  });
   return data;
 };
