@@ -346,20 +346,21 @@ export const updateUser = async (req: UpdateUserRequest, res: Response): Promise
   const normalizedTeams = [teams].flat().sort().join();
   const normalizedUserTeams = [userInfo.teams].flat().sort().join();
 
-  const isEmailChanged = email !== userInfo.email;
-  const isNameChanged = name !== userInfo.name;
-  const isRoleChanged = role !== userInfo.role;
-  const isTeamsChanged = normalizedTeams !== normalizedUserTeams;
-  const isProfileImageChanged = Boolean(req.file);
+  const isFieldChanged = {
+    email: email !== userInfo.email,
+    name: name !== userInfo.name,
+    role: role !== userInfo.role,
+    teams: normalizedTeams !== normalizedUserTeams,
+    profileImage: Boolean(req.file),
+  };
 
-  const hasChanges = isEmailChanged || isNameChanged || isRoleChanged || isTeamsChanged || isProfileImageChanged;
-
+  const hasChanges = Object.values(isFieldChanged).some(Boolean);
   if (!hasChanges) {
     res.status(400).send({ message: "하나 이상의 필드를 수정해주세요." });
     return;
   }
 
-  if (isEmailChanged) {
+  if (isFieldChanged.email) {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       res.status(409).send({ message: "이미 존재하는 이메일입니다." });
@@ -369,11 +370,11 @@ export const updateUser = async (req: UpdateUserRequest, res: Response): Promise
 
   const updateFields: Partial<IUser> = {};
 
-  if (isEmailChanged) updateFields.email = email;
-  if (isNameChanged) updateFields.name = name;
-  if (isRoleChanged) updateFields.role = role;
-  if (isTeamsChanged) updateFields.teams = teams;
-  if (isProfileImageChanged) {
+  if (isFieldChanged.email) updateFields.email = email;
+  if (isFieldChanged.name) updateFields.name = name;
+  if (isFieldChanged.role) updateFields.role = role;
+  if (isFieldChanged.teams) updateFields.teams = teams;
+  if (isFieldChanged.profileImage) {
     const profileImageUrl = (req.file as Express.MulterS3.File).location;
     updateFields.profileImage = profileImageUrl;
   }
