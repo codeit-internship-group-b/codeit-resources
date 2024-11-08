@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Toast, Button } from "@ui/index";
 import { CATEGORIES } from "@repo/ui/src/utils/constants/teams";
+import { Chevron } from "@ui/public";
+import useIsMobileStore from "@/app/store/useIsMobileStore";
 import { type MemberWithStaticImage, type SortOption, SORT_OPTIONS } from "../types";
 import { useMembersQuery } from "../_hooks/useMembersQuery";
 import SidePanel from "./SidePanel";
@@ -15,6 +17,8 @@ export default function Members(): JSX.Element {
   const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS.NEWEST);
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<MemberWithStaticImage | null>(null);
+
+  const isMobile = useIsMobileStore();
 
   const { data: members, isLoading } = useMembersQuery(selectedSort);
 
@@ -66,28 +70,73 @@ export default function Members(): JSX.Element {
     setIsSidePanelOpen(true);
   };
 
-  return (
-    <>
-      <header className="flex justify-between">
-        <h1 className="text-3xl-bold mb-40">멤버 관리</h1>
-        <Button
-          onClick={handleOpenSidePanel}
-          variant="Secondary"
-          className="w-122 h-42 text-lg-medium text-custom-black/80"
-        >
-          + 멤버 추가
-        </Button>
-      </header>
+  useEffect(() => {
+    if (isSidePanelOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
 
-      <nav className="relative mb-24">
-        <div
-          className="w-full overflow-x-auto border-b border-gray-200/10"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-        >
-          <Tabs activeTab={activeTab} onTabChange={setActiveTab} filteredTeams={filteredTeams} isLoading={isLoading} />
-          <SortDropdown selectedSort={selectedSort} onSortChange={handleSortChange} />
-        </div>
-      </nav>
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isSidePanelOpen]);
+
+  return (
+    <div className={isSidePanelOpen ? "overflow-hidden" : ""}>
+      <header>
+        {isMobile ? (
+          <>
+            <div className="mb-28 flex items-center justify-between">
+              <Chevron />
+              <h1 className="text-xl-bold">멤버 관리</h1>
+              <SortDropdown selectedSort={selectedSort} onSortChange={handleSortChange} />
+            </div>
+            <nav className="relative mb-24">
+              <div
+                className="w-full overflow-x-auto border-b border-gray-200/10"
+                style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+              >
+                <Tabs
+                  activeTab={activeTab}
+                  onTabChange={setActiveTab}
+                  filteredTeams={filteredTeams}
+                  isLoading={isLoading}
+                />
+              </div>
+            </nav>
+          </>
+        ) : (
+          <>
+            <div className="mb-40 flex justify-between">
+              <h1 className="text-3xl-bold">멤버 관리</h1>
+              <Button
+                onClick={handleOpenSidePanel}
+                variant="Secondary"
+                className="w-122 h-42 text-lg-medium text-custom-black/80"
+              >
+                + 멤버 추가
+              </Button>
+            </div>
+            <nav className="relative mb-24">
+              <div
+                className="w-full overflow-x-auto border-b border-gray-200/10"
+                style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+              >
+                <Tabs
+                  activeTab={activeTab}
+                  onTabChange={setActiveTab}
+                  filteredTeams={filteredTeams}
+                  isLoading={isLoading}
+                />
+                <div className="md:bg-custom-gradient w-174 absolute right-0 top-0 flex h-full items-center justify-end pb-4">
+                  <SortDropdown selectedSort={selectedSort} onSortChange={handleSortChange} />
+                </div>
+              </div>
+            </nav>
+          </>
+        )}
+      </header>
 
       <main>
         <MemberList
@@ -98,8 +147,16 @@ export default function Members(): JSX.Element {
         />
       </main>
 
+      {isMobile ? (
+        <div className="shadow-[0px 4px 12px 0px rgba(0, 0, 0, 0.2)] fixed bottom-0 left-0 right-0 z-10 px-24 pb-32">
+          <Button variant="Primary" type="button" className="h-48 w-full" onClick={handleOpenSidePanel}>
+            + 멤버추가
+          </Button>
+        </div>
+      ) : null}
+
       <SidePanel isOpen={isSidePanelOpen} onClose={handleCloseSidePanel} selectedMember={selectedMember} />
       <Toast />
-    </>
+    </div>
   );
 }

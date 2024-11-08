@@ -12,17 +12,15 @@ export default function SortDropdown({ selectedSort, onSortChange }: SortDropdow
   };
 
   return (
-    <div className="bg-custom-gradient w-174 absolute right-0 top-0 flex h-full items-center justify-end pb-4">
-      <Dropdown selectedValue={getDisplayText(selectedSort)} onSelect={onSortChange} size="sm">
-        <Dropdown.Toggle iconType="sort">{selectedSort}</Dropdown.Toggle>
-        <Dropdown.Wrapper className="right-0 mt-2">
-          {Object.entries(SORT_LABELS).map(([value, label]) => (
-            <Dropdown.Item key={value} value={value} hoverStyle="purple">
-              {label}
-            </Dropdown.Item>
-          ))}
-        </Dropdown.Wrapper>
-      </Dropdown>
-    </div>
+    <Dropdown selectedValue={getDisplayText(selectedSort)} onSelect={onSortChange} size="sm">
+      <Dropdown.Toggle iconType="sort">{selectedSort}</Dropdown.Toggle>
+      <Dropdown.Wrapper className="right-0 mt-2">
+        {Object.entries(SORT_LABELS).map(([value, label]) => (
+          <Dropdown.Item key={value} value={value} hoverStyle="purple">
+            {label}
+          </Dropdown.Item>
+        ))}
+      </Dropdown.Wrapper>
+    </Dropdown>
   );
 }

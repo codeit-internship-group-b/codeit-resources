@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-useless-fragment */
 "use client";
 
 import { PersonIcon, MeetingIcon, SeatsIcon, TeamIcon, GearIcon } from "@repo/ui/public";
@@ -17,7 +18,7 @@ const NAV_ITEMS = [
 const SETTINGS_ITEM = { href: PAGE_NAME.SETTINGS, name: "설정", icon: GearIcon };
 const SettingsIcon = SETTINGS_ITEM.icon;
 
-const ADMIN_ITEMS = [
+export const ADMIN_ITEMS = [
   { href: PAGE_NAME.ADMIN_MEMBERS, name: "멤버 관리", icon: PersonIcon },
   { href: PAGE_NAME.ADMIN_TEAMS, name: "팀 관리", icon: TeamIcon },
   { href: PAGE_NAME.ADMIN_MEETINGS, name: "회의실 설정", icon: MeetingIcon },
@@ -35,6 +36,10 @@ export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element {
     [PAGE_NAME.ADMIN_MEETINGS]: PAGE_NAME.MEETINGS,
     [PAGE_NAME.ADMIN_SEATS]: PAGE_NAME.SEATS,
   };
+
+  if (isMobile && pathname.startsWith(PAGE_NAME.ADMIN_MEMBERS)) {
+    return <></>;
+  }
 
   return (
     <menu className="md:w-168 flex w-full justify-around gap-12 p-16 md:flex-col md:p-0">

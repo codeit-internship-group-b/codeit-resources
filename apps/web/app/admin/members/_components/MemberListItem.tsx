@@ -5,6 +5,8 @@ import { Badge } from "@ui/index";
 import Dropdown from "@ui/src/components/common/Dropdown";
 import DefaultProfileImage from "@ui/public/images/image_default_profile.png";
 import { BLUR_DATA_URL } from "@ui/src/utils/constants/image";
+import { Chevron } from "@ui/public";
+import useIsMobileStore from "@/app/store/useIsMobileStore";
 import { type MemberWithStaticImage, ROLE_LABELS, type RoleOption } from "../types";
 import { useMemberMutations } from "../_hooks/useMemberMutation";
 
@@ -16,6 +18,8 @@ interface MemberListItemProps {
 export default function MemberListItem({ member, onMemberClick }: MemberListItemProps): JSX.Element {
   const [currentRole, setCurrentRole] = useState<RoleOption>(member.role);
   const [isImageError, setIsImageError] = useState(false);
+
+  const isMobile = useIsMobileStore();
 
   const { updateMember } = useMemberMutations({
     onSuccess: () => {},
@@ -81,9 +85,9 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
       tabIndex={0}
       onClick={handleMemberClick}
       onKeyDown={handleKeyDown}
-      className="rounded-12 flex cursor-pointer items-center border border-gray-200/10 px-24 py-16 outline outline-1 outline-transparent transition-all duration-300 hover:border-transparent hover:bg-purple-700/5 hover:outline-purple-300"
+      className="rounded-12 relative flex cursor-pointer items-center border border-gray-200/10 px-16 py-12 outline outline-1 outline-transparent transition-all duration-300 hover:border-transparent hover:bg-purple-700/5 hover:outline-purple-300 md:px-24 md:py-16"
     >
-      <div className="flex items-center gap-16">
+      <div className="flex items-center gap-8 md:gap-16">
         <Image
           src={imageSource}
           alt={`${member.name}의 프로필`}
@@ -94,11 +98,15 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
           onError={handleImageError}
           className="size-40 rounded-full"
         />
-        <span className="text-custom-black">{member.name}</span>
-        <span className="text-custom-black/60 max-w-200 overflow-wrap-break-word mr-16 break-all">{member.email}</span>
+        <span className="text-custom-black text-md-regular md:text-lg-regular">{member.name}</span>
+        <span className="text-custom-black/60 max-w-200 overflow-wrap-break-word text-md-regular md:text-lg-regular mr-16 break-all">
+          {member.email}
+        </span>
       </div>
 
-      <div className="mr-16 flex flex-grow flex-wrap gap-16">
+      <Chevron className="top-22 absolute right-16 rotate-180 md:hidden" />
+
+      <div className="mr-16 hidden flex-grow flex-wrap gap-16 md:flex">
         {member.teams.map((team) => (
           <Badge key={team} color="purple" colorApplyTo="font" shape="round">
             {team}
@@ -106,7 +114,7 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
         ))}
       </div>
 
-      <div data-dropdown="true">
+      <div data-dropdown="true" className="hidden md:block">
         <Dropdown selectedValue={getRoleDisplay(currentRole)} onSelect={handleRoleChange} size="sm">
           <Dropdown.Toggle>{getRoleDisplay(currentRole)}</Dropdown.Toggle>
           <Dropdown.Wrapper className="top-42">
