@@ -51,3 +51,13 @@ export const ROLE_LABELS: Record<RoleOption, string> = {
   member: "멤버",
   admin: "어드민",
 } as const;
+
+export type GetMembersResponse = MemberWithStaticImage[];
+
+export interface DeleteMemberResponse {
+  message: string;
+}
+export interface MemberResponse {
+  message: string;
+  user: IUser;
+}

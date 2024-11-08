@@ -13,7 +13,7 @@ interface AxiosRequesterParams<T> {
   options: AxiosRequestConfig<T>;
 }
 
-type AxiosRequester = <T>(params: AxiosRequesterParams<T>) => Promise<AxiosResponse<T>>;
+type AxiosRequester = <K, T = unknown>(params: AxiosRequesterParams<T>) => Promise<AxiosResponse<K>>;
 
 export const axiosRequester: AxiosRequester = async ({ options }) => {
   const headers = { ...options.headers } as AxiosRequestHeaders;

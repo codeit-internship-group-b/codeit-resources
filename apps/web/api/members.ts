@@ -1,10 +1,13 @@
-import { type MemberWithStaticImage } from "@/app/admin/members/types";
+import {
+  type MemberResponse,
+  type GetMembersResponse,
+  type DeleteMemberResponse,
+  type SortOption,
+} from "@/app/admin/members/types";
 import { axiosRequester } from "@/lib/axios";
 
-type SortOption = "newest" | "oldest" | "alphabetical";
-
-export const getMembers = async (sortOption: SortOption): Promise<MemberWithStaticImage[]> => {
-  const { data } = await axiosRequester<MemberWithStaticImage[]>({
+export const getMembers = async (sortOption: SortOption): Promise<GetMembersResponse> => {
+  const { data } = await axiosRequester<GetMembersResponse>({
     options: {
       method: "GET",
       url: "users",
@@ -17,8 +20,8 @@ export const getMembers = async (sortOption: SortOption): Promise<MemberWithStat
   return data;
 };
 
-export const postMember = async (formData: FormData): Promise<FormData> => {
-  const { data } = await axiosRequester({
+export const postMember = async (formData: FormData): Promise<MemberResponse> => {
+  const { data } = await axiosRequester<MemberResponse, FormData>({
     options: {
       method: "POST",
       url: "users/create",
@@ -32,8 +35,8 @@ export const postMember = async (formData: FormData): Promise<FormData> => {
   return data;
 };
 
-export const patchMember = async (userId: string, formData: FormData): Promise<FormData> => {
-  const { data } = await axiosRequester({
+export const patchMember = async (userId: string, formData: FormData): Promise<MemberResponse> => {
+  const { data } = await axiosRequester<MemberResponse, FormData>({
     options: {
       method: "PUT",
       url: `users/${userId}`,
@@ -47,8 +50,8 @@ export const patchMember = async (userId: string, formData: FormData): Promise<F
   return data;
 };
 
-export const deleteMember = async (userId: string): Promise<string> => {
-  const { data } = await axiosRequester<string>({
+export const deleteMember = async (userId: string): Promise<DeleteMemberResponse> => {
+  const { data } = await axiosRequester<DeleteMemberResponse>({
     options: {
       method: "DELETE",
       url: `users/${userId}`,
