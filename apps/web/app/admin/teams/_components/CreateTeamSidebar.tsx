@@ -1,8 +1,8 @@
 import { Button, Input } from "@ui/index";
-import { type ChangeEvent, useState, type FormEvent } from "react";
-import { debounce } from "es-toolkit";
+import { type FieldValues, type SubmitHandler } from "react-hook-form";
 import Sidebar from "@/components/common/Sidebar";
 import { useCreateTeam } from "../_hooks/useCreateTeam";
+import { useCreateForm } from "../_hooks/useCreateForm";
 
 interface CreateTeamSidebarProps {
   isOpen: boolean;
@@ -10,28 +10,22 @@ interface CreateTeamSidebarProps {
 }
 
 export default function CreateTeamSidebar({ isOpen, onClick }: CreateTeamSidebarProps): JSX.Element {
-  const [teamName, setTeamName] = useState("");
+  const { handleSubmit, register } = useCreateForm();
   const { mutate: postCreateTeamMutate, isPending } = useCreateTeam();
 
-  const debouncedSetTeamName = debounce((value: string) => {
-    setTeamName(value);
-  }, 300);
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    debouncedSetTeamName(e.target.value);
-  };
-
-  const handleSubmit = (e: FormEvent): void => {
-    e.preventDefault();
-    if (teamName) postCreateTeamMutate({ name: teamName });
+  const onSubmit: SubmitHandler<FieldValues> = ({ teamName }) => {
+    postCreateTeamMutate({ name: teamName as string });
   };
 
   return (
     <Sidebar isOpen={isOpen} onClose={onClick}>
-      <form className="flex h-full flex-col justify-between" onSubmit={handleSubmit}>
+      <form
+        className="flex h-full flex-col justify-between"
+        onSubmit={(...rest) => void handleSubmit(onSubmit)(...rest)}
+      >
         <div className="gap-76 flex flex-col">
           <h1>팀 추가</h1>
-          <Input id="teamName" placeholder="팀 이름" onChange={handleChange} />
+          <Input id="teamName" placeholder="팀 이름" {...register("teamName")} />
         </div>
         <Button className="h-42 w-full" variant="Primary" type="submit" isPending={isPending}>
           추가하기

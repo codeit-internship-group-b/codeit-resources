@@ -252,7 +252,7 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
             ) : null}
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={(...rest) => void handleSubmit(onSubmit)(...rest)}>
             <div className="w-154 mb-24">
               <Controller
                 name="role"
