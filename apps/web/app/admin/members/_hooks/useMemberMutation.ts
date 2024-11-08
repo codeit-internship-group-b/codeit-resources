@@ -1,8 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { notify } from "@ui/index";
-import { TOAST_MESSAGES } from "@repo/ui/src/utils/constants/notificationMessage";
+import axios, { type AxiosError } from "axios";
 import { postMember, patchMember, deleteMember } from "@/api/members";
 import type { MemberWithFileImage } from "../types";
+
+interface ApiResponse {
+  message: string;
+}
 
 interface UpdateMemberParams {
   id: string;
@@ -29,30 +34,47 @@ interface UseMemberMutationsProps {
 export function useMemberMutations({ onSuccess }: UseMemberMutationsProps): MemberMutationsReturn {
   const queryClient = useQueryClient();
 
-  const handleSuccess = async (message: string): Promise<void> => {
+  const handleSuccess = async (res: ApiResponse): Promise<void> => {
     notify({
       type: "success",
-      message,
+      message: res.message,
     });
-
     await queryClient.invalidateQueries({ queryKey: ["members"] });
     onSuccess();
   };
+ 
+  const handleError = (error:  Error | AxiosError<ApiResponse>): void => {
+    if (axios.isAxiosError(error)) {
+      notify({
+        type: "error",
+        message: error.response?.data.message,
+      });
+    } else {
+      notify({
+        type: "error",
+        message: error.message,
+      });
+    }
+  };
+ 
 
-  const { mutate: createMember, isPending: isCreateMemberPending } = useMutation({
-    mutationFn: postMember,
-    onSuccess: () => handleSuccess(TOAST_MESSAGES.MEMBER_ADD),
-  });
+const { mutate: createMember, isPending: isCreateMemberPending } = useMutation({
+   mutationFn: postMember,
+   onSuccess: handleSuccess,
+   onError: handleError,
+ });
 
-  const { mutate: updateMember, isPending: isUpdateMemberPending } = useMutation({
-    mutationFn: ({ id, data }: UpdateMemberParams) => patchMember(id, data),
-    onSuccess: () => handleSuccess(TOAST_MESSAGES.MEMBER_UPDATE),
-  });
+ const { mutate: updateMember, isPending: isUpdateMemberPending } = useMutation({
+   mutationFn: ({ id, data }: UpdateMemberParams) => patchMember(id, data),
+   onSuccess: handleSuccess,
+   onError: handleError,
+ });
 
-  const { mutate: removeMember, isPending: isRemoveMemberPending } = useMutation({
-    mutationFn: (userId: string) => deleteMember(userId),
-    onSuccess: () => handleSuccess(TOAST_MESSAGES.MEMBER_DELETE),
-  });
+ const { mutate: removeMember, isPending: isRemoveMemberPending } = useMutation({
+   mutationFn: (userId: string) => deleteMember(userId),
+   onSuccess: handleSuccess,
+   onError: handleError,
+ });
 
   const handleSubmitMutation = ({ selectedMember, formData }: HandleSubmitMutationParams): void => {
     if (selectedMember) {
