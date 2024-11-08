@@ -93,19 +93,19 @@ export const getUsers = async (req: GetUsersRequest, res: Response): Promise<voi
   }
 
   const users = await query.exec();
-  res.status(200).json(users);
+  res.status(200).send(users);
 };
 
 interface GetUserRequest extends Request {
   user?: IUser;
 }
 
-// Get a user by id
 /**
  * @swagger
- * /users
+ * /users/{userId}:
  *   get:
- *     tags: [Users]
+ *     tags:
+ *       - Users
  *     summary: 사용자 ID로 사용자 조회
  *     description: 주어진 사용자 ID로 사용자의 상세 정보를 조회합니다.
  *     parameters:
@@ -117,6 +117,7 @@ interface GetUserRequest extends Request {
  *         description: 조회할 사용자 ID
  *     responses:
  *       200:
+ *         description: 사용자 정보를 반환합니다.
  *         content:
  *           application/json:
  *             schema:
@@ -168,12 +169,12 @@ interface CreateUserRequest extends Request {
   file?: Express.Multer.File | Express.MulterS3.File;
 }
 
-// Create a new user
 /**
  * @swagger
  * /users/create:
  *   post:
- *     tags: [Users]
+ *     tags:
+ *       - Users
  *     summary: 새로운 사용자 생성
  *     description: 새로운 사용자를 생성합니다.
  *     requestBody:
@@ -283,12 +284,12 @@ interface UpdateUserRequest extends Request {
   file?: Express.Multer.File | Express.MulterS3.File;
 }
 
-// Update a user by id
 /**
  * @swagger
  * /users/{userId}:
  *   put:
- *     tags: [Users]
+ *     tags:
+ *       - Users
  *     summary: 사용자 정보 업데이트
  *     description: 주어진 사용자 ID로 사용자의 정보를 업데이트합니다.
  *     parameters:
@@ -401,6 +402,7 @@ export const deleteUser = async (req: DeleteUserRequest, res: Response): Promise
 
   if (!deletedUser) {
     res.status(404).send({ message: "사용자를 찾을 수 없습니다." });
+    return;
   }
 
   res.status(200).send({ message: "사용자가 삭제되었습니다." });

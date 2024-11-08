@@ -32,4 +32,10 @@ export const API_ENDPOINTS = {
     UPDATE_CATEGORY: (categoryId: string | number) => `/categories/${categoryId}`, // 카테고리 이름 수정
     DELETE_CATEGORY: (categoryId: string | number) => `/categories/${categoryId}`, // 카테고리 삭제 (하위 아이템 전체 삭제됨)
   },
+  TEAMS: {
+    GET_ALL: "/teams", // 팀 전체 조회
+    UPDATE_TEAM: (teamId: string) => `/teams/${teamId}`, // 팀 이름 수정
+    DELETE_TEAM: (teamId: string) => `/teams/${teamId}`, // 팀 삭제
+    CREATE_TEAM: "/teams", // 팀 생성
+  },
 };

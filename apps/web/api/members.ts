@@ -18,7 +18,7 @@ export const getMembers = async (sortOption: SortOption): Promise<MemberWithStat
 };
 
 export const postMember = async (formData: FormData): Promise<FormData> => {
-  const { data } = await axiosRequester({
+  const { data } = await axiosRequester<FormData>({
     options: {
       method: "POST",
       url: "users/create",
@@ -33,7 +33,7 @@ export const postMember = async (formData: FormData): Promise<FormData> => {
 };
 
 export const patchMember = async (userId: string, formData: FormData): Promise<FormData> => {
-  const { data } = await axiosRequester({
+  const { data } = await axiosRequester<FormData>({
     options: {
       method: "PUT",
       url: `users/${userId}`,
@@ -48,7 +48,7 @@ export const patchMember = async (userId: string, formData: FormData): Promise<F
 };
 
 export const deleteMember = async (userId: string): Promise<string> => {
-  const { data } = await axiosRequester<string>({
+  const { data } = await axiosRequester<typeof userId, string>({
     options: {
       method: "DELETE",
       url: `users/${userId}`,

@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { DoubleChevron } from "@ui/public";
 import { createPortal } from "react-dom";
 
@@ -33,7 +33,9 @@ export default function Sidebar(props: SidebarProps): JSX.Element | null {
         }`}
       >
         <DoubleChevron className="my-8 ml-8 size-40 cursor-pointer p-8" onClick={onClose} />
-        <div className="px-32">{children}</div>
+        <div className="px-32" style={{ height: "calc(100% - 96px)" }}>
+          {children}
+        </div>
       </div>
     </>,
     document.body,
