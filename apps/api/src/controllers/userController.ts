@@ -343,10 +343,13 @@ export const updateUser = async (req: UpdateUserRequest, res: Response): Promise
     return;
   }
 
+  const normalizedTeams = [teams].flat().sort().join();
+  const normalizedUserTeams = [userInfo.teams].flat().sort().join();
+
   const isEmailChanged = email !== userInfo.email;
   const isNameChanged = name !== userInfo.name;
   const isRoleChanged = role !== userInfo.role;
-  const isTeamsChanged = JSON.stringify(teams) !== JSON.stringify(userInfo.teams);
+  const isTeamsChanged = normalizedTeams !== normalizedUserTeams;
   const isProfileImageChanged = Boolean(req.file);
 
   const hasChanges = isEmailChanged || isNameChanged || isRoleChanged || isTeamsChanged || isProfileImageChanged;
@@ -382,6 +385,7 @@ export const updateUser = async (req: UpdateUserRequest, res: Response): Promise
     user: updatedUser,
   });
 };
+
 interface DeleteUserRequest extends Request {
   params: {
     userId: string;
