@@ -47,7 +47,7 @@ export default function SeatButton({
   const queryClient = useQueryClient();
 
   const { mutate: createSeatReservationMutate } = useMutation({
-    mutationFn: ({ seatId, reservationData }: { seatId: string | null; reservationData: ReservationRequestBody }) =>
+    mutationFn: ({ seatId, reservationData }: { seatId: string; reservationData: ReservationRequestBody }) =>
       createSeatReservationData({ seatId, reservationData }),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["seats"] });
