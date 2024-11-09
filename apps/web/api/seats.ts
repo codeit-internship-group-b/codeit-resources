@@ -41,7 +41,7 @@ export const getReservedSeats = async (date: string): Promise<IReservation[]> =>
 
 export interface ReservedResponse {
   message: string;
-  savedReservation: ReservationRequestBody;
+  savedReservation: string;
 }
 
 export const createSeatReservationData = async ({
@@ -55,6 +55,27 @@ export const createSeatReservationData = async ({
     options: {
       method: "POST",
       url: API_ENDPOINTS.RESERVATION.CREATE_RESERVATION(seatId),
+      data: reservationData,
+    },
+  });
+  return data;
+};
+
+interface UpdateReservationRequestBody {
+  status: string;
+}
+
+export const patchSeatReservationData = async ({
+  reservationId,
+  reservationData,
+}: {
+  reservationId: string;
+  reservationData: UpdateReservationRequestBody;
+}): Promise<ReservedResponse> => {
+  const { data } = await axiosRequester<ReservedResponse>({
+    options: {
+      method: "PATCH",
+      url: API_ENDPOINTS.RESERVATION.UPDATE_RESERVATION(reservationId),
       data: reservationData,
     },
   });

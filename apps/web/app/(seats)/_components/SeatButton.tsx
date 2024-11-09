@@ -11,7 +11,7 @@ import { type ReservationRequestBody } from "@repo/types";
 import { formatSelectedDate } from "@ui/src/utils/date";
 import useIsMobileStore from "@/app/store/useIsMobileStore";
 import Sidebar from "@/components/common/Sidebar";
-import { createSeatReservationData } from "@/api/seats";
+import { createSeatReservationData, patchSeatReservationData } from "@/api/seats";
 import { useDateStore } from "@/app/store/useDateStore";
 import { useAuthStore } from "@/src/stores/useAuthStore";
 import { useSeatContext } from "../context/SeatContext";
@@ -58,11 +58,32 @@ export default function SeatButton({
     },
   });
 
+  interface UpdateReservationRequestBody {
+    status: string;
+  }
+
+  const { mutate: updateSeatReservationMutate } = useMutation({
+    mutationFn: ({
+      reservationId,
+      reservationData,
+    }: {
+      reservationId: string;
+      reservationData: UpdateReservationRequestBody;
+    }) => patchSeatReservationData({ reservationId, reservationData }),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["seats"] });
+      notify({ type: "success", message: "자리 예약 어쩔티비!" });
+    },
+    onError: (error) => {
+      notify({ type: "error", message: `오류 발생: ${error.message}` });
+    },
+  });
+
   const reservationData = {
     userId: authUser?._id,
     itemType: "seat",
-    startAt: `${formatSelectedDate(selectedDate)}T14:00:00Z`,
-    endAt: `${formatSelectedDate(selectedDate)}T14:59:59Z`,
+    startAt: `${formatSelectedDate(selectedDate)}T${new Date().toISOString().slice(11, 19)}Z`,
+    endAt: `${formatSelectedDate(selectedDate)}T23:59:59Z`,
     status: "reserved",
   };
 
@@ -70,7 +91,6 @@ export default function SeatButton({
     if (checkedSeat && checkedSeat !== seatNum) {
       setIsModalOpen(true);
     } else {
-      // post api 연결
       createSeatReservationMutate({ seatId: itemId, reservationData });
       handleSelectSeat(seatNum);
     }
