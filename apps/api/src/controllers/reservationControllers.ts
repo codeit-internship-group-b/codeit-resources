@@ -64,7 +64,7 @@ export const getUserReservations = async (
     return;
   }
 
-  const today = new Date();
+  const today = new Date().toLocaleDateString("en-CA");
   const { startOfDay, endOfDay } = getStartAndEndOfDay(today);
 
   const userReservations: IReservation[] = await Reservation.find({
@@ -140,17 +140,13 @@ export const getReservationsByTypeAndDate = async (
     return;
   }
 
-  let searchDate = date;
-  if (!searchDate) {
-    const today = new Date();
-    searchDate = today.toISOString().split("T")[0];
-  } else if (!isValidDateFormat(searchDate)) {
+  const searchDate = date ?? new Date().toLocaleDateString("en-CA");
+  if (!isValidDateFormat(searchDate)) {
     res.status(400).json({ message: "날짜 형식이 잘못되었습니다. YYYY-MM-DD 형식으로 입력해주세요." });
     return;
   }
 
-  const targetDate = new Date(`${searchDate}T00:00:00Z`);
-  const { startOfDay, endOfDay } = getStartAndEndOfDay(targetDate);
+  const { startOfDay, endOfDay } = getStartAndEndOfDay(searchDate);
 
   const query: FilterQuery<IReservation> = {
     itemType,

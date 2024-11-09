@@ -1,8 +1,11 @@
-export const getStartAndEndOfDay = (date: Date): { startOfDay: Date; endOfDay: Date } => {
-  // 한국 로컬타임 기준으로 설정
-  const startOfDay = new Date(date);
-  startOfDay.setUTCHours(15, 0, 0, 0); // 시작 시간을 전날 15:00로 설정
-  const endOfDay = new Date(date);
-  endOfDay.setUTCHours(14, 59, 59, 999); // 종료 시간을 당일 14:59로 설정
-  return { startOfDay, endOfDay };
+export const getStartAndEndOfDay = (dateString: string): { startOfDay: Date; endOfDay: Date } => {
+  // 유저의 로컬 타임존을 자동으로 감지하여 startOfDay와 endOfDay를 UTC 기준으로 설정
+  const localStartOfDay = new Date(`${dateString}T00:00:00`);
+  const localEndOfDay = new Date(`${dateString}T23:59:59`);
+
+  // 로컬 기준 시간대를 UTC로 변환
+  const startOfDayUTC = new Date(localStartOfDay.toISOString());
+  const endOfDayUTC = new Date(localEndOfDay.toISOString());
+
+  return { startOfDay: startOfDayUTC, endOfDay: endOfDayUTC };
 };
