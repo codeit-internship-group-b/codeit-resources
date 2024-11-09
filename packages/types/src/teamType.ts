@@ -1,4 +1,9 @@
 export interface ITeam {
-  _id: string;
   name: string;
+}
+
+export interface TeamType extends ITeam {
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
 }

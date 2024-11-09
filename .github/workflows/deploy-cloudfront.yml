@@ -26,7 +26,7 @@ jobs:
 
       - name: Generate Environment Variables File
         run: |
-          echo "NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL" >> .env.local
+          echo "NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL" >> apps/web/.env.production.local
         env:
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
 
