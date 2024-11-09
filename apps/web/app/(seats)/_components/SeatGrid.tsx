@@ -5,9 +5,10 @@ import useSeatStatus from "@ui/src/hooks/useSeatStatus";
 import { useQuery } from "@tanstack/react-query";
 import { type IReservation, type ISeat } from "@repo/types";
 import { formatSelectedDate } from "@ui/src/utils/date";
-import { getAllSeats, getReservedSeats } from "@/api/seats";
 import { useDateStore } from "@/app/store/useDateStore";
-import { SeatProvider } from "../context/SeatContext";
+import { getAllSeats } from "@/api/items";
+import { getReservedSeats } from "@/api/reservation";
+import { SeatProvider } from "../../../src/contexts/SeatContext";
 import SeatBlock from "./SeatBlock";
 
 export default function SeatGrid(): JSX.Element {

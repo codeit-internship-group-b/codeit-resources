@@ -11,10 +11,10 @@ import { type ReservationRequestBody } from "@repo/types";
 import { formatSelectedDate } from "@ui/src/utils/date";
 import useIsMobileStore from "@/app/store/useIsMobileStore";
 import Sidebar from "@/components/common/Sidebar";
-import { createSeatReservationData, patchSeatReservationData } from "@/api/seats";
 import { useDateStore } from "@/app/store/useDateStore";
 import { useAuthStore } from "@/src/stores/useAuthStore";
-import { useSeatContext } from "../context/SeatContext";
+import { createSeatReservationData, patchSeatReservationData } from "@/api/reservation";
+import { useSeatContext } from "../../../src/contexts/SeatContext";
 import AdminSeatSetting from "./AdminSeatSetting";
 
 interface SeatButtonProps {

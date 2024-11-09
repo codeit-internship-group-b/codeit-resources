@@ -1,7 +1,7 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import { type IReservation } from "@repo/types";
-import { getDashboard } from "@/api/dashboard";
+import { getDashboard } from "@/api/reservation";
 import DashboardSection from "./DashboardSection";
 import DashboardSectionLoading from "./DashboardSectionLoading";
 
