@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { type ISeat, type IReservation, type IRoom, type IEquipment } from "@repo/types";
+import { type ISeat, type IReservation } from "@repo/types";
 
 interface SeatStatus {
   status: "in-use" | "unavailable" | "reserved" | "available";
@@ -32,16 +32,13 @@ export default function useSeatStatus(
       });
     }
 
-    function isISeat(item: ISeat | IRoom | IEquipment | string): item is ISeat {
-      return (item as ISeat).user !== undefined;
-    }
-
     if (Array.isArray(reservedData)) {
       reservedData.forEach((reservation) => {
-        if (reservation.itemType === "seat" && isISeat(reservation.item)) {
-          map.set(reservation.item.name, {
+        if (reservation.itemType === "seat") {
+          const seatItem = reservation.item as ISeat;
+          map.set(seatItem.name, {
             status: "reserved",
-            itemId: reservation.item._id,
+            itemId: seatItem._id,
             user: reservation.user.name,
           });
         }
