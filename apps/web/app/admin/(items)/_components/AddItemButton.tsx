@@ -3,29 +3,31 @@
 import { PlusIcon } from "@ui/public";
 import { useState } from "react";
 import Sidebar from "@/components/common/Sidebar";
+import AddItemForm from "./AddItemForm";
 
 export default function AddItemButton(): JSX.Element {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isPanelOpen, setIsPanelOpen] = useState(true);
 
-  const openDrawer = (): void => {
-    setIsOpen(true);
+  const openPanel = (): void => {
+    setIsPanelOpen(true);
   };
 
-  const closeDrawer = (): void => {
-    setIsOpen(false);
+  const closePanel = (): void => {
+    setIsPanelOpen(false);
   };
   return (
     <>
       <button
         className="hover:bg-custom-black/5 flex size-32 cursor-pointer justify-center rounded-full transition-colors duration-300 ease-in-out"
         type="button"
-        onClick={openDrawer}
+        onClick={openPanel}
       >
         <PlusIcon width={20} fill="true" />
       </button>
 
-      <Sidebar isOpen={isOpen} onClose={closeDrawer}>
-        hi
+      <Sidebar isOpen={isPanelOpen} onClose={closePanel}>
+        <h1 className="my-24">회의실 추가</h1>
+        <AddItemForm />
       </Sidebar>
     </>
   );
