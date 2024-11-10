@@ -10,6 +10,7 @@ import { useShouldRenderGnb } from "./hooks/useShouldRenderGnb";
 
 export default function Gnb(): JSX.Element | null {
   const { isLoggedIn, user } = useAuthStore();
+  // TODO : 모달로 띄우면 이거 없어도 될듯?
   const isRenderGnb = useShouldRenderGnb();
 
   if (!isRenderGnb) return null;

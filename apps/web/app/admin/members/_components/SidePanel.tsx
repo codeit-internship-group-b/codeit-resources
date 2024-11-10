@@ -230,7 +230,7 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
     <Modal.Root>
       <div
         ref={sidePanelRef}
-        className={`w-414 fixed right-0 top-0 z-10 h-full transform border-l border-[#33323633] bg-white shadow-[0px_2px_14px_0px_rgba(0,0,0,0.08)] transition-transform duration-300 ease-in-out ${
+        className={`w-414 fixed right-0 top-0 z-10 h-full transform border-l border-[#333236] bg-white shadow-[0px_2px_14px_0px_rgba(0,0,0,0.08)] transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >

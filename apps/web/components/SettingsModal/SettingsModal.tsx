@@ -1,8 +1,9 @@
 import { Button } from "@ui/index";
 import { Chevron } from "@ui/public";
-import { createContext, type ReactNode, useContext } from "react";
+import { type ButtonHTMLAttributes, createContext, type ReactNode, useContext } from "react";
 
 interface SettingsModalProps {
+  isOpen: boolean;
   onClose: () => void;
   children: ReactNode;
 }
@@ -20,10 +21,14 @@ const useSettingsModal = (): SettingsModalContextProps => {
   return context ?? { onClose: () => {} };
 };
 
-export default function SettingsModal({ onClose, children }: SettingsModalProps): JSX.Element {
+export default function SettingsModal({ isOpen, onClose, children }: SettingsModalProps): JSX.Element | null {
+  if (!isOpen) return null;
+
   return (
     <SettingsModalContext.Provider value={{ onClose }}>
-      <div className="flex h-screen w-full flex-col gap-28 px-16 pb-32 pt-36">{children}</div>
+      <div className="absolute left-0 top-0 z-50 flex h-screen w-screen flex-col gap-28 bg-white px-16 pb-32 pt-36">
+        {children}
+      </div>
     </SettingsModalContext.Provider>
   );
 }
@@ -33,7 +38,6 @@ interface SettingsModalHeaderProps {
 }
 
 SettingsModal.Header = function SettingsModalHeader({ title }: SettingsModalHeaderProps) {
-  // TODO : 구조분해 왜 안나옴? return type 이슈?
   const { onClose } = useSettingsModal();
   return (
     <div className="flex items-center justify-center">
@@ -43,18 +47,13 @@ SettingsModal.Header = function SettingsModalHeader({ title }: SettingsModalHead
   );
 };
 
-interface SettingsModalButtonProps {
+interface SettingsModalButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
-  onClick: () => void;
 }
 
-SettingsModal.Button = function SettingsModalButton({ children, onClick }: SettingsModalButtonProps) {
+SettingsModal.Button = function SettingsModalButton({ children, ...rest }: SettingsModalButtonProps) {
   return (
-    <Button
-      className="absolute bottom-0 h-48 w-[calc(100%-64px)] text-base font-medium"
-      variant="Primary"
-      onClick={onClick}
-    >
+    <Button className="absolute bottom-32 h-48 w-[calc(100%-32px)] text-base font-medium" variant="Primary" {...rest}>
       {children}
     </Button>
   );
