@@ -6,7 +6,7 @@ export const API_ENDPOINTS = {
   },
   USERS: {
     GET_ALL: `/users`, // 전체 유저 조회
-    GET_USER: (userId: string | number) => `/users/${userId}`, // id로 유저 조회
+    GET_USER: () => `/users/user`, // id로 유저 조회
     PATCH_USER: (userId: string | number) => `/users/${userId}`, // 유저 정보 수정
     DELETE_USER: (userId: string | number) => `/users/${userId}`, // 유저 삭제
     CREATE_USER: `/users/create`, // 유저 생성
@@ -31,5 +31,11 @@ export const API_ENDPOINTS = {
     CREATE_CATEGORY: `/categories`, // 카테고리 생성
     UPDATE_CATEGORY: (categoryId: string | number) => `/categories/${categoryId}`, // 카테고리 이름 수정
     DELETE_CATEGORY: (categoryId: string | number) => `/categories/${categoryId}`, // 카테고리 삭제 (하위 아이템 전체 삭제됨)
+  },
+  TEAMS: {
+    GET_ALL: "/teams", // 팀 전체 조회
+    UPDATE_TEAM: (teamId: string) => `/teams/${teamId}`, // 팀 이름 수정
+    DELETE_TEAM: (teamId: string) => `/teams/${teamId}`, // 팀 삭제
+    CREATE_TEAM: "/teams", // 팀 생성
   },
 };

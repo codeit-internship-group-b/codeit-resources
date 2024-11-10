@@ -9,6 +9,6 @@ export const PAGE_NAME = {
   ADMIN_MEETINGS: "/admin/meetings",
   ADMIN_SEATS: "/admin/seats",
 
-  SIGN_IN: "/sign-in",
+  SIGN_IN: "/",
   PROFILE: "/profile",
 };

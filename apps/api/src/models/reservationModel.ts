@@ -50,3 +50,52 @@ ReservationSchema.index({ status: 1, startAt: 1 });
 ReservationSchema.index({ itemType: 1, startAt: 1 });
 
 export const Reservation = model<IReservation>("Reservation", ReservationSchema);
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Reservation:
+ *       type: object
+ *       properties:
+ *         user:
+ *           $ref: '#/components/schemas/User'
+ *         item:
+ *           $ref: '#/components/schemas/Item'
+ *         itemType:
+ *           type: string
+ *           enum: ["room", "seat", "equipment"]
+ *           description: 예약된 아이템의 타입
+ *           example: "room"
+ *         startAt:
+ *           type: string
+ *           format: date-time
+ *           description: 예약 시작 시간
+ *           example: "2024-10-31T10:00:00Z"
+ *         endAt:
+ *           type: string
+ *           format: date-time
+ *           description: 예약 종료 시간
+ *           example: "2024-10-31T12:00:00Z"
+ *         status:
+ *           type: string
+ *           enum: [reserved, canceled, completed]
+ *           description: 예약 상태
+ *           example: "reserved"
+ *         notes:
+ *           type: string
+ *           description: 예약에 대한 추가 메모
+ *           example: "회의실 예약"
+ *         attendees:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/User'
+ *       required:
+ *         - user
+ *         - item
+ *         - itemType
+ *         - startAt
+ *         - endAt
+ *         - status
+ *       additionalProperties: false
+ */

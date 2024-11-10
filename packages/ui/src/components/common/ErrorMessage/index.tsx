@@ -7,7 +7,7 @@ interface ErrorMessageProps {
 
 export default function ErrorMessage({ message, className }: ErrorMessageProps) {
   return (
-    <span className={cn("!text-13 text-error absolute", className)} aria-live="polite">
+    <span className={cn("!text-13 text-error absolute bottom-10", className)} aria-live="polite">
       {message}
     </span>
   );
