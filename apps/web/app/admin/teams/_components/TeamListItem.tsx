@@ -102,12 +102,12 @@ export default function TeamListItem({ team }: TeamListItemProps): JSX.Element {
           </Dropdown.Wrapper>
         </Dropdown>
         <Modal.Content>
-          <Modal.Title>{name} 팀을 삭제하시겠습니까?</Modal.Title>
+          <Modal.Title>팀 &#39;{name}&#39;를 삭제하시겠어요?</Modal.Title>
           <Modal.Description>
-            삭제 시, 해당 팀은 더 이상 목록에서 보이지 않으며,
-            <br className="hidden md:block" /> 해당 계정으로 로그인이 불가합니다.
+            <p>해당 팀에 대한 정보가 모두 사라집니다.</p>
+            <p>단, 해당 팀에 속한 멤버는 삭제되지 않습니다.</p>
           </Modal.Description>
-          <Modal.Close onConfirm={handleDeleteTeam} confirmText="확인" cancelText="취소">
+          <Modal.Close onConfirm={handleDeleteTeam} confirmText="삭제하기" cancelText="취소하기">
             예
           </Modal.Close>
         </Modal.Content>
