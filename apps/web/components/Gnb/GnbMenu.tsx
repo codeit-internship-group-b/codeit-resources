@@ -28,13 +28,20 @@ interface GnbMenuProps {
   isAdmin: boolean;
 }
 
-export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element {
+export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element | null {
   const pathname = usePathname();
   const isMobile = useIsMobileStore();
+
   const adminPathMapping = {
     [PAGE_NAME.ADMIN_MEETINGS]: PAGE_NAME.MEETINGS,
     [PAGE_NAME.ADMIN_SEATS]: PAGE_NAME.SEATS,
   };
+
+  // // 컴포넌트가 렌더링되지 않는 admin 페이지
+  // const hiddenOnMobilePaths = [PAGE_NAME.ADMIN_MEMBERS, PAGE_NAME.ADMIN_TEAMS];
+  // const isHiddenOnMobile = isMobile && hiddenOnMobilePaths.some((page) => pathname.startsWith(page));
+
+  // if (isHiddenOnMobile) return null;
 
   return (
     <menu className="md:w-168 flex w-full justify-around gap-12 p-16 md:flex-col md:p-0">

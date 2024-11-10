@@ -1,20 +1,18 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
 import { useAuthStore } from "@/src/stores/useAuthStore";
 import Profile from "../common/Profile";
 import GnbMenu from "./GnbMenu";
 import GnbLogo from "./GnbLogo";
+import { useShouldRenderGnb } from "./hooks/useShouldRenderGnb";
 
 export default function Gnb(): JSX.Element | null {
-  const pathname = usePathname();
   const { isLoggedIn, user } = useAuthStore();
+  const isRenderGnb = useShouldRenderGnb();
 
-  if (pathname === PAGE_NAME.SIGN_IN) {
-    return null;
-  }
+  if (!isRenderGnb) return null;
 
   return (
     <nav
