@@ -13,7 +13,7 @@ export default function CategoryListSubItem({ title, editItem }: CategoryListSub
   return (
     <ListItem color="white" thickness="thin">
       <span className="flex flex-grow items-center gap-32 text-left">{title}</span>
-      <ConfirmationModal Title={title}>
+      <ConfirmationModal title={title} type="item">
         <CategoryEditDropdown setIsModifying={editItem} />
       </ConfirmationModal>
     </ListItem>

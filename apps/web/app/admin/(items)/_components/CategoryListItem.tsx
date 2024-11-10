@@ -82,7 +82,7 @@ export default function CategoryListItem({ title }: CategoryListItemProps): JSX.
         </span>
         <div className="flex gap-12">
           <AddItemButton onClick={openPanelToAdd} />
-          <ConfirmationModal Title={title}>
+          <ConfirmationModal title={title} type="category">
             <CategoryEditDropdown isModifying={isModifyingCategoryName} setIsModifying={setIsModifyingCategoryName} />
           </ConfirmationModal>
         </div>
