@@ -3,7 +3,7 @@ import Dropdown from "@ui/src/components/common/Dropdown";
 import { type Dispatch } from "react";
 
 interface CategoryEditDropdownProps {
-  isModifying: boolean;
+  isModifying?: boolean;
   setIsModifying: Dispatch<React.SetStateAction<boolean>>;
 }
 export default function CategoryEditDropdown({ isModifying, setIsModifying }: CategoryEditDropdownProps): JSX.Element {
@@ -20,7 +20,7 @@ export default function CategoryEditDropdown({ isModifying, setIsModifying }: Ca
       <Dropdown.Toggle iconType="kebab" />
       <Dropdown.Wrapper className="-left-30 top-56">
         <Dropdown.Item hoverStyle="purple" value="수정">
-          이름 편집
+          수정
         </Dropdown.Item>
         <Modal.Trigger>
           <Dropdown.Item hoverStyle="purple" value="삭제">

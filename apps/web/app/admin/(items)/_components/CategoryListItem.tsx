@@ -5,24 +5,50 @@ import { useOnClickOutside } from "@ui/src/hooks/useOnClickOutside";
 import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { TriangleIcon } from "@ui/public";
+import Sidebar from "@/components/common/Sidebar";
 import CategoryEditDropdown from "./CategoryEditDropdown";
 import ConfirmationModal from "./ConfirmationModal";
 import CategoryListSubItem from "./CategoryListSubItem";
 import AddItemButton from "./AddItemButton";
+import AddItemForm from "./AddItemForm";
 
 interface CategoryListItemProps {
   title: string;
 }
 
 export default function CategoryListItem({ title }: CategoryListItemProps): JSX.Element {
-  const [isModifying, setIsModifying] = useState(false);
+  const [isModifyingCategoryName, setIsModifyingCategoryName] = useState(false);
   const [inputValue, setInputValue] = useState("");
+
   const [isOpen, setIsOpen] = useState(false);
+  const [isPanelOpen, setIsPanelOpen] = useState(true);
+  const [panelState, setPanelState] = useState("");
+
+  const openPanelToAdd = (): void => {
+    if (!isPanelOpen) {
+      setIsPanelOpen(true);
+      setPanelState("add");
+    }
+  };
+
+  const openPanelToEdit = (): void => {
+    if (!isPanelOpen) {
+      setIsPanelOpen(true);
+      setPanelState("edit");
+    }
+  };
+
+  const closePanel = (): void => {
+    if (isPanelOpen) {
+      setIsPanelOpen(false);
+    }
+  };
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   useOnClickOutside(inputRef, () => {
-    if (isModifying) {
-      setIsModifying(false);
+    if (isModifyingCategoryName) {
+      setIsModifyingCategoryName(false);
     }
   });
 
@@ -34,10 +60,10 @@ export default function CategoryListItem({ title }: CategoryListItemProps): JSX.
     <>
       <ListItem color="gray" thickness="thick">
         <span className="flex flex-grow items-center gap-32 text-left">
-          {isModifying ? (
+          {isModifyingCategoryName ? (
             <input
               ref={inputRef}
-              placeholder="카테고리"
+              placeholder="카테고리명"
               className="placeholder:text-custom-black/50 bg-gray-60 w-full placeholder:underline placeholder:underline-offset-4 focus:outline-none"
               onChange={(e) => {
                 setInputValue(e.target.value);
@@ -55,9 +81,9 @@ export default function CategoryListItem({ title }: CategoryListItemProps): JSX.
           )}
         </span>
         <div className="flex gap-12">
-          <AddItemButton />
+          <AddItemButton onClick={openPanelToAdd} />
           <ConfirmationModal Title={title}>
-            <CategoryEditDropdown isModifying={isModifying} setIsModifying={setIsModifying} />
+            <CategoryEditDropdown isModifying={isModifyingCategoryName} setIsModifying={setIsModifyingCategoryName} />
           </ConfirmationModal>
         </div>
         <button
@@ -79,9 +105,13 @@ export default function CategoryListItem({ title }: CategoryListItemProps): JSX.
           transition={{ duration: 0.2, ease: "easeInOut" }}
           className="pl-24"
         >
-          <CategoryListSubItem title="회의실1" />
+          <CategoryListSubItem title="회의실1" editItem={openPanelToEdit} />
         </motion.div>
       ) : null}
+      <Sidebar isOpen={isPanelOpen} onClose={closePanel}>
+        <h1 className="my-24">회의실 {panelState === "add" ? "추가" : "수정"}</h1>
+        <AddItemForm />
+      </Sidebar>
     </>
   );
 }
