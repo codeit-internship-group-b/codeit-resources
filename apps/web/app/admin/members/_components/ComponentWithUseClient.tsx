@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import { Button } from "@ui/index";
-import { CATEGORIES } from "@repo/ui/src/utils/constants/teams";
+import { CATEGORIES } from "@repo/constants/teams";
 import { Chevron } from "@ui/public";
 import { type MemberWithStaticImage, type SortOption, SORT_OPTIONS } from "@repo/types/src/membersType";
 import useIsMobileStore from "@/app/store/useIsMobileStore";

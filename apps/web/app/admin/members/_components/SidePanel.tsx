@@ -4,11 +4,11 @@ import { Radio } from "@ui/index";
 import Input from "@ui/src/components/common/Input";
 import Button from "@ui/src/components/common/Button";
 import { DoubleChevron } from "@ui/public";
-import { MEMBER_FORM_MESSAGES } from "@repo/ui/src/utils/constants/notificationMessage";
-import { REGEXP_PATTERNS } from "@repo/ui/src/utils/constants/regexp";
+import { REGEXP_PATTERNS } from "@repo/constants/regexp";
+import { MEMBER_FORM_MESSAGES } from "@repo/constants/notificationMessage";
 import MultiSelectDropdown from "@repo/ui/src/components/common/Dropdown/MulitiSelectDropdown";
 import { useOnClickOutside } from "@ui/src/hooks/useOnClickOutside";
-import { TEAMS } from "@repo/ui/src/utils/constants/teams";
+import { TEAMS } from "@repo/constants/teams";
 import {
   type MemberWithFileImage,
   type SidePanelFormData,

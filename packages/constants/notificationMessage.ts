@@ -54,3 +54,7 @@ export const MODAL_MESSAGES = {
     CANCEL: "취소하기",
   },
 } as const;
+
+export const ERROR_MESSGAE = {
+  DEFAULT: "요청 처리 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
+};

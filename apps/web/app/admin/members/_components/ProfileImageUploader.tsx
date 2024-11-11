@@ -1,10 +1,10 @@
 import { useState, useEffect, type ChangeEvent } from "react";
 import Image from "next/image";
 import { notify } from "@ui/index";
-import { BLUR_DATA_URL, IMAGE_TYPES, MAX_SIZE } from "@repo/ui/src/utils/constants/image";
-import { TOAST_MESSAGES, MEMBER_FORM_MESSAGES } from "@repo/ui/src/utils/constants/notificationMessage";
 import DefaultProfileImage from "@ui/public/images/image_default_profile.png";
 import { type ImageFileType, type DisplayImageType, type FormImageType } from "@repo/types/src/membersType";
+import { BLUR_DATA_URL, IMAGE_TYPES, MAX_SIZE } from "@repo/constants/image";
+import { TOAST_MESSAGES, MEMBER_FORM_MESSAGES } from "@repo/constants/notificationMessage";
 
 interface ProfileImageUploaderProps {
   currentImage: FormImageType;

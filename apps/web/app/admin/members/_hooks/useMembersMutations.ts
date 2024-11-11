@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { notify } from "@ui/index";
 import axios, { type AxiosError } from "axios";
 import type { MemberWithFileImage, ResponseWithMessage } from "@repo/types/src/membersType";
-import { ERROR_MESSGAE } from "@ui/src/utils/constants/notificationMessage";
+import { ERROR_MESSGAE } from "@repo/constants/notificationMessage";
 import { postMember, patchMember, deleteMember } from "@/api/members";
 
 interface UpdateMemberParams {

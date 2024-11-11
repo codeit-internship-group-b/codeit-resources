@@ -4,9 +4,9 @@ import Image from "next/image";
 import { Badge } from "@ui/index";
 import Dropdown from "@ui/src/components/common/Dropdown";
 import DefaultProfileImage from "@ui/public/images/image_default_profile.png";
-import { BLUR_DATA_URL } from "@ui/src/utils/constants/image";
 import { Chevron } from "@ui/public";
 import { type MemberWithStaticImage, ROLE_LABELS, type RoleOption } from "@repo/types/src/membersType";
+import { BLUR_DATA_URL } from "@repo/constants/image";
 import useIsMobileStore from "@/app/store/useIsMobileStore";
 import { useMembersMutations } from "../_hooks/useMembersMutations";
 
