@@ -17,7 +17,7 @@ import {
   type ImageFileType,
   type FormImageType,
 } from "@repo/types/src/membersType";
-import { useMemberMutations } from "../_hooks/useMemberMutation";
+import { useMembersMutations } from "../_hooks/useMembersMutations";
 import ProfileImageUploader from "./ProfileImageUploader";
 
 interface AddMemberSidePanelProps {
@@ -36,7 +36,7 @@ export const initialFormData: SidePanelFormData = {
 
 export default function SidePanel({ isOpen, onClose, selectedMember }: AddMemberSidePanelProps): JSX.Element {
   const sidePanelRef = useRef<HTMLDivElement>(null);
-  const { handleSubmitMutation, removeMember, isPending } = useMemberMutations({
+  const { handleSubmitMutation, removeMember, isPending } = useMembersMutations({
     onSuccess: onClose,
   });
 

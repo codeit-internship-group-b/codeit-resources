@@ -28,7 +28,7 @@ interface UseMemberMutationsProps {
   onSuccess?: () => void;
 }
 
-export function useMemberMutations({ onSuccess }: UseMemberMutationsProps = {}): MemberMutationsReturn {
+export function useMembersMutations({ onSuccess }: UseMemberMutationsProps = {}): MemberMutationsReturn {
   const queryClient = useQueryClient();
 
   const handleSuccess = async (res: ResponseWithMessage): Promise<void> => {

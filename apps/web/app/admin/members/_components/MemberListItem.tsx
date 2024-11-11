@@ -8,7 +8,7 @@ import { BLUR_DATA_URL } from "@ui/src/utils/constants/image";
 import { Chevron } from "@ui/public";
 import { type MemberWithStaticImage, ROLE_LABELS, type RoleOption } from "@repo/types/src/membersType";
 import useIsMobileStore from "@/app/store/useIsMobileStore";
-import { useMemberMutations } from "../_hooks/useMemberMutation";
+import { useMembersMutations } from "../_hooks/useMembersMutations";
 
 interface MemberListItemProps {
   member: MemberWithStaticImage;
@@ -21,7 +21,7 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
 
   const isMobile = useIsMobileStore();
 
-  const { updateMember } = useMemberMutations();
+  const { updateMember } = useMembersMutations();
 
   const imageSource = isImageError ? DefaultProfileImage : (member.profileImage ?? DefaultProfileImage);
 
