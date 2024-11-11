@@ -1,7 +1,5 @@
-import { Button } from "@ui/index";
-import { Chevron } from "@ui/public";
 import { useLockBodyScroll } from "@ui/src/hooks/useLockBodyScroll";
-import { type ButtonHTMLAttributes, createContext, type ReactNode, useContext } from "react";
+import { createContext, type ReactNode, useContext } from "react";
 
 interface SettingsModalProps {
   isOpen: boolean;
