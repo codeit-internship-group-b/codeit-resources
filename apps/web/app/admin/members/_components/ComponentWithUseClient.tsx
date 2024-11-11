@@ -3,7 +3,7 @@
 
 import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Toast } from "@ui/index";
+import Toast from "@/components/common/Toast";
 import { getMembers } from "@/api/members";
 import ListItemSkeleton from "@/components/common/Skeleton/ListItemSkeleton";
 import { type MemberWithStaticImage } from "../types";
