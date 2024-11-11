@@ -7,19 +7,14 @@ import { notify } from "@ui/index";
 import AlertModal from "@ui/src/components/common/ConditionalActionModal/AlertModal";
 import { usePathname } from "next/navigation";
 import { Sheet } from "react-modal-sheet";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { type IEquipment, type IRoom, type ISeat, type IReservation, type ReservationRequestBody } from "@repo/types";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { type IEquipment, type IRoom, type ISeat, type IReservation } from "@repo/types";
 import { formatSelectedDate } from "@ui/src/utils/date";
 import useIsMobileStore from "@/app/store/useIsMobileStore";
 import Sidebar from "@/components/common/Sidebar";
 import { useDateStore } from "@/app/store/useDateStore";
 import { useAuthStore } from "@/src/stores/useAuthStore";
-import {
-  createSeatReservationData,
-  deleteReservationData,
-  getUserReservations,
-  patchReservationData,
-} from "@/api/reservation";
+import { createSeatReservationData, deleteReservationData } from "@/api/reservation";
 import { useSeatContext } from "../../../src/contexts/SeatContext";
 import AdminSeatSetting from "./AdminSeatSetting";
 
