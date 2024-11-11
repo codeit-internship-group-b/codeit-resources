@@ -1,4 +1,4 @@
-/* eslint-disable react/jsx-no-useless-fragment */
+ 
 "use client";
 
 import { PersonIcon, MeetingIcon, SeatsIcon, TeamIcon, GearIcon } from "@repo/ui/public";
@@ -36,10 +36,6 @@ export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element {
     [PAGE_NAME.ADMIN_MEETINGS]: PAGE_NAME.MEETINGS,
     [PAGE_NAME.ADMIN_SEATS]: PAGE_NAME.SEATS,
   };
-
-  if (isMobile && pathname.startsWith(PAGE_NAME.ADMIN_MEMBERS)) {
-    return <></>;
-  }
 
   return (
     <menu className="md:w-168 flex w-full justify-around gap-12 p-16 md:flex-col md:p-0">
