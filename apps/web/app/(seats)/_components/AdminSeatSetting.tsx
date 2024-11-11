@@ -12,7 +12,8 @@ const mockName = ["강형욱", "이영훈", "강동원", "조현지"];
 
 export default function AdminSeatSetting({ status, userName }: AdminSeatSettingProps): JSX.Element {
   const [selectName, setSelectName] = useState<string[]>(userName ? [userName] : []);
-  const [selectedStatus, setSelectedStatus] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState(status);
+  // console.log(status);
   return (
     <>
       <h1 className="text-custom-black my-8 hidden md:block">좌석편집</h1>
@@ -21,7 +22,7 @@ export default function AdminSeatSetting({ status, userName }: AdminSeatSettingP
           <Radio.Group
             defaultValue={status}
             onChange={(value) => {
-              setSelectedStatus(value);
+              setSelectedStatus(value as "in-use" | "unavailable" | "available" | "reserved");
             }}
           >
             <Radio.Option value="available">예약 가능</Radio.Option>
