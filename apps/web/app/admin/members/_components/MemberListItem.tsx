@@ -21,9 +21,7 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
 
   const isMobile = useIsMobileStore();
 
-  const { updateMember } = useMemberMutations({
-    onSuccess: () => {},
-  });
+  const { updateMember } = useMemberMutations();
 
   const imageSource = isImageError ? DefaultProfileImage : (member.profileImage ?? DefaultProfileImage);
 

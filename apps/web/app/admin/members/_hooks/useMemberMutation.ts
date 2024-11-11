@@ -28,10 +28,10 @@ interface MemberMutationsReturn {
 }
 
 interface UseMemberMutationsProps {
-  onSuccess: () => void;
+  onSuccess?: () => void;
 }
 
-export function useMemberMutations({ onSuccess }: UseMemberMutationsProps): MemberMutationsReturn {
+export function useMemberMutations({ onSuccess }: UseMemberMutationsProps = {}): MemberMutationsReturn {
   const queryClient = useQueryClient();
 
   const handleSuccess = async (res: ApiResponse): Promise<void> => {
@@ -40,10 +40,10 @@ export function useMemberMutations({ onSuccess }: UseMemberMutationsProps): Memb
       message: res.message,
     });
     await queryClient.invalidateQueries({ queryKey: ["members"] });
-    onSuccess();
+    onSuccess?.();
   };
- 
-  const handleError = (error:  Error | AxiosError<ApiResponse>): void => {
+
+  const handleError = (error: Error | AxiosError<ApiResponse>): void => {
     if (axios.isAxiosError(error)) {
       notify({
         type: "error",
@@ -56,25 +56,24 @@ export function useMemberMutations({ onSuccess }: UseMemberMutationsProps): Memb
       });
     }
   };
- 
 
-const { mutate: createMember, isPending: isCreateMemberPending } = useMutation({
-   mutationFn: postMember,
-   onSuccess: handleSuccess,
-   onError: handleError,
- });
+  const { mutate: createMember, isPending: isCreateMemberPending } = useMutation({
+    mutationFn: postMember,
+    onSuccess: handleSuccess,
+    onError: handleError,
+  });
 
- const { mutate: updateMember, isPending: isUpdateMemberPending } = useMutation({
-   mutationFn: ({ id, data }: UpdateMemberParams) => patchMember(id, data),
-   onSuccess: handleSuccess,
-   onError: handleError,
- });
+  const { mutate: updateMember, isPending: isUpdateMemberPending } = useMutation({
+    mutationFn: ({ id, data }: UpdateMemberParams) => patchMember(id, data),
+    onSuccess: handleSuccess,
+    onError: handleError,
+  });
 
- const { mutate: removeMember, isPending: isRemoveMemberPending } = useMutation({
-   mutationFn: (userId: string) => deleteMember(userId),
-   onSuccess: handleSuccess,
-   onError: handleError,
- });
+  const { mutate: removeMember, isPending: isRemoveMemberPending } = useMutation({
+    mutationFn: (userId: string) => deleteMember(userId),
+    onSuccess: handleSuccess,
+    onError: handleError,
+  });
 
   const handleSubmitMutation = ({ selectedMember, formData }: HandleSubmitMutationParams): void => {
     if (selectedMember) {
