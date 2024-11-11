@@ -1,3 +1,4 @@
+import { API_ENDPOINTS } from "@repo/constants";
 import {
   type MemberResponse,
   type GetMembersResponse,
@@ -10,7 +11,7 @@ export const getMembers = async (sortOption: SortOption): Promise<GetMembersResp
   const { data } = await axiosRequester<GetMembersResponse>({
     options: {
       method: "GET",
-      url: "users",
+      url: API_ENDPOINTS.USERS.GET_ALL,
       params: {
         sortOption,
       },
@@ -24,7 +25,7 @@ export const postMember = async (formData: FormData): Promise<MemberResponse> =>
   const { data } = await axiosRequester<MemberResponse, FormData>({
     options: {
       method: "POST",
-      url: "users/create",
+      url: API_ENDPOINTS.USERS.CREATE_USER,
       data: formData,
       headers: {
         "Content-Type": "multipart/form-data",
@@ -39,7 +40,7 @@ export const patchMember = async (userId: string, formData: FormData): Promise<M
   const { data } = await axiosRequester<MemberResponse, FormData>({
     options: {
       method: "PUT",
-      url: `users/${userId}`,
+      url: API_ENDPOINTS.USERS.PATCH_USER(userId),
       data: formData,
       headers: {
         "Content-Type": "multipart/form-data",
@@ -54,7 +55,7 @@ export const deleteMember = async (userId: string): Promise<DeleteMemberResponse
   const { data } = await axiosRequester<DeleteMemberResponse>({
     options: {
       method: "DELETE",
-      url: `users/${userId}`,
+      url: API_ENDPOINTS.USERS.DELETE_USER(userId),
     },
   });
 
