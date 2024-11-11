@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { Toast, Button } from "@ui/index";
+import { Button } from "@ui/index";
 import { CATEGORIES } from "@repo/ui/src/utils/constants/teams";
 import { Chevron } from "@ui/public";
 import useIsMobileStore from "@/app/store/useIsMobileStore";
@@ -156,7 +156,6 @@ export default function Members(): JSX.Element {
       ) : null}
 
       <SidePanel isOpen={isSidePanelOpen} onClose={handleCloseSidePanel} selectedMember={selectedMember} />
-      <Toast />
     </div>
   );
 }
