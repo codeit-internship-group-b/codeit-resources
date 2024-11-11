@@ -13,9 +13,9 @@ interface ToastState {
 export const useToastStore = create<ToastState>((set) => ({
   type: null,
   message: null,
-  duration: 3000,
+  duration: 1000,
   isVisible: false,
-  showToast: (type, message, duration = 3000) => {
+  showToast: (type, message, duration = 1000) => {
     set({
       type,
       message,
