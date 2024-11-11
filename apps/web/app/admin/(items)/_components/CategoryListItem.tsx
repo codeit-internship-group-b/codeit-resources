@@ -5,7 +5,9 @@ import { useOnClickOutside } from "@ui/src/hooks/useOnClickOutside";
 import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { TriangleIcon } from "@ui/public";
+import { type IEquipment, type IRoom } from "@repo/types";
 import Sidebar from "@/components/common/Sidebar";
+import { patchItem, postNewItem } from "@/api/meetings";
 import CategoryEditDropdown from "./CategoryEditDropdown";
 import ConfirmationModal from "./ConfirmationModal";
 import CategoryListSubItem from "./CategoryListSubItem";
@@ -23,6 +25,14 @@ export default function CategoryListItem({ title }: CategoryListItemProps): JSX.
   const [isOpen, setIsOpen] = useState(false);
   const [isPanelOpen, setIsPanelOpen] = useState(true);
   const [panelState, setPanelState] = useState("");
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useOnClickOutside(inputRef, () => {
+    if (isModifyingCategoryName) {
+      setIsModifyingCategoryName(false);
+    }
+  });
 
   const openPanelToAdd = (): void => {
     if (!isPanelOpen) {
@@ -44,16 +54,19 @@ export default function CategoryListItem({ title }: CategoryListItemProps): JSX.
     }
   };
 
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useOnClickOutside(inputRef, () => {
-    if (isModifyingCategoryName) {
-      setIsModifyingCategoryName(false);
-    }
-  });
-
   const toggleListItem = (): void => {
     setIsOpen(!isOpen);
+  };
+
+  const handleSubmitForm = async (data: FormData, itemId?: string): Promise<IRoom | IEquipment> => {
+    if (panelState === "add") {
+      const res = await postNewItem("room", data);
+      return res;
+    } else if (panelState === "edit" && itemId) {
+      const res = await patchItem(itemId, data);
+      return res;
+    }
+    throw new Error("잘못된 입력입니다. 새로고침 후 다시 시도해주세요");
   };
 
   return (
@@ -110,7 +123,7 @@ export default function CategoryListItem({ title }: CategoryListItemProps): JSX.
       ) : null}
       <Sidebar isOpen={isPanelOpen} onClose={closePanel}>
         <h1 className="my-24">회의실 {panelState === "add" ? "추가" : "수정"}</h1>
-        <EditItemForm prevCategory={title} />
+        <EditItemForm prevCategory={title} onSubmit={handleSubmitForm} />
       </Sidebar>
     </>
   );
