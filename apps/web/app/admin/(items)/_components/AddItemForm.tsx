@@ -1,52 +1,91 @@
 "use client";
 
+import { type ICategory, type IRoom } from "@repo/types";
 import { Input, Radio } from "@ui/index";
 import Dropdown from "@ui/src/components/common/Dropdown";
-import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { getAllCategories } from "@/api/meetings";
 
-export default function AddItemForm(): JSX.Element {
-  const [category, setCategory] = useState("카테고리 선택");
+interface EditItemFormProps {
+  defaultItem?: IRoom;
+  prevCategory: string;
+}
+
+export default function EditItemForm({ prevCategory }: EditItemFormProps): JSX.Element {
+  const { register, handleSubmit, setValue } = useForm();
+
+  const [categories, setCategories] = useState<ICategory[]>([]);
+  const [currentCategory, setCurrentCategory] = useState(prevCategory);
+
+  const onSubmit = (data: object): void => {
+    console.log("submitted", data);
+  };
+
+  useEffect(() => {
+    const fetchCategories = async (): Promise<void> => {
+      try {
+        const res = await getAllCategories();
+        const roomCategories = res.filter((item) => item.itemType === "room");
+        setCategories(roomCategories);
+      } catch (error) {
+        throw new Error();
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   return (
-    <div>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <div className="mb-24">
-        <Radio.Group defaultValue="available">
+        <Radio.Group
+          defaultValue="available"
+          onChange={(value) => {
+            setValue("status", value);
+          }}
+        >
           <Radio.Option value="available">사용 가능</Radio.Option>
-          <Radio.Option value="in-use">사용 중</Radio.Option>
-          <Radio.Option value="maintenance">점검 중</Radio.Option>
+          <Radio.Option value="maintenance">사용 불가</Radio.Option>
         </Radio.Group>
       </div>
-      <Input name="회의실 이름" placeholder="회의실 이름" type="text" />
-      <Input name="설명" placeholder="설명" type="text" />
+      <Input {...register("name", { required: true })} name="name" placeholder="회의실 이름" type="text" />
+      <Input {...register("description")} name="description" placeholder="설명" type="text" />
       <div className="mb-24">
         <Dropdown
-          selectedValue={category}
+          selectedValue={currentCategory}
           onSelect={(value) => {
             if (typeof value === "string") {
-              setCategory(value);
+              setCurrentCategory(value);
+              setValue("category", value);
             }
           }}
           isError={false}
           errorMessage="Error"
         >
-          <Dropdown.Toggle title="카테고리">카테고리</Dropdown.Toggle>
+          <Dropdown.Toggle title="카테고리">{currentCategory}</Dropdown.Toggle>
           <Dropdown.Wrapper>
-            <Dropdown.Item value="Option 1">Option 1</Dropdown.Item>
-            <Dropdown.Item value="Option 2">Option 2</Dropdown.Item>
-            <Dropdown.Item value="Option 3">Option 3</Dropdown.Item>
+            {categories.map((category) => {
+              return (
+                <Dropdown.Item key={category._id} value={category.name}>
+                  {category.name}
+                </Dropdown.Item>
+              );
+            })}
           </Dropdown.Wrapper>
         </Dropdown>
       </div>
-      <Input name="수용인원" placeholder="수용인원" type="text" />
-      <Input name="위치" placeholder="위치" type="text" />
-    </div>
+      <Input {...register("capacity")} name="capacity" placeholder="수용인원" type="text" />
+      <Input {...register("location")} name="location" placeholder="위치" type="text" />
+      <input type="submit" />
+    </form>
   );
 }
 
-//  "name": "string",
-//  "description": "string",
-//  "status": "available",
-//  "imageUrl": "string",
-//  "category": "string",
-//  "capacity": 0,
-//  "location": "string"
+// "name": "string",
+//   "description": "string",
+//   "status": "available",
+//   "imageUrl": "string",
+//   "category": "string",
+//   "capacity": 0,
+//   "location": "string"

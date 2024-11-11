@@ -10,7 +10,7 @@ import CategoryEditDropdown from "./CategoryEditDropdown";
 import ConfirmationModal from "./ConfirmationModal";
 import CategoryListSubItem from "./CategoryListSubItem";
 import AddItemButton from "./AddItemButton";
-import AddItemForm from "./AddItemForm";
+import EditItemForm from "./AddItemForm";
 
 interface CategoryListItemProps {
   title: string;
@@ -110,7 +110,7 @@ export default function CategoryListItem({ title }: CategoryListItemProps): JSX.
       ) : null}
       <Sidebar isOpen={isPanelOpen} onClose={closePanel}>
         <h1 className="my-24">회의실 {panelState === "add" ? "추가" : "수정"}</h1>
-        <AddItemForm />
+        <EditItemForm prevCategory={title} />
       </Sidebar>
     </>
   );
