@@ -1,6 +1,6 @@
-import { Input } from "@ui/index";
+import { Button, Input } from "@ui/index";
 import { type FieldValues, type SubmitHandler } from "react-hook-form";
-import { useEffect } from "react";
+import { type ReactNode, useEffect } from "react";
 import { type TeamType } from "@repo/types";
 import { debounce } from "es-toolkit";
 import SettingsModal from "@/components/SettingsModal/SettingsModal";
@@ -13,9 +13,16 @@ interface ManageTeamModalProps {
   onClose: () => void;
   isCreate?: boolean;
   team?: TeamType;
+  actions?: ReactNode;
 }
 
-export default function ManageTeamModal({ isCreate, isOpen, onClose, team }: ManageTeamModalProps): JSX.Element {
+export default function ManageTeamModal({
+  isCreate,
+  isOpen,
+  onClose,
+  team,
+  actions,
+}: ManageTeamModalProps): JSX.Element {
   const title = isCreate ? "팀 추가" : "팀 수정";
   const buttonText = isCreate ? "추가하기" : "수정하기";
 
@@ -57,7 +64,7 @@ export default function ManageTeamModal({ isCreate, isOpen, onClose, team }: Man
 
   return (
     <SettingsModal isOpen={isOpen} onClose={onClose}>
-      <SettingsModal.Header title={title} />
+      <SettingsModal.Header title={title} actions={actions} />
       <form onSubmit={(...rest) => void handleSubmit(onSubmit)(...rest)}>
         <Input id="teamName" placeholder="팀 이름" {...register("teamName")} />
         <SettingsModal.Button type="submit">{buttonText}</SettingsModal.Button>

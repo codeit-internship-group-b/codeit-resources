@@ -2,7 +2,7 @@
 
 import { type ChangeEvent, useEffect, useRef, useState } from "react";
 import { debounce } from "es-toolkit";
-import { Modal } from "@ui/index";
+import { Button, Modal } from "@ui/index";
 import { useOnClickOutside } from "@ui/src/hooks/useOnClickOutside";
 import ListItem from "@ui/src/components/common/ListItem";
 import { type TeamType } from "@repo/types";
@@ -139,6 +139,26 @@ export default function TeamListItem({ team }: TeamListItemProps): JSX.Element {
           setIsMobileModalOpen(false);
         }}
         team={team}
+        actions={
+          <Modal.Root>
+            <Modal.Trigger>
+              <Button className="text-14" variant="Secondary">
+                삭제하기
+              </Button>
+            </Modal.Trigger>
+
+            <Modal.Content>
+              <Modal.Title>팀 &#39;{name}&#39;를 삭제하시겠어요?</Modal.Title>
+              <Modal.Description>
+                <p>해당 팀에 대한 정보가 모두 사라집니다.</p>
+                <p>단, 해당 팀에 속한 멤버는 삭제되지 않습니다.</p>
+              </Modal.Description>
+              <Modal.Close onConfirm={handleDeleteTeam} confirmText="삭제하기" cancelText="취소하기">
+                예
+              </Modal.Close>
+            </Modal.Content>
+          </Modal.Root>
+        }
       />
     </>
   );

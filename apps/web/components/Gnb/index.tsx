@@ -6,18 +6,13 @@ import { useAuthStore } from "@/src/stores/useAuthStore";
 import Profile from "../common/Profile";
 import GnbMenu from "./GnbMenu";
 import GnbLogo from "./GnbLogo";
-import { useShouldRenderGnb } from "./hooks/useShouldRenderGnb";
 
 export default function Gnb(): JSX.Element | null {
   const { isLoggedIn, user } = useAuthStore();
-  // TODO : 모달로 띄우면 이거 없어도 될듯?
-  const isRenderGnb = useShouldRenderGnb();
-
-  if (!isRenderGnb) return null;
 
   return (
     <nav
-      className="md:w-200 bg-custom-black fixed bottom-0 z-50 w-screen justify-between md:flex md:h-screen md:flex-col md:p-16"
+      className="md:w-200 bg-custom-black fixed bottom-0 z-40 w-screen justify-between md:flex md:h-screen md:flex-col md:p-16"
       aria-label="Navigation Bar"
     >
       <div>

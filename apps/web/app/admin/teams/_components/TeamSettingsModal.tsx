@@ -19,7 +19,9 @@ export default function TeamSettingsModal({ isOpen, onClose }: TeamSettingsModal
     <>
       <SettingsModal isOpen={isOpen} onClose={onClose}>
         <SettingsModal.Header title="팀 관리" />
-        <TeamList />
+        <SettingsModal.Content>
+          <TeamList />
+        </SettingsModal.Content>
         <SettingsModal.Button onClick={handleOpenManageModal}>+ 팀 추가</SettingsModal.Button>
       </SettingsModal>
 
