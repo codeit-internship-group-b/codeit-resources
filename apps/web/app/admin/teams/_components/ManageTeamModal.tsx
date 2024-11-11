@@ -1,9 +1,9 @@
-import { Button, Input } from "@ui/index";
+import { Input } from "@ui/index";
 import { type FieldValues, type SubmitHandler } from "react-hook-form";
 import { type ReactNode, useEffect } from "react";
 import { type TeamType } from "@repo/types";
 import { debounce } from "es-toolkit";
-import SettingsModal from "@/components/SettingsModal/SettingsModal";
+import { SettingsModal, SettingsModalButton, SettingsModalHeader } from "@/components/SettingsModal";
 import { useCreateForm } from "../_hooks/useCreateForm";
 import { useCreateTeam } from "../_hooks/useCreateTeam";
 import { useUpdateTeam } from "../_hooks/useUpdateTeam";
@@ -64,10 +64,10 @@ export default function ManageTeamModal({
 
   return (
     <SettingsModal isOpen={isOpen} onClose={onClose}>
-      <SettingsModal.Header title={title} actions={actions} />
+      <SettingsModalHeader title={title} actions={actions} />
       <form onSubmit={(...rest) => void handleSubmit(onSubmit)(...rest)}>
         <Input id="teamName" placeholder="팀 이름" {...register("teamName")} />
-        <SettingsModal.Button type="submit">{buttonText}</SettingsModal.Button>
+        <SettingsModalButton type="submit">{buttonText}</SettingsModalButton>
       </form>
     </SettingsModal>
   );

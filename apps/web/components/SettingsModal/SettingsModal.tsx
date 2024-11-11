@@ -15,7 +15,7 @@ interface SettingsModalContextProps {
 
 const SettingsModalContext = createContext<SettingsModalContextProps | null>(null);
 
-const useSettingsModal = (): SettingsModalContextProps => {
+export const useSettingsModal = (): SettingsModalContextProps => {
   const context = useContext(SettingsModalContext);
   // throw Error 대신 빈 객체 반환으로 사용
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -34,40 +34,3 @@ export default function SettingsModal({ isOpen, onClose, children }: SettingsMod
     </SettingsModalContext.Provider>
   );
 }
-
-interface SettingsModalHeaderProps {
-  title: string;
-  actions?: ReactNode;
-}
-
-SettingsModal.Header = function SettingsModalHeader({ title, actions }: SettingsModalHeaderProps): JSX.Element {
-  const { onClose } = useSettingsModal();
-
-  return (
-    <div className="relative flex items-center justify-center">
-      <Chevron className="absolute left-16 h-40 w-40 p-10" onClick={onClose} />
-      <h1 className="text-20">{title}</h1>
-      {actions ? <div className="absolute right-0 top-0">{actions}</div> : null}
-    </div>
-  );
-};
-
-interface SettingsModalContentProps {
-  children: ReactNode;
-}
-
-SettingsModal.Content = function SettingsModalContent({ children }: SettingsModalContentProps) {
-  return <div className="no-scrollbar scrollbar-hidden mb-48 overflow-auto">{children}</div>;
-};
-
-interface SettingsModalButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  children: ReactNode;
-}
-
-SettingsModal.Button = function SettingsModalButton({ children, ...rest }: SettingsModalButtonProps) {
-  return (
-    <Button className="fixed bottom-32 h-48 w-[calc(100%-32px)] text-base font-medium" variant="Primary" {...rest}>
-      {children}
-    </Button>
-  );
-};

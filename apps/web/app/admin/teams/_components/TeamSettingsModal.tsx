@@ -1,5 +1,10 @@
 import { useState } from "react";
-import SettingsModal from "@/components/SettingsModal/SettingsModal";
+import {
+  SettingsModal,
+  SettingsModalButton,
+  SettingsModalContent,
+  SettingsModalHeader,
+} from "@/components/SettingsModal";
 import TeamList from "./TeamList";
 import ManageTeamModal from "./ManageTeamModal";
 
@@ -18,11 +23,11 @@ export default function TeamSettingsModal({ isOpen, onClose }: TeamSettingsModal
   return (
     <>
       <SettingsModal isOpen={isOpen} onClose={onClose}>
-        <SettingsModal.Header title="팀 관리" />
-        <SettingsModal.Content>
+        <SettingsModalHeader title="팀 관리" />
+        <SettingsModalContent>
           <TeamList />
-        </SettingsModal.Content>
-        <SettingsModal.Button onClick={handleOpenManageModal}>+ 팀 추가</SettingsModal.Button>
+        </SettingsModalContent>
+        <SettingsModalButton onClick={handleOpenManageModal}>+ 팀 추가</SettingsModalButton>
       </SettingsModal>
 
       <ManageTeamModal isCreate isOpen={isManageModalOpen} onClose={handleOpenManageModal} />
