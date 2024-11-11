@@ -1,7 +1,7 @@
 "use client";
 
 import AlertModal from "@ui/src/components/common/ConditionalActionModal/AlertModal";
-import { notify } from "@ui/index";
+import { notify } from "@/app/store/useToastStore";
 
 interface ReservationModalProps {
   isOpen: boolean;
@@ -16,7 +16,7 @@ export default function ReservationModal({ isOpen, onClose, onConfirm }: Reserva
       onClose={onClose}
       onConfirm={() => {
         onConfirm();
-        notify({ type: "success", message: "회의실이 예약되었습니다!" });
+        notify("success", "회의실이 예약되었습니다!");
       }}
       title="회의실을 예약하시겠어요?"
       content={<>선택한 시간대의 회의실이 예약됩니다.</>}

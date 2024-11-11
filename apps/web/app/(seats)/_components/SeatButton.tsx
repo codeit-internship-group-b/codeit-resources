@@ -2,10 +2,10 @@
 import { CancelIcon, RightIcon } from "@ui/public";
 import cn from "@ui/src/utils/cn";
 import { useMemo, useState } from "react";
-import { notify } from "@ui/index";
 import AlertModal from "@ui/src/components/common/ConditionalActionModal/AlertModal";
 import { usePathname } from "next/navigation";
 import { Sheet } from "react-modal-sheet";
+import { notify } from "@/app/store/useToastStore";
 import useIsMobileStore from "@/app/store/useIsMobileStore";
 import Sidebar from "@/components/common/Sidebar";
 import { useSeatContext } from "../context/SeatContext";
@@ -36,7 +36,7 @@ export default function SeatButton({ isLoading, status = "available", user, seat
     } else {
       // post api 연결
       handleSelectSeat(seatNum);
-      notify({ type: "success", message: "자리 예약 성공!" });
+      notify("success", "자리 예약 성공!");
     }
   };
 
@@ -54,7 +54,7 @@ export default function SeatButton({ isLoading, status = "available", user, seat
     // patch api 연결
     handleSelectSeat(seatNum);
     setIsModalOpen(false);
-    notify({ type: "success", message: "자리 예약 성공!" });
+    notify("success", "자리 예약 성공!");
   };
 
   return (

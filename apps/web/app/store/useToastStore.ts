@@ -1,4 +1,3 @@
-// stores/useToastStore.ts
 import { create } from "zustand";
 
 interface ToastState {
@@ -22,7 +21,6 @@ export const useToastStore = create<ToastState>((set) => ({
       duration,
       isVisible: true,
     });
-    // 자동으로 Toast를 숨깁니다
     setTimeout(() => {
       set({ isVisible: false, message: null, type: null });
     }, duration);
@@ -36,7 +34,6 @@ export const useToastStore = create<ToastState>((set) => ({
   },
 }));
 
-// notify 함수를 내보냅니다
 export const notify = (type: "success" | "error" | "info", message: string, duration?: number): void => {
   useToastStore.getState().showToast(type, message, duration);
 };

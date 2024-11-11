@@ -1,7 +1,7 @@
 import { useMutation, type UseMutationResult, useQueryClient } from "@tanstack/react-query";
 import { type TeamType } from "@repo/types";
 import { type AxiosError } from "axios";
-import { notify } from "@ui/index";
+import { notify } from "@/app/store/useToastStore";
 import { useRef } from "react";
 import { updateTeam } from "@/api/teams";
 
@@ -35,14 +35,14 @@ export const useUpdateTeam = (): UseMutationResult<MessageResponse, AxiosError<{
 
     onSuccess: (res) => {
       // 토스트 피드백
-      if (typeof res.message === "string") notify({ type: "success", message: res.message });
+      if (typeof res.message === "string") notify("success", res.message);
     },
     onError: (error) => {
       if (prevTeamsRef.current) void queryClient.setQueryData<TeamType[]>(["teamsResponse"], prevTeamsRef.current);
 
       const err = error as AxiosError<{ message: string }>;
       const errMessage = err.response?.data.message;
-      if (errMessage) notify({ type: "error", message: errMessage });
+      if (errMessage) notify("error", errMessage);
     },
     // finally 동작
     onSettled: () => {

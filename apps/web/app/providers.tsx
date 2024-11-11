@@ -3,8 +3,8 @@
 import { isServer, QueryClient, QueryClientProvider, QueryCache, MutationCache } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { type ReactNode } from "react";
-import { Toast } from "@ui/index";
-import notify from "@repo/ui/src/components/common/Toast/notify";
+import { notify } from "@/app/store/useToastStore";
+import Toast from "@/components/common/Toast";
 import MobileSizeWatcher from "@/components/MobileSizeWatcher";
 
 interface ProvidersProps {
@@ -40,18 +40,12 @@ function makeQueryClient(): QueryClient {
     },
     queryCache: new QueryCache({
       onError: (error: ErrorResponse) => {
-        notify({
-          type: "error",
-          message: getErrorMessage(error),
-        });
+        notify("error", getErrorMessage(error));
       },
     }),
     mutationCache: new MutationCache({
       onError: (error: ErrorResponse) => {
-        notify({
-          type: "error",
-          message: getErrorMessage(error),
-        });
+        notify("error", getErrorMessage(error));
       },
     }),
   });

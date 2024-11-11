@@ -5,7 +5,8 @@ import { useState, useEffect, useRef, type ChangeEvent } from "react";
 import { useForm, Controller } from "react-hook-form";
 import Image from "next/image";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { notify, Modal, Radio } from "@ui/index";
+import { Modal, Radio } from "@ui/index";
+import { notify } from "@/app/store/useToastStore";
 import Input from "@ui/src/components/common/Input";
 import Button from "@ui/src/components/common/Button";
 import { DoubleChevron } from "@ui/public";
@@ -61,10 +62,7 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
   const postMemberMutation = useMutation({
     mutationFn: postMember,
     onSuccess: async () => {
-      notify({
-        type: "success",
-        message: selectedMember ? NOTIFICATION_MESSAGES.MEMBER_UPDATE : NOTIFICATION_MESSAGES.MEMBER_ADD,
-      });
+      notify("success", selectedMember ? NOTIFICATION_MESSAGES.MEMBER_UPDATE : NOTIFICATION_MESSAGES.MEMBER_ADD);
       await queryClient.invalidateQueries({ queryKey: ["members"] });
       onClose();
     },
@@ -73,10 +71,7 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
   const patchMemberMutation = useMutation({
     mutationFn: (data: FormData) => (selectedMember ? patchMember(selectedMember._id, data) : postMember(data)),
     onSuccess: async () => {
-      notify({
-        type: "success",
-        message: selectedMember ? NOTIFICATION_MESSAGES.MEMBER_UPDATE : NOTIFICATION_MESSAGES.MEMBER_ADD,
-      });
+      notify("success", selectedMember ? NOTIFICATION_MESSAGES.MEMBER_UPDATE : NOTIFICATION_MESSAGES.MEMBER_ADD);
       await queryClient.invalidateQueries({ queryKey: ["members"] });
       onClose();
     },
@@ -85,10 +80,7 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
   const deleteMemberMutation = useMutation({
     mutationFn: (userId: string) => deleteMember(userId),
     onSuccess: async () => {
-      notify({
-        type: "success",
-        message: NOTIFICATION_MESSAGES.MEMBER_DELETE,
-      });
+      notify("success", NOTIFICATION_MESSAGES.MEMBER_DELETE);
       await queryClient.invalidateQueries({ queryKey: ["members"] });
       onClose();
     },
@@ -99,19 +91,13 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: AddMember
     if (!file) return;
 
     if (!IMAGE_TYPES.includes(file.type)) {
-      notify({
-        type: "error",
-        message: NOTIFICATION_MESSAGES.INVALID_IMAGE_TYPE,
-      });
+      notify("error", NOTIFICATION_MESSAGES.INVALID_IMAGE_TYPE);
       e.target.value = "";
       return;
     }
 
     if (file.size > MAX_SIZE) {
-      notify({
-        type: "error",
-        message: NOTIFICATION_MESSAGES.INVAILD_IMAGE_SIZE,
-      });
+      notify("error", NOTIFICATION_MESSAGES.INVAILD_IMAGE_SIZE);
       e.target.value = "";
       return;
     }
