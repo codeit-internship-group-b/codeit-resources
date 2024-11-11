@@ -1,12 +1,11 @@
 import { type StaticImageData } from "next/image";
-import { type IUser } from "@repo/types";
+import { IUser } from "./userType";
+import { ResponseType } from "./responseType";
 
 // 이미지 타입
 export type ImageUrlType = string;
 export type StaticImageType = StaticImageData;
 export type ImageFileType = File;
-
-// 조합 타입
 export type DisplayImageType = ImageUrlType | StaticImageType;
 export type FormImageType = DisplayImageType | ImageFileType | null;
 
@@ -54,10 +53,10 @@ export const ROLE_LABELS: Record<RoleOption, string> = {
 
 export type GetMembersResponse = MemberWithStaticImage[];
 
-export interface DeleteMemberResponse {
+export interface ResponseWithMessage {
   message: string;
 }
-export interface MemberResponse {
-  message: string;
+
+export interface MemberResponse extends ResponseWithMessage {
   user: IUser;
 }

@@ -1,4 +1,4 @@
-import { type MemberWithStaticImage } from "../types";
+import { type MemberWithStaticImage } from "@repo/types/src/membersType";
 import SkeletonList from "./SkeletonList";
 import EmptyState from "./EmptyState";
 import MemberListItem from "./MemberListItem";

@@ -16,7 +16,7 @@ import {
   type RoleOption,
   type ImageFileType,
   type FormImageType,
-} from "../types";
+} from "@repo/types/src/membersType";
 import { useMemberMutations } from "../_hooks/useMemberMutation";
 import ProfileImageUploader from "./ProfileImageUploader";
 

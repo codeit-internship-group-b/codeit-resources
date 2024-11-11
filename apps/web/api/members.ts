@@ -1,14 +1,10 @@
 import { API_ENDPOINTS } from "@repo/constants";
-import {
-  type MemberResponse,
-  type GetMembersResponse,
-  type DeleteMemberResponse,
-  type SortOption,
-} from "@/app/admin/members/types";
+import type { MemberResponse, ResponseWithMessage, SortOption } from "@repo/types/src/membersType";
+import { type IUser } from "@repo/types";
 import { axiosRequester } from "@/lib/axios";
 
-export const getMembers = async (sortOption: SortOption): Promise<GetMembersResponse> => {
-  const { data } = await axiosRequester<GetMembersResponse>({
+export const getMembers = async (sortOption: SortOption): Promise<IUser[]> => {
+  const { data } = await axiosRequester<IUser[]>({
     options: {
       method: "GET",
       url: API_ENDPOINTS.USERS.GET_ALL,
@@ -51,8 +47,8 @@ export const patchMember = async (userId: string, formData: FormData): Promise<M
   return data;
 };
 
-export const deleteMember = async (userId: string): Promise<DeleteMemberResponse> => {
-  const { data } = await axiosRequester<DeleteMemberResponse>({
+export const deleteMember = async (userId: string): Promise<ResponseWithMessage> => {
+  const { data } = await axiosRequester<ResponseWithMessage>({
     options: {
       method: "DELETE",
       url: API_ENDPOINTS.USERS.DELETE_USER(userId),

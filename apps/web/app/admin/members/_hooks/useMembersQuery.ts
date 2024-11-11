@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
+import type { MemberWithStaticImage, SortOption } from "@repo/types/src/membersType";
 import { getMembers } from "@/api/members";
-import { type MemberWithStaticImage, type SortOption } from "../types";
 
 interface UseMembersQueryReturn {
   data: MemberWithStaticImage[] | undefined;

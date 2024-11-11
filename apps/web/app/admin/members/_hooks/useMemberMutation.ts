@@ -2,12 +2,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { notify } from "@ui/index";
 import axios, { type AxiosError } from "axios";
+import type { MemberWithFileImage, ResponseWithMessage } from "@repo/types/src/membersType";
+import { ERROR_MESSGAE } from "@ui/src/utils/constants/notificationMessage";
 import { postMember, patchMember, deleteMember } from "@/api/members";
-import type { MemberWithFileImage } from "../types";
-
-interface ApiResponse {
-  message: string;
-}
 
 interface UpdateMemberParams {
   id: string;
@@ -34,7 +31,7 @@ interface UseMemberMutationsProps {
 export function useMemberMutations({ onSuccess }: UseMemberMutationsProps = {}): MemberMutationsReturn {
   const queryClient = useQueryClient();
 
-  const handleSuccess = async (res: ApiResponse): Promise<void> => {
+  const handleSuccess = async (res: ResponseWithMessage): Promise<void> => {
     notify({
       type: "success",
       message: res.message,
@@ -43,7 +40,7 @@ export function useMemberMutations({ onSuccess }: UseMemberMutationsProps = {}):
     onSuccess?.();
   };
 
-  const handleError = (error: Error | AxiosError<ApiResponse>): void => {
+  const handleError = (error: Error | AxiosError<ResponseWithMessage>): void => {
     if (axios.isAxiosError(error)) {
       notify({
         type: "error",
@@ -52,7 +49,7 @@ export function useMemberMutations({ onSuccess }: UseMemberMutationsProps = {}):
     } else {
       notify({
         type: "error",
-        message: error.message,
+        message: ERROR_MESSGAE.DEFAULT,
       });
     }
   };
