@@ -7,6 +7,13 @@ interface SettingsModalHeaderProps {
   actions?: ReactNode;
 }
 
+/**
+ * `SettingsModal.Header` 컴포넌트는 모달의 헤더 영역을 정의합니다.
+ * 제목과 추가 액션을 포함하여 헤더에 표시합니다.
+ * @param {SettingsModalHeaderProps} props - 제목과 추가 액션을 포함한 객체입니다.
+ * @returns {JSX.Element} - 헤더 영역을 포함한 JSX 요소를 반환합니다.
+ */
+
 export default function SettingsModalHeader({ title, actions }: SettingsModalHeaderProps): JSX.Element {
   const { onClose } = useSettingsModal();
 
