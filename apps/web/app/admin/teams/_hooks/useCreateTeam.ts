@@ -1,7 +1,7 @@
 import { useMutation, type UseMutationResult, useQueryClient } from "@tanstack/react-query";
-import { notify } from "@/app/store/useToastStore";
 import { type AxiosError } from "axios";
 import { type ResponseType, type ITeam } from "@repo/types";
+import { notify } from "@/app/store/useToastStore";
 import { postCreateTeam } from "@/api/teams";
 
 export const useCreateTeam = (): UseMutationResult<ResponseType<ITeam>, AxiosError<{ message?: string }>, ITeam> => {

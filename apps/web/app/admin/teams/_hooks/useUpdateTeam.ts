@@ -1,8 +1,8 @@
 import { useMutation, type UseMutationResult, useQueryClient } from "@tanstack/react-query";
 import { type TeamType } from "@repo/types";
 import { type AxiosError } from "axios";
-import { notify } from "@/app/store/useToastStore";
 import { useRef } from "react";
+import { notify } from "@/app/store/useToastStore";
 import { updateTeam } from "@/api/teams";
 
 interface UpdateRequest {
