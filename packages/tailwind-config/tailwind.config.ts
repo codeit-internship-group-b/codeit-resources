@@ -63,6 +63,7 @@ const config: Omit<Config, "content"> = {
           20: "#00BE2F",
           30: "#80F188",
           40: "#025918",
+          50: "#07AC30",
         },
         pink: {
           10: "#FFEBF7",
