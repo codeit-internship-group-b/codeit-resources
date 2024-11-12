@@ -1,4 +1,3 @@
- 
 "use client";
 
 import { PersonIcon, MeetingIcon, SeatsIcon, TeamIcon, GearIcon } from "@repo/ui/public";
@@ -18,7 +17,7 @@ const NAV_ITEMS = [
 const SETTINGS_ITEM = { href: PAGE_NAME.SETTINGS, name: "설정", icon: GearIcon };
 const SettingsIcon = SETTINGS_ITEM.icon;
 
-export const ADMIN_ITEMS = [
+const ADMIN_ITEMS = [
   { href: PAGE_NAME.ADMIN_MEMBERS, name: "멤버 관리", icon: PersonIcon },
   { href: PAGE_NAME.ADMIN_TEAMS, name: "팀 관리", icon: TeamIcon },
   { href: PAGE_NAME.ADMIN_MEETINGS, name: "회의실 설정", icon: MeetingIcon },
