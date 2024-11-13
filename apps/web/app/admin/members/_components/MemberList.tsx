@@ -1,20 +1,14 @@
 import { type MemberWithStaticImage } from "@repo/types/src/membersType";
-import SkeletonList from "./SkeletonList";
 import EmptyState from "./EmptyState";
 import MemberListItem from "./MemberListItem";
 
 interface MemberListProps {
-  isLoading: boolean;
   members: MemberWithStaticImage[];
   activeTab: string;
   onMemberClick: (member: MemberWithStaticImage) => void;
 }
 
-export default function MemberList({ isLoading, members, activeTab, onMemberClick }: MemberListProps): JSX.Element {
-  if (isLoading) {
-    return <SkeletonList />;
-  }
-
+export default function MemberList({ members, activeTab, onMemberClick }: MemberListProps): JSX.Element {
   if (members.length === 0) {
     return <EmptyState activeTab={activeTab} />;
   }
