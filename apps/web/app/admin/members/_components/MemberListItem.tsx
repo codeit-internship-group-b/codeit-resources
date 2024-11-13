@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, type MouseEvent, type KeyboardEvent } from "react";
 import Image from "next/image";
 import { Badge } from "@ui/index";
@@ -7,7 +6,6 @@ import DefaultProfileImage from "@ui/public/images/image_default_profile.png";
 import { Chevron } from "@ui/public";
 import { type MemberWithStaticImage, ROLE_LABELS, type RoleOption } from "@repo/types/src/membersType";
 import { BLUR_DATA_URL } from "@repo/constants/image";
-import useIsMobileStore from "@/app/store/useIsMobileStore";
 import { useMembersMutations } from "../_hooks/useMembersMutations";
 
 interface MemberListItemProps {
@@ -18,8 +16,6 @@ interface MemberListItemProps {
 export default function MemberListItem({ member, onMemberClick }: MemberListItemProps): JSX.Element {
   const [currentRole, setCurrentRole] = useState<RoleOption>(member.role);
   const [isImageError, setIsImageError] = useState(false);
-
-  const isMobile = useIsMobileStore();
 
   const { updateMember } = useMembersMutations();
 
@@ -102,17 +98,7 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
         </span>
       </div>
 
-      <Chevron className="top-22 absolute right-16 rotate-180 md:hidden" />
-
-      <div className="mr-16 hidden flex-grow flex-wrap gap-16 md:flex">
-        {member.teams.map((team) => (
-          <Badge key={team} color="purple" colorApplyTo="font" shape="round">
-            {team}
-          </Badge>
-        ))}
-      </div>
-
-      <div data-dropdown="true" className="hidden md:block">
+      <div data-dropdown="true" className="hidden md:absolute md:left-[356px] md:block">
         <Dropdown selectedValue={getRoleDisplay(currentRole)} onSelect={handleRoleChange} size="sm">
           <Dropdown.Toggle>{getRoleDisplay(currentRole)}</Dropdown.Toggle>
           <Dropdown.Wrapper className="top-42">
@@ -124,6 +110,16 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
           </Dropdown.Wrapper>
         </Dropdown>
       </div>
+
+      <div className="hidden md:absolute md:left-[484px] md:flex md:flex-grow md:flex-wrap md:gap-16">
+        {member.teams.map((team) => (
+          <Badge key={team} color="purple" colorApplyTo="font" shape="round">
+            {team}
+          </Badge>
+        ))}
+      </div>
+
+      <Chevron className="top-22 md:top-26 absolute right-16 rotate-180 md:right-24" />
     </div>
   );
 }
