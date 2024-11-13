@@ -1,22 +1,24 @@
-interface TabProps {
-  team: string;
-  isActive: boolean;
-  onClick: () => void;
+import TabItem from "./TabItem";
+
+interface TabsProps {
+  activeTab: string;
+  onTabChange: (tab: string) => void;
+  filteredTeams: string[];
 }
 
-export default function Tab({ team, isActive, onClick }: TabProps): JSX.Element {
+export function Tab({ activeTab, onTabChange, filteredTeams }: TabsProps): JSX.Element {
   return (
-    <li>
-      <button
-        type="button"
-        className={`text-lg-bold relative pb-8 ${isActive ? "text-custom-black/80" : "text-custom-black/50"}`}
-        onClick={onClick}
-      >
-        {team}
-        {isActive ? (
-          <span className="bg-custom-black/80 absolute bottom-0 left-0 h-2 w-full transition-all duration-300" />
-        ) : null}
-      </button>
-    </li>
+    <ul className="flex flex-row gap-32 whitespace-nowrap">
+      {filteredTeams.map((team) => (
+        <TabItem
+          key={team}
+          team={team}
+          isActive={activeTab === team}
+          onClick={() => {
+            onTabChange(team);
+          }}
+        />
+      ))}
+    </ul>
   );
 }
