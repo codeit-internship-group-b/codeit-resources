@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import { type IReservation } from "@repo/types";
+import { parseISO } from "date-fns";
 import { useSidebarStore } from "@/app/store/useSidebarStore";
 import MobileReservationSheet from "../../Reservation/MobileReservationSheet";
 import DesktopReservationSheet from "../../Reservation/DesktopReservationSheet";
@@ -31,15 +32,13 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
     let date: Date;
 
     if (typeof time === "string") {
-      date = new Date(time);
+      date = parseISO(time);
     } else {
       date = time;
     }
 
-    // 서버 시간대에 맞게 선택 (UTC 또는 로컬)
-    const hours = date.getUTCHours(); // 또는 date.getHours();
-    const minutes = date.getUTCMinutes(); // 또는 date.getMinutes();
-
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
     return hours * 60 + minutes;
   };
 
