@@ -23,7 +23,7 @@ export default function CategoryListItem({ title }: CategoryListItemProps): JSX.
   const [inputValue, setInputValue] = useState("");
 
   const [isOpen, setIsOpen] = useState(false);
-  const [isPanelOpen, setIsPanelOpen] = useState(true);
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [panelState, setPanelState] = useState("");
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -115,12 +115,17 @@ export default function CategoryListItem({ title }: CategoryListItemProps): JSX.
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
-          transition={{ duration: 0.2, ease: "easeInOut" }}
-          className="pl-24"
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+          className="overflow-hidden pl-24"
         >
+          <CategoryListSubItem title="회의실1" editItem={openPanelToEdit} />
+          <CategoryListSubItem title="회의실1" editItem={openPanelToEdit} />
+          <CategoryListSubItem title="회의실1" editItem={openPanelToEdit} />
+          <CategoryListSubItem title="회의실1" editItem={openPanelToEdit} />
           <CategoryListSubItem title="회의실1" editItem={openPanelToEdit} />
         </motion.div>
       ) : null}
+
       <Sidebar isOpen={isPanelOpen} onClose={closePanel}>
         <h1 className="my-24">회의실 {panelState === "add" ? "추가" : "수정"}</h1>
         <EditItemForm prevCategory={title} onSubmit={handleSubmitForm} />
