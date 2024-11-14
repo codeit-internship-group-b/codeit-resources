@@ -2,7 +2,7 @@
 "use client";
 
 import { useState } from "react";
-import { type Schedule } from "@/app/types/scheduletypes";
+import { type IReservation } from "@repo/types";
 import { useSidebarStore } from "@/app/store/useSidebarStore";
 import MobileReservationSheet from "../../Reservation/MobileReservationSheet";
 import DesktopReservationSheet from "../../Reservation/DesktopReservationSheet";
@@ -11,11 +11,11 @@ import ScheduleItem from "./ScheduleItem";
 import CurrentTimeIndicator from "./CurrentTimeIndicator";
 
 interface ScheduleRowProps {
-  schedules: Schedule[];
+  schedules: IReservation[];
   room: string;
   slotWidth?: number;
   slotHeight?: number;
-  onSlotClick?: (time: string, schedule?: Schedule, room?: string) => void;
+  onSlotClick?: (time: string, schedule?: IReservation, room?: string) => void;
 }
 
 export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
@@ -27,22 +27,31 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
   const minutesPerSlot = 30;
   const totalMinutes = (endHour - startHour) * 60;
 
-  const timeToMinutes = (time: string): number => {
-    const [hoursStr, minutesStr] = time.split(":");
-    const hours = Number(hoursStr);
-    const minutes = Number(minutesStr);
+  const timeToMinutes = (time: Date | string): number => {
+    let date: Date;
+
+    if (typeof time === "string") {
+      date = new Date(time);
+    } else {
+      date = time;
+    }
+
+    // 서버 시간대에 맞게 선택 (UTC 또는 로컬)
+    const hours = date.getUTCHours(); // 또는 date.getHours();
+    const minutes = date.getUTCMinutes(); // 또는 date.getMinutes();
+
     return hours * 60 + minutes;
   };
 
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
-  const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(null);
+  const [selectedSchedule, setSelectedSchedule] = useState<IReservation | null>(null);
   const [selectedRoom, setSelectedRoom] = useState<string | null>(room || null);
 
   const openSidebar = useSidebarStore((state) => state.openSidebar);
   const closeSidebar = useSidebarStore((state) => state.closeSidebar);
   const isSidebarOpen = useSidebarStore((state) => state.isSidebarOpen);
 
-  const handleSlotClick = (index: number, schedule?: Schedule): void => {
+  const handleSlotClick = (index: number, schedule?: IReservation): void => {
     const clickedTimeMinutes = startHour * 60 + index * minutesPerSlot;
     const hours = Math.floor(clickedTimeMinutes / 60);
     const minutes = clickedTimeMinutes % 60;
@@ -82,8 +91,8 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
       </div>
 
       {schedules.map((schedule) => {
-        const startMinutes = timeToMinutes(schedule.start_time) - startHour * 60;
-        const endMinutes = timeToMinutes(schedule.end_time) - startHour * 60;
+        const startMinutes = timeToMinutes(schedule.startAt) - startHour * 60;
+        const endMinutes = timeToMinutes(schedule.endAt) - startHour * 60;
         const scheduleDuration = endMinutes - startMinutes;
 
         if (startMinutes < 0 || endMinutes > totalMinutes) return null;
@@ -93,11 +102,11 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
 
         return (
           <ScheduleItem
-            key={schedule.id}
+            key={schedule._id}
             schedule={schedule}
             leftPosition={leftPosition}
             scheduleWidth={scheduleWidth}
-            isCurrentUser={schedule.userId === "1"}
+            isCurrentUser={schedule._id === "1"}
             onClick={() => {
               handleSlotClick(-1, schedule);
             }}
