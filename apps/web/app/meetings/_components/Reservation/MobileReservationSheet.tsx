@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Sheet } from "react-modal-sheet";
 import { useState } from "react";
+import { type IReservation } from "@repo/types";
 import { type ScheduleFormData, type Schedule } from "@/app/types/scheduletypes";
 import ReservationForm from "./ReservationForm";
 import ReservationModal from "./ReservationModal";
@@ -9,7 +10,7 @@ interface MobileReservationSheetProps {
   isOpen: boolean;
   onClose: () => void;
   selectedTime: string;
-  selectedSchedule?: Schedule | null;
+  selectedSchedule?: IReservation | null;
   selectedRoom: string;
 }
 
