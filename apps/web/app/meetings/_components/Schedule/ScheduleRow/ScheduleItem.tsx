@@ -2,11 +2,11 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 "use client";
 
-import { type Schedule } from "@/app/types/scheduletypes";
+import { type IReservation } from "@repo/types";
 import ScheduleTooltip from "./ScheduleTooltip";
 
 interface ScheduleItemProps {
-  schedule: Schedule;
+  schedule: IReservation;
   leftPosition: number;
   scheduleWidth: number;
   isCurrentUser: boolean;
@@ -39,7 +39,7 @@ export default function ScheduleItem(props: ScheduleItemProps): JSX.Element {
         role="button"
         tabIndex={0}
       >
-        {isCurrentUser ? null : <ScheduleTooltip title={schedule.title} />}
+        {isCurrentUser ? null : <ScheduleTooltip>{schedule.notes}</ScheduleTooltip>}
       </div>
     </div>
   );
