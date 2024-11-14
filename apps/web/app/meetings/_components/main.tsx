@@ -6,33 +6,35 @@ import { type TBaseItem } from "@repo/types";
 import { useDateStore } from "@/app/store/useDateStore";
 import { getReservationsByTypeAndDate } from "@/api/reservations";
 import { getAllItems } from "@/api/items";
-import { rooms } from "../../mocks/mockData";
 import ScheduleTable from "./Schedule/ScheduleTable";
 
 export default function MeetingRoomSchedule(): JSX.Element {
   const { selectedDate } = useDateStore();
 
-  const formattedDate = `${String(selectedDate.year)}-${String(selectedDate.month).padStart(2, "0")}-${String(selectedDate.day).padStart(2, "0")}`;
+  const formattedDate = `${String(selectedDate.year)}-${String(selectedDate.month).padStart(
+    2,
+    "0",
+  )}-${String(selectedDate.day).padStart(2, "0")}`;
 
   const MeetingRoomsType = "room";
 
-  const { data: meetingsData, isLoading: meetingsIsLoading } = useQuery<IReservation[]>({
+  const { data: meetingsData = [], isLoading: meetingsIsLoading } = useQuery<IReservation[]>({
     queryKey: ["meetings", formattedDate, MeetingRoomsType],
     queryFn: () => getReservationsByTypeAndDate({ itemType: MeetingRoomsType, date: formattedDate }),
   });
 
-  const { data: RoomsData, isLoading: RoomsIsLoading } = useQuery<TBaseItem[]>({
+  const { data: roomsData = [], isLoading: roomsIsLoading } = useQuery<TBaseItem[]>({
     queryKey: ["Rooms", MeetingRoomsType],
     queryFn: () => getAllItems({ itemType: MeetingRoomsType }),
   });
 
-  if (meetingsIsLoading || RoomsIsLoading) return <div>로딩중이에요~</div>;
+  if (meetingsIsLoading || roomsIsLoading) return <div>로딩중이에요~</div>;
 
   return (
     <>
-      <ScheduleTable rooms={rooms} selectedDate={formattedDate} />{" "}
+      <ScheduleTable rooms={roomsData} meetingsData={meetingsData} selectedDate={formattedDate} />
       <div>
-        {meetingsData && meetingsData.length > 0 ? (
+        {meetingsData.length > 0 ? (
           meetingsData.map((meeting) => (
             <div
               key={meeting._id}
@@ -62,12 +64,12 @@ export default function MeetingRoomSchedule(): JSX.Element {
             </div>
           ))
         ) : (
-          <p>예약된 회의가 없습니다.{formattedDate}</p>
+          <p>예약된 회의가 없습니다. {formattedDate}</p>
         )}
       </div>
       <div>
-        {RoomsData && RoomsData.length > 0 ? (
-          RoomsData.map((room) => (
+        {roomsData.length > 0 ? (
+          roomsData.map((room) => (
             <div
               key={room._id}
               style={{
