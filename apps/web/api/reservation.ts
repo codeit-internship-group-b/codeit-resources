@@ -1,4 +1,4 @@
-// apps/web/app/api/reservations.ts
+import { API_ENDPOINTS } from "@repo/constants";
 import { type IReservation, type TReservationStatus } from "@repo/types/src/reservationType";
 import { axiosRequester } from "@/lib/axios";
 
@@ -12,7 +12,7 @@ export const getUserReservations = async (params: GetUserReservationsParams): Pr
   const { data } = await axiosRequester<IReservation[]>({
     options: {
       method: "GET",
-      url: `/dashboard/${userId}`,
+      url: API_ENDPOINTS.RESERVATION.GET_USER_RESERVATIONS(userId),
     },
   });
 
@@ -22,7 +22,7 @@ export const getUserReservations = async (params: GetUserReservationsParams): Pr
 // 아이템 타입 및 날짜에 대한 예약 조회
 interface GetReservationsByTypeAndDateParams {
   itemType: "room" | "seat" | "equipment";
-  date?: string; // YYYY-MM-DD 형식
+  date: string;
   status?: TReservationStatus;
 }
 
@@ -33,7 +33,7 @@ export const getReservationsByTypeAndDate = async (
   const { data } = await axiosRequester<IReservation[]>({
     options: {
       method: "GET",
-      url: `/${itemType}`,
+      url: API_ENDPOINTS.RESERVATION.GET_RESERVATIONS_BY_TYPE_AND_DATE(itemType, date),
       params: {
         date,
         status,
@@ -56,7 +56,7 @@ export const createReservation = async (params: CreateReservationParams): Promis
   const { data: reservation } = await axiosRequester<{ message: string; savedReservation: IReservation }>({
     options: {
       method: "POST",
-      url: `/${itemId}`,
+      url: API_ENDPOINTS.RESERVATION.CREATE_RESERVATION(itemId),
       data,
     },
   });
