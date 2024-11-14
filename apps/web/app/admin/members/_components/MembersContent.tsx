@@ -7,7 +7,7 @@ import useIsMobileStore from "@/app/store/useIsMobileStore";
 import { useMembersQuery } from "../_hooks/useMembersQuery";
 import Header from "./Header";
 import Navbar from "./Navbar";
-import SidePanel from "./SidePanel";
+import SidePanel from "./sidepanel";
 import MemberList from "./MemberList";
 
 export default function MembersContent(): JSX.Element {
