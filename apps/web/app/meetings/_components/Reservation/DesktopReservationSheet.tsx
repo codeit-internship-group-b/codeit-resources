@@ -2,6 +2,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { type IReservation } from "@repo/types";
 import Sidebar from "@/components/common/Sidebar";
 import { type ScheduleFormData, type Schedule } from "@/app/types/scheduletypes";
 import { useSidebarStore } from "@/app/store/useSidebarStore";
@@ -11,7 +12,7 @@ import ReservationModal from "./ReservationModal";
 interface DesktopReservationSheetProps {
   onClose: () => void;
   selectedTime: string;
-  selectedSchedule?: Schedule | null;
+  selectedSchedule?: IReservation | null;
   selectedRoom: string;
 }
 
