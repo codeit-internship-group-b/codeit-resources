@@ -35,7 +35,6 @@ export const getReservationsByTypeAndDate = async (
       method: "GET",
       url: API_ENDPOINTS.RESERVATION.GET_RESERVATIONS_BY_TYPE_AND_DATE(itemType, date),
       params: {
-        date,
         status,
       },
     },
