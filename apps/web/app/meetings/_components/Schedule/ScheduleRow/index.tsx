@@ -10,6 +10,7 @@ import DesktopReservationSheet from "../../Reservation/DesktopReservationSheet";
 import ScheduleSlot from "./ScheduleSlot";
 import ScheduleItem from "./ScheduleItem";
 import CurrentTimeIndicator from "./CurrentTimeIndicator";
+import { useAuthStore } from "@/src/stores/useAuthStore";
 
 interface ScheduleRowProps {
   schedules: IReservation[];
@@ -21,6 +22,8 @@ interface ScheduleRowProps {
 
 export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
   const { schedules, room, slotHeight = 80, slotWidth = 72 } = props;
+
+  const user = useAuthStore((state) => state.user);
 
   const startHour = 0;
   const endHour = 24;
@@ -105,7 +108,7 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
             schedule={schedule}
             leftPosition={leftPosition}
             scheduleWidth={scheduleWidth}
-            isCurrentUser={schedule._id === "1"}
+            isCurrentUser={schedule.user._id === user?._id}
             onClick={() => {
               handleSlotClick(-1, schedule);
             }}
