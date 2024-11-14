@@ -5,12 +5,12 @@ import { useState } from "react";
 import { type IReservation } from "@repo/types";
 import { parseISO } from "date-fns";
 import { useSidebarStore } from "@/app/store/useSidebarStore";
+import { useAuthStore } from "@/src/stores/useAuthStore";
 import MobileReservationSheet from "../../Reservation/MobileReservationSheet";
 import DesktopReservationSheet from "../../Reservation/DesktopReservationSheet";
 import ScheduleSlot from "./ScheduleSlot";
 import ScheduleItem from "./ScheduleItem";
 import CurrentTimeIndicator from "./CurrentTimeIndicator";
-import { useAuthStore } from "@/src/stores/useAuthStore";
 
 interface ScheduleRowProps {
   schedules: IReservation[];
@@ -23,6 +23,7 @@ interface ScheduleRowProps {
 export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
   const { schedules, room, slotHeight = 80, slotWidth = 72 } = props;
 
+  // 현재 로그인된 사용자 정보 가져오기
   const user = useAuthStore((state) => state.user);
 
   const startHour = 0;
