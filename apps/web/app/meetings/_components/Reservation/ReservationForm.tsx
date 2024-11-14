@@ -6,6 +6,7 @@ import { useForm, Controller } from "react-hook-form";
 import Button from "@ui/src/components/common/Button";
 import MultiSelectDropdown from "@ui/src/components/common/Dropdown/MulitiSelectDropdown";
 import { useEffect } from "react";
+import { type IReservation } from "@repo/types";
 import { timeOptions } from "@/app/constants/timeOptions";
 import Profile from "@/components/common/Profile";
 import { type ScheduleFormData, type Schedule } from "@/app/types/scheduletypes";
@@ -13,7 +14,7 @@ import { type ScheduleFormData, type Schedule } from "@/app/types/scheduletypes"
 interface ReservationFormProps {
   onSubmit: (data: ScheduleFormData) => void;
   selectedTime: string;
-  selectedSchedule?: Schedule | null;
+  selectedSchedule?: IReservation | null;
   resetTrigger?: number;
   selectedRoom?: string | null;
 }
