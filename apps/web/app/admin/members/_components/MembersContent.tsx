@@ -10,7 +10,7 @@ import Navbar from "./Navbar";
 import SidePanel from "./SidePanel";
 import MemberList from "./MemberList";
 
-export default function Members(): JSX.Element {
+export default function MembersContent(): JSX.Element {
   const [activeTab, setActiveTab] = useState("전체");
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<MemberWithStaticImage | null>(null);
