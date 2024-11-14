@@ -11,7 +11,7 @@ interface MobileReservationSheetProps {
   onClose: () => void;
   selectedTime: string;
   selectedSchedule?: IReservation | null;
-  selectedRoom: string;
+  selectedRoom?: string | null;
 }
 
 export default function MobileReservationSheet({

@@ -13,7 +13,7 @@ interface DesktopReservationSheetProps {
   onClose: () => void;
   selectedTime: string;
   selectedSchedule?: IReservation | null;
-  selectedRoom: string;
+  selectedRoom?: string | null;
 }
 
 export default function DesktopReservationSheet(props: DesktopReservationSheetProps): JSX.Element {

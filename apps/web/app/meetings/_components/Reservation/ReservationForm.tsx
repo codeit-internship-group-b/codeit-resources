@@ -7,9 +7,10 @@ import Button from "@ui/src/components/common/Button";
 import MultiSelectDropdown from "@ui/src/components/common/Dropdown/MulitiSelectDropdown";
 import { useEffect } from "react";
 import { type IReservation } from "@repo/types";
+import { format } from "date-fns";
 import { timeOptions } from "@/app/constants/timeOptions";
 import Profile from "@/components/common/Profile";
-import { type ScheduleFormData, type Schedule } from "@/app/types/scheduletypes";
+import { type ScheduleFormData } from "@/app/types/scheduletypes";
 
 interface ReservationFormProps {
   onSubmit: (data: ScheduleFormData) => void;
@@ -43,7 +44,18 @@ const addMinutes = (time: string, minutesToAdd: number): string => {
 };
 
 export default function ReservationForm(props: ReservationFormProps): JSX.Element {
-  const { onSubmit, selectedTime, resetTrigger, selectedRoom } = props;
+  const { onSubmit, selectedTime, resetTrigger, selectedRoom, selectedSchedule } = props;
+
+  // 폼의 기본 값을 설정합니다.
+  const defaultValues: ScheduleFormData = {
+    meetingTitle: selectedSchedule?.notes ?? "",
+    selectedRoom: selectedRoom ?? "",
+    startTime: selectedSchedule ? format(new Date(selectedSchedule.startAt), "HH:mm") : selectedTime,
+    customStartTime: "",
+    endTime: selectedSchedule ? format(new Date(selectedSchedule.endAt), "HH:mm") : "",
+    customEndTime: "",
+    participants: [],
+  };
 
   const {
     control,
@@ -55,15 +67,7 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
     setValue,
     clearErrors,
   } = useForm<ScheduleFormData>({
-    defaultValues: {
-      meetingTitle: "",
-      selectedRoom: selectedRoom ?? "",
-      startTime: selectedTime,
-      customStartTime: "",
-      endTime: "",
-      customEndTime: "",
-      participants: [],
-    },
+    defaultValues,
   });
 
   const rooms = ["미팅룸 A", "미팅룸 B", "미팅룸 C", "미팅룸 D", "미팅룸 E", "녹음실 A", "녹음실 B", "녹음실 C"];
@@ -85,18 +89,10 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
   const endTimeValue = watch("endTime");
   const participantsSelected = watch("participants").length > 0;
 
-  // resetTrigger가 변경될 때마다 폼을 리셋
+  // resetTrigger 또는 selectedSchedule이 변경될 때마다 폼을 리셋
   useEffect(() => {
-    reset({
-      meetingTitle: "",
-      selectedRoom: selectedRoom ?? "", // selectedRoom 포함
-      startTime: selectedTime,
-      customStartTime: "",
-      endTime: "",
-      customEndTime: "",
-      participants: [],
-    });
-  }, [resetTrigger, reset, selectedTime, selectedRoom]);
+    reset(defaultValues);
+  }, [resetTrigger, reset, selectedTime, selectedRoom, selectedSchedule]);
 
   // startTime 또는 customStartTime이 변경될 때 endTime을 설정
   useEffect(() => {
@@ -113,7 +109,8 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
         const newEndTime = addMinutes(currentStartTime, 30);
         setValue("endTime", newEndTime, { shouldValidate: true });
       } catch (error) {
-        null;
+        // 에러 처리
+        console.error(error);
       }
     }
   }, [startTimeValue, customStartTimeValue, setValue, selectedTime]);
@@ -169,8 +166,6 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
           >
             <Dropdown.Toggle title="회의실">{field.value || "회의실 선택"}</Dropdown.Toggle>
             <Dropdown.Wrapper className="max-h-160 md:max-h-300 no-scrollbar overflow-y-auto">
-              {" "}
-              {/* 스크롤 추가 */}
               {rooms.map((room) => (
                 <Dropdown.Item key={room} value={room}>
                   {room}
@@ -199,8 +194,6 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
               >
                 <Dropdown.Toggle title="시작 시간">{field.value || selectedTime}</Dropdown.Toggle>
                 <Dropdown.Wrapper className="max-h-160 md:max-h-300 no-scrollbar overflow-y-auto">
-                  {" "}
-                  {/* 스크롤 추가 */}
                   <Dropdown.Item value="custom-start">직접입력</Dropdown.Item>
                   {timeOptions.map((time) => (
                     <Dropdown.Item key={time} value={time}>
@@ -284,8 +277,6 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
               )}
             </MultiSelectDropdown.Toggle>
             <MultiSelectDropdown.Wrapper>
-              {" "}
-              {/* 스크롤 추가 */}
               {mockParticipants
                 .sort((a, b) => {
                   const isASelected = field.value.includes(a);
@@ -314,6 +305,27 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
       >
         예약하기
       </Button>
+      {/* 예약 정보 표시 */}
+      {selectedSchedule ? (
+        <div className="mt-16 rounded-md bg-gray-100 p-16">
+          <h3 className="mb-8 text-lg font-semibold">예약 정보</h3>
+          <p>
+            <strong>회의 제목:</strong> {selectedSchedule.notes}
+          </p>
+          <p>
+            <strong>회의실:</strong> {selectedSchedule._id}
+          </p>
+          <p>
+            <strong>시작 시간:</strong> {format(new Date(selectedSchedule.startAt), "yyyy-MM-dd HH:mm")}
+          </p>
+          <p>
+            <strong>종료 시간:</strong> {format(new Date(selectedSchedule.endAt), "yyyy-MM-dd HH:mm")}
+          </p>
+          <p>
+            <strong>참여자:</strong>
+          </p>
+        </div>
+      ) : null}
     </div>
   );
 }
