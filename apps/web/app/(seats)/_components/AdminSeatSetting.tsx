@@ -1,27 +1,39 @@
-import { Radio } from "@ui/index";
+import { notify, Radio } from "@ui/index";
 import Button from "@ui/src/components/common/Button";
 import MultiSelectDropdown from "@ui/src/components/common/Dropdown/MulitiSelectDropdown";
-import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { type StaticImageData, type StaticRequire } from "next/dist/shared/lib/get-img-props";
+import { useForm } from "react-hook-form";
 import Profile from "@/components/common/Profile";
 import { getMembers } from "@/api/members";
+import { patchItem } from "@/api/items";
 
 interface AdminSeatSettingProps {
+  itemId: string;
+  seatNum: string;
   status: "in-use" | "unavailable" | "available" | "reserved";
   userName: string | null | undefined;
 }
 
 interface SelectedMember {
-  name: string;
+  id: string | undefined;
+  name: string | undefined;
   profileImage: string | StaticRequire | StaticImageData | undefined | null;
 }
 
-export default function AdminSeatSetting({ status, userName }: AdminSeatSettingProps): JSX.Element {
-  const [selectedMembers, setSelectedMembers] = useState<SelectedMember[]>(
-    userName ? [{ name: userName, profileImage: null }] : [],
-  );
-  const [selectedStatus, setSelectedStatus] = useState(status);
+interface FormValues {
+  name: string;
+  status: "in-use" | "unavailable" | "available" | "reserved";
+  user: SelectedMember[] | null;
+}
+
+export default function AdminSeatSetting({
+  status,
+  userName,
+  seatNum,
+  itemId: id,
+}: AdminSeatSettingProps): JSX.Element {
+  const queryClient = useQueryClient();
 
   // TODO: 추후 멤버 페이지에 불러온 데이터로 적용가능한지 확인 후 적용 예정
   const { data: membersData } = useQuery({
@@ -29,58 +41,94 @@ export default function AdminSeatSetting({ status, userName }: AdminSeatSettingP
     queryFn: () => getMembers("newest"),
   });
 
-  // 임시로 useEffect로 돌려서 프로필 사진 넣어줌.
-  useEffect(() => {
-    if (userName && membersData) {
-      const userInfo = membersData.find((member) => member.name === userName);
-      if (userInfo) {
-        setSelectedMembers([
-          {
-            name: userName,
-            profileImage: userInfo.profileImage,
-          },
-        ]);
-      }
+  console.log(membersData);
+
+  const initialFormData: FormValues = {
+    name: seatNum,
+    status: "available",
+    user: [
+      {
+        id: "",
+        name: userName ?? "",
+        profileImage: null,
+      },
+    ],
+  };
+
+  const { handleSubmit, setValue, watch } = useForm<FormValues>({
+    defaultValues: initialFormData,
+  });
+
+  const selectedStatus = watch("status");
+  const selectedMember = watch("user");
+
+  // 좌석 아이템 수정
+  const { mutate: patchItemMutation } = useMutation<string, Error, { itemId: string; formData: FormData }>({
+    mutationFn: ({ itemId, formData }) => patchItem(itemId, formData),
+    onSuccess: (response: string) => {
+      void Promise.all([queryClient.invalidateQueries({ queryKey: ["seats"] })]);
+      notify({ type: "success", message: response });
+    },
+    onError: (error: Error) => {
+      notify({ type: "error", message: `오류 발생: ${error.message}` });
+    },
+  });
+
+  const handleFormSubmit = handleSubmit((data) => {
+    const formData = new FormData();
+    formData.append("status", data.status);
+    formData.append("name", data.name);
+
+    if (data.user?.[0]?.id) {
+      formData.append("user", data.user[0].id);
     }
-  }, [userName, membersData]);
+
+    patchItemMutation({ itemId: id, formData });
+  });
 
   return (
     <>
       <h1 className="text-custom-black my-8 hidden md:block">좌석편집</h1>
-      <div className="flex h-screen flex-col p-16 md:p-0">
-        <div className="px-8 pb-24 pt-4">
+      {/* onSubmit 함수 만들기 */}
+      <form onSubmit={handleFormSubmit} className="flex h-full flex-col justify-between p-16 md:p-0 md:pb-40">
+        <div className="flex flex-col gap-36 px-8 pb-24 pt-4">
           <Radio.Group
             defaultValue={status}
             onChange={(value) => {
-              setSelectedStatus(value as "in-use" | "unavailable" | "available" | "reserved");
+              setValue("status", value as FormValues["status"]);
             }}
           >
             <Radio.Option value="available">예약 가능</Radio.Option>
             <Radio.Option value="in-use">고정좌석</Radio.Option>
             <Radio.Option value="unavailable">사용 불가</Radio.Option>
           </Radio.Group>
-        </div>
-        <div className="grow">
+
           {(selectedStatus === "in-use" || status === "in-use") && (
             <MultiSelectDropdown
-              selectedValue={selectedMembers.map((member) => member.name)} // 이름만 전달
+              selectedValue={
+                selectedMember
+                  ? selectedMember.map((member) => member.name).filter((name): name is string => name !== undefined)
+                  : []
+              }
               onSelect={(value: string[]) => {
-                const newSelectedMembers = value.map((name) => {
-                  const member = membersData?.find((m) => m.name === name);
-                  return {
-                    name,
-                    profileImage: member?.profileImage ?? null,
-                  };
-                });
-                setSelectedMembers(newSelectedMembers);
+                const name = value[0];
+                const member = membersData?.find((m) => m.name === name);
+
+                setValue("user", [
+                  {
+                    id: member?._id,
+                    name: name ?? "",
+                    profileImage: typeof member?.profileImage === "string" ? member.profileImage : null,
+                  },
+                ]);
               }}
               isMultiSelect={false}
             >
               <MultiSelectDropdown.Toggle title="멤버">
-                {selectedMembers.length > 0 ? (
+                {(selectedMember ?? []).length > 0 ? (
                   <div>
                     <div className="max-h-100 flex flex-wrap gap-10 overflow-y-auto">
-                      {selectedMembers.slice(0, 1).map((member) => (
+                      {(selectedMember ?? []).slice(0, 1).map((member) => (
                         <Profile
                           size="size-27"
                           key={member.name}
@@ -98,8 +146,8 @@ export default function AdminSeatSetting({ status, userName }: AdminSeatSettingP
               <MultiSelectDropdown.Wrapper>
                 {(membersData ? [...membersData] : [])
                   .sort((a, b) => {
-                    const isASelected = selectedMembers.some((selected) => selected.name === a.name);
-                    const isBSelected = selectedMembers.some((selected) => selected.name === b.name);
+                    const isASelected = (selectedMember ?? []).some((selected) => selected.name === a.name);
+                    const isBSelected = (selectedMember ?? []).some((selected) => selected.name === b.name);
 
                     if (isASelected && !isBSelected) return -1;
                     if (!isASelected && isBSelected) return 1;
@@ -119,10 +167,10 @@ export default function AdminSeatSetting({ status, userName }: AdminSeatSettingP
             </MultiSelectDropdown>
           )}
         </div>
-        <Button className="h-48" variant="Primary">
+        <Button type="submit" className="h-48" variant="Primary">
           저장하기
         </Button>
-      </div>
+      </form>
     </>
   );
 }

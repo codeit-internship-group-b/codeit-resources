@@ -239,7 +239,7 @@ export default function SeatButton({
         <Sheet.Container>
           <Sheet.Header />
           <Sheet.Content>
-            <AdminSeatSetting status={status} userName={user} />
+            <AdminSeatSetting status={status} userName={user} seatNum={seatNum} itemId={itemId} />
           </Sheet.Content>
         </Sheet.Container>
         <Sheet.Backdrop />
@@ -251,7 +251,7 @@ export default function SeatButton({
           setIsSidebarOpen(false);
         }}
       >
-        <AdminSeatSetting status={status} userName={user} />
+        <AdminSeatSetting status={status} userName={user} seatNum={seatNum} itemId={itemId} />
       </Sidebar>
     </span>
   );
@@ -274,6 +274,7 @@ export default function SeatButton({
 // 1. 좌석 아이템 / 좌석 예약 아이템 불러와서 화면에 뿌려주기 ✅
 // 2. 좌석 버튼 눌렀을 때
 //    2-1. 멤버 불러와서 드롭다운에 뿌려주기 ✅
-//    2-2. 좌석 설정 변경하기 폼 제출 (사이드 페이지에서) ❌
+//    2-2. 좌석 설정 변경하기 폼 제출 (사이드 페이지에서) ✅
 
+// 멤버 드롭다운에 이미지 백엔드에서 보내주기로 했음. 추후 수정되면 적용 예정
 // 최종 코드 분리 및 정리..❌🥹ㅠㅠ 좌석버튼에만 300줄... 스파게티도 이런 스파게티가 없음 ㅅㅂ
