@@ -41,8 +41,6 @@ export default function AdminSeatSetting({
     queryFn: () => getMembers("newest"),
   });
 
-  console.log(membersData);
-
   const initialFormData: FormValues = {
     name: seatNum,
     status: "available",
@@ -89,7 +87,6 @@ export default function AdminSeatSetting({
   return (
     <>
       <h1 className="text-custom-black my-8 hidden md:block">좌석편집</h1>
-      {/* onSubmit 함수 만들기 */}
       <form onSubmit={handleFormSubmit} className="flex h-full flex-col justify-between p-16 md:p-0 md:pb-40">
         <div className="flex flex-col gap-36 px-8 pb-24 pt-4">
           <Radio.Group
