@@ -1,15 +1,21 @@
+import { ROLES } from "@repo/constants/teams";
+import { useTeams } from "@/app/admin/teams/_hooks/useTeams";
 import TabItem from "./TabItem";
 
 interface TabsProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
-  filteredTeams: string[];
 }
 
-export function Tab({ activeTab, onTabChange, filteredTeams }: TabsProps): JSX.Element {
+export function Tab({ activeTab, onTabChange }: TabsProps): JSX.Element {
+  const { data } = useTeams();
+
+  const names = data.map(({ name }) => name);
+  const teamList = [...ROLES, ...names];
+
   return (
     <ul className="flex flex-row gap-32 whitespace-nowrap">
-      {filteredTeams.map((team) => (
+      {teamList.map((team) => (
         <TabItem
           key={team}
           team={team}

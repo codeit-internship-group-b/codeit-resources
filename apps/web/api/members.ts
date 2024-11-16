@@ -3,17 +3,18 @@ import type { MemberResponse, ResponseWithMessage, SortOption } from "@repo/type
 import { type IUser } from "@repo/types";
 import { axiosRequester } from "@/lib/axios";
 
-export const getMembers = async (sortOption: SortOption): Promise<IUser[]> => {
+export const getMembers = async (sortOption: SortOption, role?: string, team?: string): Promise<IUser[]> => {
   const { data } = await axiosRequester<IUser[]>({
     options: {
       method: "GET",
       url: API_ENDPOINTS.USERS.GET_ALL,
       params: {
         sortOption,
+        role,
+        team,
       },
     },
   });
-
   return data;
 };
 

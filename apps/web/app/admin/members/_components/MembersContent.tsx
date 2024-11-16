@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@ui/index";
 import { type MemberWithStaticImage, type SortOption } from "@repo/types/src/membersType";
 import useIsMobileStore from "@/app/store/useIsMobileStore";
-import { useMembersQuery } from "../_hooks/useMembersQuery";
 import Header from "./Header";
 import Navbar from "./Navbar";
 import SidePanel from "./sidepanel";
@@ -16,26 +15,7 @@ export default function MembersContent(): JSX.Element {
   const [selectedMember, setSelectedMember] = useState<MemberWithStaticImage | null>(null);
   const [selectedSort, setSelectedSort] = useState<SortOption>("newest");
 
-  const { data: members } = useMembersQuery(selectedSort);
   const isMobile = useIsMobileStore();
-
-  const filteredMembers = useMemo(() => {
-    if (!members) return [];
-
-    if (activeTab === "전체") {
-      return members;
-    }
-
-    if (activeTab === "어드민") {
-      return members.filter((member) => member.role === "admin");
-    }
-
-    if (activeTab === "멤버") {
-      return members.filter((member) => member.role === "member");
-    }
-
-    return members.filter((member) => member.teams.includes(activeTab));
-  }, [members, activeTab]);
 
   const handleMemberClick = (member: MemberWithStaticImage): void => {
     setSelectedMember(member);
@@ -72,7 +52,7 @@ export default function MembersContent(): JSX.Element {
         selectedSort={selectedSort}
         onSortChange={setSelectedSort}
       />
-      <MemberList members={filteredMembers} activeTab={activeTab} onMemberClick={handleMemberClick} />
+      <MemberList selectedSort={selectedSort} activeTab={activeTab} onMemberClick={handleMemberClick} />
 
       {isMobile ? (
         <div className="shadow-[0px 4px 12px 0px rgba(0, 0, 0, 0.2)] fixed bottom-0 left-0 right-0 z-10 px-24 pb-32">
