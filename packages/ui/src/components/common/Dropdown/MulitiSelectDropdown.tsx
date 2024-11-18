@@ -153,9 +153,10 @@ function Toggle({ children, title }: ToggleProps): JSX.Element {
 
 interface WrapperProps {
   children: ReactNode;
+  className?: string;
 }
 
-function Wrapper({ children }: WrapperProps): JSX.Element {
+function Wrapper({ children, className }: WrapperProps): JSX.Element {
   const { isOpen, searchTerm, setSearchTerm } = useContext(DropdownContext);
 
   const filteredChildren =
@@ -177,6 +178,7 @@ function Wrapper({ children }: WrapperProps): JSX.Element {
         <motion.div
           className={cn(
             "rounded-8 shadow-custom absolute top-64 z-50 w-full border border-solid border-gray-500 bg-white p-8",
+            className,
           )}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
