@@ -28,14 +28,11 @@ export default function ScheduleTableDesktop(props: ScheduleTableDesktopProps): 
         <div className="no-scrollbar relative h-full w-3/4 overflow-y-hidden overflow-x-scroll">
           <TimeText />
           {rooms.map((room) => {
-            // 해당 방의 스케줄 필터링
             const roomSchedules = meetingsData.filter((schedule) => {
               const scheduleItemId = typeof schedule.item === "string" ? schedule.item : schedule.item._id;
 
-              // 방 ID가 일치하는지 확인
               const isSameRoom = scheduleItemId === room._id;
 
-              // 예약 날짜가 selectedDate와 같은지 확인
               const scheduleDate = new Date(schedule.startAt).toISOString().split("T")[0];
               const isSameDate = scheduleDate === selectedDate;
 
@@ -44,7 +41,12 @@ export default function ScheduleTableDesktop(props: ScheduleTableDesktopProps): 
 
             return (
               <div className="mb-30 ml-36 mt-10" key={room._id}>
-                <ScheduleRow schedules={roomSchedules} slotWidth={72} slotHeight={80} room={room.name} />
+                <ScheduleRow
+                  schedules={roomSchedules}
+                  slotWidth={72}
+                  slotHeight={80}
+                  room={{ name: room.name, _id: room._id }}
+                />
               </div>
             );
           })}

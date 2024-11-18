@@ -2,7 +2,7 @@
 import { Sheet } from "react-modal-sheet";
 import { useState } from "react";
 import { type IReservation } from "@repo/types";
-import { type ScheduleFormData, type Schedule } from "@/app/types/scheduletypes";
+import { type ScheduleFormData, type Schedule, SelectedRoom } from "@/app/types/scheduletypes";
 import ReservationForm from "./ReservationForm";
 import ReservationModal from "./ReservationModal";
 
@@ -11,7 +11,7 @@ interface MobileReservationSheetProps {
   onClose: () => void;
   selectedTime: string;
   selectedSchedule?: IReservation | null;
-  selectedRoom?: string | null;
+  selectedRoom?: SelectedRoom | null;
 }
 
 export default function MobileReservationSheet({

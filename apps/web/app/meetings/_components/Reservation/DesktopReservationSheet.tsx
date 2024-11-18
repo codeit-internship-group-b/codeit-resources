@@ -4,7 +4,7 @@
 import { useEffect, useState } from "react";
 import { type IReservation } from "@repo/types";
 import Sidebar from "@/components/common/Sidebar";
-import { type ScheduleFormData, type Schedule } from "@/app/types/scheduletypes";
+import { type ScheduleFormData, type Schedule, type SelectedRoom } from "@/app/types/scheduletypes";
 import { useSidebarStore } from "@/app/store/useSidebarStore";
 import ReservationForm from "./ReservationForm";
 import ReservationModal from "./ReservationModal";
@@ -13,7 +13,7 @@ interface DesktopReservationSheetProps {
   onClose: () => void;
   selectedTime: string;
   selectedSchedule?: IReservation | null;
-  selectedRoom?: string | null;
+  selectedRoom?: SelectedRoom | null;
 }
 
 export default function DesktopReservationSheet(props: DesktopReservationSheetProps): JSX.Element {

@@ -19,10 +19,14 @@ export interface ScheduleDate {
 
 export interface ScheduleFormData {
   meetingTitle: string;
-  selectedRoom: string;
+  selectedRoom: SelectedRoom | null; // name과 _id를 포함
   startTime: string;
   customStartTime: string;
   endTime: string;
   customEndTime: string;
   participants: string[];
+}
+export interface SelectedRoom {
+  name: string;
+  _id: string;
 }

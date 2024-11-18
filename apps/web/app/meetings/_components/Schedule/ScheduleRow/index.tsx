@@ -11,20 +11,27 @@ import DesktopReservationSheet from "../../Reservation/DesktopReservationSheet";
 import ScheduleSlot from "./ScheduleSlot";
 import ScheduleItem from "./ScheduleItem";
 import CurrentTimeIndicator from "./CurrentTimeIndicator";
+import { SelectedRoom } from "@/app/types/scheduletypes";
 
 interface ScheduleRowProps {
   schedules: IReservation[];
-  room: string;
+  room: SelectedRoom;
   slotWidth?: number;
   slotHeight?: number;
-  onSlotClick?: (time: string, schedule?: IReservation, room?: string) => void;
+  onSlotClick?: (time: string, schedule?: IReservation, room?: { name: string; _id: string }) => void;
 }
-
 export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
   const { schedules, room, slotHeight = 80, slotWidth = 72 } = props;
 
-  // 현재 로그인된 사용자 정보 가져오기
   const user = useAuthStore((state) => state.user);
+
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [selectedSchedule, setSelectedSchedule] = useState<IReservation | null>(null);
+  const [selectedRoom, setSelectedRoom] = useState<SelectedRoom | null>(room || null);
+
+  const openSidebar = useSidebarStore((state) => state.openSidebar);
+  const closeSidebar = useSidebarStore((state) => state.closeSidebar);
+  const isSidebarOpen = useSidebarStore((state) => state.isSidebarOpen);
 
   const startHour = 0;
   const endHour = 24;
@@ -45,14 +52,6 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
     const minutes = date.getMinutes();
     return hours * 60 + minutes;
   };
-
-  const [selectedTime, setSelectedTime] = useState<string | null>(null);
-  const [selectedSchedule, setSelectedSchedule] = useState<IReservation | null>(null);
-  const [selectedRoom, setSelectedRoom] = useState<string | null>(room || null);
-
-  const openSidebar = useSidebarStore((state) => state.openSidebar);
-  const closeSidebar = useSidebarStore((state) => state.closeSidebar);
-  const isSidebarOpen = useSidebarStore((state) => state.isSidebarOpen);
 
   const handleSlotClick = (index: number, schedule?: IReservation): void => {
     const clickedTimeMinutes = startHour * 60 + index * minutesPerSlot;
@@ -124,7 +123,7 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
               onClose={handleClose}
               selectedTime={selectedTime}
               selectedSchedule={selectedSchedule}
-              selectedRoom={selectedRoom}
+              selectedRoom={room}
             />
           </div>
 
@@ -134,7 +133,7 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
               onClose={handleClose}
               selectedTime={selectedTime}
               selectedSchedule={selectedSchedule}
-              selectedRoom={selectedRoom}
+              selectedRoom={room}
             />
           </div>
         </>
