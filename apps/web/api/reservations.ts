@@ -44,21 +44,37 @@ export const getReservationsByTypeAndDate = async (
 };
 
 // 예약 생성
-interface CreateReservationParams {
+export interface CreateReservationParams {
   itemId: string;
   savedReservation: IReservation;
-  message: string;
 }
 
-export const createReservation = async (params: CreateReservationParams): Promise<IReservation> => {
-  const { itemId, ...data } = params;
-  const { data: reservation } = await axiosRequester<{ message: string; savedReservation: IReservation }>({
+export interface CreateReservationRequest {
+  userId: string;
+  itemType: "room";
+  startAt: string;
+  endAt: string;
+  status: "reserved";
+  notes: string;
+  attendees: string[];
+}
+
+export interface CreateReservationResponse {
+  message: string;
+  savedReservation: IReservation;
+}
+
+export const createReservation = async (
+  itemId: string,
+  reservationData: CreateReservationRequest,
+): Promise<IReservation> => {
+  const { data } = await axiosRequester<CreateReservationResponse>({
     options: {
       method: "POST",
       url: API_ENDPOINTS.RESERVATION.CREATE_RESERVATION(itemId),
-      data,
+      data: reservationData,
     },
   });
 
-  return reservation.savedReservation;
+  return data.savedReservation;
 };
