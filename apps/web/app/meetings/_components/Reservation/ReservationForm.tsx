@@ -7,7 +7,7 @@ import Button from "@ui/src/components/common/Button";
 import MultiSelectDropdown from "@ui/src/components/common/Dropdown/MulitiSelectDropdown";
 import { useEffect, useState } from "react";
 import { type TBaseItem, type IReservation, type IUser } from "@repo/types";
-import { format } from "date-fns";
+import { format, parse, differenceInMinutes, addMinutes } from "date-fns"; // Import addMinutes
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Badge, notify } from "@ui/index";
 import { timeOptions } from "@/app/constants/timeOptions";
@@ -16,7 +16,7 @@ import { type SelectedRoom, type ScheduleFormData } from "@/app/types/schedulety
 import { getAllUser } from "@/api/users";
 import { getAllItems } from "@/api/items";
 import { useAuthStore } from "@/src/stores/useAuthStore";
-import { createReservation, CreateReservationRequest } from "@/api/reservations";
+import { createReservation, type CreateReservationRequest } from "@/api/reservations";
 import { useDateStore } from "@/app/store/useDateStore";
 
 interface ReservationFormProps {
@@ -57,13 +57,20 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
     queryFn: getAllUser,
   });
 
+  // 시작 시간을 기반으로 종료 시간을 설정하는 함수
+  const getDefaultEndAt = (startAt: string): string => {
+    const start = parse(startAt, "HH:mm", new Date());
+    const end = addMinutes(start, 30);
+    return format(end, "HH:mm");
+  };
+
   // 폼의 기본 값을 설정합니다.
   const defaultValues: CreateReservationRequest = {
     userId: user!._id,
     itemType: "room",
     notes: selectedSchedule?.notes ?? "",
     startAt: selectedSchedule ? format(new Date(selectedSchedule.startAt), "HH:mm") : selectedTime,
-    endAt: selectedSchedule ? format(new Date(selectedSchedule.endAt), "HH:mm") : "",
+    endAt: selectedSchedule ? format(new Date(selectedSchedule.endAt), "HH:mm") : getDefaultEndAt(selectedTime), // 기본 종료 시간을 설정
     status: "reserved",
     attendees: [],
   };
@@ -79,6 +86,7 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
     clearErrors,
   } = useForm<CreateReservationRequest>({
     defaultValues,
+    mode: "onChange", // Enable validation on change
   });
 
   // 상태를 추가하여 제출된 데이터를 저장
@@ -96,18 +104,69 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
   const [selectedMeetingRoom, setSelectedMeetingRoom] = useState<SelectedRoom | null | undefined>(selectedRoom);
 
   const attendeessSelected = watch("attendees").length > 0;
+  const startAtValue = watch("startAt");
+  const endAtValue = watch("endAt");
 
   // resetTrigger 또는 selectedSchedule이 변경될 때마다 폼을 리셋
   useEffect(() => {
-    reset(defaultValues);
+    const newEndAt = selectedSchedule
+      ? format(new Date(selectedSchedule.endAt), "HH:mm")
+      : getDefaultEndAt(selectedTime);
+    reset({
+      ...defaultValues,
+      endAt: newEndAt,
+    });
   }, [resetTrigger, reset, selectedTime, selectedRoom, selectedSchedule]);
 
-  // startTime 또는 customStartTime이 변경될 때 endTime을 설정
+  // startAt 값이 변경될 때 endAt을 자동으로 30분 후로 설정
+  useEffect(() => {
+    if (startAtValue) {
+      const currentEndAt = parse(endAtValue, "HH:mm", new Date());
+      const calculatedEndAt = addMinutes(parse(startAtValue, "HH:mm", new Date()), 30);
 
-  // 시작 시간과 종료 시간을 비교하여 유효성 검사
+      // 종료 시간이 현재 설정된 종료 시간보다 작을 경우, 종료 시간을 30분 후로 설정
+      if (differenceInMinutes(calculatedEndAt, currentEndAt) > 0) {
+        const newEndAt = format(calculatedEndAt, "HH:mm");
+        setValue("endAt", newEndAt);
+      }
+    }
+  }, [startAtValue, endAtValue, setValue]);
+
+  // Custom validation to ensure endAt is at least 30 minutes after startAt
+  const validateEndAt = (endAt: string): boolean | string => {
+    if (!startAtValue || !endAt) {
+      return "시작 시간과 종료 시간을 모두 선택해주세요.";
+    }
+
+    // Parse the startAt and endAt times
+    const start = parse(startAtValue, "HH:mm", new Date());
+    const end = parse(endAt, "HH:mm", new Date());
+
+    // Calculate the difference in minutes
+    const diff = differenceInMinutes(end, start);
+
+    if (diff < 30) {
+      return "종료 시간은 시작 시간보다 최소 30분 이후여야 합니다.";
+    }
+
+    return true;
+  };
 
   const onFormSubmit = (data: CreateReservationRequest): void => {
     if (!user || !selectedRoom?._id) {
+      return;
+    }
+
+    // Additional validation to ensure endAt is at least 30 minutes after startAt
+    const start = parse(data.startAt, "HH:mm", new Date());
+    const end = parse(data.endAt, "HH:mm", new Date());
+    const diff = differenceInMinutes(end, start);
+
+    if (diff < 30) {
+      setError("endAt", {
+        type: "manual",
+        message: "종료 시간은 시작 시간보다 최소 30분 이후여야 합니다.",
+      });
       return;
     }
 
@@ -189,6 +248,8 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
                 selectedValue={field.value}
                 onSelect={(value: string | boolean) => {
                   field.onChange(value);
+                  // Clear endAt error when startAt changes
+                  clearErrors("endAt");
                 }}
                 isError={Boolean(errors.startAt)}
                 errorMessage={errors.startAt?.message ?? ""}
@@ -212,7 +273,10 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
           <Controller
             name="endAt"
             control={control}
-            rules={{ required: "종료 시간을 선택해주세요." }}
+            rules={{
+              required: "종료 시간을 선택해주세요.",
+              validate: validateEndAt, // Add custom validation
+            }}
             render={({ field }) => (
               <Dropdown
                 selectedValue={field.value}
@@ -308,21 +372,24 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
         variant="Primary"
         className="mt-20 h-48 w-full"
         onClick={handleSubmit(onFormSubmit)}
-        isActive={isValid ? attendeessSelected : undefined} // 모든 필드가 유효하고 참여자가 선택된 경우에만 활성화
+        isActive={isValid && attendeessSelected} // All fields valid and attendees selected
       >
         예약하기
       </Button>
 
       {/* 제출된 데이터 표시 */}
-      {submittedData && (
+      {submittedData ? (
         <div className="mt-16 rounded-md bg-gray-100 p-16">
           <h3 className="mb-8 text-lg font-semibold">제출된 데이터</h3>
           <pre className="whitespace-pre-wrap rounded bg-gray-200 p-4">
             {JSON.stringify(submittedData, null, 2)}
-            <div>회의실: {selectedMeetingRoom!._id || "선택된 회의실 없음"}</div>
+            <div>
+              회의실: {selectedMeetingRoom?._id || "선택된 회의실 없음"}
+              {selectedTime}
+            </div>
           </pre>
         </div>
-      )}
+      ) : null}
     </div>
   );
 }
