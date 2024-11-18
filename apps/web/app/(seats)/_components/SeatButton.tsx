@@ -8,13 +8,18 @@ import AlertModal from "@ui/src/components/common/ConditionalActionModal/AlertMo
 import { usePathname } from "next/navigation";
 import { Sheet } from "react-modal-sheet";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { type IEquipment, type IRoom, type ISeat, type IReservation } from "@repo/types";
+import { type IEquipment, type IRoom, type ISeat, type IReservation, type ReservationRequestBody } from "@repo/types";
 import { formatSelectedDate } from "@ui/src/utils/date";
 import useIsMobileStore from "@/app/store/useIsMobileStore";
 import Sidebar from "@/components/common/Sidebar";
 import { useDateStore } from "@/app/store/useDateStore";
 import { useAuthStore } from "@/src/stores/useAuthStore";
-import { createSeatReservationData, deleteReservationData } from "@/api/reservation";
+import {
+  createSeatReservationData,
+  deleteReservationData,
+  modifyReservationData,
+  type ReservedResponse,
+} from "@/api/reservation";
 import { useSeatContext } from "../../../src/contexts/SeatContext";
 import AdminSeatSetting from "./AdminSeatSetting";
 
@@ -44,6 +49,7 @@ export default function SeatButton({
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
 
   const isAdmin = useMemo(() => pathname.includes("admin"), [pathname]);
   const isDisabled = !isAdmin && (checkedSeat === seatNum || status !== "available" || isLoading);
@@ -101,6 +107,32 @@ export default function SeatButton({
     },
   });
 
+  // 좌석 예약 수정
+  const { mutate: modifyReservationMutate } = useMutation<
+    { deleteResult: ReservedResponse; createResult: ReservedResponse },
+    Error,
+    { seatId: string; reservationData: ReservationRequestBody; reservationId: string | null }
+  >({
+    mutationFn: ({ seatId, reservationData, reservationId }) => {
+      return modifyReservationData({
+        seatId,
+        reservationData,
+        reservationId,
+      });
+    },
+    onSuccess: () => {
+      void Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["seats"] }),
+        queryClient.invalidateQueries({ queryKey: ["user", "reservations"] }),
+      ]);
+      handleSelectSeat(seatNum);
+      notify({ type: "success", message: "좌석 예약 성공!" });
+    },
+    onError: (error) => {
+      notify({ type: "error", message: `오류 발생: ${error.message}` });
+    },
+  });
+
   // 예약 정보
   const reservationData = {
     userId: authUser?._id,
@@ -146,6 +178,7 @@ export default function SeatButton({
 
   // 좌석 예약 관리자 버튼
   const handleAdminButtonClick = (): void => {
+    setIsClicked(true);
     if (isMobile) {
       setIsBottomSheetOpen(true);
       handleSelectSeat(seatNum);
@@ -158,13 +191,9 @@ export default function SeatButton({
   // 모달에서 확인버튼 눌렀을 때 동작
   const handleModalConfirm = (): void => {
     if (seatReservationId && seatReservationId.length > 0) {
-      deleteSeatReservationMutate(seatReservationId);
-      createSeatReservationMutate({ seatId: itemId, reservationData });
-      handleSelectSeat(seatNum);
+      modifyReservationMutate({ seatId: itemId, reservationData, reservationId: seatReservationId });
       setIsModalOpen(false);
-      notify({ type: "success", message: "자리 예약 성공!" });
     }
-    notify({ type: "error", message: "자리 예약 못바꿈!" });
   };
 
   // 좌석예약 취소 버튼 눌렀을 때
@@ -172,6 +201,19 @@ export default function SeatButton({
     deleteSeatReservationMutate(reservationId);
     setIsChecked(false);
   };
+
+  // 좌석 이름 설정
+  let userName = null;
+  if (!isLoading) {
+    if (user && !isAdmin && !isChecked) {
+      userName = user;
+    } else if (user && !isChecked) {
+      userName = null;
+    }
+    if (user && isAdmin) {
+      userName = user;
+    }
+  }
 
   return (
     <span className="group relative">
@@ -188,14 +230,14 @@ export default function SeatButton({
             "bg-gray-200/5": status === "unavailable" && !isLoading,
             "cursor-not-allowed": !isAdmin && (status === "in-use" || status === "unavailable"),
             "bg-purple-700": isChecked && !isAdmin,
-            "border-custom-black": isChecked && !isAdmin,
             "bg-white": isChecked && isAdmin && status === "available",
             "transition-linear": !isAdmin,
+            "!border-black": isClicked,
           },
         )}
         disabled={isDisabled}
       >
-        {!isLoading && user && !isAdmin && !isChecked ? user : null}
+        {userName}
         {status === "unavailable" && !isLoading && <span className="diagonal-line" />}
         {isChecked && !isAdmin ? <RightIcon className="m-auto size-32 fill-white" /> : null}
       </button>
@@ -242,12 +284,22 @@ export default function SeatButton({
         isOpen={isBottomSheetOpen}
         onClose={() => {
           setIsBottomSheetOpen(false);
+          setIsClicked(false);
         }}
       >
         <Sheet.Container>
           <Sheet.Header />
           <Sheet.Content>
-            <AdminSeatSetting status={status} userName={user} seatNum={seatNum} itemId={itemId} />
+            <AdminSeatSetting
+              status={status}
+              userName={user}
+              seatNum={seatNum}
+              itemId={itemId}
+              onClose={() => {
+                setIsBottomSheetOpen(false);
+                setIsClicked(false);
+              }}
+            />
           </Sheet.Content>
         </Sheet.Container>
         <Sheet.Backdrop />
@@ -257,9 +309,19 @@ export default function SeatButton({
         isOpen={isSidebarOpen}
         onClose={() => {
           setIsSidebarOpen(false);
+          setIsClicked(false);
         }}
       >
-        <AdminSeatSetting status={status} userName={user} seatNum={seatNum} itemId={itemId} />
+        <AdminSeatSetting
+          status={status}
+          userName={user}
+          seatNum={seatNum}
+          itemId={itemId}
+          onClose={() => {
+            setIsSidebarOpen(false);
+            setIsClicked(false);
+          }}
+        />
       </Sidebar>
     </span>
   );
@@ -267,14 +329,15 @@ export default function SeatButton({
 
 // 에러 및 버그
 // 1. 좌석예약
-//    - 체크 버튼 눌렀을 때, 검정선이 아니라 보라색 border 적용 // 호버했을때도 마찬가지
-//    - loading 될 때 animate-pulse 적용안됨 확인 => 이유를 모르겠음;; 원래 다른 프로젝트에서는 아무 설정 안해도 바로 되는데;; 하
-//    - 새로고침 될 때 & 자리 예약 삭제할 때 배경회색처리된채 이름 보이는것
-//    - 좌석 수정 함수 새로 만들기
+//    ✅ - 체크 버튼 눌렀을 때, 검정선이 아니라 보라색 border 적용 // 호버했을때도 마찬가지
+//    ✅ - loading 될 때 animate-pulse 적용안됨 확인 => 이유를 모르겠음;; 원래 다른 프로젝트에서는 아무 설정 안해도 바로 되는데;; 하 => 그냥 테일윈드 컨피그에 적용
+//    ✅ - 새로고침 될 때 & 자리 예약 삭제할 때 배경회색처리된채 이름 보이는것
+//    ✅ - 좌석 수정 함수 새로 만들기
 //    - 프로필 이미지 받아오는 걸로 수정
-//    - 좌석 예약 삭제했을 때 css 그대로 남아있음 ㅅㅂ ㅅㅂㅅㅂㅅㅂㅅㅂㅅㅂㅅㅂ
 
 // 2. 좌석설정
-//    - 이름 보이지 않음
-//    - 좌석 편집 사이드바에서 확인 누르고 닫히게 만들기
-//    - 버튼 눌렀을 cancelIcon + 검정색 보더 적용 => 취소 버튼 눌렀을 때 기능?
+//   ✅ - 이름 보이지 않음
+//   ✅ - 좌석 편집 사이드바에서 확인 누르고 닫히게 만들기
+//   ✅ - 좌석 편집 사이드바에서 예약가능 or 사용불가는 드롭다운 안보이게하기
+//   ✅ - 버튼 눌렀을 + 검정색 보더 적용
+//   ✅ - 고정좌석은 멤버 없을 때 수정 안되게

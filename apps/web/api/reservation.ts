@@ -95,3 +95,44 @@ export const deleteReservationData = async (reservationId: string | null): Promi
   });
   return data;
 };
+
+export const modifyReservationData = async ({
+  seatId,
+  reservationData,
+  reservationId,
+}: {
+  seatId?: string;
+  reservationData?: ReservationRequestBody;
+  reservationId?: string | null;
+}): Promise<{ deleteResult: ReservedResponse; createResult: ReservedResponse }> => {
+  if (!seatId || !reservationData || !reservationId) {
+    throw new Error("Seat ID, reservation data, and reservation ID are required");
+  }
+
+  // Step 1: 기존 예약 삭제
+  const deletePromise = axiosRequester<ReservedResponse>({
+    options: {
+      method: "DELETE",
+      url: API_ENDPOINTS.RESERVATION.DELETE_RESERVATION(reservationId),
+    },
+  });
+
+  // Step 2: 새로운 예약 생성
+  const createPromise = deletePromise.then(() =>
+    axiosRequester<ReservedResponse>({
+      options: {
+        method: "POST",
+        url: API_ENDPOINTS.RESERVATION.CREATE_RESERVATION(seatId),
+        data: reservationData,
+      },
+    }),
+  );
+
+  // Step 3: 모든 작업 완료 후 결과 반환
+  const [deleteResult, createResult] = await Promise.all([deletePromise, createPromise]);
+
+  return {
+    deleteResult: deleteResult.data,
+    createResult: createResult.data,
+  };
+};

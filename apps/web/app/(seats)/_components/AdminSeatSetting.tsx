@@ -13,6 +13,7 @@ interface AdminSeatSettingProps {
   seatNum: string;
   status: "in-use" | "unavailable" | "available" | "reserved";
   userName: string | null | undefined;
+  onClose: () => void;
 }
 
 interface SelectedMember {
@@ -32,6 +33,7 @@ export default function AdminSeatSetting({
   userName,
   seatNum,
   itemId: id,
+  onClose,
 }: AdminSeatSettingProps): JSX.Element {
   const queryClient = useQueryClient();
 
@@ -43,7 +45,7 @@ export default function AdminSeatSetting({
 
   const initialFormData: FormValues = {
     name: seatNum,
-    status: "available",
+    status,
     user: [
       {
         id: "",
@@ -73,6 +75,11 @@ export default function AdminSeatSetting({
   });
 
   const handleFormSubmit = handleSubmit((data) => {
+    if (data.status === "in-use" && !data.user?.[0]?.id) {
+      notify({ type: "error", message: "멤버를 선택해주세요" });
+      return;
+    }
+
     const formData = new FormData();
     formData.append("status", data.status);
     formData.append("name", data.name);
@@ -82,6 +89,7 @@ export default function AdminSeatSetting({
     }
 
     patchItemMutation({ itemId: id, formData });
+    onClose();
   });
 
   return (
@@ -100,7 +108,7 @@ export default function AdminSeatSetting({
             <Radio.Option value="unavailable">사용 불가</Radio.Option>
           </Radio.Group>
 
-          {(selectedStatus === "in-use" || status === "in-use") && (
+          {selectedStatus === "in-use" && (
             <MultiSelectDropdown
               selectedValue={
                 selectedMember
@@ -122,10 +130,10 @@ export default function AdminSeatSetting({
               isMultiSelect={false}
             >
               <MultiSelectDropdown.Toggle title="멤버">
-                {(selectedMember ?? []).length > 0 ? (
+                {selectedMember && selectedMember.length > 0 && selectedMember[0]?.name ? (
                   <div>
                     <div className="max-h-100 flex flex-wrap gap-10 overflow-y-auto">
-                      {(selectedMember ?? []).slice(0, 1).map((member) => (
+                      {selectedMember.slice(0, 1).map((member) => (
                         <Profile
                           size="size-27"
                           key={member.name}
