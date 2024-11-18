@@ -34,17 +34,19 @@ export default function SeatButton({
   seatNum,
 }: SeatButtonProps): JSX.Element {
   const { checkedSeat, handleSelectSeat, seatReservationId, userReservationData } = useSeatContext();
+  const { selectedDate } = useDateStore();
+  const { user: authUser } = useAuthStore();
+  const pathname = usePathname();
+  const isMobile = useIsMobileStore();
+  const queryClient = useQueryClient();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
-  const { selectedDate } = useDateStore();
-  const { user: authUser } = useAuthStore();
-  const pathname = usePathname();
+
   const isAdmin = useMemo(() => pathname.includes("admin"), [pathname]);
-  const isMobile = useIsMobileStore();
   const isDisabled = !isAdmin && (checkedSeat === seatNum || status !== "available" || isLoading);
-  const queryClient = useQueryClient();
 
   // 좌석 예약되어있는지 확인 (타입 가드)
   function isSeatReserved(reservedData: IReservation[] | undefined): boolean | undefined {
@@ -99,6 +101,7 @@ export default function SeatButton({
     },
   });
 
+  // 예약 정보
   const reservationData = {
     userId: authUser?._id,
     itemType: "seat",
@@ -117,6 +120,8 @@ export default function SeatButton({
       setIsChecked(true);
     }
   };
+
+  // 현재 로그인 된 사용자의 좌석정보를 기반으로 특정 좌석 예약 여부 확인
   const userSeatInfo = useMemo(() => {
     if (!Array.isArray(userReservationData) || !seatNum || !authUser) {
       return { isUsersSeat: false, reservationId: null };
@@ -139,6 +144,7 @@ export default function SeatButton({
     };
   }, [userReservationData, seatNum, authUser, checkedSeat]);
 
+  // 좌석 예약 관리자 버튼
   const handleAdminButtonClick = (): void => {
     if (isMobile) {
       setIsBottomSheetOpen(true);
@@ -149,6 +155,7 @@ export default function SeatButton({
     }
   };
 
+  // 모달에서 확인버튼 눌렀을 때 동작
   const handleModalConfirm = (): void => {
     if (seatReservationId && seatReservationId.length > 0) {
       deleteSeatReservationMutate(seatReservationId);
@@ -160,6 +167,7 @@ export default function SeatButton({
     notify({ type: "error", message: "자리 예약 못바꿈!" });
   };
 
+  // 좌석예약 취소 버튼 눌렀을 때
   const handleCancelButtonClick = (reservationId: string): void => {
     deleteSeatReservationMutate(reservationId);
     setIsChecked(false);
@@ -172,7 +180,7 @@ export default function SeatButton({
         onClick={isAdmin ? handleAdminButtonClick : handleButtonClick}
         className={cn(
           "!text-12 md:w-90 md:!text-16 rounded-4 -z-10 h-36 w-60 min-w-60 overflow-hidden md:h-48",
-          isLoading ? "bg-gray-10" : "border-custom-black/20 border border-solid",
+          isLoading ? "bg-gray-10 animate-pulse" : "border-custom-black/20 border border-solid",
           {
             "bg-white hover:bg-purple-200": status === "available" && !isChecked && !isLoading,
             "border-custom-black/30 text-custom-black/30 bg-gray-200/10 font-medium":
@@ -180,18 +188,18 @@ export default function SeatButton({
             "bg-gray-200/5": status === "unavailable" && !isLoading,
             "cursor-not-allowed": !isAdmin && (status === "in-use" || status === "unavailable"),
             "bg-purple-700": isChecked && !isAdmin,
-            "border-custom-black": isChecked && isAdmin,
+            "border-custom-black": isChecked && !isAdmin,
             "bg-white": isChecked && isAdmin && status === "available",
             "transition-linear": !isAdmin,
           },
         )}
         disabled={isDisabled}
       >
-        {!isLoading && user && !isChecked ? user : null}
+        {!isLoading && user && !isAdmin && !isChecked ? user : null}
         {status === "unavailable" && !isLoading && <span className="diagonal-line" />}
         {isChecked && !isAdmin ? <RightIcon className="m-auto size-32 fill-white" /> : null}
       </button>
-      {isChecked ? (
+      {isChecked && !isAdmin ? (
         <CancelIcon
           onClick={(e) => {
             e.stopPropagation();
@@ -257,24 +265,16 @@ export default function SeatButton({
   );
 }
 
-// 구현해야하는 기능 (좌석 예약 페이지)
-// 1. 좌석 아이템 / 좌석 예약 아이템 불러와서 화면에 뿌려주기 ✅
-// 2. 좌석 버튼 눌렀을 때
-//    2-1. 좌석 예약 ✅
-//    2-2. 이미 예약되어있을 때는 (유저의 예약 내용 불러와서 비교)
-//      2-2-1. 내가 예약한 좌석일 때는 보라색에 흰색 체크로 보여주기 ✅
-//      2-2-2. 내가 예약한 좌석 예약 삭제 기능 (취소 아이콘 버튼 활성화) ✅
-//      2-2-3. 다른 좌석 눌렀을 때 모달에서 확인 버튼 누르면 기존 예약 삭제 + 새예약 생성 ✅
+// 에러 및 버그
+// 1. 좌석예약
+//    - 체크 버튼 눌렀을 때, 검정선이 아니라 보라색 border 적용 // 호버했을때도 마찬가지
+//    - loading 될 때 animate-pulse 적용안됨 확인 => 이유를 모르겠음;; 원래 다른 프로젝트에서는 아무 설정 안해도 바로 되는데;; 하
+//    - 새로고침 될 때 & 자리 예약 삭제할 때 배경회색처리된채 이름 보이는것
+//    - 좌석 수정 함수 새로 만들기
+//    - 프로필 이미지 받아오는 걸로 수정
+//    - 좌석 예약 삭제했을 때 css 그대로 남아있음 ㅅㅂ ㅅㅂㅅㅂㅅㅂㅅㅂㅅㅂㅅㅂ
 
-// 문제 1. 예약하고 바로 취소버튼 동작 안함 ✅
-// 문제 2. 예약 삭제하고 유저 데이터 바로 업데이트 안되는지 reservation에 계속 남아있음. ✅
-// 문제 3. 예약 모달에서 수정시 (삭제 후 생성시) 토스트 메세지 나옴. 총 3번 정도.. 토스트 띄우는 위치를 바꿔야겠음.❌
-
-// 구현해야하는 기능 (좌석 예약 설정 페이지)
-// 1. 좌석 아이템 / 좌석 예약 아이템 불러와서 화면에 뿌려주기 ✅
-// 2. 좌석 버튼 눌렀을 때
-//    2-1. 멤버 불러와서 드롭다운에 뿌려주기 ✅
-//    2-2. 좌석 설정 변경하기 폼 제출 (사이드 페이지에서) ✅
-
-// 멤버 드롭다운에 이미지 백엔드에서 보내주기로 했음. 추후 수정되면 적용 예정
-// 최종 코드 분리 및 정리..❌🥹ㅠㅠ 좌석버튼에만 300줄... 스파게티도 이런 스파게티가 없음 ㅅㅂ
+// 2. 좌석설정
+//    - 이름 보이지 않음
+//    - 좌석 편집 사이드바에서 확인 누르고 닫히게 만들기
+//    - 버튼 눌렀을 cancelIcon + 검정색 보더 적용 => 취소 버튼 눌렀을 때 기능?
