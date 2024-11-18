@@ -7,7 +7,7 @@ export default function TabsSkeleton(): JSX.Element {
         {Array.from({ length: 3 }).map((_, index) => (
           // index 이외 고유 key값 X
           // eslint-disable-next-line react/no-array-index-key
-          <li key={index} className="py-8">
+          <li key={index}>
             <LoadingBar classNames="w-60 h-12" />
           </li>
         ))}
