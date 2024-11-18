@@ -2,12 +2,12 @@
 
 import ListItem from "@ui/src/components/common/ListItem";
 import { useOnClickOutside } from "@ui/src/hooks/useOnClickOutside";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { TriangleIcon } from "@ui/public";
 import { type IEquipment, type IRoom } from "@repo/types";
 import Sidebar from "@/components/common/Sidebar";
-import { patchItem, postNewItem } from "@/api/meetings";
+import { getAllRooms, patchItem, postNewItem } from "@/api/meetings";
 import CategoryEditDropdown from "./CategoryEditDropdown";
 import ConfirmationModal from "./ConfirmationModal";
 import CategoryListSubItem from "./CategoryListSubItem";
@@ -27,6 +27,22 @@ export default function CategoryListItem({ title }: CategoryListItemProps): JSX.
   const [panelState, setPanelState] = useState("");
 
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const [items, setItems] = useState<IRoom[]>([]);
+
+  useEffect(() => {
+    const fetchItems = async (): Promise<void> => {
+      try {
+        const res = await getAllRooms();
+        const items = res.filter((item) => item.category.name === title);
+        setItems(items);
+      } catch (error) {
+        throw new Error();
+      }
+    };
+
+    void fetchItems();
+  }, []);
 
   useOnClickOutside(inputRef, () => {
     if (isModifyingCategoryName) {
@@ -118,11 +134,9 @@ export default function CategoryListItem({ title }: CategoryListItemProps): JSX.
           transition={{ duration: 0.3, ease: "easeInOut" }}
           className="overflow-hidden pl-24"
         >
-          <CategoryListSubItem title="회의실1" editItem={openPanelToEdit} />
-          <CategoryListSubItem title="회의실1" editItem={openPanelToEdit} />
-          <CategoryListSubItem title="회의실1" editItem={openPanelToEdit} />
-          <CategoryListSubItem title="회의실1" editItem={openPanelToEdit} />
-          <CategoryListSubItem title="회의실1" editItem={openPanelToEdit} />
+          {items.map((item) => (
+            <CategoryListSubItem key={item._id} title={item.name} editItem={openPanelToEdit} />
+          ))}
         </motion.div>
       ) : null}
 

@@ -28,7 +28,6 @@ export default function CategoryList(): JSX.Element {
           <CategoryListItem key={category._id} title={category.name} />
         ))}
       </div>
-      <CategoryListItem title="회의실" />
     </div>
   );
 }

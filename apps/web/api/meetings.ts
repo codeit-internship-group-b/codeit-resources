@@ -12,6 +12,16 @@ export const getAllCategories = async (): Promise<ICategory[]> => {
   return data;
 };
 
+export const getAllRooms = async (): Promise<IRoom[]> => {
+  const { data } = await axiosRequester<IRoom[]>({
+    options: {
+      method: "GET",
+      url: API_ENDPOINTS.ITEMS.GET_ALL("room"),
+    },
+  });
+  return data;
+};
+
 export const postNewItem = async (itemType: TItemType, body: FormData): Promise<IRoom | IEquipment> => {
   const { data } = await axiosRequester<IRoom | IEquipment>({
     options: {
