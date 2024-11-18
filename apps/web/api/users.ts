@@ -12,3 +12,14 @@ export const getUser = async (): Promise<IUser> => {
 
   return data;
 };
+
+export const getAllUser = async (): Promise<IUser[]> => {
+  const { data } = await axiosRequester<IUser[]>({
+    options: {
+      method: "GET",
+      url: API_ENDPOINTS.USERS.GET_ALL,
+    },
+  });
+
+  return data;
+};
