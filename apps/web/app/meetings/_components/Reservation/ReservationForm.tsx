@@ -6,18 +6,22 @@ import { useForm, Controller } from "react-hook-form";
 import Button from "@ui/src/components/common/Button";
 import MultiSelectDropdown from "@ui/src/components/common/Dropdown/MulitiSelectDropdown";
 import { useEffect } from "react";
-import { type IReservation } from "@repo/types";
+import { type TBaseItem, type IReservation } from "@repo/types";
 import { format } from "date-fns";
+import { useQuery } from "@tanstack/react-query";
 import { timeOptions } from "@/app/constants/timeOptions";
 import Profile from "@/components/common/Profile";
-import { type ScheduleFormData } from "@/app/types/scheduletypes";
+import { type SelectedRoom, type ScheduleFormData } from "@/app/types/scheduletypes";
+import { getAllItems } from "@/api/items";
+
+// ReservationForm.tsx
 
 interface ReservationFormProps {
   onSubmit: (data: ScheduleFormData) => void;
   selectedTime: string;
   selectedSchedule?: IReservation | null;
   resetTrigger?: number;
-  selectedRoom?: string | null;
+  selectedRoom?: SelectedRoom | null; // name과 _id를 포함
 }
 
 const addMinutes = (time: string, minutesToAdd: number): string => {
@@ -46,10 +50,19 @@ const addMinutes = (time: string, minutesToAdd: number): string => {
 export default function ReservationForm(props: ReservationFormProps): JSX.Element {
   const { onSubmit, selectedTime, resetTrigger, selectedRoom, selectedSchedule } = props;
 
+  const MeetingRoomsType = "room";
+
+  const { data: roomsData = [], isLoading: roomsIsLoading } = useQuery<TBaseItem[]>({
+    queryKey: ["Rooms", MeetingRoomsType],
+    queryFn: () => getAllItems({ itemType: MeetingRoomsType }),
+  });
+
+  if (roomsIsLoading) return <div>로딩중이에요~</div>;
+
   // 폼의 기본 값을 설정합니다.
   const defaultValues: ScheduleFormData = {
     meetingTitle: selectedSchedule?.notes ?? "",
-    selectedRoom: selectedRoom ?? "",
+    selectedRoom: selectedRoom ?? null,
     startTime: selectedSchedule ? format(new Date(selectedSchedule.startAt), "HH:mm") : selectedTime,
     customStartTime: "",
     endTime: selectedSchedule ? format(new Date(selectedSchedule.endAt), "HH:mm") : "",
@@ -70,7 +83,6 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
     defaultValues,
   });
 
-  const rooms = ["미팅룸 A", "미팅룸 B", "미팅룸 C", "미팅룸 D", "미팅룸 E", "녹음실 A", "녹음실 B", "녹음실 C"];
   const mockParticipants = [
     "배영준",
     "조현지",
@@ -157,18 +169,23 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
         rules={{ required: "회의실을 선택해주세요." }}
         render={({ field }) => (
           <Dropdown
-            selectedValue={field.value}
+            selectedValue={field.value?.name || ""}
             onSelect={(value: string | boolean) => {
-              field.onChange(value);
+              if (typeof value === "string") {
+                const selected = roomsData.find((room) => room.name === value);
+                if (selected) {
+                  field.onChange(selected); // 전체 객체를 저장
+                }
+              }
             }}
             isError={Boolean(errors.selectedRoom)}
             errorMessage={errors.selectedRoom?.message ?? ""}
           >
-            <Dropdown.Toggle title="회의실">{field.value || "회의실 선택"}</Dropdown.Toggle>
+            <Dropdown.Toggle title="회의실">{field.value ? field.value.name : "회의실 선택"}</Dropdown.Toggle>
             <Dropdown.Wrapper className="max-h-160 md:max-h-300 no-scrollbar overflow-y-auto">
-              {rooms.map((room) => (
-                <Dropdown.Item key={room} value={room}>
-                  {room}
+              {roomsData.map((room) => (
+                <Dropdown.Item key={room._id} value={room.name}>
+                  {room.name}
                 </Dropdown.Item>
               ))}
             </Dropdown.Wrapper>
@@ -324,6 +341,11 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
           <p>
             <strong>참여자:</strong>
           </p>
+          {watch("selectedRoom") && (
+            <div className="mt-2 text-sm text-gray-500">
+              <strong>Room ID:</strong> {watch("selectedRoom")?._id}
+            </div>
+          )}
         </div>
       ) : null}
     </div>

@@ -2,7 +2,7 @@
 import { Sheet } from "react-modal-sheet";
 import { useState } from "react";
 import { type IReservation } from "@repo/types";
-import { type ScheduleFormData, type Schedule, SelectedRoom } from "@/app/types/scheduletypes";
+import { type ScheduleFormData, type Schedule, type SelectedRoom } from "@/app/types/scheduletypes";
 import ReservationForm from "./ReservationForm";
 import ReservationModal from "./ReservationModal";
 
