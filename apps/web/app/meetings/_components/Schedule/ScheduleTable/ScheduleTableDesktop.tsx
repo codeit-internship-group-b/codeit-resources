@@ -33,7 +33,7 @@ export default function ScheduleTableDesktop(props: ScheduleTableDesktopProps): 
 
               const isSameRoom = scheduleItemId === room._id;
 
-              const scheduleDate = new Date(schedule.startAt).toISOString().split("T")[0];
+              const scheduleDate = new Date(schedule.startAt).toLocaleDateString("en-CA", { timeZone: "Asia/Seoul" });
               const isSameDate = scheduleDate === selectedDate;
 
               return isSameRoom && isSameDate;

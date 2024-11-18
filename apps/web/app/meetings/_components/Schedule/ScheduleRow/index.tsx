@@ -6,12 +6,12 @@ import { type IReservation } from "@repo/types";
 import { parseISO } from "date-fns";
 import { useSidebarStore } from "@/app/store/useSidebarStore";
 import { useAuthStore } from "@/src/stores/useAuthStore";
+import { type SelectedRoom } from "@/app/types/scheduletypes";
 import MobileReservationSheet from "../../Reservation/MobileReservationSheet";
 import DesktopReservationSheet from "../../Reservation/DesktopReservationSheet";
 import ScheduleSlot from "./ScheduleSlot";
 import ScheduleItem from "./ScheduleItem";
 import CurrentTimeIndicator from "./CurrentTimeIndicator";
-import { SelectedRoom } from "@/app/types/scheduletypes";
 
 interface ScheduleRowProps {
   schedules: IReservation[];
@@ -40,14 +40,7 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
   const totalMinutes = (endHour - startHour) * 60;
 
   const timeToMinutes = (time: Date | string): number => {
-    let date: Date;
-
-    if (typeof time === "string") {
-      date = parseISO(time);
-    } else {
-      date = time;
-    }
-
+    const date = typeof time === "string" ? new Date(time) : time;
     const hours = date.getHours();
     const minutes = date.getMinutes();
     return hours * 60 + minutes;
@@ -96,6 +89,12 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
         const startMinutes = timeToMinutes(schedule.startAt) - startHour * 60;
         const endMinutes = timeToMinutes(schedule.endAt) - startHour * 60;
         const scheduleDuration = endMinutes - startMinutes;
+
+        console.log(`Schedule ID: ${schedule._id}`);
+        console.log(`Start Minutes: ${startMinutes}`);
+        console.log(`End Minutes: ${endMinutes}`);
+        console.log(`Schedule Duration: ${schedule.notes}`);
+        console.log(`Schedule Width: ${(scheduleDuration / totalMinutes) * (slotWidth * totalSlots)}`);
 
         if (startMinutes < 0 || endMinutes > totalMinutes) return null;
 
