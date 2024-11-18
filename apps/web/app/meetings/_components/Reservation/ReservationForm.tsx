@@ -11,9 +11,10 @@ import { format } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
 import { timeOptions } from "@/app/constants/timeOptions";
 import Profile from "@/components/common/Profile";
+import { Badge } from "@ui/index";
 import { type SelectedRoom, type ScheduleFormData } from "@/app/types/scheduletypes";
 import { getAllItems } from "@/api/items";
-import { getAllUser } from "@/api/users"; // 사용자 데이터 가져오는 함수
+import { getAllUser } from "@/api/users"; // 전체 사용자 데이터 가져오는 함수
 
 interface ReservationFormProps {
   onSubmit: (data: ScheduleFormData) => void;
@@ -61,6 +62,7 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
     queryFn: () => getAllItems({ itemType: MeetingRoomsType }),
   });
 
+  // 전체 사용자 데이터를 useQuery로 가져오기
   const {
     data: allUsersData = [],
     isLoading: allUsersIsLoading,
@@ -94,18 +96,8 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
     defaultValues,
   });
 
-  const mockParticipants = [
-    "배영준",
-    "조현지",
-    "김보경",
-    "신승헌",
-    "소혜린",
-    "이대양",
-    "이영훈",
-    "이정민",
-    "이지현",
-    "천권희",
-  ];
+  // 실제 사용자 목록을 participants 드롭다운에 적용합니다.
+  const participantsOptions = allUsersData.map((user) => user.name);
 
   const startTimeValue = watch("startTime");
   const customStartTimeValue = watch("customStartTime");
@@ -312,9 +304,14 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
             <MultiSelectDropdown.Toggle title="참여자">
               {field.value.length > 0 ? (
                 <div className="flex flex-wrap justify-between gap-2">
-                  {field.value.slice(0, 3).map((name) => (
-                    <Profile key={name} size="size-27" name={name} textColor="black" className="ml-10" />
-                  ))}
+                  {field.value.slice(0, 3).map((name) => {
+                    const user = allUsersData.find((user) => user.name === name);
+                    return user ? (
+                      <div key={user._id} className="flex items-center space-x-2">
+                        <Profile name={user.name} size="size-27" textColor="black" className="ml-10" />
+                      </div>
+                    ) : null;
+                  })}
                   {field.value.length > 3 && (
                     <span className="text-purple-30 text-xs-semibold mx-10">+{field.value.length - 3}명</span>
                   )}
@@ -324,20 +321,30 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
               )}
             </MultiSelectDropdown.Toggle>
             <MultiSelectDropdown.Wrapper>
-              {mockParticipants
-                .sort((a, b) => {
-                  const isASelected = field.value.includes(a);
-                  const isBSelected = field.value.includes(b);
-
-                  if (isASelected && !isBSelected) return -1;
-                  if (!isASelected && isBSelected) return 1;
-                  return 0;
-                })
-                .map((name) => (
-                  <MultiSelectDropdown.Item key={name} value={name}>
-                    <Profile name={name} size="size-27" textColor="black" />
+              {allUsersIsLoading ? (
+                <div>사용자 데이터 로딩 중...</div>
+              ) : allUsersIsError ? (
+                <div>사용자 데이터를 불러오는 데 실패했습니다.</div>
+              ) : allUsersData.length === 0 ? (
+                <div>참여자가 없습니다.</div>
+              ) : (
+                allUsersData.map((user) => (
+                  <MultiSelectDropdown.Item key={user._id} value={user.name}>
+                    <div className="flex items-center">
+                      <Profile name={user.name} size="size-27" textColor="black" className="min-w-140" />
+                      <div>
+                        <div className="flex flex-wrap gap-2">
+                          {user.teams.map((team, index) => (
+                            <Badge key={index} color="purple" shape="round" colorApplyTo="font">
+                              {team}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
                   </MultiSelectDropdown.Item>
-                ))}
+                ))
+              )}
             </MultiSelectDropdown.Wrapper>
           </MultiSelectDropdown>
         )}
