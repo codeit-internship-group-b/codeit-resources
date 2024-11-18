@@ -6,15 +6,14 @@ import { useForm, Controller } from "react-hook-form";
 import Button from "@ui/src/components/common/Button";
 import MultiSelectDropdown from "@ui/src/components/common/Dropdown/MulitiSelectDropdown";
 import { useEffect } from "react";
-import { type TBaseItem, type IReservation } from "@repo/types";
+import { type TBaseItem, type IReservation, type IUser } from "@repo/types";
 import { format } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
 import { timeOptions } from "@/app/constants/timeOptions";
 import Profile from "@/components/common/Profile";
 import { type SelectedRoom, type ScheduleFormData } from "@/app/types/scheduletypes";
 import { getAllItems } from "@/api/items";
-
-// ReservationForm.tsx
+import { getAllUser } from "@/api/users"; // 사용자 데이터 가져오는 함수
 
 interface ReservationFormProps {
   onSubmit: (data: ScheduleFormData) => void;
@@ -52,12 +51,24 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
 
   const MeetingRoomsType = "room";
 
-  const { data: roomsData = [], isLoading: roomsIsLoading } = useQuery<TBaseItem[]>({
+  // 방 데이터를 useQuery로 가져오기
+  const {
+    data: roomsData = [],
+    isLoading: roomsIsLoading,
+    isError: roomsIsError,
+  } = useQuery<TBaseItem[]>({
     queryKey: ["Rooms", MeetingRoomsType],
     queryFn: () => getAllItems({ itemType: MeetingRoomsType }),
   });
 
-  if (roomsIsLoading) return <div>로딩중이에요~</div>;
+  const {
+    data: allUsersData = [],
+    isLoading: allUsersIsLoading,
+    isError: allUsersIsError,
+  } = useQuery<IUser[]>({
+    queryKey: ["AllUsers"],
+    queryFn: getAllUser,
+  });
 
   // 폼의 기본 값을 설정합니다.
   const defaultValues: ScheduleFormData = {
@@ -127,6 +138,7 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
     }
   }, [startTimeValue, customStartTimeValue, setValue, selectedTime]);
 
+  // 시작 시간과 종료 시간을 비교하여 유효성 검사
   useEffect(() => {
     const compareTimes = (start: string, end: string): boolean => {
       const [startHour = 0, startMinute = 0] = start.split(":").map((value) => {
@@ -162,6 +174,7 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
         rules={{ required: "미팅 제목을 입력해주세요." }}
         render={({ field }) => <Input id="meeting-title" placeholder="미팅 제목" {...field} />}
       />
+
       {/* 미팅룸 선택 */}
       <Controller
         name="selectedRoom"
@@ -183,15 +196,31 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
           >
             <Dropdown.Toggle title="회의실">{field.value ? field.value.name : "회의실 선택"}</Dropdown.Toggle>
             <Dropdown.Wrapper className="max-h-160 md:max-h-300 no-scrollbar overflow-y-auto">
-              {roomsData.map((room) => (
-                <Dropdown.Item key={room._id} value={room.name}>
-                  {room.name}
-                </Dropdown.Item>
-              ))}
+              {roomsIsLoading ? (
+                <div>회의실 로딩 중...</div>
+              ) : roomsIsError ? (
+                <div>회의실 정보를 불러오는 데 실패했습니다.</div>
+              ) : (
+                roomsData.map((room) => (
+                  <Dropdown.Item key={room._id} value={room.name}>
+                    {room.name}
+                  </Dropdown.Item>
+                ))
+              )}
             </Dropdown.Wrapper>
           </Dropdown>
         )}
       />
+
+      {/* 선택된 방의 ID를 별도의 div에 표시 */}
+      <div className="mt-4">
+        {watch("selectedRoom") && (
+          <div className="mt-2 text-sm text-gray-500">
+            <strong>Room ID:</strong> {watch("selectedRoom")?._id}
+          </div>
+        )}
+      </div>
+
       {/* 시작 시간 및 종료 시간 선택 */}
       <div className="my-16 flex justify-between gap-16">
         {/* 시작 시간 */}
@@ -268,6 +297,7 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
           )}
         </div>
       </div>
+
       {/* 참여자 선택 */}
       <Controller
         name="participants"
@@ -312,6 +342,7 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
           </MultiSelectDropdown>
         )}
       />
+
       <Button
         variant="Primary"
         className="mt-20 h-48 w-full"
@@ -322,6 +353,7 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
       >
         예약하기
       </Button>
+
       {/* 예약 정보 표시 */}
       {selectedSchedule ? (
         <div className="mt-16 rounded-md bg-gray-100 p-16">
@@ -341,11 +373,6 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
           <p>
             <strong>참여자:</strong>
           </p>
-          {watch("selectedRoom") && (
-            <div className="mt-2 text-sm text-gray-500">
-              <strong>Room ID:</strong> {watch("selectedRoom")?._id}
-            </div>
-          )}
         </div>
       ) : null}
     </div>
