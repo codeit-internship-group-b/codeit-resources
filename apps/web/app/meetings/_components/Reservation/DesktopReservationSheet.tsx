@@ -26,17 +26,14 @@ export default function DesktopReservationSheet(props: DesktopReservationSheetPr
 
   const [formData, setFormData] = useState<{ data: CreateReservationRequest; itemId: string } | null>(null);
 
-  // Reservation mutation 설정
   const createReservationMutation = useMutation({
     mutationFn: (formData: { data: CreateReservationRequest; itemId: string }) => {
-      // ScheduleFormData를 CreateReservationRequest 형식으로 변환
-
       return createReservation(formData.itemId, formData.data);
     },
     onSuccess: async () => {
       notify({
         type: "success",
-        message: "회의실 예약이 다다다다다.",
+        message: "회의실이 예약되었습니다..",
       });
       await queryClient.invalidateQueries({ queryKey: ["reservation"] });
       setIsModalOpen(false);

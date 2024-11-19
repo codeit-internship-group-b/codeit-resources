@@ -1,5 +1,4 @@
-/* eslint-disable react/no-array-index-key */
-"use client";
+// ScheduleRow.tsx
 
 import { useState } from "react";
 import { type IReservation } from "@repo/types";
@@ -20,6 +19,7 @@ interface ScheduleRowProps {
   slotHeight?: number;
   onSlotClick?: (time: string, schedule?: IReservation, room?: { name: string; _id: string }) => void;
 }
+
 export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
   const { schedules, room, slotHeight = 80, slotWidth = 72 } = props;
 
@@ -35,12 +35,12 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
 
   const startHour = 0;
   const endHour = 24;
-  const totalSlots = (endHour - startHour) * 2;
+  const totalSlots = (endHour - startHour) * 2; // 30분 단위
   const minutesPerSlot = 30;
   const totalMinutes = (endHour - startHour) * 60;
 
   const timeToMinutes = (time: Date | string): number => {
-    const date = typeof time === "string" ? new Date(time) : time;
+    const date = typeof time === "string" ? parseISO(time) : time;
     const hours = date.getHours();
     const minutes = date.getMinutes();
     return hours * 60 + minutes;
@@ -70,13 +70,11 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
       <div className="absolute left-0 top-0 flex">
         {Array.from({ length: totalSlots }).map((_, index) => (
           <ScheduleSlot
-            key={`slot-${startHour}-${room}-${index}`}
+            key={`slot-${startHour}-${room.name}-${index}`}
             index={index}
             slotWidth={slotWidth}
             slotHeight={slotHeight}
-            onClick={() => {
-              handleSlotClick(index);
-            }}
+            onClick={() => handleSlotClick(index)}
           />
         ))}
       </div>
@@ -90,12 +88,6 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
         const endMinutes = timeToMinutes(schedule.endAt) - startHour * 60;
         const scheduleDuration = endMinutes - startMinutes;
 
-        console.log(`Schedule ID: ${schedule._id}`);
-        console.log(`Start Minutes: ${startMinutes}`);
-        console.log(`End Minutes: ${endMinutes}`);
-        console.log(`Schedule Duration: ${schedule.notes}`);
-        console.log(`Schedule Width: ${(scheduleDuration / totalMinutes) * (slotWidth * totalSlots)}`);
-
         if (startMinutes < 0 || endMinutes > totalMinutes) return null;
 
         const leftPosition = (startMinutes / totalMinutes) * (slotWidth * totalSlots);
@@ -108,9 +100,7 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
             leftPosition={leftPosition}
             scheduleWidth={scheduleWidth}
             isCurrentUser={schedule.user._id === user?._id}
-            onClick={() => {
-              handleSlotClick(-1, schedule);
-            }}
+            onClick={() => handleSlotClick(-1, schedule)}
           />
         );
       })}

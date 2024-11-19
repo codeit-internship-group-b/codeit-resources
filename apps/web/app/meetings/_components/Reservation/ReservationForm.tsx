@@ -1,3 +1,5 @@
+// ReservationForm.tsx
+
 "use client";
 
 import Input from "@ui/src/components/common/Input";
@@ -7,20 +9,20 @@ import Button from "@ui/src/components/common/Button";
 import MultiSelectDropdown from "@ui/src/components/common/Dropdown/MulitiSelectDropdown";
 import { useEffect, useState } from "react";
 import { type TBaseItem, type IReservation, type IUser } from "@repo/types";
-import { format, parse, differenceInMinutes, addMinutes } from "date-fns"; // Import addMinutes
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Badge, notify } from "@ui/index";
+import { format, parse, differenceInMinutes, addMinutes } from "date-fns";
+import { useQuery } from "@tanstack/react-query";
+import { Badge } from "@ui/index";
 import { timeOptions } from "@/app/constants/timeOptions";
 import Profile from "@/components/common/Profile";
-import { type SelectedRoom, type ScheduleFormData } from "@/app/types/scheduletypes";
+import { type SelectedRoom } from "@/app/types/scheduletypes";
 import { getAllUser } from "@/api/users";
 import { getAllItems } from "@/api/items";
 import { useAuthStore } from "@/src/stores/useAuthStore";
-import { createReservation, type CreateReservationRequest } from "@/api/reservations";
+import { type CreateReservationRequest } from "@/api/reservations";
 import { useDateStore } from "@/app/store/useDateStore";
 
 interface ReservationFormProps {
-  onSubmit: (data: CreateReservationRequest, itemId: string) => void; // itemId 파라미터 추가
+  onSubmit: (data: CreateReservationRequest, itemId: string) => void;
   selectedTime: string;
   selectedSchedule?: IReservation | null;
   resetTrigger?: number;
@@ -32,12 +34,12 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
 
   const MeetingRoomsType = "room";
 
-  // useAuthStore를 사용하여 현재 사용자 데이터 가져오기
-  const user = useAuthStore((state) => state.user); // 현재 사용자의 데이터 가져오기
+  // 현재 사용자 데이터 가져오기
+  const user = useAuthStore((state) => state.user);
 
   const { selectedDate } = useDateStore();
 
-  // 방 데이터를 useQuery로 가져오기
+  // 방 데이터 가져오기
   const {
     data: roomsData = [],
     isLoading: roomsIsLoading,
@@ -47,7 +49,7 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
     queryFn: () => getAllItems({ itemType: MeetingRoomsType }),
   });
 
-  // 전체 사용자 데이터를 useQuery로 가져오기
+  // 전체 사용자 데이터 가져오기
   const {
     data: allUsersData = [],
     isLoading: allUsersIsLoading,
@@ -70,7 +72,7 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
     itemType: "room",
     notes: selectedSchedule?.notes ?? "",
     startAt: selectedSchedule ? format(new Date(selectedSchedule.startAt), "HH:mm") : selectedTime,
-    endAt: selectedSchedule ? format(new Date(selectedSchedule.endAt), "HH:mm") : getDefaultEndAt(selectedTime), // 기본 종료 시간을 설정
+    endAt: selectedSchedule ? format(new Date(selectedSchedule.endAt), "HH:mm") : getDefaultEndAt(selectedTime),
     status: "reserved",
     attendees: [],
   };
@@ -86,37 +88,40 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
     clearErrors,
   } = useForm<CreateReservationRequest>({
     defaultValues,
-    mode: "onChange", // Enable validation on change
+    mode: "onChange",
   });
 
   // 상태를 추가하여 제출된 데이터를 저장
-  const [submittedData, setSubmittedData] = useState<{
-    userId: string;
-    itemType: string;
-    startAt: string;
-    endAt: string;
-    status: string;
-    notes: string;
-    attendees: string[]; // 사용자 ID 배열로 변경
-  } | null>(null);
+  const [submittedData, setSubmittedData] = useState<CreateReservationRequest | null>(null);
 
   // ReservationForm 컴포넌트 내
   const [selectedMeetingRoom, setSelectedMeetingRoom] = useState<SelectedRoom | null | undefined>(selectedRoom);
 
-  const attendeessSelected = watch("attendees").length > 0;
+  const attendeesSelected = watch("attendees").length > 0;
   const startAtValue = watch("startAt");
   const endAtValue = watch("endAt");
 
   // resetTrigger 또는 selectedSchedule이 변경될 때마다 폼을 리셋
   useEffect(() => {
-    const newEndAt = selectedSchedule
-      ? format(new Date(selectedSchedule.endAt), "HH:mm")
-      : getDefaultEndAt(selectedTime);
-    reset({
-      ...defaultValues,
-      endAt: newEndAt,
-    });
-  }, [resetTrigger, reset, selectedTime, selectedRoom, selectedSchedule]);
+    if (allUsersData.length > 0) {
+      const newEndAt = selectedSchedule
+        ? format(new Date(selectedSchedule.endAt), "HH:mm")
+        : getDefaultEndAt(selectedTime);
+      const attendeeNames = selectedSchedule?.attendees
+        ? selectedSchedule.attendees
+            .map((attendeeId) => {
+              const user = allUsersData.find((user) => user === attendeeId);
+              return user ? user.name : null;
+            })
+            .filter((name): name is string => name !== null)
+        : [];
+      reset({
+        ...defaultValues,
+        endAt: newEndAt,
+        attendees: attendeeNames,
+      });
+    }
+  }, [resetTrigger, reset, selectedTime, selectedRoom, selectedSchedule, allUsersData]);
 
   // startAt 값이 변경될 때 endAt을 자동으로 30분 후로 설정
   useEffect(() => {
@@ -207,6 +212,7 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
         rules={{ required: "미팅 제목을 입력해주세요." }}
         render={({ field }) => <Input id="meeting-title" placeholder="미팅 제목" {...field} />}
       />
+
       {/* 미팅룸 선택 */}
       <Dropdown
         selectedValue={selectedMeetingRoom?.name || ""}
@@ -275,7 +281,7 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
             control={control}
             rules={{
               required: "종료 시간을 선택해주세요.",
-              validate: validateEndAt, // Add custom validation
+              validate: validateEndAt,
             }}
             render={({ field }) => (
               <Dropdown
@@ -368,11 +374,12 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
         )}
       />
 
+      {/* 예약하기 버튼 */}
       <Button
         variant="Primary"
         className="mt-20 h-48 w-full"
         onClick={handleSubmit(onFormSubmit)}
-        isActive={isValid && attendeessSelected} // All fields valid and attendees selected
+        isActive={isValid && attendeesSelected}
       >
         예약하기
       </Button>
