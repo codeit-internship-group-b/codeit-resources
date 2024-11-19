@@ -1,10 +1,9 @@
 import { useState, useEffect, type ChangeEvent } from "react";
 import Image from "next/image";
-import { notify } from "@ui/index";
 import DefaultProfileImage from "@ui/public/images/image_default_profile.png";
 import { type ImageFileType, type DisplayImageType, type FormImageType } from "@repo/types/src/membersType";
-import { BLUR_DATA_URL, IMAGE_TYPES, MAX_SIZE } from "@repo/constants/image";
-import { TOAST_MESSAGES, MEMBER_FORM_MESSAGES } from "@repo/constants/messages";
+import { MEMBER_FORM_MESSAGES } from "@repo/constants/messages";
+import { IMAGE_CONFIG } from "@repo/constants";
 
 interface ProfileImageUploaderProps {
   currentImage: FormImageType;
@@ -18,24 +17,6 @@ export default function ProfileImageUploader({ currentImage, onImageChange }: Pr
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>): void => {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    if (!IMAGE_TYPES.includes(file.type)) {
-      notify({
-        type: "error",
-        message: TOAST_MESSAGES.INVALID_IMAGE_TYPE,
-      });
-      e.target.value = "";
-      return;
-    }
-
-    if (file.size > MAX_SIZE) {
-      notify({
-        type: "error",
-        message: TOAST_MESSAGES.INVAILD_IMAGE_SIZE,
-      });
-      e.target.value = "";
-      return;
-    }
 
     const newObjectUrl = URL.createObjectURL(file);
     setImageObjectUrl(newObjectUrl);
@@ -78,7 +59,7 @@ export default function ProfileImageUploader({ currentImage, onImageChange }: Pr
         width={120}
         height={120}
         placeholder="blur"
-        blurDataURL={BLUR_DATA_URL}
+        blurDataURL={IMAGE_CONFIG.BLUR_DATA_URL}
         onError={handleError}
         className="size-120 rounded-full object-cover"
       />
