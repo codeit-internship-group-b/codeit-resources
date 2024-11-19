@@ -78,3 +78,31 @@ export const createReservation = async (
 
   return data.savedReservation;
 };
+
+export interface UpdateReservationRequest {
+  startAt?: string;
+  endAt?: string;
+  status?: TReservationStatus;
+  notes?: string;
+  attendees?: string[];
+}
+
+export interface UpdateReservationResponse {
+  message: string;
+  updatedReservation: IReservation;
+}
+
+export const updateReservation = async (
+  reservationId: string,
+  reservationData: UpdateReservationRequest,
+): Promise<IReservation> => {
+  const { data } = await axiosRequester<UpdateReservationResponse>({
+    options: {
+      method: "PATCH",
+      url: API_ENDPOINTS.RESERVATION.UPDATE_RESERVATION(reservationId),
+      data: reservationData,
+    },
+  });
+
+  return data.updatedReservation;
+};
