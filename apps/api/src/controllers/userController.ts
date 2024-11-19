@@ -398,7 +398,7 @@ export const updateUser = async (req: UpdateUserRequest, res: Response): Promise
 };
 
 function validateFile(file: Express.Multer.File | Express.MulterS3.File): FileValidationResult {
-  if (!IMAGE_CONFIG.TYPES.includes(file.mimetype)) {
+  if (!IMAGE_CONFIG.TYPES.includes(file.mimetype as "image/jpeg" | "image/jpg" | "image/png")) {
     return { valid: false, message: "지원되지 않는 파일 형식입니다." };
   }
   if (file.size > IMAGE_CONFIG.MAX_SIZE) {
