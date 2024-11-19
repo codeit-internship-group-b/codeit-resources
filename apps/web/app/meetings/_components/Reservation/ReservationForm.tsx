@@ -20,7 +20,7 @@ import { getReservationsByTypeAndDate, type CreateReservationRequest } from "@/a
 import { useDateStore } from "@/app/store/useDateStore";
 
 interface ReservationFormProps {
-  onSubmit: (data: CreateReservationRequest, itemId: string) => void;
+  onSubmit: (data: CreateReservationRequest, itemId: string, reservationId?: string) => void;
   selectedTime: string;
   selectedSchedule?: IReservation | null;
   resetTrigger?: number;
@@ -317,7 +317,7 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
     // 상태에 저장하여 화면에 표시
     setSubmittedData(mappedData);
 
-    onSubmit(mappedData, selectedMeetingRoom!._id);
+    onSubmit(mappedData, selectedMeetingRoom!._id, selectedSchedule?._id);
   };
 
   return (
