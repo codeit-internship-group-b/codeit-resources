@@ -1,8 +1,10 @@
 import { type Request, type Response } from "express";
 import { type IUser, type TRole } from "@repo/types";
 import { config } from "dotenv";
+import { type FilterQuery } from "mongoose";
 import { compare } from "bcryptjs";
-import { User } from "../models/userModel";
+import { IMAGE_CONFIG } from "@repo/constants";
+import { User, type UserDocument } from "../models/userModel";
 
 config();
 
@@ -14,9 +16,9 @@ interface GetUsersRequest extends Request {
   };
 }
 
-interface Filters {
+interface Filters extends FilterQuery<IUser> {
   role?: TRole;
-  team?: string;
+  teams?: { $in: string[] };
 }
 
 // Get all users
@@ -76,11 +78,12 @@ interface Filters {
  */
 export const getUsers = async (req: GetUsersRequest, res: Response): Promise<void> => {
   const { role, team, sortOption } = req.query;
-
   const filters: Filters = {};
 
   if (role) filters.role = role;
-  if (team) filters.team = team;
+  if (team) {
+    filters.team = { $in: [team] };
+  }
 
   let query = User.find(filters).select("-password");
 
@@ -253,35 +256,51 @@ export const createUser = async (req: CreateUserRequest, res: Response): Promise
     return;
   }
 
-  const newTeams = teams ?? [];
+  if (Array.isArray(teams) && teams.length > 3) {
+    res.status(400).send({ message: "팀은 최대 3개까지 추가 가능합니다." });
+    return;
+  }
 
   const profileImageUrl = req.file
     ? (req.file as Express.MulterS3.File).location
     : process.env.DEFAULT_PROFILE_IMAGE_URL;
 
   const user = new User({
+    role: role ?? "member",
     name,
     email,
-    role: role ?? "member",
+    teams,
     profileImage: profileImageUrl,
-    teams: newTeams,
   });
 
   await user.save();
   res.status(201).send({ message: "새로운 사용자가 생성되었습니다.", user });
 };
 
+interface UserFields {
+  name: string;
+  email: string;
+  role: TRole;
+  teams: string[];
+}
+
 interface UpdateUserRequest extends Request {
   params: {
     userId: string;
   };
-  body: {
-    name: string;
-    email: string;
-    role: TRole;
-    teams: string[];
-  };
+  body: UserFields;
   file?: Express.Multer.File | Express.MulterS3.File;
+}
+
+type UpdateFields = Partial<
+  UserFields & {
+    profileImage: string;
+  }
+>;
+
+interface FileValidationResult {
+  valid: boolean;
+  message?: string;
 }
 
 /**
@@ -336,57 +355,81 @@ interface UpdateUserRequest extends Request {
  */
 export const updateUser = async (req: UpdateUserRequest, res: Response): Promise<void> => {
   const { userId } = req.params;
-  const { email, name, teams, role } = req.body;
+  const updateData = req.body;
 
-  const userInfo = await User.findById(userId);
-  if (!userInfo) {
+  const user = await User.findById(userId);
+  if (!user) {
     res.status(404).send({ message: "사용자를 찾을 수 없습니다." });
     return;
   }
 
-  const normalizedTeams = [teams].flat().sort().join();
-  const normalizedUserTeams = [userInfo.teams].flat().sort().join();
-
-  const isFieldChanged = {
-    email: email !== userInfo.email,
-    name: name !== userInfo.name,
-    role: role !== userInfo.role,
-    teams: normalizedTeams !== normalizedUserTeams,
-    profileImage: Boolean(req.file),
-  };
-
-  const hasChanges = Object.values(isFieldChanged).some(Boolean);
-  if (!hasChanges) {
-    res.status(400).send({ message: "하나 이상의 필드를 수정해주세요." });
-    return;
+  if (req.file) {
+    const isValidFile = validateFile(req.file);
+    if (!isValidFile.valid) {
+      res.status(400).send({ message: isValidFile.message });
+      return;
+    }
   }
 
-  if (isFieldChanged.email) {
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
+  if (updateData.email && updateData.email !== user.email) {
+    const emailExists = await User.findOne({ email: updateData.email });
+    if (emailExists) {
       res.status(409).send({ message: "이미 존재하는 이메일입니다." });
       return;
     }
   }
 
-  const updateFields: Partial<IUser> = {};
-
-  if (isFieldChanged.email) updateFields.email = email;
-  if (isFieldChanged.name) updateFields.name = name;
-  if (isFieldChanged.role) updateFields.role = role;
-  if (isFieldChanged.teams) updateFields.teams = teams;
-  if (isFieldChanged.profileImage) {
-    const profileImageUrl = (req.file as Express.MulterS3.File).location;
-    updateFields.profileImage = profileImageUrl;
+  if (updateData.teams.length > 3) {
+    res.status(400).send({ message: "팀은 최대 3개까지 추가 가능합니다." });
+    return;
   }
 
-  const updatedUser = await User.findByIdAndUpdate(userId, { $set: updateFields }, { new: true, runValidators: false });
+  const updateFields = buildUpdateFields(user, updateData, req.file);
+  if (!Object.keys(updateFields).length) {
+    res.status(400).send({ message: "하나 이상의 필드를 수정해주세요." });
+    return;
+  }
 
+  const updatedUser = await User.findByIdAndUpdate(userId, { $set: updateFields }, { new: true });
   res.status(200).send({
     message: "사용자 정보가 성공적으로 업데이트되었습니다.",
     user: updatedUser,
   });
 };
+
+function validateFile(file: Express.Multer.File | Express.MulterS3.File): FileValidationResult {
+  if (!IMAGE_CONFIG.TYPES.includes(file.mimetype)) {
+    return { valid: false, message: "지원되지 않는 파일 형식입니다." };
+  }
+  if (file.size > IMAGE_CONFIG.MAX_SIZE) {
+    return { valid: false, message: "파일 크기는 10MB 이하여야 합니다." };
+  }
+  return { valid: true };
+}
+
+function buildUpdateFields(
+  user: UserDocument,
+  updateData: UpdateUserRequest["body"],
+  file?: Express.Multer.File | Express.MulterS3.File,
+): UpdateFields {
+  const updateFields: UpdateFields = {};
+
+  if (updateData.name && updateData.name !== user.name) updateFields.name = updateData.name;
+
+  if (updateData.role !== user.role) updateFields.role = updateData.role;
+
+  if (updateData.email && updateData.email !== user.email) updateFields.email = updateData.email;
+
+  if (JSON.stringify(updateData.teams.sort()) !== JSON.stringify(user.teams.sort())) {
+    updateFields.teams = updateData.teams;
+  }
+
+  if (file && "location" in file) {
+    updateFields.profileImage = file.location;
+  }
+
+  return updateFields;
+}
 
 interface DeleteUserRequest extends Request {
   params: {
