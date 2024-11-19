@@ -47,7 +47,7 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
   };
 
   // 슬롯별로 예약 상태를 저장하는 배열 생성
-  const slotReservations = Array(totalSlots).fill(null) as Array<IReservation | null>;
+  const slotReservations = Array(totalSlots).fill(null) as (IReservation | null)[];
 
   // 예약 정보를 슬롯 인덱스에 매핑
   schedules.forEach((schedule) => {
@@ -83,8 +83,10 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
             slotCount={end - start}
             slotWidth={slotWidth}
             slotHeight={slotHeight}
-            onClick={() => handleSlotClick(start, schedule)}
-            isReserved={true}
+            onClick={() => {
+              handleSlotClick(start, schedule);
+            }}
+            isReserved
             schedule={schedule}
           />,
         );
@@ -99,7 +101,9 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
           slotCount={1}
           slotWidth={slotWidth}
           slotHeight={slotHeight}
-          onClick={() => handleSlotClick(i)}
+          onClick={() => {
+            handleSlotClick(i);
+          }}
           isReserved={false}
         />,
       );
@@ -132,7 +136,6 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
       <div className="block md:hidden">
         <CurrentTimeIndicator slotWidth={slotWidth} startHour={startHour} endHour={endHour} />
       </div>
-
       {selectedTime && selectedRoom ? (
         <>
           <div className="!hidden md:block">

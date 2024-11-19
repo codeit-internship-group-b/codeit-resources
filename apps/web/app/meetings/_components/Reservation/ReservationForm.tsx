@@ -34,6 +34,7 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
 
   // 현재 사용자 데이터 가져오기
   const user = useAuthStore((state) => state.user);
+  const isEditMode = !!selectedSchedule && selectedSchedule.user._id === user?._id;
 
   const { selectedDate } = useDateStore();
 
@@ -499,7 +500,7 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
         onClick={handleSubmit(onFormSubmit)}
         isActive={isValid && attendeesSelected}
       >
-        예약하기
+        {isEditMode ? "수정하기" : "예약하기"}
       </Button>
 
       {/* 제출된 데이터 표시 */}

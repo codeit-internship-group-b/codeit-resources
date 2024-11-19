@@ -7,9 +7,10 @@ import { notify } from "@ui/index";
 import Sidebar from "@/components/common/Sidebar";
 import { type ScheduleFormData, type Schedule, type SelectedRoom } from "@/app/types/scheduletypes";
 import { useSidebarStore } from "@/app/store/useSidebarStore";
-import { createReservation, type CreateReservationRequest } from "@/api/reservations";
+import { createReservation, updateReservation, type CreateReservationRequest } from "@/api/reservations";
 import ReservationForm from "./ReservationForm";
 import ReservationModal from "./ReservationModal";
+import { useAuthStore } from "@/src/stores/useAuthStore";
 
 interface DesktopReservationSheetProps {
   onClose: () => void;
@@ -24,16 +25,30 @@ export default function DesktopReservationSheet(props: DesktopReservationSheetPr
   const { isSidebarOpen, closeSidebar } = useSidebarStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [formData, setFormData] = useState<{ data: CreateReservationRequest; itemId: string } | null>(null);
+  const user = useAuthStore((state) => state.user);
 
-  const createReservationMutation = useMutation({
-    mutationFn: (formData: { data: CreateReservationRequest; itemId: string }) => {
-      return createReservation(formData.itemId, formData.data);
+  const [formData, setFormData] = useState<{
+    data: CreateReservationRequest;
+    itemId: string;
+    reservationId?: string;
+  } | null>(null);
+
+  const isEditMode = !!selectedSchedule && selectedSchedule.user._id === user?._id;
+
+  const createOrUpdateReservation = useMutation({
+    mutationFn: (formData: { data: CreateReservationRequest; itemId: string; reservationId?: string }) => {
+      if (isEditMode && formData.reservationId) {
+        // 수정 모드일 경우
+        return updateReservation(formData.reservationId, formData.data);
+      } else {
+        // 생성 모드일 경우
+        return createReservation(formData.itemId, formData.data);
+      }
     },
     onSuccess: async () => {
       notify({
         type: "success",
-        message: "회의실이 예약되었습니다..",
+        message: isEditMode ? "예약이 수정되었습니다." : "회의실이 예약되었습니다.",
       });
       await queryClient.invalidateQueries({ queryKey: ["reservation"] });
       setIsModalOpen(false);
@@ -41,8 +56,12 @@ export default function DesktopReservationSheet(props: DesktopReservationSheetPr
     },
   });
 
-  const handleSubmit = (data: CreateReservationRequest, itemId: string): void => {
-    setFormData({ data, itemId });
+  const handleSubmit = (
+    data: CreateReservationRequest,
+    itemId: string,
+    reservationId?: string, // 수정 모드일 경우 reservationId 추가
+  ): void => {
+    setFormData({ data, itemId, reservationId });
     setIsModalOpen(true);
   };
 
@@ -75,7 +94,7 @@ export default function DesktopReservationSheet(props: DesktopReservationSheetPr
         }}
         onConfirm={() => {
           if (formData) {
-            createReservationMutation.mutate(formData);
+            createOrUpdateReservation.mutate(formData);
           }
           setIsModalOpen(false);
           onClose();
