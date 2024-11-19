@@ -5,7 +5,7 @@ import Dropdown from "@ui/src/components/common/Dropdown";
 import DefaultProfileImage from "@ui/public/images/image_default_profile.png";
 import { Chevron } from "@ui/public";
 import { type MemberWithStaticImage, ROLE_LABELS, type RoleOption } from "@repo/types/src/membersType";
-import { BLUR_DATA_URL } from "@repo/constants/image";
+import { IMAGE_CONFIG } from "@repo/constants";
 import { useMembersMutations } from "../_hooks/useMembersMutations";
 
 interface MemberListItemProps {
@@ -88,7 +88,7 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
           width={40}
           height={40}
           placeholder="blur"
-          blurDataURL={BLUR_DATA_URL}
+          blurDataURL={IMAGE_CONFIG.BLUR_DATA_URL}
           onError={handleImageError}
           className="size-40 rounded-full"
         />

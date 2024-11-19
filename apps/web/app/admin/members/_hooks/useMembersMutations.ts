@@ -11,7 +11,7 @@ interface UpdateMemberParams {
   data: FormData;
 }
 
-export interface HandleSubmitMutationParams {
+interface HandleSubmitMutationParams {
   selectedMember: MemberWithFileImage | null;
   formData: FormData;
 }
@@ -72,7 +72,7 @@ export function useMembersMutations({ onSuccess }: UseMemberMutationsProps = {})
     onError: handleError,
   });
 
-  const handleSubmitMutation = ({ selectedMember, formData }: HandleSubmitMutationParams): void => {
+  const handleSubmitMutation = ({ formData, selectedMember }: HandleSubmitMutationParams): void => {
     if (selectedMember) {
       updateMember({ id: selectedMember._id, data: formData });
     } else {
