@@ -1,9 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { notify, Radio } from "@ui/index";
 import Button from "@ui/src/components/common/Button";
 import MultiSelectDropdown from "@ui/src/components/common/Dropdown/MulitiSelectDropdown";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { type StaticImageData, type StaticRequire } from "next/dist/shared/lib/get-img-props";
 import { useForm } from "react-hook-form";
+import { type AdminSeatSettingFormValues } from "@repo/types";
 import Profile from "@/components/common/Profile";
 import { getMembers } from "@/api/members";
 import { patchItem } from "@/api/items";
@@ -14,18 +18,6 @@ interface AdminSeatSettingProps {
   status: "in-use" | "unavailable" | "available" | "reserved";
   userName: string | null | undefined;
   onClose: () => void;
-}
-
-interface SelectedMember {
-  id: string | undefined;
-  name: string | undefined;
-  profileImage: string | StaticRequire | StaticImageData | undefined | null;
-}
-
-interface FormValues {
-  name: string;
-  status: "in-use" | "unavailable" | "available" | "reserved";
-  user: SelectedMember[] | null;
 }
 
 export default function AdminSeatSetting({
@@ -43,7 +35,7 @@ export default function AdminSeatSetting({
     queryFn: () => getMembers("newest"),
   });
 
-  const initialFormData: FormValues = {
+  const initialFormData: AdminSeatSettingFormValues = {
     name: seatNum,
     status,
     user: [
@@ -55,7 +47,7 @@ export default function AdminSeatSetting({
     ],
   };
 
-  const { handleSubmit, setValue, watch } = useForm<FormValues>({
+  const { handleSubmit, setValue, watch } = useForm<AdminSeatSettingFormValues>({
     defaultValues: initialFormData,
   });
 
@@ -74,6 +66,7 @@ export default function AdminSeatSetting({
     },
   });
 
+  // 폼 전송 로직
   const handleFormSubmit = handleSubmit((data) => {
     if (data.status === "in-use" && !data.user?.[0]?.id) {
       notify({ type: "error", message: "멤버를 선택해주세요" });
@@ -100,7 +93,7 @@ export default function AdminSeatSetting({
           <Radio.Group
             defaultValue={status}
             onChange={(value) => {
-              setValue("status", value as FormValues["status"]);
+              setValue("status", value as AdminSeatSettingFormValues["status"]);
             }}
           >
             <Radio.Option value="available">예약 가능</Radio.Option>

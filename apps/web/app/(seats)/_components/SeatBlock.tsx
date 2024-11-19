@@ -1,13 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 "use client";
 import { clsx } from "clsx";
+import { type Seat } from "@repo/types";
 import SeatButton from "./SeatButton";
-
-interface Seat {
-  seatNum: string;
-  status: "in-use" | "unavailable" | "available" | "reserved";
-  itemId: string;
-  user: string | null;
-}
 
 interface SeatBlockProps {
   seats: Seat[];

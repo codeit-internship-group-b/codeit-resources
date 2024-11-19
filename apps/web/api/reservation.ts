@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { API_ENDPOINTS } from "@repo/constants";
-import { type ReservationRequestBody, type IReservation } from "@repo/types";
+import { type ReservationRequestBody, type IReservation, type ReservedResponse } from "@repo/types";
 import { axiosRequester } from "@/lib/axios";
 
 /**
@@ -49,6 +51,11 @@ export const getSeats = async (date: string): Promise<IReservation[]> => {
   return data;
 };
 
+/**
+ * 특정 날짜에 예약된 좌석을 가져옵니다.
+ * @param date - 조회할 날짜 (YYYY-MM-DD 형식).
+ * @returns 예약된 좌석 목록을 반환하는 Promise.
+ */
 export const getReservedSeats = async (date: string): Promise<IReservation[]> => {
   const { data } = await axiosRequester<IReservation[]>({
     options: {
@@ -60,11 +67,10 @@ export const getReservedSeats = async (date: string): Promise<IReservation[]> =>
   return data;
 };
 
-export interface ReservedResponse {
-  message: string;
-  savedReservation: IReservation[];
-}
-
+/**
+ * 새로운 좌석 예약을 생성합니다.
+ * @returns 예약 생성 결과를 반환하는 Promise.
+ */
 export const createSeatReservationData = async ({
   seatId,
   reservationData,
@@ -82,6 +88,10 @@ export const createSeatReservationData = async ({
   return data;
 };
 
+/**
+ * 특정 예약을 삭제합니다.
+ * @returns 예약 삭제 결과를 반환하는 Promise.
+ */
 export const deleteReservationData = async (reservationId: string | null): Promise<ReservedResponse> => {
   if (!reservationId) {
     throw new Error("Reservation ID is required");
@@ -96,6 +106,11 @@ export const deleteReservationData = async (reservationId: string | null): Promi
   return data;
 };
 
+/**
+ * 기존 예약을 삭제한 뒤 새로운 예약을 생성합니다.
+ * @returns 삭제 및 생성 작업 결과를 포함하는 Promise.
+
+ */
 export const modifyReservationData = async ({
   seatId,
   reservationData,
