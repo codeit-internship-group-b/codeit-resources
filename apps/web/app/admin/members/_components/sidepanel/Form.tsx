@@ -5,7 +5,6 @@ import Button from "@ui/src/components/common/Button";
 import { REGEXP_PATTERNS } from "@repo/constants/regexp";
 import { MEMBER_FORM_MESSAGES } from "@repo/constants/messages";
 import MultiSelectDropdown from "@repo/ui/src/components/common/Dropdown/MulitiSelectDropdown";
-import { TEAMS } from "@repo/constants/teams";
 import {
   ROLE_LABELS,
   type RoleOption,
@@ -14,6 +13,7 @@ import {
   type SidePanelFormData,
   type ImageFileType,
 } from "@repo/types/src/membersType";
+import { useTeams } from "@/app/admin/teams/_hooks/useTeams";
 import ProfileImageUploader from "./ProfileImageUploader";
 
 export interface MemberFormProps {
@@ -24,6 +24,8 @@ export interface MemberFormProps {
 }
 
 export default function MemberForm({ form, isPending, selectedMember, onSubmit }: MemberFormProps): JSX.Element {
+  const { data: teams } = useTeams();
+
   const {
     register,
     handleSubmit,
@@ -114,9 +116,9 @@ export default function MemberForm({ form, isPending, selectedMember, onSubmit }
                 {value.length > 0 ? value.join(", ") : MEMBER_FORM_MESSAGES.PLACEHOLDER.TEAM}
               </MultiSelectDropdown.Toggle>
               <MultiSelectDropdown.Wrapper>
-                {TEAMS.map((team) => (
-                  <MultiSelectDropdown.Item key={team} value={team}>
-                    {team}
+                {teams.map(({ name }) => (
+                  <MultiSelectDropdown.Item key={name} value={name}>
+                    {name}
                   </MultiSelectDropdown.Item>
                 ))}
               </MultiSelectDropdown.Wrapper>
