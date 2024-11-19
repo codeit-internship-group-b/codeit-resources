@@ -1,5 +1,3 @@
-// ReservationForm.tsx
-
 "use client";
 
 import Input from "@ui/src/components/common/Input";
@@ -18,7 +16,7 @@ import { type SelectedRoom } from "@/app/types/scheduletypes";
 import { getAllUser } from "@/api/users";
 import { getAllItems } from "@/api/items";
 import { useAuthStore } from "@/src/stores/useAuthStore";
-import { type CreateReservationRequest } from "@/api/reservations";
+import { getReservationsByTypeAndDate, type CreateReservationRequest } from "@/api/reservations";
 import { useDateStore } from "@/app/store/useDateStore";
 
 interface ReservationFormProps {
@@ -38,6 +36,16 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
   const user = useAuthStore((state) => state.user);
 
   const { selectedDate } = useDateStore();
+
+  const formattedDate = `${String(selectedDate.year)}-${String(selectedDate.month).padStart(
+    2,
+    "0",
+  )}-${String(selectedDate.day).padStart(2, "0")}`;
+
+  const { data: meetingsData = [], isLoading: meetingsIsLoading } = useQuery<IReservation[]>({
+    queryKey: ["meetings", formattedDate, MeetingRoomsType],
+    queryFn: () => getReservationsByTypeAndDate({ itemType: MeetingRoomsType, date: formattedDate }),
+  });
 
   // 방 데이터 가져오기
   const {
@@ -83,6 +91,8 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
     watch,
     formState: { errors, isValid },
     reset,
+    getValues,
+    trigger,
     setError,
     setValue,
     clearErrors,
@@ -90,6 +100,77 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
     defaultValues,
     mode: "onChange",
   });
+
+  const validateEndAt = (endAt: string): boolean | string => {
+    const startAtValue = getValues("startAt");
+
+    if (!startAtValue || !endAt) {
+      return "시작 시간과 종료 시간을 모두 선택해주세요.";
+    }
+
+    // 시작 시간과 종료 시간을 파싱합니다.
+    const start = parse(startAtValue, "HH:mm", new Date());
+    const end = parse(endAt, "HH:mm", new Date());
+
+    // 시간 차이를 계산합니다.
+    const diff = differenceInMinutes(end, start);
+
+    if (diff < 30) {
+      return "종료 시간은 시작 시간보다 최소 30분 이후여야 합니다.";
+    }
+
+    // 추가: 시간 겹침 여부 확인
+    if (!selectedMeetingRoom?._id) {
+      return true; // 회의실이 선택되지 않은 경우 검증 통과
+    }
+
+    const { year, month, day } = selectedDate;
+
+    const newStart = new Date(
+      `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}T${startAtValue}:00`,
+    );
+    const newEnd = new Date(`${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}T${endAt}:00`);
+
+    const isOverlap = meetingsData.some((reservation) => {
+      // 예약의 itemType이 "room"인지 확인합니다.
+      if (reservation.itemType !== "room") {
+        return false;
+      }
+
+      // 예약의 item에서 itemId를 추출합니다.
+      let itemId: string;
+      if (typeof reservation.item === "string") {
+        itemId = reservation.item;
+      } else if (reservation.item && "_id" in reservation.item) {
+        itemId = reservation.item._id;
+      } else {
+        return false; // itemId를 추출할 수 없으면 건너뜁니다.
+      }
+
+      // 현재 선택된 회의실과 동일한지 확인합니다.
+      if (itemId !== selectedMeetingRoom._id) {
+        return false;
+      }
+
+      // 현재 수정 중인 예약은 제외합니다.
+      if (selectedSchedule && reservation._id === selectedSchedule._id) {
+        return false;
+      }
+
+      // 기존 예약의 시작 시간과 종료 시간을 Date 객체로 변환합니다.
+      const existingStart = new Date(reservation.startAt);
+      const existingEnd = new Date(reservation.endAt);
+
+      // 시간 겹침 여부를 확인합니다.
+      return newStart < existingEnd && newEnd > existingStart;
+    });
+
+    if (isOverlap) {
+      return "선택한 시간에 이미 예약이 있습니다.";
+    }
+
+    return true;
+  };
 
   // 상태를 추가하여 제출된 데이터를 저장
   const [submittedData, setSubmittedData] = useState<CreateReservationRequest | null>(null);
@@ -109,11 +190,8 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
         : getDefaultEndAt(selectedTime);
       const attendeeNames = selectedSchedule?.attendees
         ? selectedSchedule.attendees
-            .map((attendeeId) => {
-              const user = allUsersData.find((user) => user === attendeeId);
-              return user ? user.name : null;
-            })
-            .filter((name): name is string => name !== null)
+            .map((attendee) => attendee.name)
+            .filter((name): name is string => name !== undefined)
         : [];
       reset({
         ...defaultValues,
@@ -137,44 +215,84 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
     }
   }, [startAtValue, endAtValue, setValue]);
 
-  // Custom validation to ensure endAt is at least 30 minutes after startAt
-  const validateEndAt = (endAt: string): boolean | string => {
-    if (!startAtValue || !endAt) {
-      return "시작 시간과 종료 시간을 모두 선택해주세요.";
-    }
-
-    // Parse the startAt and endAt times
-    const start = parse(startAtValue, "HH:mm", new Date());
-    const end = parse(endAt, "HH:mm", new Date());
-
-    // Calculate the difference in minutes
-    const diff = differenceInMinutes(end, start);
-
-    if (diff < 30) {
-      return "종료 시간은 시작 시간보다 최소 30분 이후여야 합니다.";
-    }
-
-    return true;
-  };
-
+  // onFormSubmit 함수 수정
   const onFormSubmit = (data: CreateReservationRequest): void => {
-    if (!user || !selectedRoom?._id) {
+    if (!user || !selectedMeetingRoom?._id) {
       return;
     }
 
-    // Additional validation to ensure endAt is at least 30 minutes after startAt
-    const start = parse(data.startAt, "HH:mm", new Date());
-    const end = parse(data.endAt, "HH:mm", new Date());
-    const diff = differenceInMinutes(end, start);
+    const { year, month, day } = selectedDate;
 
-    if (diff < 30) {
+    // 새로운 예약의 시작 시간과 종료 시간을 Date 객체로 변환합니다.
+    const newStart = new Date(
+      `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}T${data.startAt}:00`,
+    );
+    const newEnd = new Date(
+      `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}T${data.endAt}:00`,
+    );
+
+    // 추가적인 검증: 종료 시간이 시작 시간 이후인지 확인합니다.
+    if (newEnd <= newStart) {
       setError("endAt", {
         type: "manual",
-        message: "종료 시간은 시작 시간보다 최소 30분 이후여야 합니다.",
+        message: "종료 시간은 시작 시간 이후여야 합니다.",
       });
       return;
     }
 
+    // 시간 겹침 여부를 확인하는 함수
+    function isTimeOverlap(newStart: Date, newEnd: Date, existingStart: Date, existingEnd: Date): boolean {
+      return newStart < existingEnd && newEnd > existingStart;
+    }
+
+    // 기존 예약과 시간 겹침 여부를 확인합니다.
+    const isOverlap = meetingsData.some((reservation) => {
+      // 예약의 itemType이 "room"인지 확인합니다.
+      if (reservation.itemType !== "room") {
+        return false;
+      }
+
+      // 예약의 item에서 itemId를 추출합니다.
+      let itemId: string;
+      if (typeof reservation.item === "string") {
+        itemId = reservation.item;
+      } else if (reservation.item && "_id" in reservation.item) {
+        itemId = reservation.item._id;
+      } else {
+        return false; // itemId를 추출할 수 없으면 건너뜁니다.
+      }
+
+      // 현재 선택된 회의실과 동일한지 확인합니다.
+      if (itemId !== selectedMeetingRoom._id) {
+        return false;
+      }
+
+      // 현재 수정 중인 예약은 제외합니다.
+      if (selectedSchedule && reservation._id === selectedSchedule._id) {
+        return false;
+      }
+
+      // 기존 예약의 시작 시간과 종료 시간을 Date 객체로 변환합니다.
+      const existingStart = new Date(reservation.startAt);
+      const existingEnd = new Date(reservation.endAt);
+
+      // 시간 겹침 여부를 확인합니다.
+      return isTimeOverlap(newStart, newEnd, existingStart, existingEnd);
+    });
+
+    if (isOverlap) {
+      setError("startAt", {
+        type: "manual",
+        message: "선택한 시간에 이미 예약이 있습니다.",
+      });
+      setError("endAt", {
+        type: "manual",
+        message: "선택한 시간에 이미 예약이 있습니다.",
+      });
+      return;
+    }
+
+    // 참석자 ID 배열 생성
     const attendeeIds = data.attendees
       .map((name: string) => {
         const selectedUser = allUsersData.find((user) => user.name === name);
@@ -182,10 +300,8 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
       })
       .filter((id): id is string => id !== null);
 
-    const { year, month, day } = selectedDate;
-
-    const startAt = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}T${data.startAt}:00`;
-    const endAt = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}T${data.endAt}:00`;
+    const startAt = newStart.toISOString();
+    const endAt = newEnd.toISOString();
 
     const mappedData: CreateReservationRequest = {
       userId: user._id,
@@ -221,6 +337,8 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
             const room = roomsData.find((room) => room.name === value);
             if (room) {
               setSelectedMeetingRoom({ _id: room._id, name: room.name });
+              // Trigger validation of endAt when meeting room changes
+              trigger("endAt");
             }
           }
         }}
@@ -256,13 +374,14 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
                   field.onChange(value);
                   // Clear endAt error when startAt changes
                   clearErrors("endAt");
+                  // Trigger validation of endAt
+                  trigger("endAt");
                 }}
                 isError={Boolean(errors.startAt)}
                 errorMessage={errors.startAt?.message ?? ""}
               >
                 <Dropdown.Toggle title="시작 시간">{field.value || selectedTime}</Dropdown.Toggle>
                 <Dropdown.Wrapper className="max-h-160 md:max-h-300 no-scrollbar overflow-y-auto">
-                  <Dropdown.Item value="custom-start">직접입력</Dropdown.Item>
                   {timeOptions.map((time) => (
                     <Dropdown.Item key={time} value={time}>
                       {time}
@@ -294,7 +413,6 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
               >
                 <Dropdown.Toggle title="종료 시간">{field.value || "종료 시간 선택"}</Dropdown.Toggle>
                 <Dropdown.Wrapper className="max-h-160 md:max-h-300 no-scrollbar overflow-y-auto">
-                  <Dropdown.Item value="custom-end">직접입력</Dropdown.Item>
                   {timeOptions.map((time) => (
                     <Dropdown.Item key={time} value={time}>
                       {time}
