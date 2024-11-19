@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+ 
 "use client";
 import { clsx } from "clsx";
 import { type Seat } from "@repo/types";

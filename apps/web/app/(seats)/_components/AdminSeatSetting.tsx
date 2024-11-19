@@ -1,10 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 import { notify, Radio } from "@ui/index";
 import Button from "@ui/src/components/common/Button";
-import MultiSelectDropdown from "@ui/src/components/common/Dropdown/MulitiSelectDropdown";
+import MultiSelectDropdown from "@repo/ui/src/components/common/Dropdown/MultiSelectDropdown";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { type AdminSeatSettingFormValues } from "@repo/types";

@@ -12,7 +12,7 @@ import { DoubleChevron } from "@ui/public";
 import { IMAGE_TYPES, MAX_SIZE } from "@repo/ui/src/utils/constants/image";
 import { NOTIFICATION_MESSAGES } from "@repo/ui/src/utils/constants/notificationMessage";
 import DefaultProfileImage from "@ui/public/images/image_default_profile.png";
-import MultiSelectDropdown from "@repo/ui/src/components/common/Dropdown/MulitiSelectDropdown";
+import MultiSelectDropdown from "@repo/ui/src/components/common/Dropdown/MultiSelectDropdown";
 import { type StaticImport } from "next/dist/shared/lib/get-img-props";
 import { useOnClickOutside } from "@ui/src/hooks/useOnClickOutside";
 import { patchMember, postMember, deleteMember } from "@/api/members";

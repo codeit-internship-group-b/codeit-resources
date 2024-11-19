@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+ 
+ 
 import { API_ENDPOINTS } from "@repo/constants";
 import { type ReservationRequestBody, type IReservation, type ReservedResponse } from "@repo/types";
 import { axiosRequester } from "@/lib/axios";
