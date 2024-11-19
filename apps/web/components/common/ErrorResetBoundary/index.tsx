@@ -1,25 +1,23 @@
 "use client";
 
-import { type ReactNode, type ComponentType, Suspense } from "react";
+import { type ReactNode, type ComponentType } from "react";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import { ErrorBoundary, type FallbackProps } from "react-error-boundary";
 
-interface AsyncBoundaryProps {
+interface ErrorResetBoundaryProps {
   children: ReactNode;
   fallbackComponent: ComponentType<FallbackProps>;
-  suspenseFallback: ReactNode;
 }
 
-export default function AsyncBoundary({
+export default function ErrorResetBoundary({
   children,
   fallbackComponent: FallbackComponent,
-  suspenseFallback: SuspenseFallback,
-}: AsyncBoundaryProps): JSX.Element {
+}: ErrorResetBoundaryProps): JSX.Element {
   return (
     <QueryErrorResetBoundary>
       {({ reset }) => (
         <ErrorBoundary onReset={reset} FallbackComponent={FallbackComponent}>
-          <Suspense fallback={SuspenseFallback}>{children}</Suspense>
+          {children}
         </ErrorBoundary>
       )}
     </QueryErrorResetBoundary>
