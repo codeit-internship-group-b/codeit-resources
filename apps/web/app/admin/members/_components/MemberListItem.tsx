@@ -99,8 +99,8 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
       </div>
 
       <div data-dropdown="true" className="hidden md:absolute md:left-[356px] md:block">
-        <Dropdown selectedValue={getRoleDisplay(currentRole)} onSelect={handleRoleChange} size="sm">
-          <Dropdown.Toggle>{getRoleDisplay(currentRole)}</Dropdown.Toggle>
+        <Dropdown selectedValue={getRoleDisplay(member.role)} onSelect={handleRoleChange} size="sm">
+          <Dropdown.Toggle>{getRoleDisplay(member.role)}</Dropdown.Toggle>
           <Dropdown.Wrapper className="top-42">
             {Object.entries(ROLE_LABELS).map(([value, label]) => (
               <Dropdown.Item hoverStyle="purple" key={value} value={label}>
