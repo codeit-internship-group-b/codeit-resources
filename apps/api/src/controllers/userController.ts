@@ -379,11 +379,7 @@ export const updateUser = async (req: UpdateUserRequest, res: Response): Promise
     }
   }
 
-  if (updateData.teams === undefined) {
-    updateData.teams = [];
-  }
-
-  if (updateData.teams.length > 3) {
+  if (updateData.teams && updateData.teams.length > 3) {
     res.status(400).send({ message: "팀은 최대 3개까지 추가 가능합니다." });
     return;
   }

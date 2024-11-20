@@ -38,7 +38,6 @@ export default function Header({ onSortChange, onMemberSelect }: HeaderProps): J
       ) : (
         <header className="mb-40 flex justify-between">
           <h1 className="text-3xl-bold">멤버 관리</h1>
-          <button onClick={triggerError}>에러 발생</button>
           <Button
             onClick={onMemberSelect}
             variant="Secondary"
