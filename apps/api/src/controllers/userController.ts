@@ -82,7 +82,7 @@ export const getUsers = async (req: GetUsersRequest, res: Response): Promise<voi
 
   if (role) filters.role = role;
   if (team) {
-    filters.team = { $in: [team] };
+    filters.teams = { $in: [team] };
   }
 
   let query = User.find(filters).select("-password");
