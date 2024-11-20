@@ -27,19 +27,24 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: SidePanel
     onSuccess: onClose,
   });
 
-  const handleSubmit = (data: SidePanelFormData): void => {
+  const createMemberFormData = (data: SidePanelFormData): FormData => {
     const formData = new FormData();
     formData.append("role", data.role);
     formData.append("name", data.name);
     formData.append("email", data.email);
     data.teams.forEach((team) => {
-      formData.append("teams", team);
+      formData.append("teams[]", team);
     });
 
     if (data.profileImage instanceof File) {
       formData.append("profileImage", data.profileImage);
     }
 
+    return formData;
+  };
+
+  const handleSubmit = (data: SidePanelFormData): void => {
+    const formData = createMemberFormData(data);
     handleSubmitMutation({ formData, selectedMember });
   };
 

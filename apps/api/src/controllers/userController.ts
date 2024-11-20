@@ -281,7 +281,7 @@ interface UserFields {
   name: string;
   email: string;
   role: TRole;
-  teams: string[];
+  teams?: string[];
 }
 
 interface UpdateUserRequest extends Request {
@@ -294,7 +294,7 @@ interface UpdateUserRequest extends Request {
 
 type UpdateFields = Partial<
   UserFields & {
-    profileImage: string;
+    profileImage?: string;
   }
 >;
 
@@ -379,6 +379,10 @@ export const updateUser = async (req: UpdateUserRequest, res: Response): Promise
     }
   }
 
+  if (updateData.teams === undefined) {
+    updateData.teams = [];
+  }
+
   if (updateData.teams.length > 3) {
     res.status(400).send({ message: "팀은 최대 3개까지 추가 가능합니다." });
     return;
@@ -420,7 +424,7 @@ function buildUpdateFields(
 
   if (updateData.email && updateData.email !== user.email) updateFields.email = updateData.email;
 
-  if (JSON.stringify(updateData.teams.sort()) !== JSON.stringify(user.teams.sort())) {
+  if (updateData.teams !== undefined) {
     updateFields.teams = updateData.teams;
   }
 
