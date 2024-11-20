@@ -1,6 +1,6 @@
 export const TOAST_MESSAGES = {
   INVALID_IMAGE_TYPE: "PNG, JPEG 또는 JPG 파일만 업로드 가능합니다.",
-  INVAILD_IMAGE_SIZE: "이미지 크기는 5MB 이하여야 합니다",
+  INVALID_IMAGE_SIZE: "이미지 크기는 5MB 이하여야 합니다",
 } as const;
 
 export const MEMBER_FORM_MESSAGES = {
@@ -55,6 +55,6 @@ export const MODAL_MESSAGES = {
   },
 } as const;
 
-export const ERROR_MESSGAE = {
+export const ERROR_MESSAGE = {
   DEFAULT: "요청 처리 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
 };

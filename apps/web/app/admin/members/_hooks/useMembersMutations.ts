@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { notify } from "@ui/index";
 import axios, { type AxiosError } from "axios";
 import type { MemberWithFileImage, ResponseWithMessage } from "@repo/types/src/membersType";
-import { ERROR_MESSGAE } from "@repo/constants/messages";
+import { ERROR_MESSAGE } from "@repo/constants/messages";
 import { postMember, patchMember, deleteMember } from "@/api/members";
 
 interface UpdateMemberParams {
@@ -49,7 +49,7 @@ export function useMembersMutations({ onSuccess }: UseMemberMutationsProps = {})
     } else {
       notify({
         type: "error",
-        message: ERROR_MESSGAE.DEFAULT,
+        message: ERROR_MESSAGE.DEFAULT,
       });
     }
   };
