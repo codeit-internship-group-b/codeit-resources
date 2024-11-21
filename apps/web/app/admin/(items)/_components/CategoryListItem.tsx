@@ -5,7 +5,7 @@ import { useOnClickOutside } from "@ui/src/hooks/useOnClickOutside";
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { TriangleIcon } from "@ui/public";
-import { type IEquipment, type IRoom } from "@repo/types";
+import { type ICategory, type IEquipment, type IRoom } from "@repo/types";
 import Sidebar from "@/components/common/Sidebar";
 import { getAllRooms, patchItem, postNewItem } from "@/api/meetings";
 import CategoryEditDropdown from "./CategoryEditDropdown";
@@ -15,10 +15,10 @@ import AddItemButton from "./AddItemButton";
 import EditItemForm from "./AddItemForm";
 
 interface CategoryListItemProps {
-  title: string;
+  prevCategory: ICategory;
 }
 
-export default function CategoryListItem({ title }: CategoryListItemProps): JSX.Element {
+export default function CategoryListItem({ prevCategory }: CategoryListItemProps): JSX.Element {
   const [isModifyingCategoryName, setIsModifyingCategoryName] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
@@ -28,21 +28,21 @@ export default function CategoryListItem({ title }: CategoryListItemProps): JSX.
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [items, setItems] = useState<IRoom[]>([]);
+  const [rooms, setRooms] = useState<IRoom[]>([]);
 
   useEffect(() => {
     const fetchItems = async (): Promise<void> => {
       try {
         const res = await getAllRooms();
-        const items = res.filter((item) => item.category.name === title);
-        setItems(items);
+        const items = res.filter((item) => item.category.name === prevCategory.name);
+        setRooms(items);
       } catch (error) {
         throw new Error();
       }
     };
 
     void fetchItems();
-  }, []);
+  }, [prevCategory]);
 
   useOnClickOutside(inputRef, () => {
     if (isModifyingCategoryName) {
@@ -106,12 +106,12 @@ export default function CategoryListItem({ title }: CategoryListItemProps): JSX.
               }}
             />
           ) : (
-            title
+            prevCategory.name
           )}
         </span>
         <div className="flex gap-12">
           <AddItemButton onClick={openPanelToAdd} />
-          <ConfirmationModal title={title} type="category">
+          <ConfirmationModal title={prevCategory.name} type="category">
             <CategoryEditDropdown isModifying={isModifyingCategoryName} setIsModifying={setIsModifyingCategoryName} />
           </ConfirmationModal>
         </div>
@@ -134,7 +134,7 @@ export default function CategoryListItem({ title }: CategoryListItemProps): JSX.
           transition={{ duration: 0.3, ease: "easeInOut" }}
           className="overflow-hidden pl-24"
         >
-          {items.map((item) => (
+          {rooms.map((item) => (
             <CategoryListSubItem key={item._id} title={item.name} editItem={openPanelToEdit} />
           ))}
         </motion.div>
@@ -142,7 +142,7 @@ export default function CategoryListItem({ title }: CategoryListItemProps): JSX.
 
       <Sidebar isOpen={isPanelOpen} onClose={closePanel}>
         <h1 className="my-24">회의실 {panelState === "add" ? "추가" : "수정"}</h1>
-        <EditItemForm prevCategory={title} onSubmit={handleSubmitForm} />
+        <EditItemForm prevCategory={prevCategory} onSubmit={handleSubmitForm} />
       </Sidebar>
     </>
   );

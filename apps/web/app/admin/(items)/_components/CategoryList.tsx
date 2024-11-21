@@ -25,7 +25,7 @@ export default function CategoryList(): JSX.Element {
     <div>
       <div>
         {categories.map((category) => (
-          <CategoryListItem key={category._id} title={category.name} />
+          <CategoryListItem key={category._id} prevCategory={category} />
         ))}
       </div>
     </div>

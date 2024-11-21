@@ -1,23 +1,32 @@
 "use client";
 
-import { type IEquipment, type ICategory, type IRoom } from "@repo/types";
-import { Input, Radio } from "@ui/index";
+import { type IEquipment, type ICategory, type IRoom, type TItemStatus } from "@repo/types";
+import { Input, Radio, notify } from "@ui/index";
 import Dropdown from "@ui/src/components/common/Dropdown";
 import { type FieldValues, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { getAllCategories } from "@/api/meetings";
 
 interface EditItemFormProps {
+  prevCategory: ICategory;
   defaultItem?: IRoom;
-  prevCategory: string;
   onSubmit: (data: FormData, itemId?: string) => Promise<IRoom | IEquipment>;
 }
 
 export default function EditItemForm({ defaultItem, prevCategory, onSubmit }: EditItemFormProps): JSX.Element {
-  const { register, handleSubmit, setValue } = useForm();
+  const { register, handleSubmit, setValue } = useForm({
+    defaultValues: {
+      name: "",
+      description: "",
+      capacity: 1,
+      location: "",
+      status: defaultItem ? defaultItem.status : "available",
+      category: prevCategory._id,
+    },
+  });
 
   const [categories, setCategories] = useState<ICategory[]>([]);
-  const [currentCategory, setCurrentCategory] = useState(prevCategory);
+  const [currentCategory, setCurrentCategory] = useState<ICategory>(prevCategory);
 
   useEffect(() => {
     const fetchCategories = async (): Promise<void> => {
@@ -33,24 +42,29 @@ export default function EditItemForm({ defaultItem, prevCategory, onSubmit }: Ed
     void fetchCategories();
   }, []);
 
-  const itemId = defaultItem?._id;
-
-  const handleFormSubmit = (data: FieldValues): void => {
+  const handleFormSubmit = async (data: FieldValues): Promise<void> => {
     const formData = new FormData();
     Object.entries(data).forEach(([key, value]) => {
-      data.append(key, value);
+      formData.set(key, value as string);
     });
-    const res = onSubmit(formData, itemId);
-    console.log(res);
+    formData.set("category", currentCategory._id);
+    // formData.set("status", defaultItem ? defaultItem.status : "available");
+    try {
+      const res = await onSubmit(formData, defaultItem?._id);
+      console.log(res);
+    } catch (error) {
+      notify({ type: "error", message: "제출실패" });
+    }
   };
 
   return (
-    <form onSubmit={() => handleSubmit(handleFormSubmit)}>
-      <div className="mb-24">
+    <form onSubmit={(event) => void handleSubmit(handleFormSubmit)(event)}>
+      <div className="my-20">
         <Radio.Group
-          defaultValue="available"
+          defaultValue={defaultItem ? defaultItem.status : "available"}
+          {...register("status")}
           onChange={(value) => {
-            setValue("status", value);
+            setValue("status", value as TItemStatus);
           }}
         >
           <Radio.Option value="available">사용 가능</Radio.Option>
@@ -61,21 +75,22 @@ export default function EditItemForm({ defaultItem, prevCategory, onSubmit }: Ed
       <Input {...register("description")} name="description" placeholder="설명" type="text" />
       <div className="mb-24">
         <Dropdown
-          selectedValue={currentCategory}
+          selectedValue={currentCategory.name}
           onSelect={(value) => {
-            if (typeof value === "string") {
-              setCurrentCategory(value);
-              setValue("category", value);
+            const selectedCategory = categories.find((category) => category._id === value);
+            if (selectedCategory) {
+              setCurrentCategory(selectedCategory);
+              setValue("category", value as string);
             }
           }}
           isError={false}
           errorMessage="Error"
         >
-          <Dropdown.Toggle title="카테고리">{currentCategory}</Dropdown.Toggle>
+          <Dropdown.Toggle title="카테고리">{currentCategory.name}</Dropdown.Toggle>
           <Dropdown.Wrapper>
             {categories.map((category) => {
               return (
-                <Dropdown.Item key={category._id} value={category.name}>
+                <Dropdown.Item key={category._id} value={category._id}>
                   {category.name}
                 </Dropdown.Item>
               );
