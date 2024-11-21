@@ -1,5 +1,5 @@
-import Main from "./_components/main";
+import MeetingRoomSchedule from "./_components/MeetingRoomSchedule";
 
 export default function Meetings(): JSX.Element {
-  return <Main />;
+  return <MeetingRoomSchedule />;
 }
