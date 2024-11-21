@@ -106,3 +106,12 @@ export const updateReservation = async (
 
   return data.updatedReservation;
 };
+
+export const deleteReservation = async (reservationId: string): Promise<void> => {
+  await axiosRequester({
+    options: {
+      method: "DELETE",
+      url: API_ENDPOINTS.RESERVATION.DELETE_RESERVATION(reservationId),
+    },
+  });
+};
