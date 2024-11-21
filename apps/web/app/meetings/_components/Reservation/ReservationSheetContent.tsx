@@ -12,6 +12,7 @@ import {
   type CreateReservationRequest,
 } from "@/api/reservations";
 import { useAuthStore } from "@/src/stores/useAuthStore";
+import { useDateStore } from "@/app/store/useDateStore";
 
 interface ReservationSheetContentProps {
   onClose: () => void;
@@ -27,6 +28,14 @@ export default function ReservationSheetContent(props: ReservationSheetContentPr
   const [modalType, setModalType] = useState<"create/update" | "delete">("create/update");
 
   const user = useAuthStore((state) => state.user);
+  const { selectedDate } = useDateStore();
+
+  const formattedDate = `${String(selectedDate.year)}-${String(selectedDate.month).padStart(
+    2,
+    "0",
+  )}-${String(selectedDate.day).padStart(2, "0")}`;
+
+  const MeetingRoomsType = "room";
 
   const [formData, setFormData] = useState<{
     data: CreateReservationRequest;
@@ -51,7 +60,9 @@ export default function ReservationSheetContent(props: ReservationSheetContentPr
         type: "success",
         message: isEditMode ? "예약이 수정되었습니다." : "회의실이 예약되었습니다.",
       });
-      await queryClient.invalidateQueries({ queryKey: ["reservation"] });
+      await queryClient.invalidateQueries({
+        queryKey: ["meetings", formattedDate, MeetingRoomsType],
+      });
       setIsModalOpen(false);
       onClose();
     },
@@ -64,7 +75,9 @@ export default function ReservationSheetContent(props: ReservationSheetContentPr
         type: "success",
         message: "예약이 삭제되었습니다.",
       });
-      await queryClient.invalidateQueries({ queryKey: ["reservation"] });
+      await queryClient.invalidateQueries({
+        queryKey: ["meetings", formattedDate, MeetingRoomsType],
+      });
       setIsModalOpen(false);
       onClose();
     },
