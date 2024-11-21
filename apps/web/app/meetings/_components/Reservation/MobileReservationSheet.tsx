@@ -1,10 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Sheet } from "react-modal-sheet";
-import { useState } from "react";
+import ReservationSheetContent from "./ReservationSheetContent";
 import { type IReservation } from "@repo/types";
-import { type ScheduleFormData, type Schedule, type SelectedRoom } from "@/app/types/scheduletypes";
-import ReservationForm from "./ReservationForm";
-import ReservationModal from "./ReservationModal";
+import { type SelectedRoom } from "@/app/types/scheduletypes";
 
 interface MobileReservationSheetProps {
   isOpen: boolean;
@@ -14,45 +11,23 @@ interface MobileReservationSheetProps {
   selectedRoom?: SelectedRoom | null;
 }
 
-export default function MobileReservationSheet({
-  isOpen,
-  onClose,
-  selectedTime,
-  selectedSchedule,
-  selectedRoom,
-}: MobileReservationSheetProps): JSX.Element {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleSubmit = (data: ScheduleFormData): void => {
-    setIsModalOpen(true);
-  };
+export default function MobileReservationSheet(props: MobileReservationSheetProps): JSX.Element {
+  const { isOpen, onClose, selectedTime, selectedSchedule, selectedRoom } = props;
 
   return (
-    <>
-      <Sheet isOpen={isOpen} onClose={onClose} snapPoints={[0.8]} initialSnap={0} className="!z-50 block md:hidden">
-        <Sheet.Container>
-          <Sheet.Header />
-          <Sheet.Content>
-            <ReservationForm
-              onSubmit={handleSubmit}
-              selectedTime={selectedTime}
-              selectedSchedule={selectedSchedule}
-              selectedRoom={selectedRoom}
-            />
-          </Sheet.Content>
-        </Sheet.Container>
-        <Sheet.Backdrop onTap={onClose} />
-      </Sheet>
-      <ReservationModal
-        isOpen={isModalOpen}
-        onClose={() => {
-          setIsModalOpen(false);
-        }}
-        onConfirm={() => {
-          setIsModalOpen(false);
-          onClose();
-        }}
-      />
-    </>
+    <Sheet isOpen={isOpen} onClose={onClose} snapPoints={[0.8]} initialSnap={0} className="!z-50 block md:hidden">
+      <Sheet.Container>
+        <Sheet.Header />
+        <Sheet.Content>
+          <ReservationSheetContent
+            onClose={onClose}
+            selectedTime={selectedTime}
+            selectedSchedule={selectedSchedule}
+            selectedRoom={selectedRoom}
+          />
+        </Sheet.Content>
+      </Sheet.Container>
+      <Sheet.Backdrop onTap={onClose} />
+    </Sheet>
   );
 }
