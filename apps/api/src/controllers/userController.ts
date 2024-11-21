@@ -5,6 +5,7 @@ import { type FilterQuery } from "mongoose";
 import { compare } from "bcryptjs";
 import { IMAGE_CONFIG } from "@repo/constants";
 import { User, type UserDocument } from "../models/userModel";
+import { areArraysEqual } from "../utils/areArraysEqual";
 
 config();
 
@@ -282,6 +283,7 @@ interface UserFields {
   email: string;
   role: TRole;
   teams?: string[];
+  profileImage?: string | undefined;
 }
 
 interface UpdateUserRequest extends Request {
@@ -420,8 +422,9 @@ function buildUpdateFields(
 
   if (updateData.email && updateData.email !== user.email) updateFields.email = updateData.email;
 
-  if (updateData.teams !== undefined) {
-    updateFields.teams = updateData.teams;
+  const newTeams = Array.isArray(updateData.teams) ? updateData.teams : [];
+  if (!areArraysEqual({ arr1: newTeams, arr2: user.teams })) {
+    updateFields.teams = newTeams;
   }
 
   if (file && "location" in file) {
