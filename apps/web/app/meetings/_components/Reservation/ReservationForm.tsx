@@ -25,16 +25,17 @@ interface ReservationFormProps {
   selectedSchedule?: IReservation | null;
   resetTrigger?: number;
   selectedRoom?: SelectedRoom | null;
+  onDelete: () => void;
 }
 
 export default function ReservationForm(props: ReservationFormProps): JSX.Element {
-  const { onSubmit, selectedTime, resetTrigger, selectedRoom, selectedSchedule } = props;
+  const { onSubmit, selectedTime, resetTrigger, selectedRoom, selectedSchedule, onDelete } = props;
 
   const MeetingRoomsType = "room";
 
   // 현재 사용자 데이터 가져오기
   const user = useAuthStore((state) => state.user);
-  const isEditMode = !!selectedSchedule && selectedSchedule.user._id === user?._id;
+  const isEditMode = Boolean(selectedSchedule) && selectedSchedule.user._id === user?._id;
 
   const { selectedDate } = useDateStore();
 
@@ -317,7 +318,7 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
     // 상태에 저장하여 화면에 표시
     setSubmittedData(mappedData);
 
-    onSubmit(mappedData, selectedMeetingRoom!._id, selectedSchedule?._id);
+    onSubmit(mappedData, selectedMeetingRoom._id, selectedSchedule?._id);
   };
 
   return (
@@ -492,13 +493,22 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
           </MultiSelectDropdown>
         )}
       />
-
+      {/* 삭제하기 버튼 (수정 모드일 때만 표시) */}
+      {isEditMode ? <Button
+          variant="Primary"
+          className="mt-20 h-48 w-full"
+          onClick={() => {
+            onDelete();
+          }}
+        >
+          삭제하기
+        </Button> : null}
       {/* 예약하기 버튼 */}
       <Button
         variant="Primary"
         className="mt-20 h-48 w-full"
         onClick={handleSubmit(onFormSubmit)}
-        isActive={isValid && attendeesSelected}
+        isActive={isValid ? attendeesSelected : null}
       >
         {isEditMode ? "수정하기" : "예약하기"}
       </Button>
