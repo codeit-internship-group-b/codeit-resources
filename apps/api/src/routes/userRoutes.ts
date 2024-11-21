@@ -20,7 +20,7 @@ userRouter.get("/user", asyncHandler(authenticateToken), asyncHandler(getUser));
 
 // 유저 정보 변경
 // TODO : admin middleware 추가
-userRouter.put("/:userId/", upload.single("profileImage"), asyncHandler(updateUser));
+userRouter.patch("/:userId/", upload.single("profileImage"), asyncHandler(updateUser));
 
 // 유저 삭제
 // TODO : admin middleware 추가
