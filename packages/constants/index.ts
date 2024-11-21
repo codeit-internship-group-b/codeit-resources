@@ -39,3 +39,10 @@ export const API_ENDPOINTS = {
     CREATE_TEAM: "/teams", // 팀 생성
   },
 };
+
+export const IMAGE_CONFIG = {
+  TYPES: ["image/jpeg", "image/jpg", "image/png"] as const, // 이미지 타입
+  MAX_SIZE: 10 * 1024 * 1024, // 10MB
+  BLUR_DATA_URL:
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mOcPmF6PQAFwwI/LAMTJwAAAABJRU5ErkJggg==",
+};

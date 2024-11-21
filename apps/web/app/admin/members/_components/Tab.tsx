@@ -1,22 +1,30 @@
-interface TabProps {
-  team: string;
-  isActive: boolean;
-  onClick: () => void;
+import { ROLES } from "@repo/constants/teams";
+import { useTeams } from "@/app/admin/teams/_hooks/useTeams";
+import TabItem from "./TabItem";
+
+interface TabsProps {
+  activeTab: string;
+  onTabChange: (tab: string) => void;
 }
 
-export default function Tab({ team, isActive, onClick }: TabProps): JSX.Element {
+export function Tab({ activeTab, onTabChange }: TabsProps): JSX.Element {
+  const { data } = useTeams();
+
+  const names = data.map(({ name }) => name);
+  const teamList = [...ROLES, ...names];
+
   return (
-    <li>
-      <button
-        type="button"
-        className={`text-lg-bold relative pb-8 ${isActive ? "text-custom-black/80" : "text-custom-black/50"}`}
-        onClick={onClick}
-      >
-        {team}
-        {isActive ? (
-          <span className="bg-custom-black/80 absolute bottom-0 left-0 h-2 w-full transition-all duration-300" />
-        ) : null}
-      </button>
-    </li>
+    <ul className="flex flex-row gap-32 whitespace-nowrap">
+      {teamList.map((team) => (
+        <TabItem
+          key={team}
+          team={team}
+          isActive={activeTab === team}
+          onClick={() => {
+            onTabChange(team);
+          }}
+        />
+      ))}
+    </ul>
   );
 }
