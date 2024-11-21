@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import { type IReservation } from "@repo/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { notify } from "@ui/index";
-import ReservationForm from "./ReservationForm";
-import ReservationModal from "./ReservationModal";
 import { type SelectedRoom } from "@/app/types/scheduletypes";
 import {
   createReservation,
@@ -13,6 +11,8 @@ import {
 } from "@/api/reservations";
 import { useAuthStore } from "@/src/stores/useAuthStore";
 import { useDateStore } from "@/app/store/useDateStore";
+import ReservationModal from "./ReservationModal";
+import ReservationForm from "./ReservationForm";
 
 interface ReservationSheetContentProps {
   onClose: () => void;
@@ -43,17 +43,17 @@ export default function ReservationSheetContent(props: ReservationSheetContentPr
     reservationId?: string;
   } | null>(null);
 
-  const isEditMode = !!selectedSchedule && selectedSchedule.user._id === user?._id;
+  const isEditMode = Boolean(selectedSchedule) && selectedSchedule.user._id === user?._id;
 
   const createOrUpdateReservation = useMutation({
     mutationFn: (formData: { data: CreateReservationRequest; itemId: string; reservationId?: string }) => {
       if (isEditMode && formData.reservationId) {
         // 수정 모드일 경우
         return updateReservation(formData.reservationId, formData.data);
-      } else {
+      } 
         // 생성 모드일 경우
         return createReservation(formData.itemId, formData.data);
-      }
+      
     },
     onSuccess: async () => {
       notify({

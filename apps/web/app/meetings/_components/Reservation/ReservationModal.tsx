@@ -1,7 +1,7 @@
 "use client";
 
 import AlertModal from "@ui/src/components/common/ConditionalActionModal/AlertModal";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 
 interface ReservationModalProps {
   isOpen: boolean;

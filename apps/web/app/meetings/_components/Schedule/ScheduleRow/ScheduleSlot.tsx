@@ -1,9 +1,9 @@
 // ScheduleSlot.tsx
 
 import { useEffect, useState } from "react";
+import { type IReservation } from "@repo/types";
 import { useSidebarStore } from "@/app/store/useSidebarStore";
 import { useAuthStore } from "@/src/stores/useAuthStore"; // 현재 사용자 정보를 가져오기 위해 추가
-import { type IReservation } from "@repo/types";
 
 interface ScheduleSlotProps {
   index: number;
@@ -51,7 +51,7 @@ export default function ScheduleSlot(props: ScheduleSlotProps): JSX.Element {
       {/* 예약된 슬롯의 경우 중간에 가로 막대를 표시 */}
       {isReserved && schedule ? (
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="absolute top-1/2 h-16 w-full -translate-y-1/2 transform bg-purple-400"></div>
+          <div className="absolute top-1/2 h-16 w-full -translate-y-1/2 transform bg-purple-400" />
         </div>
       ) : null}
 

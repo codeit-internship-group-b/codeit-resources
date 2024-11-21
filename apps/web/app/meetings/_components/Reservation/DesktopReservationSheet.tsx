@@ -1,9 +1,9 @@
 import { useEffect } from "react";
+import { type IReservation } from "@repo/types";
 import { useSidebarStore } from "@/app/store/useSidebarStore";
 import Sidebar from "@/components/common/Sidebar";
-import ReservationSheetContent from "./ReservationSheetContent";
-import { type IReservation } from "@repo/types";
 import { type SelectedRoom } from "@/app/types/scheduletypes";
+import ReservationSheetContent from "./ReservationSheetContent";
 
 interface DesktopReservationSheetProps {
   onClose: () => void;
