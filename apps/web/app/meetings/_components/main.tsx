@@ -51,6 +51,13 @@ export default function MeetingRoomSchedule(): JSX.Element {
                 시작 시간:{" "}
                 {new Date(meeting.startAt).toLocaleString("ko-KR", {
                   timeZone: "Asia/Seoul",
+                  hour12: false, // 24시간 형식으로 변경
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  second: "2-digit",
+                  year: "numeric",
+                  month: "2-digit",
+                  day: "2-digit",
                 })}
               </p>
               <p>
