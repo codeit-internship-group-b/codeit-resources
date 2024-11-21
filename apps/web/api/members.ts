@@ -36,7 +36,7 @@ export const postMember = async (formData: FormData): Promise<MemberResponse> =>
 export const patchMember = async (userId: string, formData: FormData): Promise<MemberResponse> => {
   const { data } = await axiosRequester<MemberResponse, FormData>({
     options: {
-      method: "PUT",
+      method: "PATCH",
       url: API_ENDPOINTS.USERS.PATCH_USER(userId),
       data: formData,
       headers: {
