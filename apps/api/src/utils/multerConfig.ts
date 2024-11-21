@@ -3,6 +3,7 @@ import multer, { type Multer } from "multer";
 import multerS3, { AUTO_CONTENT_TYPE } from "multer-s3";
 import { type Request } from "express";
 import { type S3Client } from "@aws-sdk/client-s3";
+import { IMAGE_CONFIG } from "@repo/constants";
 import { createS3Client } from "./createS3Client";
 
 type FileNameCallback = (error: Error | null, key?: string) => void;
@@ -24,7 +25,14 @@ export const upload: Multer = multer({
     contentType: AUTO_CONTENT_TYPE,
   }),
   limits: {
-    fileSize: 1024 * 1024 * 10,
+    fileSize: IMAGE_CONFIG.MAX_SIZE,
     files: 1,
+  },
+  fileFilter(req, file, callback) {
+    if (IMAGE_CONFIG.TYPES.some((type) => type === file.mimetype)) {
+      callback(null, true); // 파일 허용
+      return;
+    }
+    callback(null, false); // 파일 거부
   },
 });
