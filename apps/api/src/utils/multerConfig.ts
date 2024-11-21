@@ -33,6 +33,6 @@ export const upload: Multer = multer({
       callback(null, true); // 파일 허용
       return;
     }
-    callback(null, false); // 파일 거부
+    callback(new Error("지원하지 않는 파일 형식입니다. JPEG, PNG, GIF 형식의 파일만 업로드할 수 있습니다."));
   },
 });
