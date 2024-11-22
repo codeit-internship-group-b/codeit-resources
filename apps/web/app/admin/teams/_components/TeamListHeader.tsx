@@ -14,7 +14,7 @@ export default function TeamListHeader(): JSX.Element {
   return (
     <>
       <div className="relative flex items-center justify-center md:justify-between">
-        <h1 className="text-20 md:text-28">팀 관리</h1>
+        <h1 className="text-xl-bold md:text-3xl-bold">팀 관리</h1>
         <Button className="hidden md:block" variant="Secondary" onClick={handleButtonClick}>
           + 팀 추가
         </Button>

@@ -26,7 +26,9 @@ export const useMembersForm = ({ selectedMember, onClose }: UseMembersForm): Use
   const { reset } = form;
   const { updateMember, createMember, isPending } = useMembersMutations({
     onSuccess: () => {
-      onClose;
+      setTimeout(() => {
+        onClose();
+      }, 1000);
     },
   });
 
