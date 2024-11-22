@@ -31,7 +31,7 @@ function ListItemSkeleton({
         {type === "member" && (
           <>
             <PersonEmptyIcon />
-            <LoadingBar className="h-12 w-44" />
+            <LoadingBar classNames="h-12 w-44" />
           </>
         )}
         <LoadingBar />
