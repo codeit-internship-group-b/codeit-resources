@@ -22,17 +22,28 @@ export default function EditItemForm({
 }: EditItemFormProps): JSX.Element {
   const { register, handleSubmit, setValue } = useForm({
     defaultValues: {
-      name: "",
-      description: "",
-      capacity: 1,
-      location: "",
+      name: defaultItem ? defaultItem.name : "",
+      description: defaultItem ? defaultItem.description : "",
+      capacity: defaultItem ? defaultItem.capacity : 1,
+      location: defaultItem ? defaultItem.location : "",
       status: defaultItem ? defaultItem.status : "available",
-      category: prevCategory._id,
+      category: defaultItem ? defaultItem.category._id : prevCategory._id,
     },
   });
 
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [currentCategory, setCurrentCategory] = useState<ICategory>(prevCategory);
+
+  useEffect(() => {
+    if (defaultItem) {
+      setValue("name", defaultItem.name);
+      setValue("description", defaultItem.description);
+      setValue("capacity", defaultItem.capacity);
+      setValue("location", defaultItem.location);
+      setValue("status", defaultItem.status);
+      setValue("category", defaultItem.category._id);
+    }
+  }, [defaultItem, setValue]);
 
   useEffect(() => {
     const fetchCategories = async (): Promise<void> => {

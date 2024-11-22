@@ -25,6 +25,7 @@ export default function CategoryListItem({ prevCategory }: CategoryListItemProps
   const [isOpen, setIsOpen] = useState(false);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [panelState, setPanelState] = useState("");
+  const [defaultItem, setDefaultItem] = useState<IRoom>();
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -42,7 +43,7 @@ export default function CategoryListItem({ prevCategory }: CategoryListItemProps
     };
 
     void fetchItems();
-  }, [prevCategory]);
+  }, [prevCategory, isPanelOpen]);
 
   useOnClickOutside(inputRef, () => {
     if (isModifyingCategoryName) {
@@ -52,15 +53,17 @@ export default function CategoryListItem({ prevCategory }: CategoryListItemProps
 
   const openPanelToAdd = (): void => {
     if (!isPanelOpen) {
-      setIsPanelOpen(true);
       setPanelState("add");
+      setIsPanelOpen(true);
     }
   };
 
-  const openPanelToEdit = (): void => {
+  const openPanelToEdit = (item: IRoom): void => {
     if (!isPanelOpen) {
-      setIsPanelOpen(true);
       setPanelState("edit");
+      setIsPanelOpen(true);
+      setDefaultItem(item);
+      console.log(item);
     }
   };
 
@@ -77,9 +80,11 @@ export default function CategoryListItem({ prevCategory }: CategoryListItemProps
   const handleSubmitForm = async (data: FormData, itemId?: string): Promise<IRoom | IEquipment> => {
     if (panelState === "add") {
       const res = await postNewItem("room", data);
+      closePanel();
       return res;
     } else if (panelState === "edit" && itemId) {
       const res = await patchItem(itemId, data);
+      closePanel();
       return res;
     }
     throw new Error("잘못된 입력입니다. 새로고침 후 다시 시도해주세요");
@@ -129,20 +134,31 @@ export default function CategoryListItem({ prevCategory }: CategoryListItemProps
       {isOpen ? (
         <motion.div
           initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
+          animate={{ opacity: 1, height: rooms.length * 75 }}
           exit={{ opacity: 0, height: 0 }}
           transition={{ duration: 0.3, ease: "easeInOut" }}
-          className="overflow-hidden pl-24"
+          className="pl-24"
         >
           {rooms.map((item) => (
-            <CategoryListSubItem key={item._id} title={item.name} editItem={openPanelToEdit} />
+            <CategoryListSubItem
+              key={item._id}
+              title={item.name}
+              editItem={() => {
+                openPanelToEdit(item);
+              }}
+            />
           ))}
         </motion.div>
       ) : null}
 
       <Sidebar isOpen={isPanelOpen} onClose={closePanel}>
         <h1 className="my-24">회의실 {panelState === "add" ? "추가" : "수정"}</h1>
-        <EditItemForm prevCategory={prevCategory} onSubmit={handleSubmitForm} panelState={panelState} />
+        <EditItemForm
+          prevCategory={prevCategory}
+          onSubmit={handleSubmitForm}
+          panelState={panelState}
+          defaultItem={defaultItem}
+        />
       </Sidebar>
     </>
   );
