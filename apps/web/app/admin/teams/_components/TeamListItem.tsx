@@ -133,7 +133,7 @@ export default function TeamListItem({ team }: TeamListItemProps): JSX.Element {
         actions={
           <Modal.Root>
             <Modal.Trigger>
-              <Button className="text-14" variant="Secondary" type="button">
+              <Button className="text-md-medium" variant="Secondary" type="button">
                 삭제하기
               </Button>
             </Modal.Trigger>
