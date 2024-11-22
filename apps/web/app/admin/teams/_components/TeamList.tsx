@@ -1,10 +1,10 @@
 "use client";
 
-import { useTeams } from "../_hooks/useTeams";
+import { useSuspenseTeamsQuery } from "../_hooks/useTeams";
 import TeamListItem from "./TeamListItem";
 
 export default function TeamList(): JSX.Element {
-  const { data: teams } = useTeams();
+  const { data: teams } = useSuspenseTeamsQuery();
 
   return (
     <div className="md:mt-40">
