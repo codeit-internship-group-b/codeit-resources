@@ -28,7 +28,7 @@ export const useMembersForm = ({ selectedMember, onClose }: UseMembersForm): Use
     onSuccess: () => {
       setTimeout(() => {
         onClose();
-      }, 1000);
+      }, 800);
     },
   });
 
@@ -51,8 +51,9 @@ export const useMembersForm = ({ selectedMember, onClose }: UseMembersForm): Use
     formData.append("role", data.role);
     formData.append("name", data.name);
     formData.append("email", data.email);
+
     data.teams.forEach((team) => {
-      formData.append("teams[]", team);
+      formData.append("teams", team);
     });
 
     if (data.profileImage instanceof File) {

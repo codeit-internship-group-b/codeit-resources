@@ -380,7 +380,7 @@ interface UpdateUserRequest extends Request {
  */
 export const updateUser = async (req: UpdateUserRequest, res: Response): Promise<void> => {
   const { userId } = req.params;
-  const { email, teams, name, role } = req.body;
+  const { email, teams = [], name, role } = req.body;
   const user = await User.findById(userId);
 
   if (!user) {
@@ -395,21 +395,24 @@ export const updateUser = async (req: UpdateUserRequest, res: Response): Promise
       return;
     }
   }
+  console.log(teams);
 
-  if (teams && teams.length > 3) {
+  if (teams.length > 3) {
     res.status(400).send({ message: "팀은 최대 3개까지 추가 가능합니다." });
     return;
   }
 
   if (role && !Roles.includes(role)) {
-    res.status(400).send({ message: "유효하지 않은 역할입니다. 'admin' 또는 'member'만 허용됩니다." });
+    res.status(400).send({ message: "유효하지 않은 역할입니다." });
     return;
   }
 
   const updateFields: Partial<typeof req.body> = {};
 
   if (email && email !== user.email) updateFields.email = email;
-  if (teams && !areArraysEqual(teams, user.teams)) updateFields.teams = teams;
+  if (!areArraysEqual(teams, user.teams)) {
+    updateFields.teams = teams;
+  }
   if (name && name !== user.name) updateFields.name = name;
   if (role && role !== user.role) updateFields.role = role;
   if (req.file) {
