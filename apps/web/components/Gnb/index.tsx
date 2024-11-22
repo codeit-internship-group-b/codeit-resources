@@ -6,9 +6,13 @@ import { useAuthStore } from "@/src/stores/useAuthStore";
 import Profile from "../common/Profile";
 import GnbMenu from "./GnbMenu";
 import GnbLogo from "./GnbLogo";
+import { useShouldRenderGnb } from "./hooks/useShouldRenderGnb";
 
 export default function Gnb(): JSX.Element | null {
   const { isLoggedIn, user } = useAuthStore();
+  const isRenderGnb = useShouldRenderGnb();
+
+  if (!isRenderGnb) return null;
 
   return (
     <nav
