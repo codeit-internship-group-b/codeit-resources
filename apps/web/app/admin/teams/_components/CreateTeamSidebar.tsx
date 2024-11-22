@@ -1,8 +1,7 @@
 import { Button, Input } from "@ui/index";
 import { type FieldValues, type SubmitHandler } from "react-hook-form";
 import Sidebar from "@/components/common/Sidebar";
-import { useCreateTeam } from "../_hooks/useCreateTeam";
-import { useCreateForm } from "../_hooks/useCreateForm";
+import { useCreateForm, useCreateTeam } from "../_hooks/useTeamsMutations";
 
 interface CreateTeamSidebarProps {
   isOpen: boolean;

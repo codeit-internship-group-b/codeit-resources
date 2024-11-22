@@ -4,9 +4,7 @@ import { type ReactNode, useEffect } from "react";
 import { type TeamType } from "@repo/types";
 import { debounce } from "es-toolkit";
 import { SettingsModal, SettingsModalButton, SettingsModalHeader } from "@/components/SettingsModal";
-import { useCreateForm } from "../_hooks/useCreateForm";
-import { useCreateTeam } from "../_hooks/useCreateTeam";
-import { useUpdateTeam } from "../_hooks/useUpdateTeam";
+import { useCreateForm, useCreateTeam, useUpdateTeam } from "../_hooks/useTeamsMutations";
 
 interface ManageTeamModalProps {
   isOpen: boolean;
@@ -25,33 +23,17 @@ export default function ManageTeamModal({
 }: ManageTeamModalProps): JSX.Element {
   const title = isCreate ? "팀 추가" : "팀 수정";
   const buttonText = isCreate ? "추가하기" : "수정하기";
-
-  const { _id = "", name } = team ?? {};
+  const { _id, name } = team ?? {};
 
   const { handleSubmit, register, setValue, reset } = useCreateForm();
   const { mutate: postCreateTeamMutate } = useCreateTeam();
   const { mutate: updateTeamMutate } = useUpdateTeam();
 
   const debouncedSubmit = debounce((teamName: string) => {
-    isCreate
-      ? postCreateTeamMutate(
-          { name: teamName },
-          {
-            onSuccess: () => {
-              onClose();
-              reset();
-            },
-          },
-        )
-      : updateTeamMutate(
-          { teamId: _id, newName: teamName },
-          {
-            onSuccess: () => {
-              onClose();
-              reset();
-            },
-          },
-        );
+    isCreate ? postCreateTeamMutate({ name: teamName }) : updateTeamMutate({ teamId: _id ?? "", newName: teamName });
+
+    onClose();
+    reset();
   }, 800);
 
   const onSubmit: SubmitHandler<FieldValues> = ({ teamName }) => {

@@ -7,5 +7,8 @@ export const useSuspenseTeamsQuery = (): UseSuspenseQueryResult<TeamType[]> => {
 };
 
 export const useTeamsQuery = (): UseQueryResult<TeamType[]> => {
-  return useQuery({ queryKey: ["teamsResponse"], queryFn: getTeams });
+  return useQuery({
+    queryKey: ["teamsResponse"],
+    queryFn: getTeams,
+  });
 };

@@ -1,5 +1,5 @@
 import { ROLES } from "@repo/constants/teams";
-import { useSuspenseTeamsQuery } from "@/app/admin/teams/_hooks/useTeams";
+import { useSuspenseTeamsQuery } from "../../teams/_hooks/useTeamsQueries";
 import TabItem from "./TabItem";
 
 interface TabsProps {

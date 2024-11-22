@@ -1,6 +1,6 @@
 "use client";
 
-import { useSuspenseTeamsQuery } from "../_hooks/useTeams";
+import { useSuspenseTeamsQuery } from "../_hooks/useTeamsQueries";
 import TeamListItem from "./TeamListItem";
 
 export default function TeamList(): JSX.Element {
