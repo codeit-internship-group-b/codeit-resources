@@ -1,19 +1,25 @@
 "use client";
 
 import { type IEquipment, type ICategory, type IRoom, type TItemStatus } from "@repo/types";
-import { Input, Radio, notify } from "@ui/index";
+import { Button, Input, Radio, notify } from "@ui/index";
 import Dropdown from "@ui/src/components/common/Dropdown";
 import { type FieldValues, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { getAllCategories } from "@/api/meetings";
 
 interface EditItemFormProps {
+  panelState: string;
   prevCategory: ICategory;
   defaultItem?: IRoom;
   onSubmit: (data: FormData, itemId?: string) => Promise<IRoom | IEquipment>;
 }
 
-export default function EditItemForm({ defaultItem, prevCategory, onSubmit }: EditItemFormProps): JSX.Element {
+export default function EditItemForm({
+  panelState,
+  defaultItem,
+  prevCategory,
+  onSubmit,
+}: EditItemFormProps): JSX.Element {
   const { register, handleSubmit, setValue } = useForm({
     defaultValues: {
       name: "",
@@ -58,7 +64,7 @@ export default function EditItemForm({ defaultItem, prevCategory, onSubmit }: Ed
   };
 
   return (
-    <form onSubmit={(event) => void handleSubmit(handleFormSubmit)(event)}>
+    <form onSubmit={(event) => void handleSubmit(handleFormSubmit)(event)} className="flex flex-col">
       <div className="my-20">
         <Radio.Group
           defaultValue={defaultItem ? defaultItem.status : "available"}
@@ -100,7 +106,9 @@ export default function EditItemForm({ defaultItem, prevCategory, onSubmit }: Ed
       </div>
       <Input {...register("capacity")} name="capacity" placeholder="수용인원" type="text" />
       <Input {...register("location")} name="location" placeholder="위치" type="text" />
-      <input type="submit" />
+      <Button type="submit" variant="Action">
+        회의실 {panelState === "add" ? "추가" : "수정"}
+      </Button>
     </form>
   );
 }

@@ -142,7 +142,7 @@ export default function CategoryListItem({ prevCategory }: CategoryListItemProps
 
       <Sidebar isOpen={isPanelOpen} onClose={closePanel}>
         <h1 className="my-24">회의실 {panelState === "add" ? "추가" : "수정"}</h1>
-        <EditItemForm prevCategory={prevCategory} onSubmit={handleSubmitForm} />
+        <EditItemForm prevCategory={prevCategory} onSubmit={handleSubmitForm} panelState={panelState} />
       </Sidebar>
     </>
   );
