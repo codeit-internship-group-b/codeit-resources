@@ -54,5 +54,5 @@ export const updateTeam = async ({ teamId, newName }: UpdateRequest): Promise<Me
     },
   });
 
-  return data as unknown as MessageResponse;
+  return data as MessageResponse;
 };

@@ -1,14 +1,23 @@
 import { DoubleChevron } from "@ui/public";
 import { MEMBER_FORM_MESSAGES } from "@repo/constants/messages";
 import { type MemberWithFileImage } from "@repo/types/src/membersType";
+import { useMembersMutations } from "../../_hooks/useMembersMutations";
 
 export interface PanelHeaderProps {
   selectedMember: MemberWithFileImage | null;
   onClose: () => void;
-  onWithdraw: () => void;
 }
 
-export default function PanelHeader({ selectedMember, onClose, onWithdraw }: PanelHeaderProps): JSX.Element {
+export default function PanelHeader({ selectedMember, onClose }: PanelHeaderProps): JSX.Element {
+  const { removeMember } = useMembersMutations({
+    onSuccess: onClose,
+  });
+
+  const handleWithdraw = (): void => {
+    if (!selectedMember) return;
+    removeMember(selectedMember._id);
+  };
+
   return (
     <>
       <button onClick={onClose} type="button" className="mb-32 ml-16 mt-16 flex flex-row">
@@ -22,7 +31,7 @@ export default function PanelHeader({ selectedMember, onClose, onWithdraw }: Pan
           {selectedMember ? (
             <button
               type="button"
-              onClick={onWithdraw}
+              onClick={handleWithdraw}
               className="text-sm-medium text-custom-black/80 hover:bg-custom-black/5 hover:text-custom-black w-71 rounded-6 border-custom-black/20 h-32 border transition-all duration-300"
             >
               {MEMBER_FORM_MESSAGES.BUTTON.WITHDRAW}

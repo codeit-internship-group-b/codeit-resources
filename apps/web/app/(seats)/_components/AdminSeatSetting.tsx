@@ -1,6 +1,6 @@
 import { Radio } from "@ui/index";
 import Button from "@ui/src/components/common/Button";
-import MultiSelectDropdown from "@ui/src/components/common/Dropdown/MulitiSelectDropdown";
+import MultiSelectDropdown from "@ui/src/components/common/Dropdown/MultiSelectDropdown";
 import { useState } from "react";
 import Profile from "@/components/common/Profile";
 

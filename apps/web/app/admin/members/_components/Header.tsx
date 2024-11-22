@@ -21,12 +21,6 @@ export default function Header({ onSortChange, onMemberSelect }: HeaderProps): J
     onSortChange(newSort);
   };
 
-  const triggerError = () => {
-    const errorSort = "ERROR" as SortOption;
-    setSelectedSort(errorSort);
-    onSortChange(errorSort);
-  };
-
   return (
     <>
       {isMobile ? (
