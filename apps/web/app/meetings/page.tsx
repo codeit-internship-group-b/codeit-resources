@@ -1,5 +1,5 @@
 import Main from "./_components/main";
 
-export default function Meetings(): JSX.Element {
+export default function MeetingsPage(): JSX.Element {
   return <Main />;
 }

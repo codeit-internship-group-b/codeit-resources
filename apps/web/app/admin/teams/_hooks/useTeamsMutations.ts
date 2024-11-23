@@ -6,6 +6,10 @@ import { type ResponseType, type ITeam, type TeamType } from "@repo/types";
 import { useRef } from "react";
 import { deleteTeam, postCreateTeam, updateTeam } from "@/api/teams";
 
+interface MessageResponse {
+  message: string;
+}
+
 export const useCreateTeam = (): UseMutationResult<ResponseType<ITeam>, AxiosError<{ message?: string }>, ITeam> => {
   const queryClient = useQueryClient();
 
@@ -34,11 +38,7 @@ export const useCreateForm = (): FieldValues => {
   });
 };
 
-interface DeleteResponse {
-  message: string;
-}
-
-export const useDeleteTeam = (): UseMutationResult<DeleteResponse, AxiosError<{ message?: string }>, string> => {
+export const useDeleteTeam = (): UseMutationResult<MessageResponse, AxiosError<{ message?: string }>, string> => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -60,10 +60,6 @@ export const useDeleteTeam = (): UseMutationResult<DeleteResponse, AxiosError<{ 
 interface UpdateRequest {
   teamId: string;
   newName: string;
-}
-
-interface MessageResponse {
-  message: string;
 }
 
 export const useUpdateTeam = (): UseMutationResult<MessageResponse, AxiosError<{ message: string }>, UpdateRequest> => {

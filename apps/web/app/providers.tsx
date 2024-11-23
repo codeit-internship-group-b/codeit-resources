@@ -7,7 +7,7 @@ import { Toast } from "@ui/index";
 import MobileSizeWatcher from "@/components/MobileSizeWatcher";
 import { getQueryClient } from "@/lib/tanstackQuery";
 
-export function Providers({ children }: PropsWithChildren): JSX.Element {
+export default function Providers({ children }: PropsWithChildren): JSX.Element {
   const queryClient = getQueryClient();
 
   return (
