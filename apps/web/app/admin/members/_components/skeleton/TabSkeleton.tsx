@@ -12,7 +12,7 @@ export default function TabsSkeleton(): JSX.Element {
           </li>
         ))}
       </ul>
-      <div className="mb-24 w-full border border-gray-200/10" />
+      <div className="mb-24 w-full animate-pulse border border-gray-200/10" />
     </>
   );
 }
