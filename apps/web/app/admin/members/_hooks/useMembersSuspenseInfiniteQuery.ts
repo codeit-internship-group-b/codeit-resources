@@ -34,5 +34,6 @@ export function useMembersSuspenseInfiniteQuery({
     initialPageParam: null,
     getNextPageParam: (lastPage) => lastPage.nextCursor,
     select: (data) => data.pages.flatMap((page) => page.members),
+    staleTime: 0,
   });
 }
