@@ -28,9 +28,10 @@ interface GnbMenuProps {
   isAdmin: boolean;
 }
 
-export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element {
+export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element | null {
   const pathname = usePathname();
   const isMobile = useIsMobileStore();
+
   const adminPathMapping = {
     [PAGE_NAME.ADMIN_MEETINGS]: PAGE_NAME.MEETINGS,
     [PAGE_NAME.ADMIN_SEATS]: PAGE_NAME.SEATS,

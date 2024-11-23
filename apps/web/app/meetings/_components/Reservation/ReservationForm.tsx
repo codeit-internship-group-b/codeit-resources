@@ -4,7 +4,7 @@ import Input from "@ui/src/components/common/Input";
 import Dropdown from "@ui/src/components/common/Dropdown";
 import { useForm, Controller } from "react-hook-form";
 import Button from "@ui/src/components/common/Button";
-import MultiSelectDropdown from "@ui/src/components/common/Dropdown/MulitiSelectDropdown";
+import MultiSelectDropdown from "@ui/src/components/common/Dropdown/MultiSelectDropdown";
 import { useEffect } from "react";
 import { timeOptions } from "@/app/constants/timeOptions";
 import Profile from "@/components/common/Profile";

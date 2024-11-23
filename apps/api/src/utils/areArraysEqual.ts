@@ -1,13 +1,14 @@
-interface AreArraysEqualProps {
-  arr1: string[];
-  arr2: string[];
-}
-
-export const areArraysEqual = ({ arr1 = [], arr2 = [] }: AreArraysEqualProps): boolean => {
+export const areArraysEqual = (arr1: string[], arr2: string[]): boolean => {
   if (arr1.length !== arr2.length) return false;
 
-  const sorted1 = [...arr1].sort();
-  const sorted2 = [...arr2].sort();
+  const arr1Set = new Set(arr1);
+  const arr2Set = new Set(arr2);
 
-  return sorted1.every((item, index) => item === sorted2[index]);
+  if (arr1Set.size !== arr2Set.size) return false;
+
+  for (const item of arr1Set) {
+    if (!arr2Set.has(item)) return false;
+  }
+
+  return true;
 };

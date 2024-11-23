@@ -2,13 +2,16 @@
 
 import { type ChangeEvent, useEffect, useRef, useState } from "react";
 import { debounce } from "es-toolkit";
-import { Modal } from "@ui/index";
+import { Button, Modal } from "@ui/index";
 import { useOnClickOutside } from "@ui/src/hooks/useOnClickOutside";
 import ListItem from "@ui/src/components/common/ListItem";
 import { type TeamType } from "@repo/types";
 import Dropdown from "@ui/src/components/common/Dropdown";
-import { useDeleteTeam } from "../_hooks/useDeleteTeam";
-import { useUpdateTeam } from "../_hooks/useUpdateTeam";
+import { Chevron } from "@ui/public";
+import useIsMobileStore from "@/app/store/useIsMobileStore";
+import { useDeleteTeam, useUpdateTeam } from "../_hooks/useTeamsMutations";
+import ManageTeamModal from "./ManageTeamModal";
+import DeleteTeamModalContent from "./DeleteTeamModalContent";
 
 interface TeamListItemProps {
   team: TeamType;
@@ -19,7 +22,9 @@ export default function TeamListItem({ team }: TeamListItemProps): JSX.Element {
 
   const [isModify, setIsModify] = useState(false);
   const [changeName, setChangeName] = useState("");
+  const [isMobileModalOpen, setIsMobileModalOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const isMobile = useIsMobileStore();
 
   useOnClickOutside(inputRef, () => {
     if (isModify) {
@@ -58,60 +63,85 @@ export default function TeamListItem({ team }: TeamListItemProps): JSX.Element {
     debouncedChangeHandler(e.target.value);
   };
 
-  return (
-    <ListItem isModify={isModify}>
-      <span className="flex flex-grow items-center gap-32 text-left">
-        {isModify ? (
-          <input
-            className="placeholder:text-custom-black/50 w-full placeholder:underline placeholder:underline-offset-4 focus:outline-none"
-            ref={inputRef}
-            placeholder="팀 이름"
-            defaultValue={name}
-            onChange={handleChange}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                handleUpdateTeam();
-              }
-            }}
-          />
-        ) : (
-          name
-        )}
-      </span>
+  const handleMobileClick = (): void => {
+    if (!isMobile) return;
 
-      <Modal.Root>
-        <Dropdown
-          selectedValue={isModify}
-          onSelect={(value: string | boolean) => {
-            if (value === "수정") {
-              setIsModify(true);
-            }
-          }}
-          size="sm"
-        >
-          <Dropdown.Toggle iconType="kebab" />
-          <Dropdown.Wrapper className="-left-30 top-56">
-            <Dropdown.Item hoverStyle="purple" value="수정">
-              이름 편집
-            </Dropdown.Item>
+    setIsMobileModalOpen(true);
+  };
+
+  return (
+    <>
+      <button className="w-full" type="button" onClick={handleMobileClick}>
+        <ListItem isModify={isModify}>
+          <span className="flex flex-grow items-center gap-32 text-left">
+            {isModify ? (
+              <input
+                className="placeholder:text-custom-black/50 w-full placeholder:underline placeholder:underline-offset-4 focus:outline-none"
+                ref={inputRef}
+                placeholder="팀 이름"
+                defaultValue={name}
+                onChange={handleChange}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleUpdateTeam();
+                  }
+                }}
+              />
+            ) : (
+              name
+            )}
+          </span>
+
+          <Chevron className="fill-custom-black rotate-180 md:hidden" />
+
+          <Modal.Root>
+            <div className="hidden md:block">
+              <Dropdown
+                selectedValue={isModify}
+                onSelect={(value: string | boolean) => {
+                  if (value === "수정") {
+                    setIsModify(true);
+                  }
+                }}
+                size="sm"
+              >
+                <Dropdown.Toggle iconType="kebab" />
+                <Dropdown.Wrapper className="-left-30 top-56">
+                  <Dropdown.Item hoverStyle="purple" value="수정">
+                    이름 편집
+                  </Dropdown.Item>
+                  <Modal.Trigger>
+                    <Dropdown.Item hoverStyle="purple" value="삭제">
+                      삭제
+                    </Dropdown.Item>
+                  </Modal.Trigger>
+                </Dropdown.Wrapper>
+              </Dropdown>
+            </div>
+
+            <DeleteTeamModalContent name={name} onConfirm={handleDeleteTeam} />
+          </Modal.Root>
+        </ListItem>
+      </button>
+
+      <ManageTeamModal
+        isOpen={isMobileModalOpen}
+        onClose={() => {
+          setIsMobileModalOpen(false);
+        }}
+        team={team}
+        actions={
+          <Modal.Root>
             <Modal.Trigger>
-              <Dropdown.Item hoverStyle="purple" value="삭제">
-                삭제
-              </Dropdown.Item>
+              <Button className="text-md-medium" variant="Secondary" type="button">
+                삭제하기
+              </Button>
             </Modal.Trigger>
-          </Dropdown.Wrapper>
-        </Dropdown>
-        <Modal.Content>
-          <Modal.Title>{name} 팀을 삭제하시겠습니까?</Modal.Title>
-          <Modal.Description>
-            삭제 시, 해당 팀은 더 이상 목록에서 보이지 않으며,
-            <br className="hidden md:block" /> 해당 계정으로 로그인이 불가합니다.
-          </Modal.Description>
-          <Modal.Close onConfirm={handleDeleteTeam} confirmText="확인" cancelText="취소">
-            예
-          </Modal.Close>
-        </Modal.Content>
-      </Modal.Root>
-    </ListItem>
+
+            <DeleteTeamModalContent name={name} onConfirm={handleDeleteTeam} />
+          </Modal.Root>
+        }
+      />
+    </>
   );
 }
