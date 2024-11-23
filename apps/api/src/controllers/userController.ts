@@ -3,7 +3,7 @@ import { type IUser, type TRole } from "@repo/types";
 import { config } from "dotenv";
 import { type FilterQuery } from "mongoose";
 import { compare } from "bcryptjs";
-import { IMAGE_CONFIG } from "@repo/constants";
+import { IMAGE_CONFIG, PAGE_SIZE } from "@repo/constants";
 import { User, type UserDocument } from "../models/userModel";
 import { areArraysEqual } from "../utils/areArraysEqual";
 
@@ -14,12 +14,14 @@ interface GetUsersRequest extends Request {
     role?: TRole;
     team?: string;
     sortOption?: "newest" | "oldest" | "alphabetical";
+    cursor?: string;
   };
 }
 
 interface Filters extends FilterQuery<IUser> {
   role?: TRole;
   teams?: { $in: string[] };
+  _id?: { $lt: string };
 }
 
 // Get all users
@@ -78,7 +80,7 @@ interface Filters extends FilterQuery<IUser> {
  *                     description: 프로필 이미지 URL
  */
 export const getUsers = async (req: GetUsersRequest, res: Response): Promise<void> => {
-  const { role, team, sortOption } = req.query;
+  const { role, team, sortOption, cursor } = req.query;
   const filters: Filters = {};
 
   if (role) filters.role = role;
@@ -86,18 +88,35 @@ export const getUsers = async (req: GetUsersRequest, res: Response): Promise<voi
     filters.teams = { $in: [team] };
   }
 
-  let query = User.find(filters).select("-password");
-
-  if (sortOption === "alphabetical") {
-    query = query.sort({ name: 1 });
-  } else if (sortOption === "oldest") {
-    query = query.sort({ createdAt: 1 });
-  } else {
-    query = query.sort({ createdAt: -1 });
+  if (cursor) {
+    filters._id = { $lt: cursor };
   }
 
-  const users = await query.exec();
-  res.status(200).send(users);
+  let sortCriteria: Record<string, 1 | -1> = {};
+  if (sortOption === "alphabetical") {
+    sortCriteria = { name: 1, _id: -1 };
+  } else if (sortOption === "oldest") {
+    sortCriteria = { createdAt: 1, _id: -1 };
+  } else {
+    sortCriteria = { createdAt: -1, _id: -1 };
+  }
+
+  const members = await User.find(filters)
+    .select("-password")
+    .sort(sortCriteria)
+    .limit(PAGE_SIZE + 1)
+    .lean()
+    .exec();
+
+  const hasNextPage = members.length > PAGE_SIZE;
+  const results = hasNextPage ? members.slice(0, -1) : members;
+
+  const response = {
+    members: results,
+    nextCursor: hasNextPage ? results[results.length - 1]?._id.toString() : null,
+  };
+
+  res.status(200).json(response);
 };
 
 interface GetUserRequest extends Request {
