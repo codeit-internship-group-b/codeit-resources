@@ -1,6 +1,6 @@
 "use client";
 
-import { type ChangeEvent, useEffect, useRef, useState } from "react";
+import { type ChangeEvent, type KeyboardEvent, useEffect, useRef, useState } from "react";
 import { debounce } from "es-toolkit";
 import { Button, Modal } from "@ui/index";
 import { useOnClickOutside } from "@ui/src/hooks/useOnClickOutside";
@@ -45,14 +45,15 @@ export default function TeamListItem({ team }: TeamListItemProps): JSX.Element {
     deleteTeamMutate(_id);
   };
 
-  const handleUpdateTeam = (): void => {
-    if (!changeName) {
+  const handleUpdateTeam = (e: KeyboardEvent<HTMLInputElement>): void => {
+    if (e.key === "Enter") {
+      if (!changeName) {
+        setIsModify(false);
+        return;
+      }
+      updateTeamMutate({ teamId: _id, newName: changeName });
       setIsModify(false);
-      return;
     }
-
-    updateTeamMutate({ teamId: _id, newName: changeName });
-    setIsModify(false);
   };
 
   const debouncedChangeHandler = debounce((value: string) => {
@@ -81,11 +82,7 @@ export default function TeamListItem({ team }: TeamListItemProps): JSX.Element {
                 placeholder="팀 이름"
                 defaultValue={name}
                 onChange={handleChange}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    handleUpdateTeam();
-                  }
-                }}
+                onKeyDown={handleUpdateTeam}
               />
             ) : (
               name
@@ -118,7 +115,6 @@ export default function TeamListItem({ team }: TeamListItemProps): JSX.Element {
                 </Dropdown.Wrapper>
               </Dropdown>
             </div>
-
             <DeleteTeamModalContent name={name} onConfirm={handleDeleteTeam} />
           </Modal.Root>
         </ListItem>
@@ -137,7 +133,6 @@ export default function TeamListItem({ team }: TeamListItemProps): JSX.Element {
                 삭제하기
               </Button>
             </Modal.Trigger>
-
             <DeleteTeamModalContent name={name} onConfirm={handleDeleteTeam} />
           </Modal.Root>
         }
