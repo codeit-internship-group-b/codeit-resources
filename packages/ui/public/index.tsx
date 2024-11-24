@@ -22,12 +22,10 @@ import SearchIcon from "./svgs/ic_search.svg";
 import TeamIcon from "./svgs/ic_team.svg";
 import PersonEmptyIcon from "./svgs/ic_person-empty.svg";
 import SpinnerIcon from "./svgs/ic_spinner.svg";
-import CloseIcon from "./svgs/ic_close.svg";
 import ReadingGlasses from "./svgs/ic_reading-glasses.svg";
 
 export {
   ReadingGlasses,
-  CloseIcon,
   SpinnerIcon,
   PersonEmptyIcon,
   TeamIcon,
