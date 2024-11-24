@@ -47,4 +47,4 @@ export const IMAGE_CONFIG = {
     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mOcPmF6PQAFwwI/LAMTJwAAAABJRU5ErkJggg==",
 };
 
-export const PAGE_SIZE = 10;
+export const PAGE_SIZE = 20;
