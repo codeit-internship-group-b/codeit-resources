@@ -3,7 +3,6 @@ interface LoadingSpinnerProps {
   height?: number;
   stroke?: string;
   strokeWidth?: number;
-  className?: string;
 }
 
 export default function LoadingSpinner({
@@ -11,7 +10,6 @@ export default function LoadingSpinner({
   height = 20,
   stroke = "white",
   strokeWidth = 3,
-  className,
 }: LoadingSpinnerProps) {
   return (
     <svg
@@ -20,7 +18,7 @@ export default function LoadingSpinner({
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={className}
+      className="animate-spin"
     >
       <path
         d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22"
