@@ -1,7 +1,13 @@
-import { useSuspenseInfiniteQuery, type UseSuspenseInfiniteQueryResult } from "@tanstack/react-query";
+import {
+  type InfiniteData,
+  infiniteQueryOptions,
+  useSuspenseInfiniteQuery,
+  type UseSuspenseInfiniteQueryResult,
+} from "@tanstack/react-query";
 import type { MembersResponse, SortOption } from "@repo/types/src/membersType";
 import { type IUser } from "@repo/types";
 import { getMembers } from "@/api/members";
+import { memberQueries } from "@/lib/queryKey";
 
 interface QueryProps {
   selectedSort: SortOption;
@@ -18,22 +24,20 @@ export function useMembersSuspenseInfiniteQuery({
   role,
   team,
 }: QueryProps): UseSuspenseInfiniteQueryResult<IUser[]> {
-  const queryKey = ["members", { sort: selectedSort, role, team }];
-
-  const fetchMembers = ({ pageParam }: PageParam): Promise<MembersResponse> =>
-    getMembers({
-      selectedSort,
-      role,
-      team,
-      cursor: pageParam,
-    });
-
-  return useSuspenseInfiniteQuery({
-    queryKey,
-    queryFn: fetchMembers,
+  const options = infiniteQueryOptions({
+    queryKey: memberQueries.list({ sort: selectedSort, role, team }),
+    queryFn: ({ pageParam }: PageParam): Promise<MembersResponse> =>
+      getMembers({
+        selectedSort,
+        role,
+        team,
+        cursor: pageParam,
+      }),
     initialPageParam: null,
-    getNextPageParam: (lastPage) => lastPage.nextCursor,
-    select: (data) => data.pages.flatMap((page) => page.members),
+    getNextPageParam: (lastPage: MembersResponse) => lastPage.nextCursor,
+    select: (data: InfiniteData<MembersResponse>) => data.pages.flatMap((page) => page.members),
     staleTime: 0,
   });
+
+  return useSuspenseInfiniteQuery(options);
 }
