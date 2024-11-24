@@ -11,7 +11,7 @@ import { useEffect, useRef, type RefObject } from "react";
  * });
  */
 
-interface UseIntersectionObserverProps {
+interface UseIntersectionObserverParams {
   onIntersect: () => void;
   threshold?: number;
   rootMargin?: string;
@@ -21,7 +21,7 @@ export const useIntersectionObserver = ({
   onIntersect,
   threshold = 0.5,
   rootMargin = "0px",
-}: UseIntersectionObserverProps): RefObject<HTMLDivElement> => {
+}: UseIntersectionObserverParams): RefObject<HTMLDivElement> => {
   const targetRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
