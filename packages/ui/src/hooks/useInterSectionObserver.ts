@@ -8,7 +8,6 @@ import { useEffect, useRef, type RefObject } from "react";
  * @example
  * const loadMoreRef = useIntersectionObserver({
  *   onIntersect: () => fetchNextPage(),
- *   enabled: !isLoading,
  * });
  */
 
