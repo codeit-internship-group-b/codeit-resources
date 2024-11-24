@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { type MemberWithStaticImage, type SortOption } from "@repo/types/src/membersType";
 import { useIntersectionObserver } from "@repo/ui/src/hooks/useIntersectionObserver";
-import LoadingSpinner from "@repo/ui/src/components/common/LoadingSpinner";
+import { SpinnerIcon } from "@ui/public";
 import { useMembersSuspenseInfiniteQuery } from "../_hooks/useMembersSuspenseInfiniteQuery";
 import EmptyState from "./EmptyState";
 import MemberListItem from "./MemberListItem";
@@ -55,7 +55,7 @@ export default function MemberList({ selectedSort, activeTab, onMemberClick }: M
       ))}
       {isFetchingNextPage ? (
         <div className="flex items-center justify-center pb-16">
-          <LoadingSpinner width={30} height={30} stroke="#8F00FF" />
+          <SpinnerIcon width={30} height={30} color="#8F00FF" className="animate-spin" />
         </div>
       ) : (
         <div ref={loadMoreRef} />
