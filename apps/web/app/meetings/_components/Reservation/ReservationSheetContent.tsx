@@ -1,4 +1,9 @@
-import { useEffect, useState } from "react";
+/* eslint-disable @typescript-eslint/no-shadow */
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
+
+"use client";
+
+import { useState } from "react";
 import { type IReservation } from "@repo/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { notify } from "@ui/index";
@@ -11,6 +16,9 @@ import {
 } from "@/api/reservations";
 import { useAuthStore } from "@/src/stores/useAuthStore";
 import { useDateStore } from "@/app/store/useDateStore";
+import { MEETING_ROOMS_TYPE } from "@/app/constants/meetingRoomsType";
+import { formatDate } from "@/app/utils/formatDate";
+import { MODAL_TEXT, ModalType, NOTIFICATION_MESSAGES, QUERY_KEYS } from "@/app/constants/reservationConstants";
 import ReservationModal from "./ReservationModal";
 import ReservationForm from "./ReservationForm";
 
@@ -25,17 +33,12 @@ export default function ReservationSheetContent(props: ReservationSheetContentPr
   const { onClose, selectedTime, selectedSchedule, selectedRoom } = props;
   const queryClient = useQueryClient();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalType, setModalType] = useState<"create/update" | "delete">("create/update");
+  const [modalType, setModalType] = useState<ModalType>(ModalType.CREATE_UPDATE);
 
   const user = useAuthStore((state) => state.user);
   const { selectedDate } = useDateStore();
 
-  const formattedDate = `${String(selectedDate.year)}-${String(selectedDate.month).padStart(
-    2,
-    "0",
-  )}-${String(selectedDate.day).padStart(2, "0")}`;
-
-  const MeetingRoomsType = "room";
+  const formattedDate = formatDate(selectedDate);
 
   const [formData, setFormData] = useState<{
     data: CreateReservationRequest;
@@ -43,25 +46,24 @@ export default function ReservationSheetContent(props: ReservationSheetContentPr
     reservationId?: string;
   } | null>(null);
 
-  const isEditMode = Boolean(selectedSchedule) && selectedSchedule.user._id === user?._id;
+  const isEditMode = selectedSchedule && selectedSchedule.user._id === user?._id;
 
   const createOrUpdateReservation = useMutation({
     mutationFn: (formData: { data: CreateReservationRequest; itemId: string; reservationId?: string }) => {
       if (isEditMode && formData.reservationId) {
         // 수정 모드일 경우
         return updateReservation(formData.reservationId, formData.data);
-      } 
-        // 생성 모드일 경우
-        return createReservation(formData.itemId, formData.data);
-      
+      }
+      // 생성 모드일 경우
+      return createReservation(formData.itemId, formData.data);
     },
     onSuccess: async () => {
       notify({
         type: "success",
-        message: isEditMode ? "예약이 수정되었습니다." : "회의실이 예약되었습니다.",
+        message: isEditMode ? NOTIFICATION_MESSAGES.update : NOTIFICATION_MESSAGES.create,
       });
       await queryClient.invalidateQueries({
-        queryKey: ["meetings", formattedDate, MeetingRoomsType],
+        queryKey: QUERY_KEYS.meetings(formattedDate, MEETING_ROOMS_TYPE),
       });
       setIsModalOpen(false);
       onClose();
@@ -73,10 +75,10 @@ export default function ReservationSheetContent(props: ReservationSheetContentPr
     onSuccess: async () => {
       notify({
         type: "success",
-        message: "예약이 삭제되었습니다.",
+        message: NOTIFICATION_MESSAGES.delete,
       });
       await queryClient.invalidateQueries({
-        queryKey: ["meetings", formattedDate, MeetingRoomsType],
+        queryKey: QUERY_KEYS.meetings(formattedDate, MEETING_ROOMS_TYPE),
       });
       setIsModalOpen(false);
       onClose();
@@ -85,12 +87,12 @@ export default function ReservationSheetContent(props: ReservationSheetContentPr
 
   const handleSubmit = (data: CreateReservationRequest, itemId: string, reservationId?: string): void => {
     setFormData({ data, itemId, reservationId });
-    setModalType("create/update"); // 모달 타입 설정
+    setModalType(isEditMode ? ModalType.CREATE_UPDATE : ModalType.CREATE_UPDATE); // 동일하게 설정, 추후 수정 가능
     setIsModalOpen(true);
   };
 
   const handleDelete = (): void => {
-    setModalType("delete"); // 모달 타입 설정
+    setModalType(ModalType.DELETE);
     setIsModalOpen(true);
   };
 
@@ -100,23 +102,13 @@ export default function ReservationSheetContent(props: ReservationSheetContentPr
     }
   };
 
-  const modalTitle =
-    modalType === "delete"
-      ? "예약을 삭제하시겠어요?"
-      : isEditMode
-        ? "회의실 예약을 수정하시겠어요?"
-        : "회의실을 예약하시겠어요?";
+  const modalTitle = isEditMode ? MODAL_TEXT.titles.edit : MODAL_TEXT.titles[modalType];
 
-  const modalContent =
-    modalType === "delete" ? (
-      <>선택한 예약이 삭제됩니다.</>
-    ) : isEditMode ? (
-      <>선택한 시간대의 회의실 예약이 수정됩니다.</>
-    ) : (
-      <>선택한 시간대의 회의실이 예약됩니다.</>
-    );
+  const modalContent = isEditMode ? MODAL_TEXT.contents.edit : MODAL_TEXT.contents[modalType];
 
-  const modalConfirmButtonName = modalType === "delete" ? "삭제하기" : isEditMode ? "수정하기" : "예약하기";
+  const modalConfirmButtonName = isEditMode
+    ? MODAL_TEXT.confirmButtonNames.edit
+    : MODAL_TEXT.confirmButtonNames[modalType];
 
   return (
     <>
@@ -133,11 +125,11 @@ export default function ReservationSheetContent(props: ReservationSheetContentPr
           setIsModalOpen(false);
         }}
         onConfirm={() => {
-          if (modalType === "create/update") {
+          if (modalType === ModalType.CREATE_UPDATE) {
             if (formData) {
               createOrUpdateReservation.mutate(formData);
             }
-          } else if (modalType === "delete") {
+          } else if (modalType === ModalType.DELETE) {
             confirmDelete();
           }
           setIsModalOpen(false);
@@ -145,7 +137,7 @@ export default function ReservationSheetContent(props: ReservationSheetContentPr
         }}
         title={modalTitle}
         content={modalContent}
-        cancelButtonName="취소하기"
+        cancelButtonName={MODAL_TEXT.cancelButtonName}
         confirmButtonName={modalConfirmButtonName}
       />
     </>
