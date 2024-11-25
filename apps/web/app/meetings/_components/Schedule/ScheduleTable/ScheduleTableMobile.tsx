@@ -2,7 +2,6 @@
 
 import { type TBaseItem } from "@repo/types";
 import { type IReservation } from "@repo/types/src/reservationType";
-import { getRoomSchedules } from "@/app/utils/getRoomSchedules";
 import RoomName from "../RoomName";
 import ScheduleRow from "../ScheduleRow";
 import TimeText from "../ScheduleRow/TimeText";
@@ -19,7 +18,16 @@ export default function ScheduleTableMobile(props: ScheduleTableMobileProps): JS
   return (
     <div className="mx-16 my-24 block w-full md:hidden">
       {rooms.map((room) => {
-        const roomSchedules = getRoomSchedules(room, meetingsData, selectedDate);
+        const roomSchedules = meetingsData.filter((schedule) => {
+          const scheduleItemId = typeof schedule.item === "string" ? schedule.item : schedule.item._id;
+
+          const isSameRoom = scheduleItemId === room._id;
+
+          const scheduleDate = new Date(schedule.startAt).toISOString().split("T")[0];
+          const isSameDate = scheduleDate === selectedDate;
+
+          return isSameRoom && isSameDate;
+        });
 
         return (
           <div key={room._id} className="mb-26">
@@ -29,7 +37,7 @@ export default function ScheduleTableMobile(props: ScheduleTableMobileProps): JS
               <div className="ml-36 mt-8">
                 <ScheduleRow
                   schedules={roomSchedules}
-                  room={{ name: room.name, _id: room._id }}
+                  room={{ name: room.name, _id: room._id }} // name과 _id를 함께 전달
                   slotWidth={72}
                   slotHeight={80}
                 />

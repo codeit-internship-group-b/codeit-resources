@@ -1,7 +1,7 @@
 "use client";
 
 import { type TBaseItem, type IReservation } from "@repo/types";
-import { getRoomSchedules } from "@/app/utils/getRoomSchedules";
+
 import RoomName from "../RoomName";
 import ScheduleRow from "../ScheduleRow";
 import CurrentTimeIndicator from "../ScheduleRow/CurrentTimeIndicator";
@@ -29,7 +29,16 @@ export default function ScheduleTableDesktop(props: ScheduleTableDesktopProps): 
         <div className="no-scrollbar relative h-full w-3/4 overflow-y-hidden overflow-x-scroll">
           <TimeText />
           {rooms.map((room) => {
-            const roomSchedules = getRoomSchedules(room, meetingsData, selectedDate);
+            const roomSchedules = meetingsData.filter((schedule) => {
+              const scheduleItemId = typeof schedule.item === "string" ? schedule.item : schedule.item._id;
+
+              const isSameRoom = scheduleItemId === room._id;
+
+              const scheduleDate = new Date(schedule.startAt).toLocaleDateString("en-CA", { timeZone: "Asia/Seoul" });
+              const isSameDate = scheduleDate === selectedDate;
+
+              return isSameRoom && isSameDate;
+            });
 
             return (
               <div className="mb-30 ml-36 mt-10" key={room._id}>
