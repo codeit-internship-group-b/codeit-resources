@@ -2,6 +2,7 @@
 
 import { type TBaseItem } from "@repo/types";
 import { type IReservation } from "@repo/types/src/reservationType";
+import { getRoomSchedules } from "@/app/utils/getRoomSchedules";
 import RoomName from "../RoomName";
 import ScheduleRow from "../ScheduleRow";
 import TimeText from "../ScheduleRow/TimeText";
@@ -18,20 +19,11 @@ export default function ScheduleTableMobile(props: ScheduleTableMobileProps): JS
   return (
     <div className="mx-16 my-24 block w-full md:hidden">
       {rooms.map((room) => {
-        const roomSchedules = meetingsData.filter((schedule) => {
-          const scheduleItemId = typeof schedule.item === "string" ? schedule.item : schedule.item._id;
-
-          const isSameRoom = scheduleItemId === room._id;
-
-          const scheduleDate = new Date(schedule.startAt).toISOString().split("T")[0];
-          const isSameDate = scheduleDate === selectedDate;
-
-          return isSameRoom && isSameDate;
-        });
+        const roomSchedules = getRoomSchedules(room, meetingsData, selectedDate);
 
         return (
           <div key={room._id} className="mb-26">
-            <RoomName name={room.name} />
+            <RoomName>{room.name}</RoomName>
             <div className="mt-30 no-scrollbar overflow-x-auto pb-20">
               <TimeText />
               <div className="ml-36 mt-8">

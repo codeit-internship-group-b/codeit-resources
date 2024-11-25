@@ -22,7 +22,7 @@ export default function ScheduleTableDesktop(props: ScheduleTableDesktopProps): 
         <div className="w-1/8 ml-30 mt-32 flex flex-col">
           {rooms.map((room) => (
             <div className="mb-38 mr-20 mt-10" key={room._id}>
-              <RoomName name={room.name} />
+              <RoomName>{room.name}</RoomName>
             </div>
           ))}
         </div>
