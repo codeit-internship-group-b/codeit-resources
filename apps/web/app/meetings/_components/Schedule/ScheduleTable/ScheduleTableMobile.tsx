@@ -12,8 +12,6 @@ interface ScheduleTableMobileProps {
   selectedDate: string;
 }
 
-// ScheduleTableMobile.tsx
-
 export default function ScheduleTableMobile(props: ScheduleTableMobileProps): JSX.Element {
   const { rooms, meetingsData, selectedDate } = props;
 
@@ -39,7 +37,7 @@ export default function ScheduleTableMobile(props: ScheduleTableMobileProps): JS
               <div className="ml-36 mt-8">
                 <ScheduleRow
                   schedules={roomSchedules}
-                  room={{ name: room.name, _id: room._id }} // name과 _id를 함께 전달
+                  room={{ name: room.name, _id: room._id }}
                   slotWidth={72}
                   slotHeight={80}
                 />
