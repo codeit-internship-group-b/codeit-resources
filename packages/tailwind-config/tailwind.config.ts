@@ -84,16 +84,6 @@ const config: Omit<Config, "content"> = {
           40: "#85C2FF",
         },
       },
-      keyframes: {
-        rotateIn: {
-          "0%": { transform: "rotate(0deg)" },
-          "100%": { transform: "rotate(180deg)" },
-        },
-        rotateOut: {
-          "0%": { transform: "rotate(180deg)" },
-          "100%": { transform: "rotate(0deg)" },
-        },
-      },
     },
     fontSize: {
       "4xl-bold": ["32px", { lineHeight: "46px", fontWeight: "700" }],
