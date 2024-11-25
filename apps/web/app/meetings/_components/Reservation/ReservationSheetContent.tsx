@@ -20,7 +20,7 @@ import { MEETING_ROOMS_TYPE } from "@/app/constants/meetingRoomsType";
 import { formatDate } from "@/app/utils/formatDate";
 import { MODAL_TEXT, ModalType, NOTIFICATION_MESSAGES, QUERY_KEYS } from "@/app/constants/reservationConstants";
 import ReservationModal from "./ReservationModal";
-import ReservationForm from "./ReservationForm";
+import { ReservationForm } from "./ReservationForm";
 
 interface ReservationSheetContentProps {
   onClose: () => void;
