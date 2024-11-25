@@ -61,7 +61,7 @@ export function validateEndAt({
     let itemId: string;
     if (typeof reservation.item === "string") {
       itemId = reservation.item;
-    } else if (reservation.item && "_id" in reservation.item) {
+    } else if ("_id" in reservation.item) {
       itemId = reservation.item._id;
     } else {
       return false;
@@ -71,7 +71,6 @@ export function validateEndAt({
       return false;
     }
 
-    // 수정된 부분: selectedReservationId를 사용하여 현재 예약을 제외
     if (selectedReservationId === reservation._id) {
       return false;
     }

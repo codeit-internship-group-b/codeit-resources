@@ -1,8 +1,8 @@
-// components/ReservationForm/ReservationForm.tsx
+/* eslint-disable  */
 
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
 import { format, parse, differenceInMinutes, addMinutes } from "date-fns";
@@ -239,7 +239,13 @@ export function ReservationForm({
         }}
       />
 
-      <TimeSelectors control={control} errors={errors} trigger={trigger} clearErrors={clearErrors} />
+      <TimeSelectors
+        control={control}
+        errors={errors}
+        trigger={trigger}
+        clearErrors={clearErrors}
+        validateEndAt={validateEndAtFunction}
+      />
 
       <AttendeesMultiSelect
         control={control}

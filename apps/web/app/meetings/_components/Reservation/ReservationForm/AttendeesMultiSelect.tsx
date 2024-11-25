@@ -27,10 +27,10 @@ export function AttendeesMultiSelect({
             {field.value.length > 0 ? (
               <div className="flex flex-wrap justify-between gap-2">
                 {field.value.slice(0, 3).map((name) => {
-                  const user = allUsersData.find((user) => user.name === name);
-                  return user ? (
-                    <Badge key={user._id} color="purple" shape="round" colorApplyTo="font">
-                      {user.name}
+                  const matchingUser = allUsersData.find((user) => user.name === name);
+                  return matchingUser ? (
+                    <Badge key={matchingUser._id} color="purple" shape="round" colorApplyTo="font">
+                      {matchingUser.name}
                     </Badge>
                   ) : null;
                 })}
@@ -43,13 +43,12 @@ export function AttendeesMultiSelect({
             )}
           </MultiSelectDropdown.Toggle>
           <MultiSelectDropdown.Wrapper className="max-h-160 md:max-h-300 no-scrollbar overflow-y-auto">
-            {isLoading ? (
-              <div>사용자 데이터 로딩 중...</div>
-            ) : isError ? (
-              <div>{ERROR_MESSAGES.userFetchError}</div>
-            ) : allUsersData.length === 0 ? (
-              <div>참여자가 없습니다.</div>
-            ) : (
+            {isLoading ? <div>사용자 데이터 로딩 중...</div> : null}
+            {isError && !isLoading ? <div>{ERROR_MESSAGES.userFetchError}</div> : null}
+            {!isLoading && !isError && allUsersData.length === 0 && <div>참여자가 없습니다.</div>}
+            {!isLoading &&
+              !isError &&
+              allUsersData.length > 0 &&
               allUsersData.map((user: IUser) => (
                 <MultiSelectDropdown.Item key={user._id} value={user.name}>
                   <div className="flex items-center space-x-2">
@@ -61,7 +60,7 @@ export function AttendeesMultiSelect({
                       className="min-w-140"
                     />
                     <div className="flex flex-wrap gap-2">
-                      {user.teams.map((team: string, index: number) => (
+                      {user.teams.map((team: string) => (
                         <div
                           key={team}
                           className="text-xxs-medium flex h-12 items-center justify-center rounded-lg bg-purple-100 p-6 py-10 text-purple-300"
@@ -72,8 +71,7 @@ export function AttendeesMultiSelect({
                     </div>
                   </div>
                 </MultiSelectDropdown.Item>
-              ))
-            )}
+              ))}
           </MultiSelectDropdown.Wrapper>
         </MultiSelectDropdown>
       )}

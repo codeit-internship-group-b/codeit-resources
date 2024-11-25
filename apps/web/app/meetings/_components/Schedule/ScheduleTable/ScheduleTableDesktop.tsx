@@ -1,7 +1,6 @@
 "use client";
 
 import { type TBaseItem, type IReservation } from "@repo/types";
-
 import RoomName from "../RoomName";
 import ScheduleRow from "../ScheduleRow";
 import CurrentTimeIndicator from "../ScheduleRow/CurrentTimeIndicator";

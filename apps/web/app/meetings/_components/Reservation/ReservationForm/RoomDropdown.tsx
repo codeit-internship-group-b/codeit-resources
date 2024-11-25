@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import Dropdown from "@ui/src/components/common/Dropdown";
 import { useQuery } from "@tanstack/react-query";
 import { type TBaseItem } from "@repo/types";

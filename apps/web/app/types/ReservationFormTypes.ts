@@ -26,6 +26,7 @@ export interface TimeSelectorsProps {
   errors: FieldErrors<CreateReservationRequest>;
   trigger: UseFormTrigger<CreateReservationRequest>;
   clearErrors: UseFormClearErrors<CreateReservationRequest>;
+  validateEndAt: (endAt: string) => boolean | string;
 }
 
 export interface AttendeesMultiSelectProps {
