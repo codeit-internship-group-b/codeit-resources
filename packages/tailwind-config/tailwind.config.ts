@@ -130,32 +130,6 @@ const config: Omit<Config, "content"> = {
       "xxs-medium": ["11px", { lineHeight: "18px", fontWeight: "500" }],
       "xxs-regular": ["11px", { lineHeight: "18px", fontWeight: "400" }],
     },
-    keyframes: {
-      rotateIn: {
-        "0%": { transform: "rotate(0deg)" },
-        "100%": { transform: "rotate(180deg)" },
-      },
-      rotateOut: {
-        "0%": { transform: "rotate(180deg)" },
-        "100%": { transform: "rotate(0deg)" },
-      },
-      pulse: {
-        "0%": {
-          opacity: 1,
-        },
-        "50%": {
-          opacity: 0.5,
-        },
-        "100%": {
-          opacity: 1,
-        },
-      },
-    },
-    animation: {
-      "rotate-in": "rotateIn 0.3s ease-in-out",
-      "rotate-out": "rotateOut 0.3s ease-in-out",
-      pulse: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-    },
     backgroundImage: {
       "custom-gradient": "linear-gradient(90deg, rgba(251, 251, 251, 0) 0%, #FBFBFB 50%)",
     },
