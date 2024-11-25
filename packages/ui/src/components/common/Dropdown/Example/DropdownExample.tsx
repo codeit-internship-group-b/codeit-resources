@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Dropdown from "@ui/src/components/common/Dropdown";
-import MultiSelectDropdown from "../MulitiSelectDropdown";
+import MultiSelectDropdown from "../MultiSelectDropdown";
 import Profile from "./Profile";
 
 const mockName = ["강형욱", "이영훈", "강동원", "조현지"];

@@ -1,6 +1,6 @@
-import React, { ComponentPropsWithoutRef, ElementType, ReactNode } from "react";
+import { ComponentPropsWithoutRef, ElementType, ReactNode } from "react";
 import cn from "@ui/src/utils/cn";
-import { LogoCodeitIcon, SpinnerIcon } from "@ui/public";
+import { SpinnerIcon } from "@ui/public";
 
 interface ButtonProps {
   variant: "Action" | "Primary" | "Secondary" | "Tertiary" | "TertiaryColor" | "Text" | "TextColor";

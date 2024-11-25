@@ -1,5 +1,5 @@
 import { memo } from "react";
-import TeamListSkeleton from "./TeamListSkeleton";
+import ListItemSkeleton from "@/components/common/Skeleton/ListItemSkeleton";
 
 function TeamListSkeletonGroup(): JSX.Element {
   return (
@@ -7,7 +7,7 @@ function TeamListSkeletonGroup(): JSX.Element {
       {Array.from({ length: 10 }).map((_, index) => (
         // index 이외 고유 key값 X
         // eslint-disable-next-line react/no-array-index-key
-        <TeamListSkeleton key={`TeamListSkeleton-${index}`} />
+        <ListItemSkeleton key={`TeamListSkeleton-${index}`} />
       ))}
     </div>
   );

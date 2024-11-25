@@ -27,6 +27,7 @@
     "multer-s3": "^3.0.1"
   },
   "devDependencies": {
+    "@repo/constants": "workspace:*",
     "@repo/eslint-config": "workspace:*",
     "@repo/jest-config": "workspace:*",
     "@repo/types": "workspace:*",
