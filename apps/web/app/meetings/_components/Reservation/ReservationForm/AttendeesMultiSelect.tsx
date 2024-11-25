@@ -1,4 +1,4 @@
-import MultiSelectDropdown from "@ui/src/components/common/Dropdown/MulitiSelectDropdown";
+import MultiSelectDropdown from "@ui/src/components/common/Dropdown/MultiSelectDropdown";
 import { Controller } from "react-hook-form";
 import { Badge } from "@ui/index";
 import { type IUser } from "@repo/types";
