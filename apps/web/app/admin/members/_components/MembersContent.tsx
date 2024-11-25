@@ -1,13 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@ui/index";
 import { type MemberWithStaticImage, type SortOption } from "@repo/types/src/membersType";
+import { useLockBodyScroll } from "@ui/src/hooks/useLockBodyScroll";
 import useIsMobileStore from "@/app/store/useIsMobileStore";
 import Header from "./Header";
 import Navbar from "./Navbar";
-import SidePanel from "./sidepanel";
 import MemberList from "./MemberList";
+import SidePanel from "./sidepanel";
 
 export default function MembersContent(): JSX.Element {
   const [activeTab, setActiveTab] = useState("전체");
@@ -16,6 +17,7 @@ export default function MembersContent(): JSX.Element {
   const [selectedSort, setSelectedSort] = useState<SortOption>("newest");
 
   const isMobile = useIsMobileStore();
+  useLockBodyScroll(isSidePanelOpen);
 
   const handleMemberClick = (member: MemberWithStaticImage): void => {
     setSelectedMember(member);
@@ -30,18 +32,6 @@ export default function MembersContent(): JSX.Element {
     setIsSidePanelOpen(false);
     setSelectedMember(null);
   };
-
-  useEffect(() => {
-    if (isSidePanelOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
-
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, [isSidePanelOpen]);
 
   return (
     <div className={isSidePanelOpen ? "overflow-hidden" : ""}>

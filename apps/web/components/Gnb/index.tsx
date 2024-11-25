@@ -1,24 +1,22 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
 import { useAuthStore } from "@/src/stores/useAuthStore";
 import Profile from "../common/Profile";
 import GnbMenu from "./GnbMenu";
 import GnbLogo from "./GnbLogo";
+import { useShouldRenderGnb } from "./hooks/useShouldRenderGnb";
 
 export default function Gnb(): JSX.Element | null {
-  const pathname = usePathname();
   const { isLoggedIn, user } = useAuthStore();
+  const isRenderGnb = useShouldRenderGnb();
 
-  if (pathname === PAGE_NAME.SIGN_IN) {
-    return null;
-  }
+  if (!isRenderGnb) return null;
 
   return (
     <nav
-      className="md:w-200 bg-custom-black fixed bottom-0 z-50 w-screen justify-between md:flex md:h-screen md:flex-col md:p-16"
+      className="md:w-200 bg-custom-black fixed bottom-0 z-40 w-screen justify-between md:flex md:h-screen md:flex-col md:p-16"
       aria-label="Navigation Bar"
     >
       <div>

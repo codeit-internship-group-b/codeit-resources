@@ -1,5 +1,5 @@
 import { ROLES } from "@repo/constants/teams";
-import { useTeams } from "@/app/admin/teams/_hooks/useTeams";
+import { useSuspenseTeamsQuery } from "../../teams/_hooks/useTeamsQueries";
 import TabItem from "./TabItem";
 
 interface TabsProps {
@@ -8,7 +8,7 @@ interface TabsProps {
 }
 
 export function Tab({ activeTab, onTabChange }: TabsProps): JSX.Element {
-  const { data } = useTeams();
+  const { data } = useSuspenseTeamsQuery();
 
   const names = data.map(({ name }) => name);
   const teamList = [...ROLES, ...names];

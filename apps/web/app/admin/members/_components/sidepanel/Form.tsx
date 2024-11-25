@@ -1,31 +1,26 @@
-import { type UseFormReturn, Controller } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { Radio } from "@ui/index";
 import Input from "@ui/src/components/common/Input";
 import Button from "@ui/src/components/common/Button";
 import { REGEXP_PATTERNS } from "@repo/constants/regexp";
 import { MEMBER_FORM_MESSAGES } from "@repo/constants/messages";
-import MultiSelectDropdown from "@repo/ui/src/components/common/Dropdown/MultiSelectDropdown";
 import {
   ROLE_LABELS,
   type RoleOption,
   type FormImageType,
   type MemberWithFileImage,
-  type SidePanelFormData,
   type ImageFileType,
 } from "@repo/types/src/membersType";
-import { useTeams } from "@/app/admin/teams/_hooks/useTeams";
+import { useMembersForm } from "../../_hooks/useMembersForm";
 import ProfileImageUploader from "./ProfileImageUploader";
+import TeamDropdown from "./TeamDropdown";
 
 export interface MemberFormProps {
-  form: UseFormReturn<SidePanelFormData>;
-  isPending: boolean;
   selectedMember: MemberWithFileImage | null;
-  onSubmit: (data: SidePanelFormData) => void;
+  onClose: () => void;
 }
 
-export default function MemberForm({ form, isPending, selectedMember, onSubmit }: MemberFormProps): JSX.Element {
-  const { data: teams } = useTeams();
-
+export default function MemberForm({ selectedMember, onClose }: MemberFormProps): JSX.Element {
   const {
     register,
     handleSubmit,
@@ -33,7 +28,9 @@ export default function MemberForm({ form, isPending, selectedMember, onSubmit }
     control,
     setValue,
     watch,
-  } = form;
+    onSubmit: MembersFormSubmit,
+    isPending,
+  } = useMembersForm({ selectedMember, onClose });
 
   const handleImageChange = (file: ImageFileType): void => {
     setValue("profileImage", file);
@@ -62,7 +59,7 @@ export default function MemberForm({ form, isPending, selectedMember, onSubmit }
   };
 
   return (
-    <form onSubmit={(...args) => void handleSubmit(onSubmit)(...args)}>
+    <form onSubmit={(...args) => void handleSubmit(MembersFormSubmit)(...args)}>
       <div className="w-154 mb-24">
         <Controller
           name="role"
@@ -110,20 +107,7 @@ export default function MemberForm({ form, isPending, selectedMember, onSubmit }
         <Controller
           name="teams"
           control={control}
-          render={({ field: { value, onChange } }) => (
-            <MultiSelectDropdown selectedValue={value} onSelect={onChange}>
-              <MultiSelectDropdown.Toggle>
-                {value.length > 0 ? value.join(", ") : MEMBER_FORM_MESSAGES.PLACEHOLDER.TEAM}
-              </MultiSelectDropdown.Toggle>
-              <MultiSelectDropdown.Wrapper>
-                {teams.map(({ name }) => (
-                  <MultiSelectDropdown.Item key={name} value={name}>
-                    {name}
-                  </MultiSelectDropdown.Item>
-                ))}
-              </MultiSelectDropdown.Wrapper>
-            </MultiSelectDropdown>
-          )}
+          render={({ field: { value, onChange } }) => <TeamDropdown value={value} onSelect={onChange} />}
         />
       </div>
 

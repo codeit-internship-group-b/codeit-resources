@@ -11,9 +11,7 @@ export default function ModalDescription(props: ModalDescriptionProps): JSX.Elem
   const { children, className } = props;
 
   return (
-    <p
-      className={`text-md-regular text-custom-black/80 my-16 break-words px-32 text-center md:px-0 ${String(className)}`}
-    >
+    <p className={`text-md-regular text-custom-black/80 my-16 break-words text-center ${String(className)}`}>
       {children}
     </p>
   );
