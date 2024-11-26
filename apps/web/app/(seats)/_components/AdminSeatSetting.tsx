@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 
 import { notify, Radio } from "@ui/index";
@@ -33,7 +30,10 @@ export default function AdminSeatSetting({
   // TODO: 추후 멤버 페이지에 불러온 데이터로 적용가능한지 확인 후 적용 예정
   const { data: membersData } = useQuery({
     queryKey: ["members", "newest"],
-    queryFn: () => getMembers("newest"),
+    queryFn: () =>
+      getMembers({
+        selectedSort: "newest",
+      }),
   });
 
   const initialFormData: AdminSeatSettingFormValues = {
@@ -111,7 +111,7 @@ export default function AdminSeatSetting({
               }
               onSelect={(value: string[]) => {
                 const name = value[0];
-                const member = membersData?.find((m) => m.name === name);
+                const member = membersData?.members.find((m) => m.name === name);
 
                 setValue("user", [
                   {
@@ -143,7 +143,7 @@ export default function AdminSeatSetting({
                 )}
               </MultiSelectDropdown.Toggle>
               <MultiSelectDropdown.Wrapper>
-                {(membersData ? [...membersData] : [])
+                {(membersData?.members ? [...membersData.members] : [])
                   .sort((a, b) => {
                     const isASelected = (selectedMember ?? []).some((selected) => selected.name === a.name);
                     const isBSelected = (selectedMember ?? []).some((selected) => selected.name === b.name);
