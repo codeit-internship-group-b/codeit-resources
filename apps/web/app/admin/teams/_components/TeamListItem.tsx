@@ -27,15 +27,11 @@ export default function TeamListItem({ team }: TeamListItemProps): JSX.Element {
   const isMobile = useIsMobileStore();
 
   useOnClickOutside(inputRef, () => {
-    if (isModify) {
-      setIsModify(false);
-    }
+    if (isModify) setIsModify(false);
   });
 
   useEffect(() => {
-    if (isModify && inputRef.current) {
-      inputRef.current.focus();
-    }
+    if (isModify && inputRef.current) inputRef.current.focus();
   }, [isModify]);
 
   const { mutate: deleteTeamMutate } = useDeleteTeam();
@@ -66,13 +62,14 @@ export default function TeamListItem({ team }: TeamListItemProps): JSX.Element {
 
   const handleMobileClick = (): void => {
     if (!isMobile) return;
-
     setIsMobileModalOpen(true);
   };
 
+  // TODO : 멤버관리 페이지 스켈레톤
+
   return (
     <>
-      <button className="w-full" type="button" onClick={handleMobileClick}>
+      <button className="w-full cursor-default" type="button" onClick={handleMobileClick}>
         <ListItem isModify={isModify}>
           <span className="flex flex-grow items-center gap-32 text-left">
             {isModify ? (
