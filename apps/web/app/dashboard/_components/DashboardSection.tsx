@@ -2,7 +2,7 @@ import { type IReservation } from "@repo/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { notify } from "@ui/index";
 import { formatTime, isInProgress } from "@ui/src/utils/date";
-import { patchMeetingStatus } from "@/api/dashboard";
+import { patchMeetingStatus } from "@/api/reservation";
 import EmptyState from "./EmptyState";
 
 interface DashboardSectionProps {

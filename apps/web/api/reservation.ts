@@ -1,0 +1,153 @@
+ 
+ 
+import { API_ENDPOINTS } from "@repo/constants";
+import { type ReservationRequestBody, type IReservation, type ReservedResponse } from "@repo/types";
+import { axiosRequester } from "@/lib/axios";
+
+/**
+ * 유저의 예약을 조회하는 API 함수입니다.
+ * @returns IReservation 배열을 반환합니다.
+ */
+export const getUserReservations = async (userId: string): Promise<IReservation[]> => {
+  const { data } = await axiosRequester<IReservation[]>({
+    options: {
+      method: "GET",
+      url: API_ENDPOINTS.RESERVATION.GET_USER_RESERVATIONS(userId),
+    },
+  });
+  return data;
+};
+
+/**
+ * 대시보드 페이지의 회의를 종료하는 API 함수입니다.
+ * @returns IReservation 객체를 반환합니다.
+ */
+export const patchMeetingStatus = async (_id: string): Promise<IReservation> => {
+  const { data } = await axiosRequester<IReservation>({
+    options: {
+      method: "PATCH",
+      url: API_ENDPOINTS.RESERVATION.UPDATE_RESERVATION(_id),
+      data: {
+        status: "completed",
+      },
+    },
+  });
+
+  return data;
+};
+
+/**
+ * 좌석예약 페이지를 조회하는 API 함수입니다.
+ * @returns IReservation 배열을 반환합니다.
+ */
+export const getSeats = async (date: string): Promise<IReservation[]> => {
+  const { data } = await axiosRequester<IReservation[]>({
+    options: {
+      method: "GET",
+      url: API_ENDPOINTS.RESERVATION.GET_RESERVATIONS_BY_TYPE_AND_DATE("seat", date),
+    },
+  });
+
+  return data;
+};
+
+/**
+ * 특정 날짜에 예약된 좌석을 가져옵니다.
+ * @param date - 조회할 날짜 (YYYY-MM-DD 형식).
+ * @returns 예약된 좌석 목록을 반환하는 Promise.
+ */
+export const getReservedSeats = async (date: string): Promise<IReservation[]> => {
+  const { data } = await axiosRequester<IReservation[]>({
+    options: {
+      method: "GET",
+      url: API_ENDPOINTS.RESERVATION.GET_RESERVATIONS_BY_TYPE_AND_DATE("seat", date),
+    },
+  });
+
+  return data;
+};
+
+/**
+ * 새로운 좌석 예약을 생성합니다.
+ * @returns 예약 생성 결과를 반환하는 Promise.
+ */
+export const createSeatReservationData = async ({
+  seatId,
+  reservationData,
+}: {
+  seatId: string;
+  reservationData: ReservationRequestBody;
+}): Promise<ReservedResponse> => {
+  const { data } = await axiosRequester<ReservedResponse>({
+    options: {
+      method: "POST",
+      url: API_ENDPOINTS.RESERVATION.CREATE_RESERVATION(seatId),
+      data: reservationData,
+    },
+  });
+  return data;
+};
+
+/**
+ * 특정 예약을 삭제합니다.
+ * @returns 예약 삭제 결과를 반환하는 Promise.
+ */
+export const deleteReservationData = async (reservationId: string | null): Promise<ReservedResponse> => {
+  if (!reservationId) {
+    throw new Error("Reservation ID is required");
+  }
+
+  const { data } = await axiosRequester<ReservedResponse>({
+    options: {
+      method: "DELETE",
+      url: API_ENDPOINTS.RESERVATION.DELETE_RESERVATION(reservationId),
+    },
+  });
+  return data;
+};
+
+/**
+ * 기존 예약을 삭제한 뒤 새로운 예약을 생성합니다.
+ * @returns 삭제 및 생성 작업 결과를 포함하는 Promise.
+
+ */
+export const modifyReservationData = async ({
+  seatId,
+  reservationData,
+  reservationId,
+}: {
+  seatId?: string;
+  reservationData?: ReservationRequestBody;
+  reservationId?: string | null;
+}): Promise<{ deleteResult: ReservedResponse; createResult: ReservedResponse }> => {
+  if (!seatId || !reservationData || !reservationId) {
+    throw new Error("Seat ID, reservation data, and reservation ID are required");
+  }
+
+  // Step 1: 기존 예약 삭제
+  const deletePromise = axiosRequester<ReservedResponse>({
+    options: {
+      method: "DELETE",
+      url: API_ENDPOINTS.RESERVATION.DELETE_RESERVATION(reservationId),
+    },
+  });
+
+  // Step 2: 새로운 예약 생성
+  const createPromise = deletePromise.then(() =>
+    axiosRequester<ReservedResponse>({
+      options: {
+        method: "POST",
+        url: API_ENDPOINTS.RESERVATION.CREATE_RESERVATION(seatId),
+        data: reservationData,
+      },
+    }),
+  );
+
+  // Step 3: 모든 작업 완료 후 결과 반환
+  const [deleteResult, createResult] = await Promise.all([deletePromise, createPromise]);
+
+  return {
+    deleteResult: deleteResult.data,
+    createResult: createResult.data,
+  };
+};
