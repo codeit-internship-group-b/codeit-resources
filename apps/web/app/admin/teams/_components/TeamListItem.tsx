@@ -69,7 +69,17 @@ export default function TeamListItem({ team }: TeamListItemProps): JSX.Element {
 
   return (
     <>
-      <button className="w-full cursor-default" type="button" onClick={handleMobileClick}>
+      <div
+        className="w-full cursor-default"
+        onClick={handleMobileClick}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            handleMobileClick();
+          }
+        }}
+      >
         <ListItem isModify={isModify}>
           <span className="flex flex-grow items-center gap-32 text-left">
             {isModify ? (
@@ -115,7 +125,7 @@ export default function TeamListItem({ team }: TeamListItemProps): JSX.Element {
             <DeleteTeamModalContent name={name} onConfirm={handleDeleteTeam} />
           </Modal.Root>
         </ListItem>
-      </button>
+      </div>
 
       <ManageTeamModal
         isOpen={isMobileModalOpen}

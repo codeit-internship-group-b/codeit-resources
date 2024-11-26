@@ -34,28 +34,23 @@ export default function ListItem({
   const [dragging, setDragging] = useState(false);
 
   const handleMouseEnter = (): void => {
-    setDragging(true);
+    setDragging((prev) => !prev);
   };
-  const handleMouseLeave = (): void => {
-    setDragging(false);
-  };
-
-  const height = thickness === "thick" ? 72 : 56;
 
   return (
     <div
       className={cn(
-        "rounded-12 flex items-center justify-between border border-solid border-gray-200/10 px-24 py-16 transition-colors duration-300",
+        "rounded-12 mb-16 flex items-center justify-between border border-solid border-gray-200/10 px-24 py-16 transition-colors duration-300",
         {
           "border-custom-black": isModify,
         },
         color === "white" ? "bg-white" : "bg-gray-60",
-        thickness === "thick" ? `h-${height}` : `h-${height}`,
+        thickness === "thick" ? "h-72" : "h-56",
       )}
       draggable={dragging}
     >
       {showHamburger && (
-        <BurgerIcon className="mr-32 cursor-pointer" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} />
+        <BurgerIcon className="mr-32 cursor-pointer" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseEnter} />
       )}
 
       {children}
