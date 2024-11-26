@@ -13,6 +13,7 @@ interface QueryProps {
   selectedSort: SortOption;
   role?: string;
   team?: string;
+  keyword: string;
 }
 
 interface PageParam {
@@ -23,14 +24,16 @@ export function useMembersSuspenseInfiniteQuery({
   selectedSort,
   role,
   team,
+  keyword,
 }: QueryProps): UseSuspenseInfiniteQueryResult<IUser[]> {
   const options = infiniteQueryOptions({
-    queryKey: memberQueries.list({ sort: selectedSort, role, team }),
+    queryKey: memberQueries.list({ sort: selectedSort, role, team, keyword }),
     queryFn: ({ pageParam }: PageParam): Promise<MembersResponse> =>
       getMembers({
         selectedSort,
         role,
         team,
+        keyword,
         cursor: pageParam,
       }),
     initialPageParam: null,

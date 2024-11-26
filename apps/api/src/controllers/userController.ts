@@ -15,6 +15,7 @@ interface GetUsersRequest extends Request {
     team?: string;
     sortOption?: "newest" | "oldest" | "alphabetical";
     cursor?: string;
+    keyword?: string;
   };
 }
 
@@ -22,6 +23,20 @@ interface Filters extends FilterQuery<IUser> {
   role?: TRole;
   teams?: { $in: string[] };
   _id?: { $lt: string };
+  $or?: Record<
+    string,
+    {
+      $regex: string;
+      $options: string;
+    }
+  >[];
+}
+
+type SortCriteria = Record<string, 1 | -1>;
+
+interface PaginatedResponse {
+  members: IUser[];
+  nextCursor: string | null | undefined;
 }
 
 // Get all users
@@ -49,72 +64,124 @@ interface Filters extends FilterQuery<IUser> {
  *           type: string
  *           enum: [newest, oldest, alphabetical]
  *         description: 정렬 옵션을 선택합니다.
+ *       - in: query
+ *         name: cursor
+ *         schema:
+ *           type: string
+ *         description: 다음 페이지 조회를 위한 커서 ID
+ *       - in: query
+ *         name: keyword
+ *         schema:
+ *           type: string
+ *         description: 이름, 이메일로 검색합니다.
  *     responses:
  *       200:
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   _id:
- *                     type: string
- *                     description: 사용자 ID
- *                   name:
- *                     type: string
- *                     description: 사용자 이름
- *                   email:
- *                     type: string
- *                     description: 사용자 이메일
- *                   role:
- *                     type: string
- *                     description: 사용자 역할
- *                   teams:
- *                     type: array
- *                     items:
- *                       type: string
- *                     description: 사용자가 속한 팀
- *                   profileImage:
- *                     type: string
- *                     description: 프로필 이미지 URL
+ *               type: object
+ *               properties:
+ *                 members:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                         description: 사용자 ID
+ *                       name:
+ *                         type: string
+ *                         description: 사용자 이름
+ *                       email:
+ *                         type: string
+ *                         description: 사용자 이메일
+ *                       role:
+ *                         type: string
+ *                         description: 사용자 역할
+ *                       teams:
+ *                         type: array
+ *                         items:
+ *                           type: string
+ *                         description: 사용자가 속한 팀
+ *                       profileImage:
+ *                         type: string
+ *                         description: 프로필 이미지 URL
+ *                 nextCursor:
+ *                   type: string
+ *                   nullable: true
+ *                   description: 다음 페이지가 있는 경우 다음 페이지의 첫 번째 아이템 ID
+ *       400:
+ *         description: 잘못된 요청 파라미터입니다.
  */
-export const getUsers = async (req: GetUsersRequest, res: Response): Promise<void> => {
-  const { role, team, sortOption, cursor } = req.query;
+const buildFilters = (params: GetUsersRequest["query"]): Filters => {
   const filters: Filters = {};
 
-  if (role) filters.role = role;
-  if (team) {
-    filters.teams = { $in: [team] };
+  if (params.role) {
+    filters.role = params.role;
   }
 
-  if (cursor) {
-    filters._id = { $lt: cursor };
+  if (params.team) {
+    filters.teams = { $in: [params.team] };
   }
 
-  let sortCriteria: Record<string, 1 | -1> = {};
-  if (sortOption === "alphabetical") {
-    sortCriteria = { name: 1, _id: -1 };
-  } else if (sortOption === "oldest") {
-    sortCriteria = { createdAt: 1, _id: -1 };
-  } else {
-    sortCriteria = { createdAt: -1, _id: -1 };
+  if (params.cursor) {
+    filters._id = { $lt: params.cursor };
   }
 
-  const members = await User.find(filters)
-    .select("-password")
-    .sort(sortCriteria)
-    .limit(PAGE_SIZE + 1)
-    .lean()
-    .exec();
+  if (params.keyword) {
+    filters.$or = [
+      { name: { $regex: params.keyword, $options: "i" } },
+      { email: { $regex: params.keyword, $options: "i" } },
+    ];
+  }
 
-  const hasNextPage = members.length > PAGE_SIZE;
+  return filters;
+};
+
+const getSortCriteria = (sortOption?: "newest" | "oldest" | "alphabetical"): SortCriteria => {
+  switch (sortOption) {
+    case "alphabetical":
+      return { name: 1, _id: -1 };
+    case "oldest":
+      return { createdAt: 1, _id: -1 };
+    default:
+      return { createdAt: -1, _id: -1 };
+  }
+};
+
+const formatPaginatedResponse = (members: IUser[], pageSize: number): PaginatedResponse => {
+  const hasNextPage = members.length > pageSize;
   const results = hasNextPage ? members.slice(0, -1) : members;
 
-  const response = {
+  return {
     members: results,
     nextCursor: hasNextPage ? results[results.length - 1]?._id.toString() : null,
   };
+};
+
+const fetchUsers = async (
+  filters: Filters,
+  sortCriteria: Record<string, 1 | -1>,
+  pageSize: number,
+): Promise<IUser[]> => {
+  const members = await User.find(filters)
+    .select("-password")
+    .sort(sortCriteria)
+    .limit(pageSize + 1)
+    .lean()
+    .exec();
+
+  return members.map((member) => ({
+    ...member,
+    _id: member._id.toString(),
+  }));
+};
+
+export const getUsers = async (req: GetUsersRequest, res: Response): Promise<void> => {
+  const filters = buildFilters(req.query);
+  const sortCriteria = getSortCriteria(req.query.sortOption);
+  const members = await fetchUsers(filters, sortCriteria, PAGE_SIZE);
+  const response = formatPaginatedResponse(members, PAGE_SIZE);
 
   res.status(200).json(response);
 };
