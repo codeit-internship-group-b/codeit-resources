@@ -6,7 +6,7 @@ interface GetMembersProps {
   selectedSort: SortOption;
   role?: string;
   team?: string;
-  keyword?: string | number;
+  keyword?: string;
   cursor?: string | null;
 }
 

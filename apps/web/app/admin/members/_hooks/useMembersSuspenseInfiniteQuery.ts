@@ -13,7 +13,7 @@ interface QueryProps {
   selectedSort: SortOption;
   role?: string;
   team?: string;
-  keyword: string;
+  keyword?: string;
 }
 
 interface PageParam {

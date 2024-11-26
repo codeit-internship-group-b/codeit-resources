@@ -16,6 +16,7 @@ export default function SearchForm({ onSearch, keyword }: SearchFormProps): JSX.
       keyword,
     },
   });
+
   const watchedKeyword = useWatch({
     name: "keyword",
     control,
