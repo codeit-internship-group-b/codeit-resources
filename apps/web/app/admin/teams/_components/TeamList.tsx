@@ -2,6 +2,7 @@
 
 import { useSuspenseTeamsQuery } from "../_hooks/useTeamsQueries";
 import { useDragAndDrop } from "../../_hooks/useDragAndDrop";
+import EmptyState from "../../members/_components/EmptyState";
 import TeamListItem from "./TeamListItem";
 // import { useMutation } from "@tanstack/react-query";
 
@@ -18,9 +19,11 @@ export default function TeamList(): JSX.Element {
 
   // TODO : api 연동
   // TODO : 드래그앤드랍 TeamListItem 연동
+  // TODO : empty case
 
   return (
     <div className="flex flex-col md:mt-40">
+      <EmptyState activeTab="teams" />
       {items.map((team, index) => (
         <div
           key={team._id}
