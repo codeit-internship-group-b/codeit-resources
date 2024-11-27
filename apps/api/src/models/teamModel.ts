@@ -1,7 +1,7 @@
-import { type ITeam } from "@repo/types/teamType";
+import { type TeamType } from "@repo/types/teamType";
 import { type Document, model, Schema } from "mongoose";
 
-interface TeamDocument extends Omit<ITeam, "_id">, Document {}
+interface TeamDocument extends Omit<TeamType, "_id">, Document {}
 
 const TeamSchema = new Schema<TeamDocument>(
   {

@@ -1,10 +1,10 @@
 export interface ITeam {
   name: string;
-  order: number;
 }
 
 export interface TeamType extends ITeam {
   _id: string;
+  order: number;
   createdAt: string;
   updatedAt: string;
 }
