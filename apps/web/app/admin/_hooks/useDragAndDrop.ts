@@ -1,5 +1,10 @@
 import { type DragEvent, useRef, useState } from "react";
 
+interface UseDragAndDropParams<T> {
+  initialItems: T[];
+  onUpdate: (updatedItem: T[]) => void;
+}
+
 interface UseDragAndDropResult<T> {
   items: T[];
   handleDragStart: (e: DragEvent<HTMLDivElement>, index: number) => void;
@@ -8,7 +13,7 @@ interface UseDragAndDropResult<T> {
   handleDragOver: (e: DragEvent<HTMLDivElement>) => void;
 }
 
-export const useDragAndDrop = <T>(initialItems: T[]): UseDragAndDropResult<T> => {
+export const useDragAndDrop = <T>({ initialItems, onUpdate }: UseDragAndDropParams<T>): UseDragAndDropResult<T> => {
   const [items, setItems] = useState(initialItems);
   const draggingItemIndex = useRef<number>(-1);
   const draggingOverItemIndex = useRef<number>(-1);
@@ -34,6 +39,7 @@ export const useDragAndDrop = <T>(initialItems: T[]): UseDragAndDropResult<T> =>
 
   const handleDragEnd = (e: DragEvent<HTMLDivElement>): void => {
     e.currentTarget.classList.remove("dragging");
+    onUpdate(items);
   };
 
   const handleDragOver = (e: DragEvent<HTMLDivElement>): void => {

@@ -1,5 +1,6 @@
 import { type Request, type Response } from "express";
 import { Types } from "mongoose";
+import { type TeamType } from "@repo/types";
 import { Team } from "../models/teamModel";
 
 interface GetTeamsRequest extends Request {
@@ -112,7 +113,7 @@ export const createTeam = async (req: CreateTeamRequest, res: Response): Promise
   res.status(201).send({ message: `새로운 팀 ${name}이 생성되었습니다.`, data: newTeam });
 };
 
-interface UpdateTeamRequest extends Request {
+interface UpdateTeamNameRequest extends Request {
   params: {
     teamId: string;
   };
@@ -156,7 +157,7 @@ interface UpdateTeamRequest extends Request {
  *       409:
  *         description: 이미 존재하는 팀 이름입니다.
  */
-export const updateTeam = async (req: UpdateTeamRequest, res: Response): Promise<void> => {
+export const updateTeamName = async (req: UpdateTeamNameRequest, res: Response): Promise<void> => {
   const { teamId } = req.params;
   const { name } = req.body;
 
@@ -185,6 +186,31 @@ export const updateTeam = async (req: UpdateTeamRequest, res: Response): Promise
 
   await Team.findByIdAndUpdate(teamId, { name }, { new: true });
   res.status(200).send({ message: "팀 이름이 성공적으로 업데이트되었습니다." });
+};
+
+interface UpdateTeamOrderRequest extends Request {
+  body: {
+    updatedOrder: TeamType[];
+  };
+}
+
+export const updateTeamOrder = async (req: UpdateTeamOrderRequest, res: Response): Promise<void> => {
+  const { updatedOrder } = req.body;
+
+  if (!Array.isArray(updatedOrder)) {
+    res.status(400).json({ message: "잘못된 요청입니다." });
+    return;
+  }
+
+  const bulkOperations = updatedOrder.map((team) => ({
+    updateOne: {
+      filter: { _id: team._id },
+      update: { order: team.order },
+    },
+  }));
+
+  await Team.bulkWrite(bulkOperations);
+  res.status(200).send({ message: "성공적으로 업데이트되었습니다.", Team });
 };
 
 interface DeleteTeamRequest extends Request {

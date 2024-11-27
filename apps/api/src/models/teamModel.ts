@@ -6,8 +6,17 @@ interface TeamDocument extends Omit<ITeam, "_id">, Document {}
 const TeamSchema = new Schema<TeamDocument>(
   {
     name: { type: String, unique: true, required: true },
+    order: { type: Number, unique: true, require: true, default: 0 },
   },
-  { timestamps: true },
+  { timestamps: true, versionKey: false },
 );
+
+TeamSchema.pre<TeamDocument>("save", async function (next) {
+  if (this.isNew) {
+    const lastTeam = await Team.findOne().sort({ order: -1 }).lean();
+    this.order = lastTeam ? lastTeam.order + 1 : 0;
+  }
+  next();
+});
 
 export const Team = model<TeamDocument>("Team", TeamSchema);

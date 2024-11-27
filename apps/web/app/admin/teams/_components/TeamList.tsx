@@ -7,9 +7,17 @@ import TeamListItem from "./TeamListItem";
 
 export default function TeamList(): JSX.Element {
   const { data: teams } = useSuspenseTeamsQuery();
-  const { handleDragEnd, handleDragEnter, handleDragOver, handleDragStart, items } = useDragAndDrop(teams);
+  const { handleDragEnd, handleDragEnter, handleDragOver, handleDragStart, items } = useDragAndDrop({
+    initialItems: teams,
+    onUpdate: (updatedItems) => {
+      console.log(updatedItems);
+    },
+  });
 
   // const {} = useMutation()
+
+  // TODO : api 연동
+  // TODO : 드래그앤드랍 TeamListItem 연동
 
   return (
     <div className="flex flex-col md:mt-40">

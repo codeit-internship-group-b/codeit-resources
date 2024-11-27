@@ -1,5 +1,6 @@
 export interface ITeam {
   name: string;
+  order: number;
 }
 
 export interface TeamType extends ITeam {
