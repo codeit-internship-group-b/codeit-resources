@@ -1,5 +1,3 @@
-/* eslint-disable -- 일시적 eslint 에러 회피*/
-
 import { extname } from "node:path";
 import multer, { type Multer } from "multer";
 import multerS3, { AUTO_CONTENT_TYPE } from "multer-s3";
