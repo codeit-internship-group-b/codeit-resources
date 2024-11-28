@@ -26,13 +26,11 @@ export default function ManageTeamModal({
   const { _id, name } = team ?? {};
 
   const { handleSubmit, register, setValue, reset } = useCreateForm();
-  const { mutate: postCreateTeamMutate } = useCreateTeam();
+  const { mutate: postCreateTeamMutate } = useCreateTeam(onClose);
   const { mutate: updateTeamMutate } = useUpdateTeamName();
 
   const debouncedSubmit = debounce((teamName: string) => {
     isCreate ? postCreateTeamMutate({ name: teamName }) : updateTeamMutate({ teamId: _id ?? "", newName: teamName });
-
-    onClose();
     reset();
   }, 800);
 
