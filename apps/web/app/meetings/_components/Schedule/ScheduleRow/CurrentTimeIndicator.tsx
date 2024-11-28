@@ -24,10 +24,12 @@ export default function CurrentTimeIndicator(props: CurrentTimeIndicatorProps): 
   return (
     <div className="relative">
       <div
-        className="border-custom-black md:top-30 absolute top-0 z-30 h-full border-l-2 md:ml-36"
+        className="border-custom-black md:h-120 absolute z-50 ml-36 h-80 border-l-2 border-solid"
         style={{ left: `${currentPosition}px` }}
       />
-      <CurrentTimeLabel position={currentPosition} time={currentTime} />
+      <div className="absolute left-36 top-80 block md:hidden">
+        <CurrentTimeLabel position={currentPosition} time={currentTime} />
+      </div>
     </div>
   );
 }

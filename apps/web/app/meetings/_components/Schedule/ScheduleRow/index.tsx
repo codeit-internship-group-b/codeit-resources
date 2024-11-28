@@ -61,7 +61,7 @@ export default function ScheduleRow(props: ScheduleRowProps): JSX.Element {
         />
       </div>
 
-      <div className="block md:hidden">
+      <div className="block">
         <CurrentTimeIndicator slotWidth={slotWidth} startHour={startHour} endHour={endHour} />
       </div>
 
