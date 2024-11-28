@@ -22,9 +22,6 @@ export default function TeamList(): JSX.Element {
   });
   const { mutate: updateTeamOrderMutate } = useUpdateTeamOrder(updatedTeams);
 
-  // TODO : api swagger 작성
-  // TODO : querykey 추가
-
   if (teams.length === 0) return <EmptyState activeTab="teams" />;
 
   return (
