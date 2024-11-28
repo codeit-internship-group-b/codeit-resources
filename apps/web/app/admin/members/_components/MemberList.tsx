@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { type MemberWithStaticImage, type SortOption } from "@repo/types/src/membersType";
 import { SpinnerIcon } from "@ui/public";
 import { useIntersectionObserver } from "@repo/ui/src/hooks/useIntersectionObserver";
+import { getEmptyMessage } from "@repo/ui/src/utils/getEmptyMessage";
 import { useMembersSuspenseInfiniteQuery } from "../_hooks/useMembersSuspenseInfiniteQuery";
 import EmptyState from "./EmptyState";
 import MemberListItem from "./MemberListItem";
@@ -51,7 +52,7 @@ export default function MemberList({ selectedSort, activeTab, onMemberClick, key
   });
 
   if (members.length === 0) {
-    return <EmptyState activeTab={activeTab} keyword={keyword} />;
+    return <EmptyState message={getEmptyMessage({ activeTab, keyword })} />;
   }
 
   return (
