@@ -8,6 +8,7 @@ import { formatDate } from "@/app/utils/formatDate";
 import { getAllItems } from "@/api/items";
 import { getReservationsByTypeAndDate } from "@/api/reservations";
 import ScheduleTable from "./Schedule/ScheduleTable";
+import MeetingsSkeleton from "./skeleton";
 
 export default function MeetingRoomSchedule(): JSX.Element {
   const { selectedDate } = useDateStore();
@@ -24,7 +25,7 @@ export default function MeetingRoomSchedule(): JSX.Element {
     queryFn: () => getAllItems({ itemType: MEETING_ROOMS_TYPE }),
   });
 
-  if (meetingsIsLoading || roomsIsLoading) return <div>로딩~</div>;
+  if (meetingsIsLoading || roomsIsLoading) return <MeetingsSkeleton />;
 
   return <ScheduleTable rooms={roomsData} meetingsData={meetingsData} selectedDate={formattedDate} />;
 }
