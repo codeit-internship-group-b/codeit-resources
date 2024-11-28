@@ -1,43 +1,17 @@
 import { type Request, type Response } from "express";
 import { Roles, type IUser, type TRole } from "@repo/types";
 import { config } from "dotenv";
-import { type FilterQuery } from "mongoose";
 import { compare } from "bcryptjs";
 import { PAGE_SIZE } from "@repo/constants";
 import { User } from "../models/userModel";
 import { areArraysEqual } from "../utils/areArraysEqual";
+import { buildFilters } from "../utils/buildFilters";
+import { getSortCriteria } from "../utils/getSortCriteria";
+import { formatPaginatedResponse } from "../utils/formatPaginatedResponse";
+import { fetchUsers } from "../utils/fetchUsers";
+import { type GetUsersRequest } from "../types";
 
 config();
-
-interface GetUsersRequest extends Request {
-  query: {
-    role?: TRole;
-    team?: string;
-    sortOption?: "newest" | "oldest" | "alphabetical";
-    cursor?: string;
-    keyword?: string;
-  };
-}
-
-interface Filters extends FilterQuery<IUser> {
-  role?: TRole;
-  teams?: { $in: string[] };
-  _id?: { $lt: string };
-  $or?: Record<
-    string,
-    {
-      $regex: string;
-      $options: string;
-    }
-  >[];
-}
-
-type SortCriteria = Record<string, 1 | -1>;
-
-interface PaginatedResponse {
-  members: IUser[];
-  nextCursor: string | null | undefined;
-}
 
 // Get all users
 /**
@@ -81,7 +55,7 @@ interface PaginatedResponse {
  *             schema:
  *               type: object
  *               properties:
- *                 members:
+ *                 users:
  *                   type: array
  *                   items:
  *                     type: object
@@ -113,75 +87,12 @@ interface PaginatedResponse {
  *       400:
  *         description: 잘못된 요청 파라미터입니다.
  */
-const buildFilters = (params: GetUsersRequest["query"]): Filters => {
-  const filters: Filters = {};
-
-  if (params.role) {
-    filters.role = params.role;
-  }
-
-  if (params.team) {
-    filters.teams = { $in: [params.team] };
-  }
-
-  if (params.cursor) {
-    filters._id = { $lt: params.cursor };
-  }
-
-  if (params.keyword) {
-    filters.$or = [
-      { name: { $regex: params.keyword, $options: "i" } },
-      { email: { $regex: params.keyword, $options: "i" } },
-    ];
-  }
-
-  return filters;
-};
-
-const getSortCriteria = (sortOption?: "newest" | "oldest" | "alphabetical"): SortCriteria => {
-  switch (sortOption) {
-    case "alphabetical":
-      return { name: 1, _id: -1 };
-    case "oldest":
-      return { createdAt: 1, _id: -1 };
-    default:
-      return { createdAt: -1, _id: -1 };
-  }
-};
-
-const formatPaginatedResponse = (members: IUser[], pageSize: number): PaginatedResponse => {
-  const hasNextPage = members.length > pageSize;
-  const results = hasNextPage ? members.slice(0, -1) : members;
-
-  return {
-    members: results,
-    nextCursor: hasNextPage ? results[results.length - 1]?._id.toString() : null,
-  };
-};
-
-const fetchUsers = async (
-  filters: Filters,
-  sortCriteria: Record<string, 1 | -1>,
-  pageSize: number,
-): Promise<IUser[]> => {
-  const members = await User.find(filters)
-    .select("-password")
-    .sort(sortCriteria)
-    .limit(pageSize + 1)
-    .lean()
-    .exec();
-
-  return members.map((member) => ({
-    ...member,
-    _id: member._id.toString(),
-  }));
-};
 
 export const getUsers = async (req: GetUsersRequest, res: Response): Promise<void> => {
   const filters = buildFilters(req.query);
   const sortCriteria = getSortCriteria(req.query.sortOption);
-  const members = await fetchUsers(filters, sortCriteria, PAGE_SIZE);
-  const response = formatPaginatedResponse(members, PAGE_SIZE);
+  const users = await fetchUsers(filters, sortCriteria, PAGE_SIZE);
+  const response = formatPaginatedResponse(users, PAGE_SIZE);
 
   res.status(200).json(response);
 };
