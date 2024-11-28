@@ -3,22 +3,28 @@
 import { SEAT_GRID } from "@ui/src/utils/constants/seats";
 import useSeatStatus from "@ui/src/hooks/useSeatStatus";
 import { useQuery } from "@tanstack/react-query";
-import { type ISeat } from "@repo/types";
-import { getAllSeats } from "@/api/seats";
-import { SeatProvider } from "../context/SeatContext";
+import { type IReservation, type ISeat } from "@repo/types";
+import { formatSelectedDate } from "@ui/src/utils/date";
+import { useDateStore } from "@/app/store/useDateStore";
+import { getAllSeats } from "@/api/items";
+import { getReservedSeats } from "@/api/reservation";
+import { SeatProvider } from "../../../src/contexts/SeatContext";
 import SeatBlock from "./SeatBlock";
 
 export default function SeatGrid(): JSX.Element {
-  // 탠스택쿼리로 바꿀 예정 (data / Loading)
+  const { selectedDate } = useDateStore();
 
-  // const [data, setData] = useState(seatsMock);
   const { data: seatsData, isLoading } = useQuery<ISeat[]>({
-    queryKey: ["dashboard"],
+    queryKey: ["seats"],
     queryFn: () => getAllSeats(),
   });
 
-  const { getSeatStatus } = useSeatStatus(seatsData);
+  const { data: reservedSeatsData, isLoading: reservedSeatsIsLoading } = useQuery<IReservation[]>({
+    queryKey: ["seats", "reserved", formatSelectedDate(selectedDate)],
+    queryFn: () => getReservedSeats(formatSelectedDate(selectedDate)),
+  });
 
+  const { getSeatStatus } = useSeatStatus(seatsData, reservedSeatsData);
   return (
     <SeatProvider>
       <div className="w-660 md:w-1004 m-auto grid grid-cols-2 gap-20 md:gap-40">
@@ -29,7 +35,7 @@ export default function SeatGrid(): JSX.Element {
               seatNum,
               ...getSeatStatus(seatNum),
             }))}
-            isLoading={isLoading}
+            isLoading={isLoading || reservedSeatsIsLoading}
           />
         ))}
       </div>

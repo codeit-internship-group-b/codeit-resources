@@ -1,16 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { useState, type MouseEvent, type KeyboardEvent } from "react";
 import Image from "next/image";
 import { Badge } from "@ui/index";
 import Dropdown from "@ui/src/components/common/Dropdown";
 import DefaultProfileImage from "@ui/public/images/image_default_profile.png";
-import { type MemberWithStaticImage } from "../types";
-
-const roleOptions = {
-  member: "멤버",
-  admin: "어드민",
-} as const;
-
-type RoleOption = keyof typeof roleOptions;
+import { Chevron } from "@ui/public";
+import { type MemberWithStaticImage, ROLE_LABELS, type RoleOption } from "@repo/types/src/membersType";
+import { IMAGE_CONFIG } from "@repo/constants";
+import { useMembersMutations } from "../_hooks/useMembersMutations";
 
 interface MemberListItemProps {
   member: MemberWithStaticImage;
@@ -21,19 +18,23 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
   const [currentRole, setCurrentRole] = useState<RoleOption>(member.role);
   const [isImageError, setIsImageError] = useState(false);
 
+  const { updateMember } = useMembersMutations();
+
+  const imageSource = isImageError ? DefaultProfileImage : (member.profileImage ?? DefaultProfileImage);
+
   const getRoleValue = (displayText: string): RoleOption => {
-    const entry = Object.entries(roleOptions).find(([_, value]) => value === displayText);
+    const entry = Object.entries(ROLE_LABELS).find(([_, value]) => value === displayText);
+
     return entry?.[0] as RoleOption;
   };
 
   const getRoleDisplay = (value: RoleOption): string => {
-    return roleOptions[value];
+    return ROLE_LABELS[value];
   };
-
-  const imageSource = isImageError ? DefaultProfileImage : (member.profileImage ?? DefaultProfileImage);
 
   const handleMemberClick = (e: MouseEvent<HTMLDivElement>): void => {
     const target = e.target as HTMLElement;
+
     if (!target.closest('[data-dropdown="true"]')) {
       onMemberClick(member);
     }
@@ -42,6 +43,7 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
   const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>): void => {
     if (e.key === "Escape") {
       e.currentTarget.blur();
+
       return;
     }
 
@@ -52,7 +54,18 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
 
   const handleRoleChange = (value: string | boolean): void => {
     if (typeof value === "string") {
-      setCurrentRole(getRoleValue(value));
+      const newRole = getRoleValue(value);
+      setCurrentRole(newRole);
+
+      if (newRole === currentRole) return;
+
+      const formData = new FormData();
+      formData.append("role", newRole);
+
+      updateMember({
+        id: member._id,
+        data: formData,
+      });
     }
   };
 
@@ -62,36 +75,33 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
 
   return (
     <div
+      // 하위에 버튼 요소가 포함되어 있어 div에 role="button"을 사용함
       role="button"
       tabIndex={0}
       onClick={handleMemberClick}
       onKeyDown={handleKeyDown}
-      className="rounded-12 flex cursor-pointer items-center border border-gray-200/10 px-24 py-16 outline outline-1 outline-transparent transition-all duration-300 hover:border-transparent hover:bg-purple-700/5 hover:outline-purple-300"
+      className="rounded-12 relative flex cursor-pointer items-center border border-gray-200/10 px-16 py-12 outline outline-1 outline-transparent transition-all duration-300 hover:border-transparent hover:bg-purple-700/5 hover:outline-purple-300 md:px-24 md:py-16"
     >
-      <div className="flex items-center gap-16">
+      <div className="flex items-center gap-8 md:gap-16">
         <Image
           src={imageSource}
           alt={`${member.name}의 프로필`}
           width={40}
           height={40}
-          className="size-40 rounded-full"
+          placeholder="blur"
+          blurDataURL={IMAGE_CONFIG.BLUR_DATA_URL}
           onError={handleImageError}
+          className="size-40 rounded-full"
         />
-        <span className="text-custom-black">{member.name}</span>
-        <span className="text-custom-black/60 max-w-200 overflow-wrap-break-word mr-16 break-all">{member.email}</span>
+        <span className="text-custom-black text-md-regular md:text-lg-regular">{member.name}</span>
+        <span className="text-md-regular md:text-lg-regular text-gray-30">{member.email}</span>
       </div>
-      <div className="mr-16 flex flex-grow flex-wrap gap-16">
-        {member.teams.map((team) => (
-          <Badge key={team} color="purple" colorApplyTo="font" shape="round">
-            {team}
-          </Badge>
-        ))}
-      </div>
-      <div data-dropdown="true">
-        <Dropdown selectedValue={getRoleDisplay(currentRole)} onSelect={handleRoleChange} size="sm">
-          <Dropdown.Toggle>{getRoleDisplay(currentRole)}</Dropdown.Toggle>
+
+      <div data-dropdown="true" className="hidden md:absolute md:left-[400px] md:block">
+        <Dropdown selectedValue={getRoleDisplay(member.role)} onSelect={handleRoleChange} size="sm">
+          <Dropdown.Toggle>{getRoleDisplay(member.role)}</Dropdown.Toggle>
           <Dropdown.Wrapper className="top-42">
-            {Object.entries(roleOptions).map(([value, label]) => (
+            {Object.entries(ROLE_LABELS).map(([value, label]) => (
               <Dropdown.Item hoverStyle="purple" key={value} value={label}>
                 {label}
               </Dropdown.Item>
@@ -99,6 +109,16 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
           </Dropdown.Wrapper>
         </Dropdown>
       </div>
+
+      <div className="hidden md:absolute md:left-[530px] md:flex md:flex-grow md:flex-wrap md:gap-16">
+        {member.teams?.map((team) => (
+          <Badge key={team} color="purple" colorApplyTo="font" shape="round">
+            {team}
+          </Badge>
+        ))}
+      </div>
+
+      <Chevron className="top-22 md:top-26 absolute right-16 rotate-180 md:right-24" />
     </div>
   );
 }

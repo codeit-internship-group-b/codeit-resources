@@ -31,10 +31,10 @@ function ListItemSkeleton({
         {type === "member" && (
           <>
             <PersonEmptyIcon />
-            <LoadingBar classNames="w-44 h-12" />
+            <LoadingBar classNames="h-12 w-44" />
           </>
         )}
-        <LoadingBar classNames={type === "team" ? "w-100" : "w-200"} />
+        <LoadingBar />
       </div>
     </ListItem>
   );

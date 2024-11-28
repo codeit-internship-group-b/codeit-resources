@@ -3,10 +3,11 @@ import { Schema, type Types, model, type Document } from "mongoose";
 import { genSalt, hash } from "bcryptjs";
 import { config } from "dotenv";
 import { emailValidator } from "../utils/emailValidator";
+import { Reservation } from "./reservationModel";
 
 config();
 
-interface UserDocument extends Omit<IUser, "_id">, Document {
+export interface UserDocument extends Omit<IUser, "_id">, Document {
   _id: Types.ObjectId;
 }
 
@@ -72,6 +73,15 @@ UserSchema.pre("save", function (next) {
       next();
     });
   });
+});
+
+UserSchema.pre("findOneAndDelete", async function (next) {
+  const userId = this.getQuery()._id as UserDocument;
+
+  await Reservation.deleteMany({ user: userId });
+  await Reservation.updateMany({ attendees: userId }, { $pull: { attendees: userId } });
+
+  next();
 });
 
 export const User = model<UserDocument>("User", UserSchema);
