@@ -1,8 +1,8 @@
 export const PAGE_NAME = {
-  DASHBOARD: "/dashboard",
-  MEETINGS: "/meetings",
-  SEATS: "/seats",
-  SETTINGS: "/settings",
+  DASHBOARD: "/dashboard/",
+  MEETINGS: "/meetings/",
+  SEATS: "/seats/",
+  SETTINGS: "/settings/",
 
   ADMIN_MEMBERS: "/admin/members",
   ADMIN_TEAMS: "/admin/teams",
