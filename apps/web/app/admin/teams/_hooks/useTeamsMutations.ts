@@ -107,7 +107,9 @@ export const useUpdateTeamName = (): UseMutationResult<
   });
 };
 
-export const useUpdateTeamOrder = (updatedTeams: TeamType[]) => {
+export const useUpdateTeamOrder = (
+  updatedTeams: TeamType[],
+): UseMutationResult<ResponseType<TeamType[]>, AxiosError<{ message: string }>, TeamType[]> => {
   const queryClient = useQueryClient();
   const prevTeamsRef = useRef<TeamType[] | undefined>();
 
