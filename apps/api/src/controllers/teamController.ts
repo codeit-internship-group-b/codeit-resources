@@ -3,12 +3,6 @@ import { Types } from "mongoose";
 import { type TeamType } from "@repo/types";
 import { Team } from "../models/teamModel";
 
-interface GetTeamsRequest extends Request {
-  query: {
-    sortOption?: "newest" | "oldest" | "alphabetical";
-  };
-}
-
 /**
  * @swagger
  * /teams:
@@ -44,20 +38,8 @@ interface GetTeamsRequest extends Request {
  *                     type: string
  *                     format: date-time
  */
-export const getTeams = async (req: GetTeamsRequest, res: Response): Promise<void> => {
-  const { sortOption = "newest" } = req.query;
-
-  let query = Team.find();
-
-  if (sortOption === "alphabetical") {
-    query = query.sort({ name: 1 });
-  } else if (sortOption === "oldest") {
-    query = query.sort({ createdAt: 1 });
-  } else {
-    query = query.sort({ createdAt: -1 });
-  }
-
-  const teams = await query.exec();
+export const getTeams = async (req: Request, res: Response): Promise<void> => {
+  const teams = await Team.find().sort({ order: 1 }).exec();
   res.status(200).send(teams);
 };
 
@@ -190,27 +172,42 @@ export const updateTeamName = async (req: UpdateTeamNameRequest, res: Response):
 
 interface UpdateTeamOrderRequest extends Request {
   body: {
-    updatedOrder: TeamType[];
+    updatedTeams: TeamType[];
   };
 }
 
 export const updateTeamOrder = async (req: UpdateTeamOrderRequest, res: Response): Promise<void> => {
-  const { updatedOrder } = req.body;
+  const { updatedTeams } = req.body;
+  console.log(updatedTeams);
 
-  if (!Array.isArray(updatedOrder)) {
+  if (!Array.isArray(updatedTeams)) {
     res.status(400).json({ message: "잘못된 요청입니다." });
     return;
   }
 
-  const bulkOperations = updatedOrder.map((team) => ({
+  const teams = await Team.find().sort({ order: 1 }).lean();
+  if (teams.length !== updatedTeams.length) {
+    res.status(400).json({ message: "팀 개수가 일치하지 않습니다." });
+    return;
+  }
+
+  const bulkOperations = updatedTeams.map((updatedTeam, index) => ({
     updateOne: {
-      filter: { _id: team._id },
-      update: { order: team.order },
+      filter: { _id: updatedTeam._id },
+      update: { $set: { order: index } },
     },
   }));
 
-  await Team.bulkWrite(bulkOperations);
-  res.status(200).send({ message: "성공적으로 업데이트되었습니다.", Team });
+  const result = await Team.bulkWrite(bulkOperations);
+  console.log(result);
+
+  const reorderedTeams = await Team.find().sort({ order: 1 }).lean();
+  console.log(reorderedTeams);
+
+  res.status(200).send({
+    message: "성공적으로 업데이트되었습니다.",
+    teams: reorderedTeams,
+  });
 };
 
 interface DeleteTeamRequest extends Request {

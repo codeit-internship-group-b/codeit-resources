@@ -20,7 +20,7 @@ export default function TeamListHeader(): JSX.Element {
         </Button>
       </div>
 
-      <CreateTeamSidebar isOpen={isOpen} onClick={handleButtonClick} />
+      <CreateTeamSidebar isOpen={isOpen} onClose={handleButtonClick} />
     </>
   );
 }

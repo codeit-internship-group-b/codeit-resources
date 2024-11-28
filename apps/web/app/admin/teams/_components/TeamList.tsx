@@ -3,28 +3,33 @@
 import { useSuspenseTeamsQuery } from "../_hooks/useTeamsQueries";
 import { useDragAndDrop } from "../../_hooks/useDragAndDrop";
 import EmptyState from "../../members/_components/EmptyState";
+import { useUpdateTeamOrder } from "../_hooks/useTeamsMutations";
 import TeamListItem from "./TeamListItem";
-// import { useMutation } from "@tanstack/react-query";
 
 export default function TeamList(): JSX.Element {
   const { data: teams } = useSuspenseTeamsQuery();
-  const { handleDragEnd, handleDragEnter, handleDragOver, handleDragStart, items } = useDragAndDrop({
+  const {
+    handleDragEnd,
+    handleDragEnter,
+    handleDragOver,
+    handleDragStart,
+    items: updatedTeams,
+  } = useDragAndDrop({
     initialItems: teams,
-    onUpdate: (updatedItems) => {
-      console.log(updatedItems);
+    onUpdate: (items) => {
+      updateTeamOrderMutate(items);
     },
   });
+  const { mutate: updateTeamOrderMutate } = useUpdateTeamOrder(updatedTeams);
 
-  // const {} = useMutation()
+  // TODO : api swagger 작성
+  // TODO : querykey 추가
 
-  // TODO : api 연동
-  // TODO : 드래그앤드랍 TeamListItem 연동
-  // TODO : empty case
+  if (teams.length === 0) return <EmptyState activeTab="teams" />;
 
   return (
     <div className="flex flex-col md:mt-40">
-      <EmptyState activeTab="teams" />
-      {items.map((team, index) => (
+      {teams.map((team, index) => (
         <div
           key={team._id}
           onDragStart={(e) => {

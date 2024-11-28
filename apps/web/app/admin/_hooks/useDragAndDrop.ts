@@ -1,4 +1,4 @@
-import { type DragEvent, useRef, useState } from "react";
+import { type DragEvent, useEffect, useRef, useState } from "react";
 
 interface UseDragAndDropParams<T> {
   initialItems: T[];
@@ -17,6 +17,10 @@ export const useDragAndDrop = <T>({ initialItems, onUpdate }: UseDragAndDropPara
   const [items, setItems] = useState(initialItems);
   const draggingItemIndex = useRef<number>(-1);
   const draggingOverItemIndex = useRef<number>(-1);
+
+  useEffect(() => {
+    setItems(initialItems);
+  }, [initialItems]);
 
   const handleDragStart = (e: DragEvent<HTMLDivElement>, index: number): void => {
     draggingItemIndex.current = index;

@@ -1,12 +1,12 @@
 import { type TeamType } from "@repo/types/teamType";
 import { type Document, model, Schema } from "mongoose";
 
-interface TeamDocument extends Omit<TeamType, "_id">, Document {}
+export interface TeamDocument extends Omit<TeamType, "_id">, Document {}
 
 const TeamSchema = new Schema<TeamDocument>(
   {
     name: { type: String, unique: true, required: true },
-    order: { type: Number, unique: true, require: true, default: 0 },
+    order: { type: Number },
   },
   { timestamps: true, versionKey: false },
 );
