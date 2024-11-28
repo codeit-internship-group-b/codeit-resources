@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 "use client";
-import { CancelIcon, RightIcon } from "@ui/public";
+import { RightIcon } from "@ui/public";
 import cn from "@ui/src/utils/cn";
 import { useMemo, useState } from "react";
-import { notify } from "@ui/index";
 import AlertModal from "@ui/src/components/common/ConditionalActionModal/AlertModal";
 import { usePathname } from "next/navigation";
 import { Sheet } from "react-modal-sheet";
@@ -16,6 +15,7 @@ import { isSeat, isSeatReserved } from "@/src/utils/seats";
 import { useSeatReservation } from "@/app/_hooks/useSeatReservation";
 import { useSeatContext } from "../../../src/contexts/SeatContext";
 import AdminSeatSetting from "./AdminSeatSetting";
+import SeatCancelButton from "./SeatCancelButton";
 
 interface SeatButtonProps {
   isLoading?: boolean;
@@ -112,7 +112,7 @@ export default function SeatButton({
   };
 
   // 좌석예약 취소(삭제) 버튼 눌렀을 때
-  const handleCancelButtonClick = (reservationId: string): void => {
+  const handleCancelButtonClick = (reservationId: string | null): void => {
     deleteSeatReservation(reservationId);
     setIsChecked(false);
   };
@@ -157,24 +157,10 @@ export default function SeatButton({
         {isChecked && !isAdmin ? <RightIcon className="m-auto size-32 fill-white" /> : null}
       </button>
       {isChecked && !isAdmin ? (
-        <CancelIcon
-          onClick={(e) => {
-            e.stopPropagation();
-            if (userSeatInfo.reservationId) {
-              handleCancelButtonClick(userSeatInfo.reservationId);
-            } else {
-              notify({
-                type: "error",
-                message: "예약 정보를 찾을 수 없습니다. 페이지를 새로고침해주세요.",
-              });
-            }
-          }}
-          className={cn(
-            "bg-custom-black absolute -right-6 -top-10 size-24 cursor-pointer rounded-full md:-right-4 md:-top-8",
-            {
-              "hidden group-hover:block": !isAdmin,
-            },
-          )}
+        <SeatCancelButton
+          reservationId={userSeatInfo?.reservationId}
+          onCancel={handleCancelButtonClick}
+          isAdmin={isAdmin}
         />
       ) : null}
       <AlertModal
