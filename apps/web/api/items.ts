@@ -27,11 +27,7 @@ export const patchItem = async (itemId: string, formData: FormData): Promise<str
       method: "PATCH",
       url: API_ENDPOINTS.ITEMS.UPDATE_ITEM(itemId),
       data: formData,
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
     },
   });
-
   return data;
 };

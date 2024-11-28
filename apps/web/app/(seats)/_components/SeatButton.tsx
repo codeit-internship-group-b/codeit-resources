@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 "use client";
 import { CancelIcon, RightIcon } from "@ui/public";
@@ -8,15 +7,13 @@ import { notify } from "@ui/index";
 import AlertModal from "@ui/src/components/common/ConditionalActionModal/AlertModal";
 import { usePathname } from "next/navigation";
 import { Sheet } from "react-modal-sheet";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { type ReservedResponse, type ReservationRequestBody, type ReservationResponse } from "@repo/types";
 import { formatSelectedDate } from "@ui/src/utils/date";
 import useIsMobileStore from "@/app/store/useIsMobileStore";
 import Sidebar from "@/components/common/Sidebar";
 import { useDateStore } from "@/app/store/useDateStore";
 import { useAuthStore } from "@/src/stores/useAuthStore";
-import { createSeatReservationData, deleteReservationData, modifyReservationData } from "@/api/reservation";
 import { isSeat, isSeatReserved } from "@/src/utils/seats";
+import { useSeatReservation } from "@/app/_hooks/useSeatReservation";
 import { useSeatContext } from "../../../src/contexts/SeatContext";
 import AdminSeatSetting from "./AdminSeatSetting";
 
@@ -38,9 +35,9 @@ export default function SeatButton({
   const { checkedSeat, handleSelectSeat, seatReservationId, userReservationData } = useSeatContext();
   const { selectedDate } = useDateStore();
   const { user: authUser } = useAuthStore();
+  const { createSeatReservation, deleteSeatReservation, modifySeatReservation } = useSeatReservation();
   const pathname = usePathname();
   const isMobile = useIsMobileStore();
-  const queryClient = useQueryClient();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
@@ -50,68 +47,6 @@ export default function SeatButton({
 
   const isAdmin = useMemo(() => pathname.includes("admin"), [pathname]);
   const isDisabled = !isAdmin && (checkedSeat === seatNum || status !== "available" || isLoading);
-
-  // 좌석 예약 생성
-  const { mutate: createSeatReservationMutate } = useMutation<
-    ReservationResponse,
-    Error,
-    { seatId: string; reservationData: typeof reservationData }
-  >({
-    mutationFn: ({ seatId, reservationData }) => createSeatReservationData({ seatId, reservationData }),
-    onSuccess: (response) => {
-      void Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["seats"] }),
-        queryClient.invalidateQueries({ queryKey: ["user", "reservations"] }),
-      ]);
-      notify({ type: "success", message: response.message });
-    },
-    onError: (error) => {
-      setIsChecked(false);
-      notify({ type: "error", message: `오류 발생: ${error.message}` });
-    },
-  });
-
-  // 좌석 예약 삭제
-  const { mutate: deleteSeatReservationMutate } = useMutation({
-    mutationFn: (reservationId: string | null) => deleteReservationData(reservationId),
-    onSuccess: () => {
-      void Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["seats"] }),
-        queryClient.invalidateQueries({ queryKey: ["user", "reservations"] }),
-      ]);
-      setIsChecked(false);
-      notify({ type: "success", message: "자리 예약을 삭제했습니다" });
-    },
-    onError: (error) => {
-      notify({ type: "error", message: `오류 발생: ${error.message}` });
-    },
-  });
-
-  // 좌석 예약 수정
-  const { mutate: modifyReservationMutate } = useMutation<
-    { deleteResult: ReservedResponse; createResult: ReservedResponse },
-    Error,
-    { seatId: string; reservationData: ReservationRequestBody; reservationId: string | null }
-  >({
-    mutationFn: ({ seatId, reservationData, reservationId }) => {
-      return modifyReservationData({
-        seatId,
-        reservationData,
-        reservationId,
-      });
-    },
-    onSuccess: () => {
-      void Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["seats"] }),
-        queryClient.invalidateQueries({ queryKey: ["user", "reservations"] }),
-      ]);
-      handleSelectSeat(seatNum);
-      notify({ type: "success", message: "좌석 예약 성공!" });
-    },
-    onError: (error) => {
-      notify({ type: "error", message: `오류 발생: ${error.message}` });
-    },
-  });
 
   // 예약 정보
   const reservationData = {
@@ -150,7 +85,7 @@ export default function SeatButton({
     if (isSeatReserved(userReservationData)) {
       setIsModalOpen(true);
     } else {
-      createSeatReservationMutate({ seatId: itemId, reservationData });
+      createSeatReservation({ seatId: itemId, reservationData });
       handleSelectSeat(seatNum);
       setIsChecked(true);
     }
@@ -171,14 +106,14 @@ export default function SeatButton({
   // 모달에서 자리바꾸기 확인버튼 눌렀을 때
   const handleModalConfirm = (): void => {
     if (seatReservationId && seatReservationId.length > 0) {
-      modifyReservationMutate({ seatId: itemId, reservationData, reservationId: seatReservationId });
+      modifySeatReservation({ seatId: itemId, reservationData, reservationId: seatReservationId });
       setIsModalOpen(false);
     }
   };
 
   // 좌석예약 취소(삭제) 버튼 눌렀을 때
   const handleCancelButtonClick = (reservationId: string): void => {
-    deleteSeatReservationMutate(reservationId);
+    deleteSeatReservation(reservationId);
     setIsChecked(false);
   };
 
