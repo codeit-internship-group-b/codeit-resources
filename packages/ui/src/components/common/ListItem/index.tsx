@@ -2,8 +2,7 @@
 
 import { BurgerIcon } from "@ui/public";
 import cn from "@ui/src/utils/cn";
-import { DragEvent, useCallback, useState, type ReactNode } from "react";
-import { debounce, throttle } from "es-toolkit";
+import { useState, type ReactNode } from "react";
 
 interface ListItemProps {
   children: ReactNode;

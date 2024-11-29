@@ -65,8 +65,6 @@ export default function TeamListItem({ team }: TeamListItemProps): JSX.Element {
     setIsMobileModalOpen(true);
   };
 
-  // TODO : 멤버관리 페이지 스켈레톤
-
   return (
     <>
       <div
