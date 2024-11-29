@@ -6,10 +6,17 @@ interface GetMembersProps {
   selectedSort: SortOption;
   role?: string;
   team?: string;
+  keyword?: string;
   cursor?: string | null;
 }
 
-export const getMembers = async ({ selectedSort, role, team, cursor }: GetMembersProps): Promise<MembersResponse> => {
+export const getMembers = async ({
+  selectedSort,
+  role,
+  team,
+  keyword,
+  cursor,
+}: GetMembersProps): Promise<MembersResponse> => {
   const { data } = await axiosRequester<MembersResponse>({
     options: {
       method: "GET",
@@ -18,6 +25,7 @@ export const getMembers = async ({ selectedSort, role, team, cursor }: GetMember
         sortOption: selectedSort,
         role,
         team,
+        keyword,
         cursor,
       },
     },
