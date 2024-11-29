@@ -5,7 +5,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { type PropsWithChildren } from "react";
 import { Toast } from "@ui/index";
 import MobileSizeWatcher from "@/components/MobileSizeWatcher";
-import { getQueryClient } from "@/lib/getQueryClient";
+import { getQueryClient } from "@/lib/queryClient";
 
 export default function Providers({ children }: PropsWithChildren): JSX.Element {
   const queryClient = getQueryClient();
