@@ -89,11 +89,17 @@ config();
  */
 
 export const getUsers = async (req: GetUsersRequest, res: Response): Promise<void> => {
-  const filters = buildFilters(req.query);
-  const sortCriteria = getSortCriteria(req.query.sortOption);
-  const users = await fetchUsers(filters, sortCriteria, PAGE_SIZE);
-  const response = formatPaginatedResponse(users, PAGE_SIZE);
-
+  const filters = buildFilters({ query: req.query });
+  const sortCriteria = getSortCriteria({ sortOption: req.query.sortOption });
+  const users = await fetchUsers({
+    filters,
+    sortCriteria,
+    pageSize: PAGE_SIZE,
+  });
+  const response = formatPaginatedResponse({
+    members: users,
+    pageSize: PAGE_SIZE,
+  });
   res.status(200).json(response);
 };
 

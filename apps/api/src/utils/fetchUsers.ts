@@ -2,11 +2,13 @@ import { type IUser } from "@repo/types";
 import { User } from "../models";
 import { type Filters } from "../types";
 
-export const fetchUsers = async (
-  filters: Filters,
-  sortCriteria: Record<string, 1 | -1>,
-  pageSize: number,
-): Promise<IUser[]> => {
+interface FetchUsersParams {
+  filters: Filters;
+  sortCriteria: Record<string, 1 | -1>;
+  pageSize: number;
+}
+
+export const fetchUsers = async ({ filters, sortCriteria, pageSize }: FetchUsersParams): Promise<IUser[]> => {
   const users = await User.find(filters)
     .select("-password")
     .sort(sortCriteria)

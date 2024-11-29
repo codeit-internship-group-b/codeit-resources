@@ -1,24 +1,28 @@
 import { type Filters, type GetUsersRequest } from "../types";
 
-export const buildFilters = (params: GetUsersRequest["query"]): Filters => {
+interface BuildFiltersParams {
+  query: GetUsersRequest["query"];
+}
+
+export const buildFilters = ({ query }: BuildFiltersParams): Filters => {
   const filters: Filters = {};
 
-  if (params.role) {
-    filters.role = params.role;
+  if (query.role) {
+    filters.role = query.role;
   }
 
-  if (params.team) {
-    filters.teams = { $in: [params.team] };
+  if (query.team) {
+    filters.teams = { $in: [query.team] };
   }
 
-  if (params.cursor) {
-    filters._id = { $lt: params.cursor };
+  if (query.cursor) {
+    filters._id = { $lt: query.cursor };
   }
 
-  if (params.keyword) {
+  if (query.keyword) {
     filters.$or = [
-      { name: { $regex: params.keyword, $options: "i" } },
-      { email: { $regex: params.keyword, $options: "i" } },
+      { name: { $regex: query.keyword, $options: "i" } },
+      { email: { $regex: query.keyword, $options: "i" } },
     ];
   }
 
