@@ -75,48 +75,54 @@ export default function EditItemForm({
   };
 
   return (
-    <form onSubmit={(event) => void handleSubmit(handleFormSubmit)(event)} className="flex flex-col">
-      <div className="my-20">
-        <Radio.Group
-          defaultValue={defaultItem ? defaultItem.status : "available"}
-          {...register("status")}
-          onChange={(value) => {
-            setValue("status", value as TItemStatus);
-          }}
-        >
-          <Radio.Option value="available">사용 가능</Radio.Option>
-          <Radio.Option value="maintenance">사용 불가</Radio.Option>
-        </Radio.Group>
+    <form
+      onSubmit={(event) => void handleSubmit(handleFormSubmit)(event)}
+      className="flex h-full flex-col justify-between"
+    >
+      <div>
+        <h1>회의실 {panelState === "add" ? "추가" : "수정"}</h1>
+        <div className="my-20">
+          <Radio.Group
+            defaultValue={defaultItem ? defaultItem.status : "available"}
+            {...register("status")}
+            onChange={(value) => {
+              setValue("status", value as TItemStatus);
+            }}
+          >
+            <Radio.Option value="available">사용 가능</Radio.Option>
+            <Radio.Option value="maintenance">사용 불가</Radio.Option>
+          </Radio.Group>
+        </div>
+        <Input {...register("name", { required: true })} name="name" placeholder="회의실 이름" type="text" />
+        <Input {...register("description")} name="description" placeholder="설명" type="text" />
+        <div className="mb-24">
+          <Dropdown
+            selectedValue={currentCategory.name}
+            onSelect={(value) => {
+              const selectedCategory = categories.find((category) => category._id === value);
+              if (selectedCategory) {
+                setCurrentCategory(selectedCategory);
+                setValue("category", value as string);
+              }
+            }}
+            isError={false}
+            errorMessage="Error"
+          >
+            <Dropdown.Toggle title="카테고리">{currentCategory.name}</Dropdown.Toggle>
+            <Dropdown.Wrapper>
+              {categories.map((category) => {
+                return (
+                  <Dropdown.Item key={category._id} value={category._id}>
+                    {category.name}
+                  </Dropdown.Item>
+                );
+              })}
+            </Dropdown.Wrapper>
+          </Dropdown>
+        </div>
+        <Input {...register("capacity")} name="capacity" placeholder="수용인원" type="text" />
+        <Input {...register("location")} name="location" placeholder="위치" type="text" />
       </div>
-      <Input {...register("name", { required: true })} name="name" placeholder="회의실 이름" type="text" />
-      <Input {...register("description")} name="description" placeholder="설명" type="text" />
-      <div className="mb-24">
-        <Dropdown
-          selectedValue={currentCategory.name}
-          onSelect={(value) => {
-            const selectedCategory = categories.find((category) => category._id === value);
-            if (selectedCategory) {
-              setCurrentCategory(selectedCategory);
-              setValue("category", value as string);
-            }
-          }}
-          isError={false}
-          errorMessage="Error"
-        >
-          <Dropdown.Toggle title="카테고리">{currentCategory.name}</Dropdown.Toggle>
-          <Dropdown.Wrapper>
-            {categories.map((category) => {
-              return (
-                <Dropdown.Item key={category._id} value={category._id}>
-                  {category.name}
-                </Dropdown.Item>
-              );
-            })}
-          </Dropdown.Wrapper>
-        </Dropdown>
-      </div>
-      <Input {...register("capacity")} name="capacity" placeholder="수용인원" type="text" />
-      <Input {...register("location")} name="location" placeholder="위치" type="text" />
       <Button type="submit" variant="Action">
         회의실 {panelState === "add" ? "추가" : "수정"}
       </Button>

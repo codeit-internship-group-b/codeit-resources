@@ -26,10 +26,7 @@ export default function ItemsAdminHeader(): JSX.Element {
         <AddCategoryButton onClick={openPanel} />
       </div>
       <Sidebar isOpen={isPanelOpen} onClose={closePanel}>
-        <div>
-          <h1 className="my-24">카테고리 추가</h1>
-          <AddCategoryForm />
-        </div>
+        <AddCategoryForm />
       </Sidebar>
     </>
   );

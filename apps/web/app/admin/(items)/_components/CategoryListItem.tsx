@@ -121,14 +121,11 @@ export default function CategoryListItem({ prevCategory }: CategoryListItemProps
           </ConfirmationModal>
         </div>
         <button
-          className="hover:bg-custom-black/5 ml-40 flex size-32 cursor-pointer justify-center rounded-full transition-colors duration-300 ease-in-out"
+          className="hover:bg-custom-black/5 ml-40 flex size-32 cursor-pointer items-center justify-center rounded-full transition-colors duration-300 ease-in-out"
           type="button"
           onClick={toggleListItem}
         >
-          <TriangleIcon
-            width={16}
-            className={`transition-transform duration-300 ${isOpen ? "rotate-180" : "rotate-0"}`}
-          />
+          <TriangleIcon className={`transition-transform duration-300 ${isOpen ? "rotate-180" : "rotate-0"}`} />
         </button>
       </ListItem>
       {isOpen ? (
@@ -152,7 +149,6 @@ export default function CategoryListItem({ prevCategory }: CategoryListItemProps
       ) : null}
 
       <Sidebar isOpen={isPanelOpen} onClose={closePanel}>
-        <h1 className="my-24">회의실 {panelState === "add" ? "추가" : "수정"}</h1>
         <EditItemForm
           prevCategory={prevCategory}
           onSubmit={handleSubmitForm}
