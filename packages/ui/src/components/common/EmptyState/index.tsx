@@ -1,10 +1,8 @@
-interface EmptyMessage {
-  title: string;
-  description: string;
-}
-
 interface EmptyStateProps {
-  message: EmptyMessage;
+  message: {
+    title: string;
+    description: string;
+  };
 }
 
 export default function EmptyState({ message }: EmptyStateProps): JSX.Element {

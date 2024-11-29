@@ -3,8 +3,8 @@ import { type MemberWithStaticImage, type SortOption } from "@repo/types/src/mem
 import { SpinnerIcon } from "@ui/public";
 import { useIntersectionObserver } from "@repo/ui/src/hooks/useIntersectionObserver";
 import { getEmptyMessage } from "@repo/ui/src/utils/getEmptyMessage";
+import EmptyState from "@ui/src/components/common/EmptyState";
 import { useMembersSuspenseInfiniteQuery } from "../_hooks/useMembersSuspenseInfiniteQuery";
-import EmptyState from "./EmptyState";
 import MemberListItem from "./MemberListItem";
 
 interface MemberListProps {
