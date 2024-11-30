@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 
 import { notify, Radio } from "@ui/index";
@@ -5,7 +6,7 @@ import Button from "@ui/src/components/common/Button";
 import MultiSelectDropdown from "@repo/ui/src/components/common/Dropdown/MultiSelectDropdown";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { type AdminSeatSettingFormValues } from "@repo/types";
+import { type SeatStatus, type AdminSeatSettingFormValues } from "@repo/types";
 import Profile from "@/components/common/Profile";
 import { getMembers } from "@/api/members";
 import { patchItem } from "@/api/items";
@@ -13,7 +14,7 @@ import { patchItem } from "@/api/items";
 interface AdminSeatSettingProps {
   itemId: string;
   seatNum: string;
-  status: "in-use" | "unavailable" | "available" | "reserved";
+  status: SeatStatus;
   userName: string | null | undefined;
   onClose: () => void;
 }
@@ -59,7 +60,7 @@ export default function AdminSeatSetting({
   const { mutate: patchItemMutation } = useMutation<string, Error, { itemId: string; formData: FormData }>({
     mutationFn: ({ itemId, formData }) => patchItem(itemId, formData),
     onSuccess: (response: string) => {
-      void Promise.all([queryClient.invalidateQueries({ queryKey: ["seats"] })]);
+      void queryClient.invalidateQueries({ queryKey: ["seats"] });
       notify({ type: "success", message: response });
     },
     onError: (error: Error) => {

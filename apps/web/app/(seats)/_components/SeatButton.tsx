@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 "use client";
 import { RightIcon } from "@ui/public";
@@ -7,6 +8,7 @@ import AlertModal from "@ui/src/components/common/ConditionalActionModal/AlertMo
 import { usePathname } from "next/navigation";
 import { Sheet } from "react-modal-sheet";
 import { formatSelectedDate } from "@ui/src/utils/date";
+import { type SeatStatus } from "@repo/types";
 import useIsMobileStore from "@/app/store/useIsMobileStore";
 import Sidebar from "@/components/common/Sidebar";
 import { useDateStore } from "@/app/store/useDateStore";
@@ -19,7 +21,7 @@ import SeatCancelButton from "./SeatCancelButton";
 
 interface SeatButtonProps {
   isLoading?: boolean;
-  status: "in-use" | "unavailable" | "available" | "reserved";
+  status: SeatStatus;
   itemId: string;
   user?: string | null;
   seatNum: string;
@@ -49,13 +51,18 @@ export default function SeatButton({
   const isDisabled = !isAdmin && (checkedSeat === seatNum || status !== "available" || isLoading);
 
   // 예약 정보
-  const reservationData = {
-    userId: authUser?._id,
-    itemType: "seat",
-    startAt: `${formatSelectedDate(selectedDate)}T${new Date().toISOString().slice(11, 19)}Z`,
-    endAt: `${formatSelectedDate(selectedDate)}T23:59:59Z`,
-    status: "reserved",
-  };
+  const reservationData = useMemo(() => {
+    if (!authUser?._id) {
+      throw new Error("사용자 정보가 없습니다.");
+    }
+    return {
+      userId: authUser._id,
+      itemType: "seat" as const,
+      startAt: `${formatSelectedDate(selectedDate)}T${new Date().toISOString().slice(11, 19)}Z`,
+      endAt: `${formatSelectedDate(selectedDate)}T23:59:59Z`,
+      status: "reserved" as const,
+    };
+  }, [authUser?._id, selectedDate]);
 
   // 현재 로그인 된 사용자의 좌석정보를 기반으로 특정 좌석 예약 여부 확인
   const userSeatInfo = useMemo(() => {
@@ -85,9 +92,22 @@ export default function SeatButton({
     if (isSeatReserved(userReservationData)) {
       setIsModalOpen(true);
     } else {
-      createSeatReservation({ seatId: itemId, reservationData });
-      handleSelectSeat(seatNum);
-      setIsChecked(true);
+      createSeatReservation(
+        {
+          seatId: itemId,
+          reservationData,
+        },
+        {
+          onSuccess: () => {
+            handleSelectSeat(seatNum);
+            setIsChecked(true);
+          },
+          onError: () => {
+            handleSelectSeat(null);
+            setIsChecked(false);
+          },
+        },
+      );
     }
   };
 
@@ -106,7 +126,19 @@ export default function SeatButton({
   // 모달에서 자리바꾸기 확인버튼 눌렀을 때
   const handleModalConfirm = (): void => {
     if (seatReservationId && seatReservationId.length > 0) {
-      modifySeatReservation({ seatId: itemId, reservationData, reservationId: seatReservationId });
+      modifySeatReservation(
+        { seatId: itemId, reservationData, reservationId: seatReservationId },
+        {
+          onSuccess: () => {
+            handleSelectSeat(seatNum);
+            setIsChecked(true);
+          },
+          onError: () => {
+            handleSelectSeat(null);
+            setIsChecked(false);
+          },
+        },
+      );
       setIsModalOpen(false);
     }
   };

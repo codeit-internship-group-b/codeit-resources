@@ -24,14 +24,18 @@ interface SeatReservationMutations {
 export const useSeatReservation = (onSuccess?: () => void): SeatReservationMutations => {
   const queryClient = useQueryClient();
 
+  const invalidateReservationQueries = async (): Promise<void> => {
+    await Promise.all([
+      queryClient.invalidateQueries({ queryKey: ["seats"] }),
+      queryClient.invalidateQueries({ queryKey: ["user", "reservations"] }),
+    ]);
+  };
+
   // 좌석 예약 생성 뮤테이션
   const { mutate: createSeatReservation } = useMutation({
     mutationFn: createSeatReservationData,
     onSuccess: (response) => {
-      void Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["seats"] }),
-        queryClient.invalidateQueries({ queryKey: ["user", "reservations"] }),
-      ]);
+      void invalidateReservationQueries();
       notify({ type: "success", message: response.message });
       onSuccess?.();
     },
@@ -44,10 +48,7 @@ export const useSeatReservation = (onSuccess?: () => void): SeatReservationMutat
   const { mutate: deleteSeatReservation } = useMutation({
     mutationFn: deleteReservationData,
     onSuccess: () => {
-      void Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["seats"] }),
-        queryClient.invalidateQueries({ queryKey: ["user", "reservations"] }),
-      ]);
+      void invalidateReservationQueries();
       notify({ type: "success", message: "자리 예약을 삭제했습니다" });
     },
     onError: (error) => {
@@ -59,10 +60,7 @@ export const useSeatReservation = (onSuccess?: () => void): SeatReservationMutat
   const { mutate: modifySeatReservation } = useMutation({
     mutationFn: modifyReservationData,
     onSuccess: () => {
-      void Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["seats"] }),
-        queryClient.invalidateQueries({ queryKey: ["user", "reservations"] }),
-      ]);
+      void invalidateReservationQueries();
       notify({ type: "success", message: "좌석 예약 성공!" });
     },
     onError: (error) => {

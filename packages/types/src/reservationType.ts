@@ -19,11 +19,11 @@ export interface IReservation {
 }
 
 export interface ReservationRequestBody {
-  userId: string | undefined;
-  itemType: string;
+  userId?: string;
+  itemType: "room" | "seat" | "equipment";
   startAt: string;
   endAt: string;
-  status: string;
+  status: TReservationStatus;
   notes?: string;
   attendees?: string[];
 }

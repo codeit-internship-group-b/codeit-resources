@@ -1,5 +1,3 @@
- 
- 
 import { API_ENDPOINTS } from "@repo/constants";
 import { type ReservationRequestBody, type IReservation, type ReservedResponse } from "@repo/types";
 import { axiosRequester } from "@/lib/axios";
@@ -121,7 +119,7 @@ export const modifyReservationData = async ({
   reservationId?: string | null;
 }): Promise<{ deleteResult: ReservedResponse; createResult: ReservedResponse }> => {
   if (!seatId || !reservationData || !reservationId) {
-    throw new Error("Seat ID, reservation data, and reservation ID are required");
+    throw new Error("Seat ID, reservation data, reservation ID가 필요합니다.");
   }
 
   // Step 1: 기존 예약 삭제
