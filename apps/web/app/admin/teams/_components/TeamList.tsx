@@ -1,5 +1,7 @@
 "use client";
 
+import EmptyState from "@ui/src/components/common/EmptyState";
+import { EMPTY_STATE_MESSAGES } from "@repo/constants/messages";
 import { useSuspenseTeamsQuery } from "../_hooks/useTeamsQueries";
 import { useDragAndDrop } from "../../_hooks/useDragAndDrop";
 import { useUpdateTeamOrder } from "../_hooks/useTeamsMutations";
@@ -21,7 +23,7 @@ export default function TeamList(): JSX.Element {
   });
   const { mutate: updateTeamOrderMutate } = useUpdateTeamOrder(updatedTeams);
 
-  // if (teams.length === 0) return <EmptyState activeTab="teams" />;
+  if (teams.length === 0) return <EmptyState message={EMPTY_STATE_MESSAGES.TEAMS} />;
 
   return (
     <div className="flex flex-col md:mt-40">

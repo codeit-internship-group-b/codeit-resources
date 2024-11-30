@@ -74,4 +74,8 @@ export const EMPTY_STATE_MESSAGES = {
       SUGGESTION: "멤버를 새로 등록해 보세요.",
     }),
   },
-} as const;
+  TEAMS: {
+    title: "등록된 팀이 없습니다.",
+    description: "새로운 팀을 등록해 보세요.",
+  },
+};
