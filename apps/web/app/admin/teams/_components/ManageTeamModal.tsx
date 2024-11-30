@@ -4,7 +4,7 @@ import { type ReactNode, useEffect } from "react";
 import { type TeamType } from "@repo/types";
 import { debounce } from "es-toolkit";
 import { SettingsModal, SettingsModalButton, SettingsModalHeader } from "@/components/SettingsModal";
-import { useCreateForm, useCreateTeam, useUpdateTeam } from "../_hooks/useTeamsMutations";
+import { useCreateForm, useCreateTeam, useUpdateTeamName } from "../_hooks/useTeamsMutations";
 
 interface ManageTeamModalProps {
   isOpen: boolean;
@@ -26,13 +26,11 @@ export default function ManageTeamModal({
   const { _id, name } = team ?? {};
 
   const { handleSubmit, register, setValue, reset } = useCreateForm();
-  const { mutate: postCreateTeamMutate } = useCreateTeam();
-  const { mutate: updateTeamMutate } = useUpdateTeam();
+  const { mutate: postCreateTeamMutate } = useCreateTeam(onClose);
+  const { mutate: updateTeamMutate } = useUpdateTeamName();
 
   const debouncedSubmit = debounce((teamName: string) => {
     isCreate ? postCreateTeamMutate({ name: teamName }) : updateTeamMutate({ teamId: _id ?? "", newName: teamName });
-
-    onClose();
     reset();
   }, 800);
 
