@@ -60,3 +60,8 @@ export interface ResponseWithMessage {
 export interface MemberResponse extends ResponseWithMessage {
   user: IUser;
 }
+
+export interface MembersResponse extends ResponseWithMessage {
+  members: IUser[];
+  nextCursor: string | null;
+}

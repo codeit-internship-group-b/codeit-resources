@@ -47,3 +47,5 @@ export const IMAGE_CONFIG = {
   BLUR_DATA_URL:
     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mOcPmF6PQAFwwI/LAMTJwAAAABJRU5ErkJggg==",
 };
+
+export const PAGE_SIZE = 20;

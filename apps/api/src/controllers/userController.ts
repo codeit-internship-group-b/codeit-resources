@@ -1,25 +1,17 @@
 import { type Request, type Response } from "express";
 import { Roles, type IUser, type TRole } from "@repo/types";
 import { config } from "dotenv";
-import { type FilterQuery } from "mongoose";
 import { compare } from "bcryptjs";
+import { PAGE_SIZE } from "@repo/constants";
 import { User } from "../models/userModel";
 import { areArraysEqual } from "../utils/areArraysEqual";
+import { buildFilters } from "../utils/buildFilters";
+import { getSortCriteria } from "../utils/getSortCriteria";
+import { formatPaginatedResponse } from "../utils/formatPaginatedResponse";
+import { fetchUsers } from "../utils/fetchUsers";
+import { type GetUsersRequest } from "../types";
 
 config();
-
-interface GetUsersRequest extends Request {
-  query: {
-    role?: TRole;
-    team?: string;
-    sortOption?: "newest" | "oldest" | "alphabetical";
-  };
-}
-
-interface Filters extends FilterQuery<IUser> {
-  role?: TRole;
-  teams?: { $in: string[] };
-}
 
 // Get all users
 /**
@@ -46,57 +38,69 @@ interface Filters extends FilterQuery<IUser> {
  *           type: string
  *           enum: [newest, oldest, alphabetical]
  *         description: 정렬 옵션을 선택합니다.
+ *       - in: query
+ *         name: cursor
+ *         schema:
+ *           type: string
+ *         description: 다음 페이지 조회를 위한 커서 ID
+ *       - in: query
+ *         name: keyword
+ *         schema:
+ *           type: string
+ *         description: 이름, 이메일로 검색합니다.
  *     responses:
  *       200:
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   _id:
- *                     type: string
- *                     description: 사용자 ID
- *                   name:
- *                     type: string
- *                     description: 사용자 이름
- *                   email:
- *                     type: string
- *                     description: 사용자 이메일
- *                   role:
- *                     type: string
- *                     description: 사용자 역할
- *                   teams:
- *                     type: array
- *                     items:
- *                       type: string
- *                     description: 사용자가 속한 팀
- *                   profileImage:
- *                     type: string
- *                     description: 프로필 이미지 URL
+ *               type: object
+ *               properties:
+ *                 users:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                         description: 사용자 ID
+ *                       name:
+ *                         type: string
+ *                         description: 사용자 이름
+ *                       email:
+ *                         type: string
+ *                         description: 사용자 이메일
+ *                       role:
+ *                         type: string
+ *                         description: 사용자 역할
+ *                       teams:
+ *                         type: array
+ *                         items:
+ *                           type: string
+ *                         description: 사용자가 속한 팀
+ *                       profileImage:
+ *                         type: string
+ *                         description: 프로필 이미지 URL
+ *                 nextCursor:
+ *                   type: string
+ *                   nullable: true
+ *                   description: 다음 페이지가 있는 경우 다음 페이지의 첫 번째 아이템 ID
+ *       400:
+ *         description: 잘못된 요청 파라미터입니다.
  */
+
 export const getUsers = async (req: GetUsersRequest, res: Response): Promise<void> => {
-  const { role, team, sortOption } = req.query;
-  const filters: Filters = {};
-
-  if (role) filters.role = role;
-  if (team) {
-    filters.teams = { $in: [team] };
-  }
-
-  let query = User.find(filters).select("-password");
-
-  if (sortOption === "alphabetical") {
-    query = query.sort({ name: 1 });
-  } else if (sortOption === "oldest") {
-    query = query.sort({ createdAt: 1 });
-  } else {
-    query = query.sort({ createdAt: -1 });
-  }
-
-  const users = await query.exec();
-  res.status(200).send(users);
+  const filters = buildFilters({ query: req.query });
+  const sortCriteria = getSortCriteria({ sortOption: req.query.sortOption });
+  const users = await fetchUsers({
+    filters,
+    sortCriteria,
+    pageSize: PAGE_SIZE,
+  });
+  const response = formatPaginatedResponse({
+    members: users,
+    pageSize: PAGE_SIZE,
+  });
+  res.status(200).json(response);
 };
 
 interface GetUserRequest extends Request {
@@ -395,7 +399,6 @@ export const updateUser = async (req: UpdateUserRequest, res: Response): Promise
       return;
     }
   }
-  console.log(teams);
 
   if (teams.length > 3) {
     res.status(400).send({ message: "팀은 최대 3개까지 추가 가능합니다." });
