@@ -1,31 +1,38 @@
 import { useMemo } from "react";
 import { type MemberWithStaticImage, type SortOption } from "@repo/types/src/membersType";
-import { useIntersectionObserver } from "@repo/ui/src/hooks/useIntersectionObserver";
 import { SpinnerIcon } from "@ui/public";
+import { useIntersectionObserver } from "@repo/ui/src/hooks/useIntersectionObserver";
+import { getEmptyMessage } from "@repo/ui/src/utils/getEmptyMessage";
+import EmptyState from "@ui/src/components/common/EmptyState";
 import { useMembersSuspenseInfiniteQuery } from "../_hooks/useMembersSuspenseInfiniteQuery";
-import EmptyState from "./EmptyState";
 import MemberListItem from "./MemberListItem";
 
 interface MemberListProps {
   selectedSort: SortOption;
   activeTab: string;
   onMemberClick: (member: MemberWithStaticImage) => void;
+  keyword: string;
 }
 
-export default function MemberList({ selectedSort, activeTab, onMemberClick }: MemberListProps): JSX.Element {
+export default function MemberList({ selectedSort, activeTab, onMemberClick, keyword }: MemberListProps): JSX.Element {
   const queryParams = useMemo(() => {
+    const baseParams = {
+      selectedSort,
+      keyword,
+    };
+
     if (activeTab === "전체") {
-      return { selectedSort };
+      return baseParams;
     }
     if (activeTab === "어드민") {
-      return { selectedSort, role: "admin" };
+      return { ...baseParams, role: "admin" };
     }
     if (activeTab === "멤버") {
-      return { selectedSort, role: "member" };
+      return { ...baseParams, role: "member" };
     }
 
-    return { selectedSort, team: activeTab };
-  }, [activeTab, selectedSort]);
+    return { ...baseParams, team: activeTab };
+  }, [activeTab, selectedSort, keyword]);
 
   const {
     data: members,
@@ -45,11 +52,12 @@ export default function MemberList({ selectedSort, activeTab, onMemberClick }: M
   });
 
   if (members.length === 0) {
-    return <EmptyState activeTab={activeTab} />;
+    return <EmptyState message={getEmptyMessage({ activeTab, keyword })} />;
   }
 
   return (
     <div className="flex flex-col gap-16">
+      {keyword ? <p className="text-2lg-bold">&apos;{keyword}&apos; 검색 결과</p> : null}
       {members.map((member) => (
         <MemberListItem key={member._id} member={member} onMemberClick={onMemberClick} />
       ))}
