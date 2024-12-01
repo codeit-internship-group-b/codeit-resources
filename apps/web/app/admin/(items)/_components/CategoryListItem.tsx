@@ -20,7 +20,7 @@ interface CategoryListItemProps extends PropsWithChildren {
 
 export default function CategoryListItem({ category, rooms }: CategoryListItemProps): JSX.Element {
   const { isSidebarOpen, openSidebar } = useSidebarStore();
-  const { setPanelState } = useMeetingsStore();
+  const { setPanelState, setCurrentItem, setCurrentCategory } = useMeetingsStore();
   const [isOpen, setIsOpen] = useState(false);
 
   const [isModifyingCategoryName, setIsModifyingCategoryName] = useState(false);
@@ -42,6 +42,7 @@ export default function CategoryListItem({ category, rooms }: CategoryListItemPr
   const openPanelToAddItem = (): void => {
     if (!isSidebarOpen) {
       setPanelState("add");
+      setCurrentCategory(category);
       openSidebar();
     }
   };

@@ -10,13 +10,15 @@ interface MeetingsStore {
   isLoading: boolean;
   error: string | null;
   currentItem: IRoom | null;
+  currentCategory: ICategory | null;
 
   setCategories: (categories: ICategory[]) => void;
   setRooms: (rooms: IRoom[]) => void;
   setPanelState: (panelState: string) => void;
   setLoading: (isLoading: boolean) => void;
   setError: (error: string | null) => void;
-  setCurrentItem: (item: IRoom) => void;
+  setCurrentItem: (item: IRoom | null) => void;
+  setCurrentCategory: (category: ICategory | null) => void;
 
   handleAddItem: (data: FormData) => Promise<IRoom | IEquipment | string>;
   handleEditItem: (data: FormData, itemId: string) => Promise<IRoom | IEquipment | string>;
@@ -26,10 +28,12 @@ interface MeetingsStore {
 const useMeetingsStore = create<MeetingsStore>((set) => ({
   categories: [],
   rooms: [],
-  panelState: "",
+  panelState: "add",
   isLoading: false,
   error: null,
   currentItem: null,
+  currentCategory: null,
+
   setCategories: (categories) => {
     set({ categories });
   },
@@ -48,6 +52,10 @@ const useMeetingsStore = create<MeetingsStore>((set) => ({
   setCurrentItem: (item) => {
     set({ currentItem: item });
   },
+  setCurrentCategory: (category) => {
+    set({ currentCategory: category });
+  },
+
   handleAddItem: async (data: FormData): Promise<IRoom | IEquipment | string> => {
     set({ isLoading: true, error: null });
     try {
