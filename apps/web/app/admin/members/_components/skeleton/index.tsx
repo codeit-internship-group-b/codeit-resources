@@ -5,7 +5,7 @@ import TabsSkeleton from "./TabSkeleton";
 export default function Skeleton(): JSX.Element {
   return (
     <>
-      <header className="my-16 flex items-center justify-between gap-20 md:mb-40 md:mt-0">
+      <header className="my-16 flex items-center justify-between gap-20 md:mb-40 md:mt-80">
         <Chevron className="animate-pulse md:hidden" />
         <h1 className="text-3xl-bold hidden md:block">멤버 관리</h1>
         <div className="h-54 relative w-full md:hidden">
