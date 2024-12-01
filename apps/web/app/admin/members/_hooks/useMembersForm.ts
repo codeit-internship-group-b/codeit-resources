@@ -32,20 +32,6 @@ export const useMembersForm = ({ selectedMember, onClose }: UseMembersForm): Use
     },
   });
 
-  useEffect(() => {
-    if (selectedMember) {
-      reset({
-        role: selectedMember.role,
-        name: selectedMember.name,
-        email: selectedMember.email,
-        teams: selectedMember.teams,
-        profileImage: selectedMember.profileImage ?? null,
-      });
-    } else {
-      reset(DEFAULT_VALUES);
-    }
-  }, [selectedMember, reset]);
-
   const createMemberFormData = (data: SidePanelFormData): FormData => {
     const formData = new FormData();
     formData.append("role", data.role);
@@ -71,6 +57,20 @@ export const useMembersForm = ({ selectedMember, onClose }: UseMembersForm): Use
     }
     createMember(formData);
   };
+
+  useEffect(() => {
+    if (selectedMember) {
+      reset({
+        role: selectedMember.role,
+        name: selectedMember.name,
+        email: selectedMember.email,
+        teams: selectedMember.teams,
+        profileImage: selectedMember.profileImage ?? null,
+      });
+    } else {
+      reset(DEFAULT_VALUES);
+    }
+  }, [selectedMember, reset]);
 
   return { onSubmit, isPending, ...form };
 };

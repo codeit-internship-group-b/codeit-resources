@@ -28,7 +28,7 @@ export default function MemberForm({ selectedMember, onClose }: MemberFormProps)
     control,
     setValue,
     watch,
-    onSubmit: MembersFormSubmit,
+    onSubmit: membersFormSubmit,
     isPending,
   } = useMembersForm({ selectedMember, onClose });
 
@@ -59,7 +59,7 @@ export default function MemberForm({ selectedMember, onClose }: MemberFormProps)
   };
 
   return (
-    <form onSubmit={(...args) => void handleSubmit(MembersFormSubmit)(...args)}>
+    <form onSubmit={(...args) => void handleSubmit(membersFormSubmit)(...args)}>
       <div className="w-154 mb-24">
         <Controller
           name="role"

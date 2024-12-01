@@ -1,4 +1,3 @@
- 
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 "use client";
 import { CancelIcon, RightIcon } from "@ui/public";
@@ -234,6 +233,7 @@ export default function SeatButton({
               });
             }
           }}
+          color="white"
           className={cn(
             "bg-custom-black absolute -right-6 -top-10 size-24 cursor-pointer rounded-full md:-right-4 md:-top-8",
             {
