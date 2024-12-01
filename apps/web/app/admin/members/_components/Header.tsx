@@ -1,6 +1,6 @@
 import { Button } from "@ui/index";
 import { Chevron } from "@ui/public";
-import SearchForm from "./SearchForm";
+import SearchForm from "./search";
 
 interface HeaderProps {
   onMemberSelect: () => void;
