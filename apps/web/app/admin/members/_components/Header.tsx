@@ -1,46 +1,30 @@
-import { useState } from "react";
 import { Button } from "@ui/index";
 import { Chevron } from "@ui/public";
-import { type SortOption, SORT_OPTIONS } from "@repo/types/src/membersType";
-import useIsMobileStore from "@/app/store/useIsMobileStore";
-import SortDropdown from "./SortDropdown";
+import SearchForm from "./SearchForm";
 
 interface HeaderProps {
-  onSortChange: (sort: SortOption) => void;
   onMemberSelect: () => void;
+  onSearch: (keyword: string) => void;
+  keyword: string;
 }
 
-export default function Header({ onSortChange, onMemberSelect }: HeaderProps): JSX.Element {
-  const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS.NEWEST);
-
-  const isMobile = useIsMobileStore();
-
-  const handleSortChange = (value: string | boolean): void => {
-    const newSort = value as SortOption;
-    setSelectedSort(newSort);
-    onSortChange(newSort);
-  };
-
+export default function Header({ onMemberSelect, onSearch, keyword }: HeaderProps): JSX.Element {
   return (
-    <>
-      {isMobile ? (
-        <header className="mb-28 flex items-center justify-between">
-          <Chevron />
-          <h1 className="text-xl-bold">멤버 관리</h1>
-          <SortDropdown selectedSort={selectedSort} onSortChange={handleSortChange} />
-        </header>
-      ) : (
-        <header className="mb-40 flex justify-between">
-          <h1 className="text-3xl-bold">멤버 관리</h1>
-          <Button
-            onClick={onMemberSelect}
-            variant="Secondary"
-            className="w-122 h-42 text-lg-medium text-custom-black/80"
-          >
-            + 멤버 추가
-          </Button>
-        </header>
-      )}
-    </>
+    <header className="my-16 flex items-center justify-between gap-20 md:mb-40 md:mt-0 md:gap-0">
+      <Chevron className="md:hidden" />
+      <h1 className="text-3xl-bold hidden md:block">멤버 관리</h1>
+      <div className="md:gap-30 relative w-full md:flex md:w-auto">
+        <div className="h-54 md:h-42 relative md:w-[240px]">
+          <SearchForm onSearch={onSearch} keyword={keyword} />
+        </div>
+        <Button
+          onClick={onMemberSelect}
+          variant="Secondary"
+          className="w-122 h-42 text-lg-medium text-custom-black/80 hidden md:block"
+        >
+          + 멤버 추가
+        </Button>
+      </div>
+    </header>
   );
 }

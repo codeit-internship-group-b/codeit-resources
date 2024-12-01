@@ -4,6 +4,7 @@ export interface ITeam {
 
 export interface TeamType extends ITeam {
   _id: string;
+  order: number;
   createdAt: string;
   updatedAt: string;
 }
