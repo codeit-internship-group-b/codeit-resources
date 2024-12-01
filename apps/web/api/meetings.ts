@@ -45,3 +45,14 @@ export const patchItem = async (itemId: string, body: FormData): Promise<IRoom |
 
   return data;
 };
+
+export const deleteItem = async (itemId: string): Promise<string> => {
+  const { data } = await axiosRequester<string>({
+    options: {
+      method: "DELETE",
+      url: API_ENDPOINTS.ITEMS.DELETE_ITEM(itemId),
+    },
+  });
+
+  return data;
+};

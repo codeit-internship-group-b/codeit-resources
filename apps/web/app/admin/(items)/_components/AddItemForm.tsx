@@ -65,10 +65,9 @@ export default function EditItemForm({
       formData.set(key, value as string);
     });
     formData.set("category", currentCategory._id);
-    // formData.set("status", defaultItem ? defaultItem.status : "available");
     try {
-      const res = await onSubmit(formData, defaultItem?._id);
-      console.log(res);
+      await onSubmit(formData, defaultItem?._id);
+      notify({ type: "success", message: `${panelState === "add" ? "추가" : "수정"} 되었습니다.` });
     } catch (error) {
       notify({ type: "error", message: "제출실패" });
     }

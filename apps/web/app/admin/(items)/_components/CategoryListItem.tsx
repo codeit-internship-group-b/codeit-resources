@@ -2,48 +2,30 @@
 
 import ListItem from "@ui/src/components/common/ListItem";
 import { useOnClickOutside } from "@ui/src/hooks/useOnClickOutside";
-import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { type PropsWithChildren, useRef, useState, useEffect } from "react";
 import { TriangleIcon } from "@ui/public";
-import { type ICategory, type IEquipment, type IRoom } from "@repo/types";
-import Sidebar from "@/components/common/Sidebar";
-import { getAllRooms, patchItem, postNewItem } from "@/api/meetings";
+import { type ICategory, type IRoom } from "@repo/types";
+import { motion } from "framer-motion";
+import { useSidebarStore } from "@/app/store/useSidebarStore";
+import useMeetingsStore from "../_store/useMeetingsStore";
+import AddItemButton from "./AddItemButton";
+import CategoryListSubItem from "./CategoryListSubItem";
 import CategoryEditDropdown from "./CategoryEditDropdown";
 import ConfirmationModal from "./ConfirmationModal";
-import CategoryListSubItem from "./CategoryListSubItem";
-import AddItemButton from "./AddItemButton";
-import EditItemForm from "./AddItemForm";
 
-interface CategoryListItemProps {
-  prevCategory: ICategory;
+interface CategoryListItemProps extends PropsWithChildren {
+  category: ICategory;
+  rooms: IRoom[];
 }
 
-export default function CategoryListItem({ prevCategory }: CategoryListItemProps): JSX.Element {
+export default function CategoryListItem({ category, rooms }: CategoryListItemProps): JSX.Element {
+  const { isSidebarOpen, openSidebar } = useSidebarStore();
+  const { setPanelState } = useMeetingsStore();
+  const [isOpen, setIsOpen] = useState(false);
+
   const [isModifyingCategoryName, setIsModifyingCategoryName] = useState(false);
   const [inputValue, setInputValue] = useState("");
-
-  const [isOpen, setIsOpen] = useState(false);
-  const [isPanelOpen, setIsPanelOpen] = useState(false);
-  const [panelState, setPanelState] = useState("");
-  const [defaultItem, setDefaultItem] = useState<IRoom>();
-
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const [rooms, setRooms] = useState<IRoom[]>([]);
-
-  useEffect(() => {
-    const fetchItems = async (): Promise<void> => {
-      try {
-        const res = await getAllRooms();
-        const items = res.filter((item) => item.category.name === prevCategory.name);
-        setRooms(items);
-      } catch (error) {
-        throw new Error();
-      }
-    };
-
-    void fetchItems();
-  }, [prevCategory, isPanelOpen]);
 
   useOnClickOutside(inputRef, () => {
     if (isModifyingCategoryName) {
@@ -51,43 +33,21 @@ export default function CategoryListItem({ prevCategory }: CategoryListItemProps
     }
   });
 
-  const openPanelToAdd = (): void => {
-    if (!isPanelOpen) {
+  useEffect(() => {
+    if (isModifyingCategoryName && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isModifyingCategoryName]);
+
+  const openPanelToAddItem = (): void => {
+    if (!isSidebarOpen) {
       setPanelState("add");
-      setIsPanelOpen(true);
-    }
-  };
-
-  const openPanelToEdit = (item: IRoom): void => {
-    if (!isPanelOpen) {
-      setPanelState("edit");
-      setIsPanelOpen(true);
-      setDefaultItem(item);
-      console.log(item);
-    }
-  };
-
-  const closePanel = (): void => {
-    if (isPanelOpen) {
-      setIsPanelOpen(false);
+      openSidebar();
     }
   };
 
   const toggleListItem = (): void => {
     setIsOpen(!isOpen);
-  };
-
-  const handleSubmitForm = async (data: FormData, itemId?: string): Promise<IRoom | IEquipment> => {
-    if (panelState === "add") {
-      const res = await postNewItem("room", data);
-      closePanel();
-      return res;
-    } else if (panelState === "edit" && itemId) {
-      const res = await patchItem(itemId, data);
-      closePanel();
-      return res;
-    }
-    throw new Error("잘못된 입력입니다. 새로고침 후 다시 시도해주세요");
   };
 
   return (
@@ -96,6 +56,7 @@ export default function CategoryListItem({ prevCategory }: CategoryListItemProps
         <span className="flex flex-grow items-center gap-32 text-left">
           {isModifyingCategoryName ? (
             <input
+              defaultValue={category.name}
               ref={inputRef}
               placeholder="카테고리명"
               className="placeholder:text-custom-black/50 bg-gray-60 w-full placeholder:underline placeholder:underline-offset-4 focus:outline-none"
@@ -111,15 +72,25 @@ export default function CategoryListItem({ prevCategory }: CategoryListItemProps
               }}
             />
           ) : (
-            prevCategory.name
+            category.name
           )}
         </span>
+
         <div className="flex gap-12">
-          <AddItemButton onClick={openPanelToAdd} />
-          <ConfirmationModal title={prevCategory.name} type="category">
-            <CategoryEditDropdown isModifying={isModifyingCategoryName} setIsModifying={setIsModifyingCategoryName} />
+          <AddItemButton
+            onClick={() => {
+              openPanelToAddItem();
+            }}
+          />
+          <ConfirmationModal title={category.name} type="category" onConfirm={() => {}}>
+            <CategoryEditDropdown
+              onClickEdit={() => {
+                setIsModifyingCategoryName(true);
+              }}
+            />
           </ConfirmationModal>
         </div>
+
         <button
           className="hover:bg-custom-black/5 ml-40 flex size-32 cursor-pointer items-center justify-center rounded-full transition-colors duration-300 ease-in-out"
           type="button"
@@ -137,25 +108,10 @@ export default function CategoryListItem({ prevCategory }: CategoryListItemProps
           className="pl-24"
         >
           {rooms.map((item) => (
-            <CategoryListSubItem
-              key={item._id}
-              title={item.name}
-              editItem={() => {
-                openPanelToEdit(item);
-              }}
-            />
+            <CategoryListSubItem key={item._id} item={item} />
           ))}
         </motion.div>
       ) : null}
-
-      <Sidebar isOpen={isPanelOpen} onClose={closePanel}>
-        <EditItemForm
-          prevCategory={prevCategory}
-          onSubmit={handleSubmitForm}
-          panelState={panelState}
-          defaultItem={defaultItem}
-        />
-      </Sidebar>
     </>
   );
 }

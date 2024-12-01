@@ -1,18 +1,17 @@
 import { Modal } from "@ui/index";
 import Dropdown from "@ui/src/components/common/Dropdown";
-import { type Dispatch } from "react";
 
 interface CategoryEditDropdownProps {
   isModifying?: boolean;
-  setIsModifying: Dispatch<React.SetStateAction<boolean>>;
+  onClickEdit: () => void;
 }
-export default function CategoryEditDropdown({ isModifying, setIsModifying }: CategoryEditDropdownProps): JSX.Element {
+export default function CategoryEditDropdown({ isModifying, onClickEdit }: CategoryEditDropdownProps): JSX.Element {
   return (
     <Dropdown
       selectedValue={isModifying}
       onSelect={(value: string | boolean) => {
         if (value === "수정") {
-          setIsModifying(true);
+          onClickEdit();
         }
       }}
       size="sm"
