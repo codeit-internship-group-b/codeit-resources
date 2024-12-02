@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { type IRoom, type IEquipment, type ICategory } from "@repo/types";
 import { notify } from "@ui/index";
-import { postNewRoom, patchItem, deleteItem } from "@/api/meetings"; // API 요청 함수 예시
+import { postNewRoom, deleteRoom, patchRoom } from "@/api/meetings"; // API 요청 함수 예시
 
 interface MeetingsStore {
   categories: ICategory[];
@@ -70,7 +70,7 @@ const useMeetingsStore = create<MeetingsStore>((set) => ({
   handleEditItem: async (data, itemId): Promise<IRoom | IEquipment | string> => {
     set({ isLoading: true, error: null });
     try {
-      const res = await patchItem(itemId, data);
+      const res = await patchRoom(itemId, data);
       set({ isLoading: false });
       return res;
     } catch (error) {
@@ -80,7 +80,7 @@ const useMeetingsStore = create<MeetingsStore>((set) => ({
   },
   handleDeleteItem: async (itemId): Promise<void> => {
     try {
-      await deleteItem(itemId);
+      await deleteRoom(itemId);
       notify({ type: "success", message: "삭제되었습니다." });
     } catch (error) {
       notify({ type: "error", message: "삭제 실패" });
