@@ -1,8 +1,8 @@
 "use client";
 
+import { Button } from "@ui/index";
 import { useSidebarStore } from "@/app/store/useSidebarStore";
 import useMeetingsStore from "../_store/useMeetingsStore";
-import AddCategoryButton from "./AddCategoryButton";
 
 export default function ItemsAdminHeader(): JSX.Element {
   const { isSidebarOpen, openSidebar } = useSidebarStore();
@@ -18,7 +18,9 @@ export default function ItemsAdminHeader(): JSX.Element {
   return (
     <div className="flex justify-between">
       <h1>회의실 관리</h1>
-      <AddCategoryButton onClick={openPanel} />
+      <Button variant="Secondary" onClick={openPanel}>
+        분류 추가
+      </Button>
     </div>
   );
 }
