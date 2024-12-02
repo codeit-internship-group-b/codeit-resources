@@ -7,9 +7,11 @@ import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { patchRoom, postNewRoom } from "@/api/meetings";
+import { useSidebarStore } from "@/app/store/useSidebarStore";
 import useMeetingsStore from "../_store/useMeetingsStore";
 
 export default function EditItemForm(): JSX.Element {
+  const { closeSidebar } = useSidebarStore();
   const { panelState, currentItem, categories, currentCategory } = useMeetingsStore();
   const [selectedCategory, setSelectedCategory] = useState<ICategory>();
   const queryClient = useQueryClient();
@@ -35,6 +37,15 @@ export default function EditItemForm(): JSX.Element {
         status: "available",
         category: currentCategory?._id,
       });
+    } else if (panelState === "edit" && currentItem) {
+      reset({
+        name: currentItem.name,
+        description: currentItem.description,
+        capacity: currentItem.capacity,
+        location: currentItem.location,
+        status: currentItem.status,
+        category: currentItem.category._id,
+      });
     }
   }, [panelState, currentItem, currentCategory, reset]);
 
@@ -52,6 +63,7 @@ export default function EditItemForm(): JSX.Element {
     },
     onSuccess: async () => {
       notify({ type: "success", message: panelState === "add" ? "등록완료!" : "수정완료!" });
+      closeSidebar();
       await queryClient.invalidateQueries({ queryKey: ["rooms"] });
     },
     onError: () => {
@@ -75,20 +87,21 @@ export default function EditItemForm(): JSX.Element {
         <h1>회의실 {panelState === "add" ? "추가" : "수정"}</h1>
         <div className="my-20">
           <Radio.Group
-            defaultValue={currentItem ? currentItem.status : "available"}
+            value={currentItem?.status}
+            defaultValue={currentItem?.status ?? "available"}
             onChange={(value) => {
               setValue("status", value as TItemStatus);
             }}
           >
             <Radio.Option value="available">사용 가능</Radio.Option>
-            <Radio.Option value="maintenance">사용 불가</Radio.Option>
+            <Radio.Option value="unavailable">사용 불가</Radio.Option>
           </Radio.Group>
         </div>
         <Input {...register("name", { required: true })} name="name" placeholder="회의실 이름" type="text" />
         <Input {...register("description")} name="description" placeholder="설명" type="text" />
         <div className="mb-24">
           <Dropdown
-            selectedValue={currentCategory?.name}
+            selectedValue={selectedCategory?.name ?? currentCategory?.name}
             onSelect={(value) => {
               const selectedValue = categories.find((category) => category._id === value);
               if (selectedValue) {
