@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { getAllCategories, getAllRooms } from "@/api/meetings";
 import useMeetingsStore from "../_store/useMeetingsStore";
 import SidePanel from "./SidePanel";
@@ -9,29 +10,24 @@ import CategoryListItem from "./CategoryListItem";
 export default function CategoryList(): JSX.Element {
   const { categories, setCategories, rooms, setRooms } = useMeetingsStore();
 
+  const { data: fetchedCategories } = useQuery({
+    queryKey: ["categories"],
+    queryFn: getAllCategories,
+  });
+  const { data: fetchedRooms } = useQuery({ queryKey: ["rooms"], queryFn: getAllRooms });
+
   useEffect(() => {
-    const fetchCategories = async (): Promise<void> => {
-      try {
-        const res = await getAllCategories();
-        const roomCategories = res.filter((category) => category.itemType === "room");
-        setCategories(roomCategories);
-      } catch (error) {
-        throw new Error();
-      }
-    };
-    void fetchCategories();
+    if (fetchedCategories) {
+      const roomCategories = fetchedCategories.filter((category) => category.itemType === "room");
+      setCategories(roomCategories);
+    }
+  }, [fetchedCategories, setCategories]);
 
-    const fetchItems = async (): Promise<void> => {
-      try {
-        const res = await getAllRooms();
-        setRooms(res);
-      } catch (error) {
-        throw new Error();
-      }
-    };
-
-    void fetchItems();
-  }, []);
+  useEffect(() => {
+    if (fetchedRooms) {
+      setRooms(fetchedRooms);
+    }
+  }, [fetchedRooms, setRooms]);
 
   const filteredRoomsByCategory = categories.map((category) => ({
     categoryId: category._id,
