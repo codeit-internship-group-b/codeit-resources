@@ -39,10 +39,11 @@ export default function CategoryListItem({ category, rooms }: CategoryListItemPr
     }
   }, [isModifyingCategoryName]);
 
-  const openPanelToAddItem = (): void => {
+  const openPanelToAddItem = (selectedCategory: ICategory): void => {
     if (!isSidebarOpen) {
       setPanelState("add");
-      setCurrentCategory(category);
+      setCurrentItem(null);
+      setCurrentCategory(selectedCategory);
       openSidebar();
     }
   };
@@ -80,7 +81,7 @@ export default function CategoryListItem({ category, rooms }: CategoryListItemPr
         <div className="flex gap-12">
           <AddItemButton
             onClick={() => {
-              openPanelToAddItem();
+              openPanelToAddItem(category);
             }}
           />
           <ConfirmationModal title={category.name} type="category" onConfirm={() => {}}>

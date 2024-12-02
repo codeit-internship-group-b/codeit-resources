@@ -6,12 +6,6 @@ import useMeetingsStore from "../_store/useMeetingsStore";
 import EditItemForm from "./EditItemForm";
 import AddCategoryForm from "./AddCategoryForm";
 
-const panelContents: Record<string, JSX.Element | null> = {
-  add: <EditItemForm />,
-  edit: <EditItemForm />,
-  category: <AddCategoryForm />,
-};
-
 export default function SidePanel(): JSX.Element {
   const { isSidebarOpen, closeSidebar } = useSidebarStore();
   const { panelState } = useMeetingsStore();
@@ -23,7 +17,9 @@ export default function SidePanel(): JSX.Element {
         closeSidebar();
       }}
     >
-      {panelContents[panelState] ?? null}
+      {panelState === "add" && <EditItemForm />}
+      {panelState === "edit" && <EditItemForm />}
+      {panelState === "category" && <AddCategoryForm />}
     </Sidebar>
   );
 }

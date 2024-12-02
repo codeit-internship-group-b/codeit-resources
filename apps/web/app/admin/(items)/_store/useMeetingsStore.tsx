@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { type IRoom, type IEquipment, type ICategory } from "@repo/types";
 import { notify } from "@ui/index";
-import { postNewItem, patchItem, deleteItem } from "@/api/meetings"; // API 요청 함수 예시
+import { postNewRoom, patchItem, deleteItem } from "@/api/meetings"; // API 요청 함수 예시
 
 interface MeetingsStore {
   categories: ICategory[];
@@ -20,8 +20,8 @@ interface MeetingsStore {
   setCurrentItem: (item: IRoom | null) => void;
   setCurrentCategory: (category: ICategory | null) => void;
 
-  handleAddItem: (data: FormData) => Promise<IRoom | IEquipment | string>;
-  handleEditItem: (data: FormData, itemId: string) => Promise<IRoom | IEquipment | string>;
+  handleAddItem: (data: Record<string, string>) => Promise<IRoom | IEquipment | string>;
+  handleEditItem: (data: Record<string, string>, itemId: string) => Promise<IRoom | IEquipment | string>;
   handleDeleteItem: (itemId: string) => Promise<void>;
 }
 
@@ -56,10 +56,10 @@ const useMeetingsStore = create<MeetingsStore>((set) => ({
     set({ currentCategory: category });
   },
 
-  handleAddItem: async (data: FormData): Promise<IRoom | IEquipment | string> => {
+  handleAddItem: async (data): Promise<IRoom | IEquipment | string> => {
     set({ isLoading: true, error: null });
     try {
-      const res = await postNewItem("room", data);
+      const res = await postNewRoom("room", data);
       set({ isLoading: false });
       return res;
     } catch (error) {
@@ -67,7 +67,7 @@ const useMeetingsStore = create<MeetingsStore>((set) => ({
       throw new Error();
     }
   },
-  handleEditItem: async (data: FormData, itemId: string): Promise<IRoom | IEquipment | string> => {
+  handleEditItem: async (data, itemId): Promise<IRoom | IEquipment | string> => {
     set({ isLoading: true, error: null });
     try {
       const res = await patchItem(itemId, data);
@@ -78,7 +78,7 @@ const useMeetingsStore = create<MeetingsStore>((set) => ({
       throw new Error();
     }
   },
-  handleDeleteItem: async (itemId: string): Promise<void> => {
+  handleDeleteItem: async (itemId): Promise<void> => {
     try {
       await deleteItem(itemId);
       notify({ type: "success", message: "삭제되었습니다." });

@@ -1,23 +1,26 @@
 "use client";
 
-import { type TItemStatus } from "@repo/types";
-import { Button, Input, Radio } from "@ui/index";
+import { type ICategory, type TItemStatus } from "@repo/types";
+import { Button, Input, Radio, notify } from "@ui/index";
 import Dropdown from "@ui/src/components/common/Dropdown";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { AxiosError } from "axios";
+import { patchRoom, postNewRoom } from "@/api/meetings";
 import useMeetingsStore from "../_store/useMeetingsStore";
 
 export default function EditItemForm(): JSX.Element {
   const { panelState, currentItem, categories, currentCategory } = useMeetingsStore();
+  const [selectedCategory, setSelectedCategory] = useState<ICategory>();
 
   const { register, handleSubmit, setValue, reset } = useForm({
     defaultValues: {
-      name: currentItem ? currentItem.name : "",
-      description: currentItem ? currentItem.description : "",
-      capacity: currentItem ? currentItem.capacity : 1,
-      location: currentItem ? currentItem.location : "",
-      status: currentItem ? currentItem.status : "available",
-      category: currentItem ? currentItem.category._id : categories[1]?._id,
+      name: currentItem?.name ?? "",
+      description: currentItem?.description ?? "",
+      capacity: currentItem?.capacity ?? 1,
+      location: currentItem?.location ?? "",
+      status: currentItem?.status ?? "available",
+      category: currentCategory?._id,
     },
   });
 
@@ -29,35 +32,50 @@ export default function EditItemForm(): JSX.Element {
         capacity: 1,
         location: "",
         status: "available",
-        category: categories[1]?._id ?? "",
-      });
-    } else if (panelState === "edit" && currentItem) {
-      reset({
-        name: currentItem.name,
-        description: currentItem.description,
-        capacity: currentItem.capacity,
-        location: currentItem.location,
-        status: currentItem.status,
-        category: currentItem.category._id,
+        category: currentCategory?._id,
       });
     }
-  }, [panelState, currentItem, reset, categories]);
+  }, [panelState, currentItem, currentCategory, reset]);
 
-  const handleFormSubmit = handleSubmit((data) => {
+  const handleFormSubmit = handleSubmit(async (data) => {
+    const payload = {
+      ...data,
+      category: selectedCategory?._id ?? String(currentCategory?._id),
+      capacity: String(data.capacity),
+    };
+
     if (panelState === "add") {
-      console.log("add", data);
-      return data;
+      try {
+        const res = await postNewRoom("room", payload);
+        notify({ type: "success", message: "등록완료!" });
+        return res;
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          notify({ type: "error", message: error.response?.data.message || "잘못된 요청입니다." });
+        }
+      }
+    }
+
+    if (panelState === "edit" && currentItem) {
+      try {
+        const res = await patchRoom(currentItem._id, payload);
+        notify({ type: "success", message: "수정완료!" });
+        return res;
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          notify({ type: "error", message: error.response?.data?.message || "잘못된 요청입니다." });
+        }
+      }
     }
   });
 
   return (
-    <form onSubmit={() => handleSubmit} className="flex h-full flex-col justify-between">
+    <form onSubmit={handleFormSubmit} className="flex h-full flex-col justify-between">
       <div>
         <h1>회의실 {panelState === "add" ? "추가" : "수정"}</h1>
         <div className="my-20">
           <Radio.Group
             defaultValue={currentItem ? currentItem.status : "available"}
-            {...register("status")}
             onChange={(value) => {
               setValue("status", value as TItemStatus);
             }}
@@ -70,11 +88,12 @@ export default function EditItemForm(): JSX.Element {
         <Input {...register("description")} name="description" placeholder="설명" type="text" />
         <div className="mb-24">
           <Dropdown
-            selectedValue={currentItem?.category.name ?? currentCategory?.name ?? ""}
+            selectedValue={currentCategory?.name}
             onSelect={(value) => {
-              const selectedCategory = categories.find((category) => category._id === value);
-              if (selectedCategory) {
-                setValue("category", selectedCategory.name);
+              const selectedValue = categories.find((category) => category._id === value);
+              if (selectedValue) {
+                setSelectedCategory(selectedValue);
+                setValue("category", String(value));
               }
             }}
             isError={false}

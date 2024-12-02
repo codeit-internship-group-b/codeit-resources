@@ -13,12 +13,13 @@ interface CategoryListSubItemProps {
 
 export default function CategoryListSubItem({ item }: CategoryListSubItemProps): JSX.Element {
   const { isSidebarOpen, openSidebar } = useSidebarStore();
-  const { setPanelState, setCurrentItem } = useMeetingsStore();
+  const { setPanelState, setCurrentItem, setCurrentCategory } = useMeetingsStore();
 
   const openPanelToEditItem = (selectedItem: IRoom): void => {
     if (!isSidebarOpen) {
       setPanelState("edit");
       setCurrentItem(selectedItem);
+      setCurrentCategory(selectedItem.category);
       openSidebar();
     }
   };

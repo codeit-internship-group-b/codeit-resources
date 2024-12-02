@@ -22,11 +22,14 @@ export const getAllRooms = async (): Promise<IRoom[]> => {
   return data;
 };
 
-export const postNewItem = async (itemType: TItemType, body: FormData): Promise<IRoom | IEquipment> => {
+export const postNewRoom = async (itemType: TItemType, body: Record<string, string>): Promise<IRoom | IEquipment> => {
   const { data } = await axiosRequester<IRoom | IEquipment>({
     options: {
       method: "POST",
       url: API_ENDPOINTS.ITEMS.CREATE_ITEM(itemType),
+      headers: {
+        "Content-Type": "application/json",
+      },
       data: body,
     },
   });
@@ -34,11 +37,14 @@ export const postNewItem = async (itemType: TItemType, body: FormData): Promise<
   return data;
 };
 
-export const patchItem = async (itemId: string, body: FormData): Promise<IRoom | IEquipment> => {
+export const patchRoom = async (itemId: string, body: Record<string, string>): Promise<IRoom | IEquipment> => {
   const { data } = await axiosRequester<IRoom | IEquipment>({
     options: {
       method: "PATCH",
       url: API_ENDPOINTS.ITEMS.UPDATE_ITEM(itemId),
+      headers: {
+        "Content-Type": "application/json",
+      },
       data: body,
     },
   });
@@ -46,7 +52,7 @@ export const patchItem = async (itemId: string, body: FormData): Promise<IRoom |
   return data;
 };
 
-export const deleteItem = async (itemId: string): Promise<string> => {
+export const deleteRoom = async (itemId: string): Promise<string> => {
   const { data } = await axiosRequester<string>({
     options: {
       method: "DELETE",
