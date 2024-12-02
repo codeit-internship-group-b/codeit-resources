@@ -44,6 +44,7 @@ export default function CategoryListSubItem({ item }: CategoryListSubItemProps):
   const handleDeleteRoom = (itemId: string) => {
     mutation.mutate(itemId);
   };
+
   return (
     <ListItem color="white" thickness="thin">
       <span className="flex flex-grow items-center gap-32 text-left">{item.name}</span>

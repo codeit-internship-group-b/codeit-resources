@@ -66,7 +66,6 @@ export default function EditItemForm(): JSX.Element {
       capacity: String(data.capacity),
     };
 
-    // mutation을 사용하여 서버에 데이터 보내기
     mutation.mutate(payload);
   });
 

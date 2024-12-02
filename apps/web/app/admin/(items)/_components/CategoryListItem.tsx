@@ -6,7 +6,10 @@ import { type PropsWithChildren, useRef, useState, useEffect } from "react";
 import { TriangleIcon } from "@ui/public";
 import { type ICategory, type IRoom } from "@repo/types";
 import { motion } from "framer-motion";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { notify } from "@ui/index";
 import { useSidebarStore } from "@/app/store/useSidebarStore";
+import { deleteCategory, patchCategory } from "@/api/meetings";
 import useMeetingsStore from "../_store/useMeetingsStore";
 import AddItemButton from "./AddItemButton";
 import CategoryListSubItem from "./CategoryListSubItem";
@@ -26,6 +29,8 @@ export default function CategoryListItem({ category, rooms }: CategoryListItemPr
   const [isModifyingCategoryName, setIsModifyingCategoryName] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const queryClient = useQueryClient();
 
   useOnClickOutside(inputRef, () => {
     if (isModifyingCategoryName) {
@@ -52,6 +57,50 @@ export default function CategoryListItem({ category, rooms }: CategoryListItemPr
     setIsOpen(!isOpen);
   };
 
+  const deleteMutation = useMutation({
+    mutationFn: async (categoryId: string) => {
+      return await deleteCategory(categoryId);
+    },
+    onSuccess: async () => {
+      notify({
+        type: "success",
+        message: "카테고리가 삭제되었습니다.",
+      });
+      await queryClient.invalidateQueries({ queryKey: ["categories"] });
+    },
+    onError: () => {
+      notify({ type: "error", message: "삭제에 실패했습니다. 다시 시도해주세요." });
+    },
+  });
+
+  const handleDeleteCategory = (categoryId: string) => {
+    deleteMutation.mutate(categoryId);
+  };
+
+  const updateMutation = useMutation({
+    mutationFn: async (payload: Record<string, string>) => {
+      return await patchCategory(category._id, payload);
+    },
+    onSuccess: async () => {
+      notify({
+        type: "success",
+        message: "카테고리가 수정되었습니다.",
+      });
+      await queryClient.invalidateQueries({ queryKey: ["categories"] });
+    },
+    onError: () => {
+      notify({ type: "error", message: "수정에 실패했습니다. 다시 시도해주세요." });
+    },
+  });
+
+  const handleUpdateCategory = (): void => {
+    const payload = {
+      name: inputValue,
+    };
+
+    updateMutation.mutate(payload);
+  };
+
   return (
     <>
       <ListItem color="gray" thickness="thick">
@@ -67,9 +116,8 @@ export default function CategoryListItem({ category, rooms }: CategoryListItemPr
               }}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
-                  // TODO: input 데이터 patch
-                  // eslint-disable-next-line no-console
-                  console.log(inputValue);
+                  handleUpdateCategory();
+                  setIsModifyingCategoryName(false);
                 }
               }}
             />
@@ -84,7 +132,13 @@ export default function CategoryListItem({ category, rooms }: CategoryListItemPr
               openPanelToAddItem(category);
             }}
           />
-          <ConfirmationModal title={category.name} type="category" onConfirm={() => {}}>
+          <ConfirmationModal
+            title={category.name}
+            type="category"
+            onConfirm={() => {
+              handleDeleteCategory(category._id);
+            }}
+          >
             <CategoryEditDropdown
               onClickEdit={() => {
                 setIsModifyingCategoryName(true);

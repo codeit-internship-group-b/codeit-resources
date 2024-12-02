@@ -62,3 +62,44 @@ export const deleteRoom = async (itemId: string): Promise<string> => {
 
   return data;
 };
+
+export const postNewCategory = async (body: Record<string, string>): Promise<ICategory> => {
+  const { data } = await axiosRequester<ICategory>({
+    options: {
+      method: "POST",
+      url: API_ENDPOINTS.CATEGORIES.CREATE_CATEGORY,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: body,
+    },
+  });
+
+  return data;
+};
+
+export const patchCategory = async (categoryId: string, body: Record<string, string>): Promise<IRoom | IEquipment> => {
+  const { data } = await axiosRequester<IRoom | IEquipment>({
+    options: {
+      method: "PATCH",
+      url: API_ENDPOINTS.CATEGORIES.UPDATE_CATEGORY(categoryId),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: body,
+    },
+  });
+
+  return data;
+};
+
+export const deleteCategory = async (categoryId: string): Promise<string> => {
+  const { data } = await axiosRequester<string>({
+    options: {
+      method: "DELETE",
+      url: API_ENDPOINTS.CATEGORIES.DELETE_CATEGORY(categoryId),
+    },
+  });
+
+  return data;
+};
