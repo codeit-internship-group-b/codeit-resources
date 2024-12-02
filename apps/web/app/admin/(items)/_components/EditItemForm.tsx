@@ -5,13 +5,14 @@ import { Button, Input, Radio, notify } from "@ui/index";
 import Dropdown from "@ui/src/components/common/Dropdown";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import { AxiosError } from "axios";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { patchRoom, postNewRoom } from "@/api/meetings";
 import useMeetingsStore from "../_store/useMeetingsStore";
 
 export default function EditItemForm(): JSX.Element {
   const { panelState, currentItem, categories, currentCategory } = useMeetingsStore();
   const [selectedCategory, setSelectedCategory] = useState<ICategory>();
+  const queryClient = useQueryClient();
 
   const { register, handleSubmit, setValue, reset } = useForm({
     defaultValues: {
@@ -37,36 +38,36 @@ export default function EditItemForm(): JSX.Element {
     }
   }, [panelState, currentItem, currentCategory, reset]);
 
-  const handleFormSubmit = handleSubmit(async (data) => {
+  const mutation = useMutation({
+    mutationFn: async (payload: Record<string, string>) => {
+      if (panelState === "add") {
+        return await postNewRoom("room", payload);
+      }
+
+      if (panelState === "edit" && currentItem) {
+        return await patchRoom(currentItem._id, payload);
+      }
+
+      throw new Error("Unknown panel state");
+    },
+    onSuccess: async () => {
+      notify({ type: "success", message: panelState === "add" ? "등록완료!" : "수정완료!" });
+      await queryClient.invalidateQueries({ queryKey: ["rooms"] });
+    },
+    onError: () => {
+      notify({ type: "error", message: "잘못된 요청입니다." });
+    },
+  });
+
+  const handleFormSubmit = handleSubmit((data) => {
     const payload = {
       ...data,
       category: selectedCategory?._id ?? String(currentCategory?._id),
       capacity: String(data.capacity),
     };
 
-    if (panelState === "add") {
-      try {
-        const res = await postNewRoom("room", payload);
-        notify({ type: "success", message: "등록완료!" });
-        return res;
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          notify({ type: "error", message: error.response?.data.message || "잘못된 요청입니다." });
-        }
-      }
-    }
-
-    if (panelState === "edit" && currentItem) {
-      try {
-        const res = await patchRoom(currentItem._id, payload);
-        notify({ type: "success", message: "수정완료!" });
-        return res;
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          notify({ type: "error", message: error.response?.data?.message || "잘못된 요청입니다." });
-        }
-      }
-    }
+    // mutation을 사용하여 서버에 데이터 보내기
+    mutation.mutate(payload);
   });
 
   return (
