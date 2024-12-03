@@ -45,14 +45,26 @@ interface UpdateRequest {
   newName: string;
 }
 
-export const updateTeam = async ({ teamId, newName }: UpdateRequest): Promise<MessageResponse> => {
+export const updateTeamName = async ({ teamId, newName }: UpdateRequest): Promise<MessageResponse> => {
   const { data } = await axiosRequester({
     options: {
       method: "PUT",
-      url: API_ENDPOINTS.TEAMS.UPDATE_TEAM(teamId),
+      url: API_ENDPOINTS.TEAMS.UPDATE_TEAM_NAME(teamId),
       data: { name: newName },
     },
   });
 
   return data as MessageResponse;
+};
+
+export const updateTeamOrder = async (updatedTeams: TeamType[]): Promise<ResponseType<TeamType[]>> => {
+  const { data } = await axiosRequester<ResponseType<TeamType[]>>({
+    options: {
+      method: "PATCH",
+      url: API_ENDPOINTS.TEAMS.UPDATE_TEAM_ORDER,
+      data: { updatedTeams },
+    },
+  });
+
+  return data;
 };

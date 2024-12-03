@@ -34,9 +34,10 @@ export const API_ENDPOINTS = {
   },
   TEAMS: {
     GET_ALL: "/teams", // 팀 전체 조회
-    UPDATE_TEAM: (teamId: string) => `/teams/${teamId}`, // 팀 이름 수정
+    UPDATE_TEAM_NAME: (teamId: string) => `/teams/${teamId}`, // 팀 이름 수정
     DELETE_TEAM: (teamId: string) => `/teams/${teamId}`, // 팀 삭제
     CREATE_TEAM: "/teams", // 팀 생성
+    UPDATE_TEAM_ORDER: "/teams/order", // 드래그 앤 드랍
   },
 };
 
