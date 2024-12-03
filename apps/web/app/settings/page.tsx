@@ -1,10 +1,3 @@
-import Link from "next/link";
-import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
-
-export default function Settings(): JSX.Element {
-  return (
-    <div>
-      <Link href={PAGE_NAME.ADMIN_MEMBERS}>멤버 관리</Link>
-    </div>
-  );
+export default function SettingsPage(): JSX.Element {
+  return <div>settigs 페이지 입니다</div>;
 }
