@@ -1,6 +1,6 @@
 "use client";
 
-import { type ChangeEvent, useEffect, useRef, useState } from "react";
+import { type ChangeEvent, type KeyboardEvent, useEffect, useRef, useState } from "react";
 import { debounce } from "es-toolkit";
 import { Button, Modal } from "@ui/index";
 import { useOnClickOutside } from "@ui/src/hooks/useOnClickOutside";
@@ -9,7 +9,7 @@ import { type TeamType } from "@repo/types";
 import Dropdown from "@ui/src/components/common/Dropdown";
 import { Chevron } from "@ui/public";
 import useIsMobileStore from "@/app/store/useIsMobileStore";
-import { useDeleteTeam, useUpdateTeam } from "../_hooks/useTeamsMutations";
+import { useDeleteTeam, useUpdateTeamName } from "../_hooks/useTeamsMutations";
 import ManageTeamModal from "./ManageTeamModal";
 import DeleteTeamModalContent from "./DeleteTeamModalContent";
 
@@ -27,32 +27,29 @@ export default function TeamListItem({ team }: TeamListItemProps): JSX.Element {
   const isMobile = useIsMobileStore();
 
   useOnClickOutside(inputRef, () => {
-    if (isModify) {
-      setIsModify(false);
-    }
+    if (isModify) setIsModify(false);
   });
 
   useEffect(() => {
-    if (isModify && inputRef.current) {
-      inputRef.current.focus();
-    }
+    if (isModify && inputRef.current) inputRef.current.focus();
   }, [isModify]);
 
   const { mutate: deleteTeamMutate } = useDeleteTeam();
-  const { mutate: updateTeamMutate } = useUpdateTeam();
+  const { mutate: updateTeamMutate } = useUpdateTeamName();
 
   const handleDeleteTeam = (): void => {
     deleteTeamMutate(_id);
   };
 
-  const handleUpdateTeam = (): void => {
-    if (!changeName) {
+  const handleUpdateTeam = (e: KeyboardEvent<HTMLInputElement>): void => {
+    if (e.key === "Enter") {
+      if (!changeName) {
+        setIsModify(false);
+        return;
+      }
+      updateTeamMutate({ teamId: _id, newName: changeName });
       setIsModify(false);
-      return;
     }
-
-    updateTeamMutate({ teamId: _id, newName: changeName });
-    setIsModify(false);
   };
 
   const debouncedChangeHandler = debounce((value: string) => {
@@ -65,13 +62,22 @@ export default function TeamListItem({ team }: TeamListItemProps): JSX.Element {
 
   const handleMobileClick = (): void => {
     if (!isMobile) return;
-
     setIsMobileModalOpen(true);
   };
 
   return (
     <>
-      <button className="w-full" type="button" onClick={handleMobileClick}>
+      <div
+        className="w-full cursor-default"
+        onClick={handleMobileClick}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            handleMobileClick();
+          }
+        }}
+      >
         <ListItem isModify={isModify}>
           <span className="flex flex-grow items-center gap-32 text-left">
             {isModify ? (
@@ -81,11 +87,7 @@ export default function TeamListItem({ team }: TeamListItemProps): JSX.Element {
                 placeholder="팀 이름"
                 defaultValue={name}
                 onChange={handleChange}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    handleUpdateTeam();
-                  }
-                }}
+                onKeyDown={handleUpdateTeam}
               />
             ) : (
               name
@@ -118,11 +120,10 @@ export default function TeamListItem({ team }: TeamListItemProps): JSX.Element {
                 </Dropdown.Wrapper>
               </Dropdown>
             </div>
-
             <DeleteTeamModalContent name={name} onConfirm={handleDeleteTeam} />
           </Modal.Root>
         </ListItem>
-      </button>
+      </div>
 
       <ManageTeamModal
         isOpen={isMobileModalOpen}
@@ -137,7 +138,6 @@ export default function TeamListItem({ team }: TeamListItemProps): JSX.Element {
                 삭제하기
               </Button>
             </Modal.Trigger>
-
             <DeleteTeamModalContent name={name} onConfirm={handleDeleteTeam} />
           </Modal.Root>
         }

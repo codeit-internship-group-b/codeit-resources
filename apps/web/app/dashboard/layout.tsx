@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description: "나의 회의 일정을 알 수 있는 페이지입니다.",
 };
 
-export default function Layout({
+export default function DashBoardLayout({
   children,
 }: Readonly<{
   children: ReactNode;
