@@ -1,11 +1,12 @@
 import { useMutation, type UseMutationResult, useQueryClient } from "@tanstack/react-query";
-import { notify } from "@ui/index";
+
 import { type FieldValues, useForm } from "react-hook-form";
 import { type AxiosError } from "axios";
 import { type ResponseType, type ITeam, type TeamType } from "@repo/types";
 import { useRef } from "react";
 import { deleteTeam, postCreateTeam, updateTeamName, updateTeamOrder } from "@/api/teams";
 import { useDebouncedCallback } from "./useDebounceCallback";
+import { notify } from "@/app/store/useToastStore";
 
 interface MessageResponse {
   message: string;
@@ -21,7 +22,7 @@ export const useCreateTeam = (
     mutationFn: (name: ITeam) => postCreateTeam(name),
     onSuccess: (res) => {
       // 토스트 피드백
-      if (typeof res.message === "string") notify({ type: "success", message: res.message });
+      if (typeof res.message === "string") notify("success", res.message);
       // query key 초기화
       void queryClient.invalidateQueries({ queryKey: ["teamsResponse"] });
       // modal close
@@ -30,7 +31,7 @@ export const useCreateTeam = (
     onError: (error) => {
       const err = error as AxiosError<{ message: string }>;
       const errMessage = err.response?.data.message;
-      if (errMessage) notify({ type: "error", message: errMessage });
+      if (errMessage) notify("error", errMessage);
     },
   });
 };
@@ -51,14 +52,14 @@ export const useDeleteTeam = (): UseMutationResult<MessageResponse, AxiosError<{
     mutationFn: (teamId: string) => deleteTeam(teamId),
     onSuccess: (res) => {
       // 토스트 피드백
-      if (typeof res.message === "string") notify({ type: "success", message: res.message });
+      if (typeof res.message === "string") notify("success", res.message);
       // query key 초기화
       void queryClient.invalidateQueries({ queryKey: ["teamsResponse"] });
     },
     onError: (error) => {
       const err = error as AxiosError<{ message: string }>;
       const errMessage = err.response?.data.message;
-      if (errMessage) notify({ type: "error", message: errMessage });
+      if (errMessage) notify("error", errMessage);
     },
   });
 };
@@ -92,13 +93,13 @@ export const useUpdateTeamName = (): UseMutationResult<
 
     onSuccess: (res) => {
       // 토스트 피드백
-      if (typeof res.message === "string") notify({ type: "success", message: res.message });
+      if (typeof res.message === "string") notify("success", res.message);
     },
     onError: (error) => {
       if (prevTeamsRef.current) void queryClient.setQueryData<TeamType[]>(["teamsResponse"], prevTeamsRef.current);
       const err = error as AxiosError<{ message: string }>;
       const errMessage = err.response?.data.message;
-      if (errMessage) notify({ type: "error", message: errMessage });
+      if (errMessage) notify("error", errMessage);
     },
     // finally 동작
     onSettled: () => {
@@ -125,7 +126,7 @@ export const useUpdateTeamOrder = (
       if (prevTeamsRef.current) void queryClient.setQueryData<TeamType[]>(["teamsResponse"], prevTeamsRef.current);
       const err = error as AxiosError<{ message: string }>;
       const errMessage = err.response?.data.message;
-      if (errMessage) notify({ type: "error", message: errMessage });
+      if (errMessage) notify("error", errMessage);
     },
     onSettled: () => {
       void queryClient.invalidateQueries({ queryKey: ["teamsResponse"] });

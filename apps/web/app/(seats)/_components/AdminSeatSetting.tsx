@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 
-import { notify, Radio } from "@ui/index";
+import { Radio } from "@ui/index";
 import Button from "@ui/src/components/common/Button";
 import MultiSelectDropdown from "@repo/ui/src/components/common/Dropdown/MultiSelectDropdown";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -9,6 +9,7 @@ import { type AdminSeatSettingFormValues } from "@repo/types";
 import Profile from "@/components/common/Profile";
 import { getMembers } from "@/api/members";
 import { patchItem } from "@/api/items";
+import { notify } from "@/app/store/useToastStore";
 
 interface AdminSeatSettingProps {
   itemId: string;
@@ -60,17 +61,17 @@ export default function AdminSeatSetting({
     mutationFn: ({ itemId, formData }) => patchItem(itemId, formData),
     onSuccess: (response: string) => {
       void Promise.all([queryClient.invalidateQueries({ queryKey: ["seats"] })]);
-      notify({ type: "success", message: response });
+      notify("success", response);
     },
     onError: (error: Error) => {
-      notify({ type: "error", message: `오류 발생: ${error.message}` });
+      notify("error", `오류 발생: ${error.message}`);
     },
   });
 
   // 폼 전송 로직
   const handleFormSubmit = handleSubmit((data) => {
     if (data.status === "in-use" && !data.user?.[0]?.id) {
-      notify({ type: "error", message: "멤버를 선택해주세요" });
+      notify("error", "멤버를 선택해주세요");
       return;
     }
 
