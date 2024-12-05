@@ -13,14 +13,14 @@ export default function TeamListHeader(): JSX.Element {
 
   return (
     <>
-      <div className="flex justify-between">
-        <h1>팀 관리</h1>
-        <Button variant="Secondary" onClick={handleButtonClick}>
+      <div className="relative flex items-center justify-center md:justify-between">
+        <h1 className="text-xl-bold md:text-3xl-bold">팀 관리</h1>
+        <Button className="hidden md:block" variant="Secondary" onClick={handleButtonClick}>
           + 팀 추가
         </Button>
       </div>
 
-      <CreateTeamSidebar isOpen={isOpen} onClick={handleButtonClick} />
+      <CreateTeamSidebar isOpen={isOpen} onClose={handleButtonClick} />
     </>
   );
 }

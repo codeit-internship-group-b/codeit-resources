@@ -1,24 +1,23 @@
 import { Button, Input } from "@ui/index";
 import { type FieldValues, type SubmitHandler } from "react-hook-form";
 import Sidebar from "@/components/common/Sidebar";
-import { useCreateTeam } from "../_hooks/useCreateTeam";
-import { useCreateForm } from "../_hooks/useCreateForm";
+import { useCreateForm, useCreateTeam } from "../_hooks/useTeamsMutations";
 
 interface CreateTeamSidebarProps {
   isOpen: boolean;
-  onClick: () => void;
+  onClose: () => void;
 }
 
-export default function CreateTeamSidebar({ isOpen, onClick }: CreateTeamSidebarProps): JSX.Element {
+export default function CreateTeamSidebar({ isOpen, onClose }: CreateTeamSidebarProps): JSX.Element {
   const { handleSubmit, register } = useCreateForm();
-  const { mutate: postCreateTeamMutate, isPending } = useCreateTeam();
+  const { mutate: postCreateTeamMutate, isPending } = useCreateTeam(onClose);
 
   const onSubmit: SubmitHandler<FieldValues> = ({ teamName }) => {
     postCreateTeamMutate({ name: teamName as string });
   };
 
   return (
-    <Sidebar isOpen={isOpen} onClose={onClick}>
+    <Sidebar isOpen={isOpen} onClose={onClose}>
       <form
         className="flex h-full flex-col justify-between"
         onSubmit={(...rest) => void handleSubmit(onSubmit)(...rest)}

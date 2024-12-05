@@ -34,8 +34,18 @@ export const API_ENDPOINTS = {
   },
   TEAMS: {
     GET_ALL: "/teams", // 팀 전체 조회
-    UPDATE_TEAM: (teamId: string) => `/teams/${teamId}`, // 팀 이름 수정
+    UPDATE_TEAM_NAME: (teamId: string) => `/teams/${teamId}`, // 팀 이름 수정
     DELETE_TEAM: (teamId: string) => `/teams/${teamId}`, // 팀 삭제
     CREATE_TEAM: "/teams", // 팀 생성
+    UPDATE_TEAM_ORDER: "/teams/order", // 드래그 앤 드랍
   },
 };
+
+export const IMAGE_CONFIG = {
+  TYPES: ["image/jpeg", "image/jpg", "image/png"], // 이미지 타입
+  MAX_SIZE: 10 * 1024 * 1024, // 10MB
+  BLUR_DATA_URL:
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mOcPmF6PQAFwwI/LAMTJwAAAABJRU5ErkJggg==",
+};
+
+export const PAGE_SIZE = 20;

@@ -1,15 +1,32 @@
-import { type MemberWithStaticImage } from "@/app/admin/members/types";
+import { API_ENDPOINTS } from "@repo/constants";
+import type { MemberResponse, ResponseWithMessage, SortOption, MembersResponse } from "@repo/types/src/membersType";
 import { axiosRequester } from "@/lib/axios";
 
-type SortOption = "newest" | "oldest" | "alphabetical";
+interface GetMembersProps {
+  selectedSort: SortOption;
+  role?: string;
+  team?: string;
+  keyword?: string;
+  cursor?: string | null;
+}
 
-export const getMembers = async (sortOption: SortOption): Promise<MemberWithStaticImage[]> => {
-  const { data } = await axiosRequester<MemberWithStaticImage[]>({
+export const getMembers = async ({
+  selectedSort,
+  role,
+  team,
+  keyword,
+  cursor,
+}: GetMembersProps): Promise<MembersResponse> => {
+  const { data } = await axiosRequester<MembersResponse>({
     options: {
       method: "GET",
-      url: "users",
+      url: API_ENDPOINTS.USERS.GET_ALL,
       params: {
-        sortOption,
+        sortOption: selectedSort,
+        role,
+        team,
+        keyword,
+        cursor,
       },
     },
   });
@@ -17,11 +34,11 @@ export const getMembers = async (sortOption: SortOption): Promise<MemberWithStat
   return data;
 };
 
-export const postMember = async (formData: FormData): Promise<FormData> => {
-  const { data } = await axiosRequester<FormData>({
+export const postMember = async (formData: FormData): Promise<MemberResponse> => {
+  const { data } = await axiosRequester<MemberResponse, FormData>({
     options: {
       method: "POST",
-      url: "users/create",
+      url: API_ENDPOINTS.USERS.CREATE_USER,
       data: formData,
       headers: {
         "Content-Type": "multipart/form-data",
@@ -32,11 +49,11 @@ export const postMember = async (formData: FormData): Promise<FormData> => {
   return data;
 };
 
-export const patchMember = async (userId: string, formData: FormData): Promise<FormData> => {
-  const { data } = await axiosRequester<FormData>({
+export const patchMember = async (userId: string, formData: FormData): Promise<MemberResponse> => {
+  const { data } = await axiosRequester<MemberResponse, FormData>({
     options: {
-      method: "PUT",
-      url: `users/${userId}`,
+      method: "PATCH",
+      url: API_ENDPOINTS.USERS.PATCH_USER(userId),
       data: formData,
       headers: {
         "Content-Type": "multipart/form-data",
@@ -47,11 +64,11 @@ export const patchMember = async (userId: string, formData: FormData): Promise<F
   return data;
 };
 
-export const deleteMember = async (userId: string): Promise<string> => {
-  const { data } = await axiosRequester<typeof userId, string>({
+export const deleteMember = async (userId: string): Promise<ResponseWithMessage> => {
+  const { data } = await axiosRequester<ResponseWithMessage>({
     options: {
       method: "DELETE",
-      url: `users/${userId}`,
+      url: API_ENDPOINTS.USERS.DELETE_USER(userId),
     },
   });
 

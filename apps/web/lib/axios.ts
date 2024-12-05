@@ -18,7 +18,6 @@ type AxiosRequester = <K, T = unknown>(params: AxiosRequesterParams<T>) => Promi
 export const axiosRequester: AxiosRequester = async ({ options }) => {
   const headers = {
     ...options.headers,
-    "Content-Type": "application/json",
   } as AxiosRequestHeaders;
   const accessToken = getCookie("accessToken");
 

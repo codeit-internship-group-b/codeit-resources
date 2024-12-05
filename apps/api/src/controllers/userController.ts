@@ -1,23 +1,17 @@
 import { type Request, type Response } from "express";
-import { type IUser, type TRole } from "@repo/types";
+import { Roles, type IUser, type TRole } from "@repo/types";
 import { config } from "dotenv";
 import { compare } from "bcryptjs";
+import { PAGE_SIZE } from "@repo/constants";
 import { User } from "../models/userModel";
+import { areArraysEqual } from "../utils/areArraysEqual";
+import { buildFilters } from "../utils/buildFilters";
+import { getSortCriteria } from "../utils/getSortCriteria";
+import { formatPaginatedResponse } from "../utils/formatPaginatedResponse";
+import { fetchUsers } from "../utils/fetchUsers";
+import { type GetUsersRequest } from "../types";
 
 config();
-
-interface GetUsersRequest extends Request {
-  query: {
-    role?: TRole;
-    team?: string;
-    sortOption?: "newest" | "oldest" | "alphabetical";
-  };
-}
-
-interface Filters {
-  role?: TRole;
-  team?: string;
-}
 
 // Get all users
 /**
@@ -44,56 +38,69 @@ interface Filters {
  *           type: string
  *           enum: [newest, oldest, alphabetical]
  *         description: 정렬 옵션을 선택합니다.
+ *       - in: query
+ *         name: cursor
+ *         schema:
+ *           type: string
+ *         description: 다음 페이지 조회를 위한 커서 ID
+ *       - in: query
+ *         name: keyword
+ *         schema:
+ *           type: string
+ *         description: 이름, 이메일로 검색합니다.
  *     responses:
  *       200:
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   _id:
- *                     type: string
- *                     description: 사용자 ID
- *                   name:
- *                     type: string
- *                     description: 사용자 이름
- *                   email:
- *                     type: string
- *                     description: 사용자 이메일
- *                   role:
- *                     type: string
- *                     description: 사용자 역할
- *                   teams:
- *                     type: array
- *                     items:
- *                       type: string
- *                     description: 사용자가 속한 팀
- *                   profileImage:
- *                     type: string
- *                     description: 프로필 이미지 URL
+ *               type: object
+ *               properties:
+ *                 users:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                         description: 사용자 ID
+ *                       name:
+ *                         type: string
+ *                         description: 사용자 이름
+ *                       email:
+ *                         type: string
+ *                         description: 사용자 이메일
+ *                       role:
+ *                         type: string
+ *                         description: 사용자 역할
+ *                       teams:
+ *                         type: array
+ *                         items:
+ *                           type: string
+ *                         description: 사용자가 속한 팀
+ *                       profileImage:
+ *                         type: string
+ *                         description: 프로필 이미지 URL
+ *                 nextCursor:
+ *                   type: string
+ *                   nullable: true
+ *                   description: 다음 페이지가 있는 경우 다음 페이지의 첫 번째 아이템 ID
+ *       400:
+ *         description: 잘못된 요청 파라미터입니다.
  */
+
 export const getUsers = async (req: GetUsersRequest, res: Response): Promise<void> => {
-  const { role, team, sortOption } = req.query;
-
-  const filters: Filters = {};
-
-  if (role) filters.role = role;
-  if (team) filters.team = team;
-
-  let query = User.find(filters).select("-password");
-
-  if (sortOption === "alphabetical") {
-    query = query.sort({ name: 1 });
-  } else if (sortOption === "oldest") {
-    query = query.sort({ createdAt: 1 });
-  } else {
-    query = query.sort({ createdAt: -1 });
-  }
-
-  const users = await query.exec();
-  res.status(200).send(users);
+  const filters = buildFilters({ query: req.query });
+  const sortCriteria = getSortCriteria({ sortOption: req.query.sortOption });
+  const users = await fetchUsers({
+    filters,
+    sortCriteria,
+    pageSize: PAGE_SIZE,
+  });
+  const response = formatPaginatedResponse({
+    members: users,
+    pageSize: PAGE_SIZE,
+  });
+  res.status(200).json(response);
 };
 
 interface GetUserRequest extends Request {
@@ -247,51 +254,58 @@ export const createUser = async (req: CreateUserRequest, res: Response): Promise
     return;
   }
 
-  const existingUser = await User.findOne({ email });
+  const existingUser = await User.exists({ email });
   if (existingUser) {
     res.status(409).send({ message: "이미 존재하는 이메일입니다." });
     return;
   }
 
-  const newTeams = teams ?? [];
+  if (Array.isArray(teams) && teams.length > 3) {
+    res.status(400).send({ message: "팀은 최대 3개까지 추가 가능합니다." });
+    return;
+  }
 
   const profileImageUrl = req.file
     ? (req.file as Express.MulterS3.File).location
     : process.env.DEFAULT_PROFILE_IMAGE_URL;
 
   const user = new User({
+    role: role ?? "member",
     name,
     email,
-    role: role ?? "member",
+    password: 1234,
+    teams,
     profileImage: profileImageUrl,
-    teams: newTeams,
   });
 
   await user.save();
   res.status(201).send({ message: "새로운 사용자가 생성되었습니다.", user });
 };
 
+interface UserFields {
+  name: string;
+  email: string;
+  role?: TRole;
+  teams?: string[];
+  profileImage?: string;
+}
+
 interface UpdateUserRequest extends Request {
   params: {
     userId: string;
   };
-  body: {
-    name: string;
-    email: string;
-    role: TRole;
-    teams: string[];
-  };
+  body: UserFields;
   file?: Express.Multer.File | Express.MulterS3.File;
 }
 
 /**
  * @swagger
  * /users/{userId}:
- *   put:
+ *   patch:
  *     tags:
  *       - Users
  *     summary: 사용자 정보 업데이트
- *     description: 주어진 사용자 ID로 사용자의 정보를 업데이트합니다.
+ *     description: 주어진 사용자 ID로 사용자의 정보를 업데이트합니다. 기존 값과 새 값을 비교하여 변경된 데이터만 업데이트합니다. 변경사항이 없을 경우 400 에러를 반환합니다.
  *     parameters:
  *       - in: path
  *         name: userId
@@ -314,59 +328,111 @@ interface UpdateUserRequest extends Request {
  *                 description: 새로운 사용자 이메일
  *               role:
  *                 type: string
- *                 description: 새로운 사용자 역할
+ *                 description: 새로운 사용자 역할 (admin 또는 member)
+ *                 enum: [admin, member]
  *               teams:
  *                 type: array
  *                 items:
  *                   type: string
- *                 description: 사용자가 속할 팀
+ *                 description: 사용자가 속할 팀 (최대 3개)
+ *               profileImage:
+ *                 type: string
+ *                 format: binary
+ *                 description: 새로운 프로필 이미지 파일
  *     responses:
  *       200:
  *         description: 사용자 정보가 성공적으로 업데이트되었습니다.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 user:
+ *                   $ref: '#/components/schemas/User'
  *       400:
- *         description: 모든 필드값을 전송해주세요.
+ *         description: 요청이 잘못되었습니다.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 변경사항이 없습니다.
  *       404:
  *         description: 사용자를 찾을 수 없습니다.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 사용자를 찾을 수 없습니다.
  *       409:
- *         description: 이미 존재하는 이메일입니다.
+ *         description: 중복된 이메일로 인해 업데이트할 수 없습니다.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 이미 존재하는 이메일입니다.
  */
 export const updateUser = async (req: UpdateUserRequest, res: Response): Promise<void> => {
   const { userId } = req.params;
-  const userInfo = await User.findById(userId);
+  const { email, teams = [], name, role } = req.body;
+  const user = await User.findById(userId);
 
-  if (!userInfo) {
+  if (!user) {
     res.status(404).send({ message: "사용자를 찾을 수 없습니다." });
     return;
   }
 
-  const { email, name, teams, role } = req.body;
-
-  if (!(email || name)) {
-    res.status(400).send({ message: "모든 필드값을 전송해주세요." });
-    return;
-  }
-
-  if (email) {
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
+  if (email && email !== user.email) {
+    const emailExists = await User.exists({ email });
+    if (emailExists) {
       res.status(409).send({ message: "이미 존재하는 이메일입니다." });
       return;
     }
   }
 
-  userInfo.role = role;
-  userInfo.name = name;
-  userInfo.email = email;
-  userInfo.teams = teams;
-
-  if (req.file) {
-    const profileImageUrl = (req.file as Express.MulterS3.File).location;
-
-    userInfo.profileImage = profileImageUrl;
+  if (teams.length > 3) {
+    res.status(400).send({ message: "팀은 최대 3개까지 추가 가능합니다." });
+    return;
   }
 
-  await userInfo.save();
-  res.status(200).send({ message: "사용자 정보가 성공적으로 업데이트되었습니다." });
+  if (role && !Roles.includes(role)) {
+    res.status(400).send({ message: "유효하지 않은 역할입니다." });
+    return;
+  }
+
+  const updateFields: Partial<typeof req.body> = {};
+
+  if (email && email !== user.email) updateFields.email = email;
+  if (!areArraysEqual(teams, user.teams)) {
+    updateFields.teams = teams;
+  }
+  if (name && name !== user.name) updateFields.name = name;
+  if (role && role !== user.role) updateFields.role = role;
+  if (req.file) {
+    const profileImageUrl = (req.file as Express.MulterS3.File).location;
+    updateFields.profileImage = profileImageUrl;
+  }
+
+  if (Object.keys(updateFields).length === 0) {
+    res.status(400).send({ message: "변경사항이 없습니다." });
+    return;
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(userId, { $set: updateFields }, { new: true });
+  res.status(200).send({
+    message: "사용자 정보가 성공적으로 업데이트되었습니다.",
+    user: updatedUser,
+  });
 };
 
 interface DeleteUserRequest extends Request {
@@ -375,12 +441,12 @@ interface DeleteUserRequest extends Request {
   };
 }
 
-// Delete a user by id
 /**
  * @swagger
  * /users/{userId}:
  *   delete:
- *     tags: [Users]
+ *     tags:
+ *       - Users
  *     summary: 사용자 삭제
  *     description: 주어진 사용자 ID로 사용자를 삭제합니다.
  *     parameters:
@@ -392,9 +458,25 @@ interface DeleteUserRequest extends Request {
  *         description: 삭제할 사용자 ID
  *     responses:
  *       200:
- *         description: 사용자가 삭제되었습니다.
+ *         description: 사용자가 성공적으로 삭제되었습니다.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 사용자가 삭제되었습니다.
  *       404:
  *         description: 사용자를 찾을 수 없습니다.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 사용자를 찾을 수 없습니다.
  */
 export const deleteUser = async (req: DeleteUserRequest, res: Response): Promise<void> => {
   const { userId } = req.params;
@@ -417,7 +499,8 @@ interface UpdateProfileImageRequest extends Request {
  * @swagger
  * /users/me/image:
  *   patch:
- *     tags: [Users]
+ *     tags:
+ *       - Users
  *     summary: 프로필 사진 업데이트
  *     description: 현재 사용자의 프로필 사진을 업데이트합니다.
  *     requestBody:
@@ -430,14 +513,38 @@ interface UpdateProfileImageRequest extends Request {
  *               file:
  *                 type: string
  *                 format: binary
- *                 description: 새 프로필 이미지 파일
+ *                 description: 새로운 프로필 이미지 파일
  *     responses:
  *       200:
  *         description: 프로필 사진이 성공적으로 업데이트되었습니다.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 프로필 사진이 변경되었습니다.
  *       400:
- *         description: 인증 토큰이 유효하지 않거나 사진이 누락되었습니다.
+ *         description: 사진이 누락되었거나 인증 토큰이 유효하지 않습니다.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 사진이 누락되었습니다.
  *       404:
  *         description: 사용자를 찾을 수 없습니다.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 사용자를 찾을 수 없습니다.
  */
 export const updateProfileImage = async (req: UpdateProfileImageRequest, res: Response): Promise<void> => {
   const userId = req.user?._id;
@@ -476,7 +583,8 @@ interface UpdateUserCredentialsRequest extends Request {
  * @swagger
  * /users/credentials:
  *   patch:
- *     tags: [Users]
+ *     tags:
+ *       - Users
  *     summary: 사용자 비밀번호 업데이트
  *     description: 현재 사용자의 비밀번호를 변경합니다.
  *     requestBody:
@@ -494,13 +602,45 @@ interface UpdateUserCredentialsRequest extends Request {
  *                 description: 새 비밀번호
  *     responses:
  *       200:
- *         description: 비밀번호가 변경되었습니다.
+ *         description: 비밀번호가 성공적으로 변경되었습니다.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 비밀번호가 변경되었습니다.
  *       400:
  *         description: 필수 정보가 누락되었습니다.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 필수 정보가 누락되었습니다.
  *       401:
  *         description: 비밀번호가 일치하지 않습니다.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 비밀번호가 일치하지 않습니다.
  *       404:
  *         description: 사용자를 찾을 수 없습니다.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 사용자를 찾을 수 없습니다.
  */
 export const updateUserCredentials = async (req: UpdateUserCredentialsRequest, res: Response): Promise<void> => {
   const userId = req.user?._id;
