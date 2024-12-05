@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { notify } from "@ui/index";
 import axios, { type AxiosError } from "axios";
 import type { ResponseWithMessage } from "@repo/types/src/membersType";
 import { postMember, patchMember, deleteMember } from "@/api/members";
+import { notify } from "@/app/store/useToastStore";
 
 interface UpdateMemberParams {
   id: string;
@@ -24,10 +24,7 @@ export function useMembersMutations({ onSuccess }: UseMemberMutationsProps = {})
   const queryClient = useQueryClient();
 
   const handleSuccess = (res: ResponseWithMessage): void => {
-    notify({
-      type: "success",
-      message: res.message,
-    });
+    notify("success", res.message);
     void queryClient.invalidateQueries({ queryKey: ["members"] });
     onSuccess?.();
   };
@@ -40,7 +37,7 @@ export function useMembersMutations({ onSuccess }: UseMemberMutationsProps = {})
 
       const err = error as AxiosError<{ message: string }>;
       const errMessage = err.response?.data.message;
-      if (errMessage) notify({ type: "error", message: errMessage });
+      if (errMessage) notify("error", errMessage);
     } else {
       throw error;
     }
