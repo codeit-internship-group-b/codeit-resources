@@ -26,9 +26,8 @@ export const useMembersForm = ({ selectedMember, onClose }: UseMembersForm): Use
   const { reset } = form;
   const { updateMember, createMember, isPending } = useMembersMutations({
     onSuccess: () => {
-      setTimeout(() => {
-        onClose();
-      }, 800);
+      reset(DEFAULT_VALUES);
+      onClose();
     },
   });
 
@@ -50,22 +49,28 @@ export const useMembersForm = ({ selectedMember, onClose }: UseMembersForm): Use
   };
 
   const onSubmit = (data: SidePanelFormData): void => {
+    if (isPending) return;
+
     const formData = createMemberFormData(data);
+
     if (selectedMember) {
       updateMember({ id: selectedMember._id, data: formData });
       return;
     }
+
     createMember(formData);
   };
 
   useEffect(() => {
     if (selectedMember) {
+      const { role, name, email, teams, profileImage } = selectedMember;
+
       reset({
-        role: selectedMember.role,
-        name: selectedMember.name,
-        email: selectedMember.email,
-        teams: selectedMember.teams,
-        profileImage: selectedMember.profileImage ?? null,
+        role,
+        name,
+        email,
+        teams,
+        profileImage: profileImage ?? null,
       });
     } else {
       reset(DEFAULT_VALUES);
