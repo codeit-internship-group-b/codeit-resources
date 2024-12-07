@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "@ui/index";
 import { type MemberWithStaticImage, type SortOption } from "@repo/types/src/membersType";
 import { useLockBodyScroll } from "@ui/src/hooks/useLockBodyScroll";
+import { MEMBER_FORM_MESSAGES } from "@repo/constants/messages";
 import Header from "./Header";
 import Navbar from "./Navbar";
 import MemberList from "./MemberList";
@@ -55,7 +56,7 @@ export default function MembersContent(): JSX.Element {
 
       <div className="fixed bottom-0 left-0 right-0 z-10 mx-16 mb-32 bg-white shadow-[0px_4px_12px_0px_rgba(0,0,0,0.2)] md:hidden">
         <Button variant="Primary" type="button" className="h-48 w-full" onClick={handleOpenSidePanel}>
-          + 멤버추가
+          {`+ ${MEMBER_FORM_MESSAGES.TITLE.ADD}`}
         </Button>
       </div>
 
