@@ -57,13 +57,14 @@ export const MODAL_MESSAGES = {
 
 export const ERROR_MESSAGE = {
   DEFAULT: "요청 처리 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
-};
+} as const;
 
 export const EMPTY_STATE_MESSAGES = {
   SEARCH: {
     NO_RESULT: "검색 결과가 없습니다.",
     CHECK_SPELLING: "단어의 철자가 정확한지 확인해 보세요.",
   },
+
   MEMBERS: {
     NO_MEMBERS: {
       NOTICE: "등록된 멤버가 없습니다.",
@@ -74,8 +75,9 @@ export const EMPTY_STATE_MESSAGES = {
       SUGGESTION: "멤버를 새로 등록해 보세요.",
     }),
   },
+
   TEAMS: {
     title: "등록된 팀이 없습니다.",
     description: "새로운 팀을 등록해 보세요.",
   },
-};
+} as const;
