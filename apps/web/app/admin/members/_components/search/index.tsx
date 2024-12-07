@@ -11,7 +11,7 @@ interface SearchFormProps {
 }
 
 export default function SearchForm({ onSearch, keyword }: SearchFormProps): JSX.Element {
-  const formRef = useRef<HTMLDivElement>(null);
+  const searchFormRef = useRef<HTMLDivElement>(null);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
   const handleOpenKeyword = (): void => {
@@ -42,10 +42,10 @@ export default function SearchForm({ onSearch, keyword }: SearchFormProps): JSX.
     onClose: handleCloseKeyword,
   });
 
-  useOnClickOutside(formRef, handleCloseKeyword);
+  useOnClickOutside(searchFormRef, handleCloseKeyword);
 
   return (
-    <div ref={formRef} className="h-54 md:h-42 relative w-full md:w-[240px]">
+    <div ref={searchFormRef} className="h-54 md:h-42 relative w-full md:w-[240px]">
       <form
         onSubmit={(...args) => void handleSubmit(searchFormSubmit)(...args)}
         className="rounded-100 border-1 focus-within:border-custom-black/20 group flex h-full w-full items-center gap-14 border-gray-100/30 bg-gray-100/30 px-20 transition-all duration-200 focus-within:bg-white hover:bg-gray-100/45 focus-within:hover:bg-white"
