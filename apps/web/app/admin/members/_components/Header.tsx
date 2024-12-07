@@ -1,5 +1,6 @@
 import { Button } from "@ui/index";
 import { Chevron } from "@ui/public";
+import { MEMBER_FORM_MESSAGES } from "@repo/constants/messages";
 import SearchForm from "./search";
 
 interface HeaderProps {
@@ -22,7 +23,7 @@ export default function Header({ onMemberSelect, onSearch, keyword }: HeaderProp
           variant="Secondary"
           className="w-122 h-42 text-lg-medium text-custom-black/80 hidden md:block"
         >
-          + 멤버 추가
+          {`+ ${MEMBER_FORM_MESSAGES.TITLE.ADD}`}
         </Button>
       </div>
     </header>

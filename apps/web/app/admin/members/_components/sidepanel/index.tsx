@@ -12,6 +12,7 @@ export interface SidePanelProps {
 
 export default function SidePanel({ isOpen, onClose, selectedMember }: SidePanelProps): JSX.Element {
   const sidePanelRef = useRef<HTMLDivElement>(null);
+
   useOnClickOutside(sidePanelRef, () => {
     if (isOpen) onClose();
   });
