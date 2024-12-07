@@ -39,7 +39,7 @@ export const useMembersForm = ({ selectedMember, onClose }: UseMembersForm): Use
     formData.append("email", data.email);
 
     data.teams.forEach((team) => {
-      formData.append("teams", team);
+      formData.append("teams[]", team);
     });
 
     if (data.profileImage instanceof File) {
