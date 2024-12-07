@@ -1,3 +1,4 @@
+import { type ChangeEvent } from "react";
 import { type UseFormSetValue, type UseFormRegister } from "react-hook-form";
 import { SearchIcon, CancelIcon } from "@ui/public";
 import { type KeywordsFormData } from "@repo/types/src/searchFormType";
@@ -17,17 +18,18 @@ export default function SearchInput({ register, setValue, keyword, onFocus, onCl
     setValue("keyword", value);
   }, 300);
 
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    debouncedSetValue(e.target.value);
+  };
+
   return (
     <>
       <label htmlFor="keyword">
         <SearchIcon className="transition-colors duration-200 group-focus-within:text-purple-400" />
       </label>
       <input
-        {...(register("keyword"),
-        {
-          onChange: (e) => {
-            debouncedSetValue(e.target.value);
-          },
+        {...register("keyword", {
+          onChange: handleInputChange,
         })}
         id="keyword"
         className="h-18 w-full bg-transparent focus:outline-none"
