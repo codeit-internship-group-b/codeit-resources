@@ -30,7 +30,6 @@ export default function SearchForm({ onSearch, keyword }: SearchFormProps): JSX.
   const {
     register,
     setValue,
-    watchedKeyword,
     handleSubmit,
     handleClearInput,
     handleRemoveKeyword,
@@ -39,7 +38,7 @@ export default function SearchForm({ onSearch, keyword }: SearchFormProps): JSX.
     onSubmit: searchFormSubmit,
   } = useKeywordsForm({
     onSearch,
-    initialKeyword: keyword,
+    keyword,
     onClose: handleCloseKeyword,
   });
 
@@ -53,7 +52,9 @@ export default function SearchForm({ onSearch, keyword }: SearchFormProps): JSX.
       >
         <SearchInput
           register={register}
-          watchedKeyword={watchedKeyword}
+          setValue={setValue}
+          keyword={keyword}
+          onSearch={onSearch}
           onFocus={handleOpenKeyword}
           onClear={handleClearInput}
         />

@@ -1,15 +1,15 @@
+/* eslint-disable @typescript-eslint/no-shadow */
 import { useForm, type UseFormProps, type UseFormReturn } from "react-hook-form";
 import { storage } from "@repo/ui/src/utils/storage";
 import { type KeywordsFormData } from "@repo/types/src/searchFormType";
 
 interface UseKeywordsFormProps extends UseFormProps {
   onSearch: (keyword: string) => void;
-  initialKeyword: string;
+  keyword: string;
   onClose: () => void;
 }
 
 interface UseKeywordsFormReturn extends UseFormReturn<KeywordsFormData> {
-  watchedKeyword: string;
   recentKeywords: string[];
   handleClearInput: () => void;
   onSubmit: (data: KeywordsFormData) => void;
@@ -22,15 +22,15 @@ const DEFAULT_VALUES: KeywordsFormData = {
   recentKeywords: [],
 };
 
-export const useKeywordsForm = ({ onSearch, initialKeyword, onClose }: UseKeywordsFormProps): UseKeywordsFormReturn => {
+export const useKeywordsForm = ({ onSearch, keyword, onClose }: UseKeywordsFormProps): UseKeywordsFormReturn => {
   const form = useForm<KeywordsFormData>({
     defaultValues: {
       ...DEFAULT_VALUES,
-      keyword: initialKeyword,
+      keyword,
     },
   });
+
   const { setValue, watch } = form;
-  const watchedKeyword = watch("keyword");
   const recentKeywords = watch("recentKeywords");
 
   const updateKeywords = (keywords: string[]): void => {
@@ -64,7 +64,6 @@ export const useKeywordsForm = ({ onSearch, initialKeyword, onClose }: UseKeywor
   };
 
   return {
-    watchedKeyword,
     recentKeywords,
     handleClearInput,
     onSubmit,
