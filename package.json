@@ -30,5 +30,10 @@
   "workspaces": [
     "packages/*",
     "apps/*"
-  ]
+  ],
+  "dependencies": {
+    "@plaiceholder/next": "^3.0.0",
+    "plaiceholder": "^3.0.0",
+    "sharp": "^0.33.5"
+  }
 }

@@ -7,7 +7,7 @@ import { IMAGE_CONFIG } from "@repo/constants";
 
 interface ProfileImageUploaderProps {
   currentImage: FormImageType;
-  onImageChange: (file: ImageFileType) => void;
+  onImageChange?: (file: ImageFileType) => void;
   size?: "sm" | "md";
 }
 
@@ -25,7 +25,7 @@ export default function ProfileImageUploader({
 
     const newObjectUrl = URL.createObjectURL(file);
     setImageObjectUrl(newObjectUrl);
-    onImageChange(file);
+    onImageChange?.(file);
   };
 
   const getImageSource = (): DisplayImageType => {
@@ -57,6 +57,8 @@ export default function ProfileImageUploader({
       <Image
         src={getImageSource()}
         alt={currentImage ? MEMBER_FORM_MESSAGES.IMAGE.PREVIEW_ALT : MEMBER_FORM_MESSAGES.IMAGE.DEFAULT_ALT}
+        width={size === "sm" ? 72 : 120}
+        height={size === "sm" ? 72 : 120}
         placeholder="blur"
         blurDataURL={IMAGE_CONFIG.BLUR_DATA_URL}
         onError={handleError}

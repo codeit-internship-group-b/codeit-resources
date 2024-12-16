@@ -16,7 +16,7 @@ const userRouter: Router = Router();
 
 // 유저 정렬
 userRouter.get("/", asyncHandler(getUsers));
-userRouter.get("/user", asyncHandler(authenticateToken), asyncHandler(getUser));
+userRouter.get("/me", asyncHandler(authenticateToken), asyncHandler(getUser));
 
 // 유저 정보 변경
 // TODO : admin middleware 추가
