@@ -152,7 +152,7 @@ function Wrapper({ children, className }: WrapperProps): JSX.Element {
       {isOpen && (
         <motion.div
           className={cn(
-            "rounded-8 shadow-custom absolute z-50 border border-solid border-gray-500 bg-white p-8",
+            "rounded-8 custom-shadow absolute z-50 border border-solid border-gray-500 bg-white p-8",
             size === "md" ? "top-64 w-full" : "w-96",
             className,
           )}

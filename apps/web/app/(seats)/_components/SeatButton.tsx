@@ -1,4 +1,3 @@
- 
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 "use client";
 import { RightIcon } from "@ui/public";
@@ -36,7 +35,7 @@ export default function SeatButton({
 }: SeatButtonProps): JSX.Element {
   const { checkedSeat, handleSelectSeat, seatReservationId, userReservationData } = useSeatContext();
   const { selectedDate } = useDateStore();
-  const { user: authUser } = useAuthStore();
+  const { user: authUser, isLoggedIn } = useAuthStore();
   const { createSeatReservation, deleteSeatReservation, modifySeatReservation } = useSeatReservation();
   const pathname = usePathname();
   const isMobile = useIsMobileStore();
@@ -52,17 +51,17 @@ export default function SeatButton({
 
   // 예약 정보
   const reservationData = useMemo(() => {
-    if (!authUser?._id) {
-      throw new Error("사용자 정보가 없습니다.");
+    if (!isLoggedIn) {
+      return undefined;
     }
     return {
-      userId: authUser._id,
+      userId: authUser?._id,
       itemType: "seat" as const,
       startAt: `${formatSelectedDate(selectedDate)}T${new Date().toISOString().slice(11, 19)}Z`,
       endAt: `${formatSelectedDate(selectedDate)}T23:59:59Z`,
       status: "reserved" as const,
     };
-  }, [authUser?._id, selectedDate]);
+  }, [authUser?._id, selectedDate, isLoggedIn]);
 
   // 현재 로그인 된 사용자의 좌석정보를 기반으로 특정 좌석 예약 여부 확인
   const userSeatInfo = useMemo(() => {
@@ -91,6 +90,8 @@ export default function SeatButton({
   const handleButtonClick = (): void => {
     if (isSeatReserved(userReservationData)) {
       setIsModalOpen(true);
+    } else if (!reservationData) {
+      throw new Error("예약 데이터가 없습니다");
     } else {
       createSeatReservation(
         {
