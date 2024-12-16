@@ -5,5 +5,5 @@ interface LayoutProps {
 }
 
 export default function SettingsLayout({ children }: LayoutProps): JSX.Element {
-  return <section>{children}</section>;
+  return <section className="md:ml-200 w-full">{children}</section>;
 }
