@@ -1,7 +1,7 @@
 import { type ReservationRequestBody, type ReservedResponse } from "@repo/types";
 import { type UseMutateFunction, useMutation, useQueryClient } from "@tanstack/react-query";
-import { notify } from "@ui/index";
 import { createSeatReservationData, deleteReservationData, modifyReservationData } from "@/api/reservation";
+import { notify } from "../store/useToastStore";
 
 interface SeatReservationMutations {
   createSeatReservation: UseMutateFunction<
@@ -36,11 +36,11 @@ export const useSeatReservation = (onSuccess?: () => void): SeatReservationMutat
     mutationFn: createSeatReservationData,
     onSuccess: (response) => {
       void invalidateReservationQueries();
-      notify({ type: "success", message: response.message });
+      notify("success", response.message);
       onSuccess?.();
     },
     onError: (error) => {
-      notify({ type: "error", message: `오류 발생: ${error.message}` });
+      notify("error", `오류 발생: ${error.message}`);
     },
   });
 
@@ -49,10 +49,10 @@ export const useSeatReservation = (onSuccess?: () => void): SeatReservationMutat
     mutationFn: deleteReservationData,
     onSuccess: () => {
       void invalidateReservationQueries();
-      notify({ type: "success", message: "자리 예약을 삭제했습니다" });
+      notify("success", "자리 예약을 삭제했습니다");
     },
     onError: (error) => {
-      notify({ type: "error", message: `오류 발생: ${error.message}` });
+      notify("error", `오류 발생: ${error.message}`);
     },
   });
 
@@ -61,10 +61,10 @@ export const useSeatReservation = (onSuccess?: () => void): SeatReservationMutat
     mutationFn: modifyReservationData,
     onSuccess: () => {
       void invalidateReservationQueries();
-      notify({ type: "success", message: "좌석 예약 성공!" });
+      notify("success", "좌석 예약 성공!");
     },
     onError: (error) => {
-      notify({ type: "error", message: `오류 발생: ${error.message}` });
+      notify("error", `오류 발생: ${error.message}`);
     },
   });
 

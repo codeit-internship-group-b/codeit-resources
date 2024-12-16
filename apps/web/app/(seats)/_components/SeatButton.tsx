@@ -164,7 +164,7 @@ export default function SeatButton({
   }
 
   return (
-    <span className="group relative">
+    <span className="relative group">
       <button
         type="button"
         onClick={isAdmin ? handleAdminButtonClick : handleButtonClick}

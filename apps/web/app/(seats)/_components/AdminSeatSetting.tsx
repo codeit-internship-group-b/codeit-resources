@@ -1,7 +1,6 @@
- 
 /* eslint-disable @typescript-eslint/no-misused-promises */
 
-import { notify, Radio } from "@ui/index";
+import { Radio } from "@ui/index";
 import Button from "@ui/src/components/common/Button";
 import MultiSelectDropdown from "@repo/ui/src/components/common/Dropdown/MultiSelectDropdown";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -10,6 +9,7 @@ import { type SeatStatus, type AdminSeatSettingFormValues } from "@repo/types";
 import Profile from "@/components/common/Profile";
 import { getMembers } from "@/api/members";
 import { patchItem } from "@/api/items";
+import { notify } from "@/app/store/useToastStore";
 
 interface AdminSeatSettingProps {
   itemId: string;
@@ -61,17 +61,17 @@ export default function AdminSeatSetting({
     mutationFn: ({ itemId, formData }) => patchItem(itemId, formData),
     onSuccess: (response: string) => {
       void queryClient.invalidateQueries({ queryKey: ["seats"] });
-      notify({ type: "success", message: response });
+      notify("success", response);
     },
     onError: (error: Error) => {
-      notify({ type: "error", message: `오류 발생: ${error.message}` });
+      notify("error", `오류 발생: ${error.message}`);
     },
   });
 
   // 폼 전송 로직
   const handleFormSubmit = handleSubmit((data) => {
     if (data.status === "in-use" && !data.user?.[0]?.id) {
-      notify({ type: "error", message: "멤버를 선택해주세요" });
+      notify("error", "멤버를 선택해주세요");
       return;
     }
 
@@ -89,9 +89,9 @@ export default function AdminSeatSetting({
 
   return (
     <>
-      <h1 className="text-custom-black my-8 hidden md:block">좌석편집</h1>
-      <form onSubmit={handleFormSubmit} className="flex h-full flex-col justify-between p-16 md:p-0 md:pb-40">
-        <div className="flex flex-col gap-36 px-8 pb-24 pt-4">
+      <h1 className="hidden my-8 text-custom-black md:block">좌석편집</h1>
+      <form onSubmit={handleFormSubmit} className="flex flex-col justify-between h-full p-16 md:p-0 md:pb-40">
+        <div className="flex flex-col px-8 pt-4 pb-24 gap-36">
           <Radio.Group
             defaultValue={status}
             onChange={(value) => {
@@ -127,7 +127,7 @@ export default function AdminSeatSetting({
               <MultiSelectDropdown.Toggle title="멤버">
                 {selectedMember && selectedMember.length > 0 && selectedMember[0]?.name ? (
                   <div>
-                    <div className="max-h-100 flex flex-wrap gap-10 overflow-y-auto">
+                    <div className="flex flex-wrap gap-10 overflow-y-auto max-h-100">
                       {selectedMember.slice(0, 1).map((member) => (
                         <Profile
                           size="size-27"
