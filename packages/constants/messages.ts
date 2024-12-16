@@ -25,7 +25,7 @@ export const MEMBER_FORM_MESSAGES = {
       PROCESSING: "처리 중...",
     },
     WITHDRAW: "탈퇴하기",
-    UPLOAD_PHOTO: "사진 업로드",
+    UPLOAD_PHOTO: "사진 변경",
     CANCEL: "취소하기",
   },
 

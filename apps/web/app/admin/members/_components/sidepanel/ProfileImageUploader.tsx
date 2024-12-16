@@ -8,9 +8,14 @@ import { IMAGE_CONFIG } from "@repo/constants";
 interface ProfileImageUploaderProps {
   currentImage: FormImageType;
   onImageChange: (file: ImageFileType) => void;
+  size?: "sm" | "md";
 }
 
-export default function ProfileImageUploader({ currentImage, onImageChange }: ProfileImageUploaderProps): JSX.Element {
+export default function ProfileImageUploader({
+  currentImage,
+  onImageChange,
+  size = "md",
+}: ProfileImageUploaderProps): JSX.Element {
   const [imageObjectUrl, setImageObjectUrl] = useState<string>("");
   const [isImageError, setIsImageError] = useState(false);
 
@@ -44,24 +49,18 @@ export default function ProfileImageUploader({ currentImage, onImageChange }: Pr
   };
 
   useEffect(() => {
-    return () => {
-      if (imageObjectUrl) {
-        URL.revokeObjectURL(imageObjectUrl);
-      }
-    };
+    if (imageObjectUrl) URL.revokeObjectURL(imageObjectUrl);
   }, [imageObjectUrl]);
 
   return (
-    <div className="mb-[262px] flex items-center gap-24">
+    <div className="flex items-center gap-16 md:gap-24">
       <Image
         src={getImageSource()}
         alt={currentImage ? MEMBER_FORM_MESSAGES.IMAGE.PREVIEW_ALT : MEMBER_FORM_MESSAGES.IMAGE.DEFAULT_ALT}
-        width={120}
-        height={120}
         placeholder="blur"
         blurDataURL={IMAGE_CONFIG.BLUR_DATA_URL}
         onError={handleError}
-        className="size-120 rounded-full object-cover"
+        className={`rounded-full object-cover ${size === "sm" ? "size-72" : "size-120"}`}
       />
       <label
         htmlFor="profileImage"
