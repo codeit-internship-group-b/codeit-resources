@@ -34,6 +34,6 @@ userRouter.post("/create", upload.single("profileImage"), asyncHandler(createUse
 userRouter.patch("/me/image", upload.single("profileImage"), asyncHandler(updateProfileImage));
 
 // 비밀변호 변경
-userRouter.patch("/me/password", asyncHandler(updateUserCredentials));
+userRouter.patch("/me/password", asyncHandler(authenticateToken), asyncHandler(updateUserCredentials));
 
 export default userRouter;

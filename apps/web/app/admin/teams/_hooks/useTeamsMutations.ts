@@ -13,7 +13,7 @@ interface MessageResponse {
 
 export const useCreateTeam = (
   onClose: () => void,
-): UseMutationResult<ResponseType<ITeam>, AxiosError<{ message?: string }>, ITeam> => {
+): UseMutationResult<ResponseType<ITeam>, AxiosError<MessageResponse>, ITeam> => {
   const queryClient = useQueryClient();
   const debouncedOnClose = useDebouncedCallback(onClose, 800);
 
@@ -28,8 +28,7 @@ export const useCreateTeam = (
       debouncedOnClose();
     },
     onError: (error) => {
-      const err = error as AxiosError<{ message: string }>;
-      const errMessage = err.response?.data.message;
+      const errMessage = error.response?.data.message;
       if (errMessage) notify({ type: "error", message: errMessage });
     },
   });
@@ -37,14 +36,14 @@ export const useCreateTeam = (
 
 export const useCreateForm = (): FieldValues => {
   return useForm({
-    mode: "onChange",
+    mode: "onBlur",
     defaultValues: {
       teamName: "",
     },
   });
 };
 
-export const useDeleteTeam = (): UseMutationResult<MessageResponse, AxiosError<{ message?: string }>, string> => {
+export const useDeleteTeam = (): UseMutationResult<MessageResponse, AxiosError<MessageResponse>, string> => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -56,8 +55,7 @@ export const useDeleteTeam = (): UseMutationResult<MessageResponse, AxiosError<{
       void queryClient.invalidateQueries({ queryKey: ["teamsResponse"] });
     },
     onError: (error) => {
-      const err = error as AxiosError<{ message: string }>;
-      const errMessage = err.response?.data.message;
+      const errMessage = error.response?.data.message;
       if (errMessage) notify({ type: "error", message: errMessage });
     },
   });
@@ -68,11 +66,7 @@ interface UpdateRequest {
   newName: string;
 }
 
-export const useUpdateTeamName = (): UseMutationResult<
-  MessageResponse,
-  AxiosError<{ message: string }>,
-  UpdateRequest
-> => {
+export const useUpdateTeamName = (): UseMutationResult<MessageResponse, AxiosError<MessageResponse>, UpdateRequest> => {
   const queryClient = useQueryClient();
   const prevTeamsRef = useRef<TeamType[] | undefined>();
 
@@ -96,8 +90,7 @@ export const useUpdateTeamName = (): UseMutationResult<
     },
     onError: (error) => {
       if (prevTeamsRef.current) void queryClient.setQueryData<TeamType[]>(["teamsResponse"], prevTeamsRef.current);
-      const err = error as AxiosError<{ message: string }>;
-      const errMessage = err.response?.data.message;
+      const errMessage = error.response?.data.message;
       if (errMessage) notify({ type: "error", message: errMessage });
     },
     // finally 동작
@@ -109,7 +102,7 @@ export const useUpdateTeamName = (): UseMutationResult<
 
 export const useUpdateTeamOrder = (
   updatedTeams: TeamType[],
-): UseMutationResult<ResponseType<TeamType[]>, AxiosError<{ message: string }>, TeamType[]> => {
+): UseMutationResult<ResponseType<TeamType[]>, AxiosError<MessageResponse>, TeamType[]> => {
   const queryClient = useQueryClient();
   const prevTeamsRef = useRef<TeamType[] | undefined>();
 
@@ -123,8 +116,7 @@ export const useUpdateTeamOrder = (
 
     onError: (error) => {
       if (prevTeamsRef.current) void queryClient.setQueryData<TeamType[]>(["teamsResponse"], prevTeamsRef.current);
-      const err = error as AxiosError<{ message: string }>;
-      const errMessage = err.response?.data.message;
+      const errMessage = error.response?.data.message;
       if (errMessage) notify({ type: "error", message: errMessage });
     },
     onSettled: () => {

@@ -1,31 +1,24 @@
-"use client";
-
 import ProfileImageUploader from "@/app/admin/members/_components/sidepanel/ProfileImageUploader";
 import { useSuspenseUserQuery } from "../_hooks/useUserQueries";
 
-export default function ProfileInfo(): JSX.Element {
+export default function ProfileDetails(): JSX.Element {
   const { data: user } = useSuspenseUserQuery();
   const { email, name, teams, profileImage = "" } = user;
 
   return (
-    <div className="flex flex-col gap-24 md:flex-col-reverse md:gap-16">
-      <div className="flex items-center md:gap-40">
-        <p className="text-lg-bold hidden md:block">사진</p>
+    <div className="rounded-8 bg-gray-60 flex gap-16 border border-[#E4E3E8] px-16 py-12 md:gap-32 md:border-none md:bg-inherit md:p-0">
+      <div className="text-md-bold md:text-lg-bold md:text-custom-black flex flex-col justify-center gap-4 text-[#818084] md:gap-16">
+        <p>이름</p>
+        <p>이메일</p>
+        <p>팀</p>
+        <p className="text-lg-bold hidden h-72 items-center md:flex">사진</p>
+      </div>
+      <div className="text-lg-regular flex flex-col justify-between gap-4 md:gap-16">
+        <p>{name}</p>
+        <p>{email}</p>
+        <p>{JSON.stringify(teams)}</p>
         <ProfileImageUploader size="sm" currentImage={profileImage} />
       </div>
-      <div className="rounded-8 bg-gray-60 flex gap-16 border border-[#E4E3E8] px-16 py-12 md:gap-32 md:border-none md:bg-inherit md:p-0">
-        <div className="text-md-bold md:text-lg-bold md:text-custom-black flex flex-col justify-center gap-4 text-[#818084] md:gap-16">
-          <p>이름</p>
-          <p>이메일</p>
-          <p>팀</p>
-        </div>
-        <div className="text-lg-regular flex flex-col justify-center gap-4 md:gap-16">
-          <p>{name}</p>
-          <p>{email}</p>
-          <p>{JSON.stringify(teams)}</p>
-        </div>
-      </div>
-      <h1 className="text-2xl-bold border-b-1 hidden border-[#E8E8EA] py-8 md:block">내 프로필</h1>
     </div>
   );
 }

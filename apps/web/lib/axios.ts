@@ -20,10 +20,7 @@ export const axiosRequester: AxiosRequester = async ({ options }) => {
     ...options.headers,
   } as AxiosRequestHeaders;
   const accessToken = getCookie("accessToken") ?? "";
-
-  if (accessToken) {
-    headers.Authorization = `Bearer ${accessToken}`;
-  }
+  if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
 
   const client = await axiosInstance({
     ...options,

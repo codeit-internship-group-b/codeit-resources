@@ -1,9 +1,9 @@
 "use client";
 
 import { Button } from "@ui/index";
+import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import dynamic from "next/dynamic";
 import useIsMobileStore from "@/app/store/useIsMobileStore";
 // import ProfileInfo from "./ProfileInfo";
 import SettingButtons from "./SettingButtons";
@@ -16,9 +16,10 @@ const ProfileInfo = dynamic(() => import("./ProfileInfo"), {
 });
 
 // TODO : querykey 상수화
-// TODO : gnb settings페이지 연동
 // TODO : profile teams 다시 적용하기
 // TODO : suspense 401 server error 해결하기
+// TODO : Error boundary 렌더 컴포넌트 제작
+// TODO : 비밀번호 입력값으로 적용되도록 수정
 
 export default function ResponsiveSettingsPage(): JSX.Element {
   const isMobile = useIsMobileStore();
@@ -26,11 +27,14 @@ export default function ResponsiveSettingsPage(): JSX.Element {
   return (
     <div className="md:max-w-372 flex w-full flex-col gap-24 md:gap-56">
       <h1 className="text-2xl-bold md:hidden">설정</h1>
-      <ErrorBoundary fallback={<ProfileInfoSkeleton />}>
-        <Suspense fallback={<ProfileInfoSkeleton />}>
-          <ProfileInfo />
-        </Suspense>
-      </ErrorBoundary>
+      <div className="flex flex-col gap-24 md:flex-col-reverse md:gap-16">
+        <ErrorBoundary fallback={<ProfileInfoSkeleton />}>
+          <Suspense fallback={<ProfileInfoSkeleton />}>
+            <ProfileInfo />
+          </Suspense>
+        </ErrorBoundary>
+        <h1 className="text-2xl-bold border-b-1 hidden border-[#E8E8EA] py-8 md:block">내 프로필</h1>
+      </div>
       {isMobile ? <SettingButtons /> : <ChangePasswordForm />}
       <div className="flex flex-col gap-24">
         <h1 className="text-2xl-bold border-b-1 hidden border-[#E8E8EA] py-8 md:block">계정</h1>

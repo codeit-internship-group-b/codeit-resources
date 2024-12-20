@@ -15,14 +15,14 @@ export const postCreateTeam = async (teamName: ITeam): Promise<ResponseType<ITea
 };
 
 export const getTeams = async (): Promise<TeamType[]> => {
-  const { data } = await axiosRequester({
+  const { data } = await axiosRequester<TeamType[]>({
     options: {
       method: "GET",
       url: API_ENDPOINTS.TEAMS.GET_ALL,
     },
   });
 
-  return data as TeamType[];
+  return data;
 };
 
 interface MessageResponse {
@@ -30,14 +30,14 @@ interface MessageResponse {
 }
 
 export const deleteTeam = async (teamId: string): Promise<MessageResponse> => {
-  const { data } = await axiosRequester({
+  const { data } = await axiosRequester<MessageResponse>({
     options: {
       method: "DELETE",
       url: API_ENDPOINTS.TEAMS.DELETE_TEAM(teamId),
     },
   });
 
-  return data as MessageResponse;
+  return data;
 };
 
 interface UpdateRequest {
@@ -46,7 +46,7 @@ interface UpdateRequest {
 }
 
 export const updateTeamName = async ({ teamId, newName }: UpdateRequest): Promise<MessageResponse> => {
-  const { data } = await axiosRequester({
+  const { data } = await axiosRequester<MessageResponse>({
     options: {
       method: "PUT",
       url: API_ENDPOINTS.TEAMS.UPDATE_TEAM_NAME(teamId),
@@ -54,7 +54,7 @@ export const updateTeamName = async ({ teamId, newName }: UpdateRequest): Promis
     },
   });
 
-  return data as MessageResponse;
+  return data;
 };
 
 export const updateTeamOrder = async (updatedTeams: TeamType[]): Promise<ResponseType<TeamType[]>> => {

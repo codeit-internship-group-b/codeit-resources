@@ -9,9 +9,13 @@ import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
 import { postSignIn } from "@/api/auth";
 import { useAuthStore } from "@/src/stores/useAuthStore";
 
+interface MessageResponse {
+  message: string;
+}
+
 export const useSignInMutation = (): UseMutationResult<
   SignInResponseType<string>,
-  AxiosError<{ message?: string }>,
+  AxiosError<MessageResponse>,
   FieldValues
 > => {
   const router = useRouter();
@@ -38,8 +42,7 @@ export const useSignInMutation = (): UseMutationResult<
       }, 1000);
     },
     onError: (error) => {
-      const err = error as AxiosError<{ message: string }>;
-      const errMessage = err.response?.data.message;
+      const errMessage = error.response?.data.message;
       if (errMessage) notify({ type: "error", message: errMessage });
     },
   });
