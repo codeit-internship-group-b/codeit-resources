@@ -70,17 +70,17 @@ export const EMPTY_STATE_MESSAGES = {
 
   MEMBERS: {
     NO_MEMBERS: {
-      NOTICE: "등록된 멤버가 없습니다.",
-      SUGGESTION: "멤버를 새로 등록해 보세요.",
+      title: "등록된 멤버가 없습니다.",
+      description: "멤버를 새로 등록해 보세요.",
     },
     NO_TEAM_MEMBERS: (team: string) => ({
-      NOTICE: `${team} 팀에 속한 멤버가 없습니다.`,
-      SUGGESTION: "멤버를 새로 등록해 보세요.",
+      title: `${team} 팀에 속한 멤버가 없습니다.`,
+      description: "멤버를 새로 등록해 보세요.",
     }),
   },
 
   TEAMS: {
-    NOTICE: "등록된 팀이 없습니다.",
-    SUGGESTION: "새로운 팀을 등록해 보세요.",
+    title: "등록된 팀이 없습니다.",
+    description: "새로운 팀을 등록해 보세요.",
   },
 } as const;
