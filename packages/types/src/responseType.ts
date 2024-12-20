@@ -18,3 +18,7 @@ export interface ReservationResponse {
   message: string;
   savedReservation: IReservation[];
 }
+
+export interface MessageResponse {
+  message: string;
+}

@@ -1,11 +1,6 @@
 import { API_ENDPOINTS } from "@repo/constants";
-import { type IUser } from "@repo/types";
+import { type ChangePasswordPayload, type MessageResponse, type IUser } from "@repo/types";
 import { axiosRequester } from "@/lib/axios";
-import { type ChangePasswordPayload } from "@/app/settings/_components/ChangePasswordForm";
-
-interface MessageResponse {
-  message: string;
-}
 
 export const getUser = async (): Promise<IUser> => {
   const { data } = await axiosRequester<IUser>({

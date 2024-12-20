@@ -1,39 +1,16 @@
-import { useMutation } from "@tanstack/react-query";
-import { Button, Input, notify } from "@ui/index";
-import { type SubmitHandler, useForm } from "react-hook-form";
-import { patchUserPassword } from "@/api/users";
-
-export interface ChangePasswordPayload {
-  currentPassword: string;
-  newPassword: string;
-  confirmPassword: string;
-}
+import { Button, Input } from "@ui/index";
+import { type SubmitHandler } from "react-hook-form";
+import { type ChangePasswordPayload } from "@repo/types";
+import { useChangeUserPasswordMutation } from "../_hooks/useUserMutations";
+import { useChangeUserPasswordForm } from "../_hooks/useChangePasswordForm";
 
 export default function ChangePasswordForm(): JSX.Element {
   const {
     handleSubmit,
-    register,
-    watch,
+    registers,
     formState: { errors },
-  } = useForm({
-    mode: "onBlur",
-    defaultValues: {
-      currentPassword: "",
-      newPassword: "",
-      confirmPassword: "",
-    },
-  });
-
-  const { mutate: patchUserPasswordMutate } = useMutation({
-    mutationFn: (payload: ChangePasswordPayload) => patchUserPassword(payload),
-    onSuccess: (res) => {
-      notify({ type: "success", message: res.message });
-    },
-    // onError: (error) => {
-    //   const errMessage = error.response?.data.message;
-    //   if (errMessage) notify({ type: "error", message: errMessage });
-    // },
-  });
+  } = useChangeUserPasswordForm();
+  const { mutate: patchUserPasswordMutate } = useChangeUserPasswordMutation();
 
   const onSubmit: SubmitHandler<ChangePasswordPayload> = (payload) => {
     patchUserPasswordMutate(payload);
@@ -47,27 +24,14 @@ export default function ChangePasswordForm(): JSX.Element {
           type="password"
           placeholder="현재 비밀번호"
           error={errors.currentPassword}
-          {...register("currentPassword", {
-            required: "비밀번호를 입력해 주세요.",
-            minLength: { value: 4, message: "4자리 이상 입력해 주세요." },
-          })}
+          {...registers.currentPassword}
         />
-        <Input
-          type="password"
-          placeholder="새 비밀번호"
-          error={errors.newPassword}
-          {...register("newPassword", {
-            required: "새 비밀번호를 입력해 주세요.",
-            minLength: { value: 4, message: "4자리 이상 입력해 주세요." },
-          })}
-        />
+        <Input type="password" placeholder="새 비밀번호" error={errors.newPassword} {...registers.newPassword} />
         <Input
           type="password"
           placeholder="새 비밀번호 확인"
           error={errors.confirmPassword}
-          {...register("confirmPassword", {
-            validate: (value) => value === watch("newPassword") || "비밀번호가 일치하지 않습니다.",
-          })}
+          {...registers.confirmPassword}
         />
         <Button className="text-lg-medium w-106 h-42" type="submit" variant="Secondary">
           변경하기

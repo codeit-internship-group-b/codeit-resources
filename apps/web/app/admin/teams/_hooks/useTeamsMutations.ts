@@ -2,14 +2,10 @@ import { useMutation, type UseMutationResult, useQueryClient } from "@tanstack/r
 import { notify } from "@ui/index";
 import { type FieldValues, useForm } from "react-hook-form";
 import { type AxiosError } from "axios";
-import { type ResponseType, type ITeam, type TeamType } from "@repo/types";
+import { type ResponseType, type ITeam, type TeamType, type MessageResponse } from "@repo/types";
 import { useRef } from "react";
 import { deleteTeam, postCreateTeam, updateTeamName, updateTeamOrder } from "@/api/teams";
 import { useDebouncedCallback } from "./useDebounceCallback";
-
-interface MessageResponse {
-  message: string;
-}
 
 export const useCreateTeam = (
   onClose: () => void,
