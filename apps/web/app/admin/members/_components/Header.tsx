@@ -1,5 +1,5 @@
 import { Button } from "@ui/index";
-import { Chevron } from "@ui/public";
+import { Chevron, PlusIcon } from "@ui/public";
 import { MEMBER_FORM_MESSAGES } from "@repo/constants/messages";
 import SearchForm from "./search";
 
@@ -21,9 +21,12 @@ export default function Header({ onMemberSelect, onSearch, keyword }: HeaderProp
         <Button
           onClick={onMemberSelect}
           variant="Secondary"
-          className="w-122 h-42 text-lg-medium text-custom-black/80 hidden md:block"
+          className="h-42 w-122 text-lg-medium text-custom-black/80 hidden md:flex"
         >
-          {`+ ${MEMBER_FORM_MESSAGES.TITLE.ADD}`}
+          <div className="flex items-center gap-2">
+            <PlusIcon width={12} height={12} fill="text-custom-black/80" />
+            <span>{MEMBER_FORM_MESSAGES.TITLE.ADD}</span>
+          </div>
         </Button>
       </div>
     </header>
