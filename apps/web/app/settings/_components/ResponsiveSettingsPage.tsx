@@ -4,8 +4,11 @@ import { Button } from "@ui/index";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
+import { useRouter } from "next/navigation";
+import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
 import useIsMobileStore from "@/app/store/useIsMobileStore";
 // import ProfileInfo from "./ProfileInfo";
+import { useAuthStore } from "@/src/stores/useAuthStore";
 import SettingButtons from "./SettingButtons";
 import ChangePasswordForm from "./ChangePasswordForm";
 import ProfileInfoSkeleton from "./ProfileInfoSkeleton";
@@ -23,6 +26,13 @@ const ProfileInfo = dynamic(() => import("./ProfileInfo"), {
 
 export default function ResponsiveSettingsPage(): JSX.Element {
   const isMobile = useIsMobileStore();
+  const { logout } = useAuthStore();
+  const router = useRouter();
+
+  const handleLogout = (): void => {
+    logout();
+    router.replace(PAGE_NAME.SIGN_IN);
+  };
 
   return (
     <div className="md:max-w-372 flex w-full flex-col gap-24 md:gap-56">
@@ -38,7 +48,7 @@ export default function ResponsiveSettingsPage(): JSX.Element {
       {isMobile ? <SettingButtons /> : <ChangePasswordForm />}
       <div className="flex flex-col gap-24">
         <h1 className="text-2xl-bold border-b-1 hidden border-[#E8E8EA] py-8 md:block">계정</h1>
-        <Button className="text-lg-medium w-106 h-42" type="button" variant="Secondary">
+        <Button className="text-lg-medium w-106 h-42" type="button" variant="Secondary" onClick={handleLogout}>
           로그아웃
         </Button>
       </div>

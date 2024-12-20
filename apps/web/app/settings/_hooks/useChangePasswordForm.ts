@@ -12,15 +12,16 @@ type ChangePasswordFormReturn = UseFormReturn<ChangePasswordPayload> & {
 };
 
 const MIN_LENGTH = 4;
+const DEFAULT_VALUES = {
+  currentPassword: "",
+  newPassword: "",
+  confirmPassword: "",
+};
 
 export const useChangeUserPasswordForm = (): ChangePasswordFormReturn => {
   const form = useForm({
     mode: "onSubmit",
-    defaultValues: {
-      currentPassword: "",
-      newPassword: "",
-      confirmPassword: "",
-    },
+    defaultValues: DEFAULT_VALUES,
   });
 
   const { register, watch } = form;
