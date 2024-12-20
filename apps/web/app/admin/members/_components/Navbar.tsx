@@ -14,11 +14,8 @@ export default function Navbar({ activeTab, onTabChange, selectedSort, onSortCha
   const isMobile = useIsMobileStore();
 
   return (
-    <nav className="relative mb-24">
-      <div
-        className="w-full overflow-x-auto border-b border-gray-200/10"
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-      >
+    <nav className="relative">
+      <div className="no-scrollbar w-full overflow-x-auto border-b border-gray-200/10">
         <Tab activeTab={activeTab} onTabChange={onTabChange} />
         {!isMobile && (
           <div className="w-174 md:bg-custom-gradient absolute right-0 top-0 flex h-full items-center justify-end pb-4">

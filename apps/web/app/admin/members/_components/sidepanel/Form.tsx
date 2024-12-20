@@ -28,7 +28,7 @@ export default function MemberForm({ selectedMember, onClose }: MemberFormProps)
     control,
     setValue,
     watch,
-    onSubmit: MembersFormSubmit,
+    onSubmit: membersFormSubmit,
     isPending,
   } = useMembersForm({ selectedMember, onClose });
 
@@ -37,8 +37,6 @@ export default function MemberForm({ selectedMember, onClose }: MemberFormProps)
   };
 
   const getButtonText = (): string => {
-    if (isPending) return MEMBER_FORM_MESSAGES.BUTTON.SUBMIT.PROCESSING;
-
     return selectedMember ? MEMBER_FORM_MESSAGES.BUTTON.SUBMIT.UPDATE : MEMBER_FORM_MESSAGES.BUTTON.SUBMIT.ADD;
   };
 
@@ -59,7 +57,7 @@ export default function MemberForm({ selectedMember, onClose }: MemberFormProps)
   };
 
   return (
-    <form onSubmit={(...args) => void handleSubmit(MembersFormSubmit)(...args)}>
+    <form onSubmit={(...args) => void handleSubmit(membersFormSubmit)(...args)}>
       <div className="w-154 mb-24">
         <Controller
           name="role"
@@ -113,7 +111,7 @@ export default function MemberForm({ selectedMember, onClose }: MemberFormProps)
 
       <ProfileImageUploader currentImage={getCurrentImage()} onImageChange={handleImageChange} />
 
-      <Button variant="Primary" type="submit" className="h-48 w-full" disabled={isPending}>
+      <Button variant="Primary" type="submit" className="h-48 w-full" isPending={isPending}>
         {getButtonText()}
       </Button>
     </form>

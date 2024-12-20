@@ -230,6 +230,7 @@ export default function SeatButton({
               notify("error", "예약 정보를 찾을 수 없습니다. 페이지를 새로고침해주세요.");
             }
           }}
+          color="white"
           className={cn(
             "bg-custom-black absolute -right-6 -top-10 size-24 cursor-pointer rounded-full md:-right-4 md:-top-8",
             {

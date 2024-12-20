@@ -40,9 +40,6 @@ export const postMember = async (formData: FormData): Promise<MemberResponse> =>
       method: "POST",
       url: API_ENDPOINTS.USERS.CREATE_USER,
       data: formData,
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
     },
   });
 
@@ -55,9 +52,6 @@ export const patchMember = async (userId: string, formData: FormData): Promise<M
       method: "PATCH",
       url: API_ENDPOINTS.USERS.PATCH_USER(userId),
       data: formData,
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
     },
   });
 

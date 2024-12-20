@@ -136,6 +136,7 @@ const config: Omit<Config, "content"> = {
     },
     boxShadow: {
       custom: "0 2px 4px 0 rgba(51, 50, 54, 0.06)", // X: 0, Y: 2, Blur: 4, Spread: 0, 색상: #333236/6
+      "search-form": "0 4px 12px rgba(0, 0, 0, 0.08)",
     },
   },
   plugins: [],
