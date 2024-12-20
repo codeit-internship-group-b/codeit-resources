@@ -14,7 +14,7 @@ export default function ChangePasswordForm(): JSX.Element {
     handleSubmit,
     register,
     watch,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm({
     mode: "onBlur",
     defaultValues: {
@@ -29,10 +29,10 @@ export default function ChangePasswordForm(): JSX.Element {
     onSuccess: (res) => {
       notify({ type: "success", message: res.message });
     },
-    onError: (error) => {
-      // const errMessage = error.response?.data.message;
-      // if (errMessage) notify({ type: "error", message: errMessage });
-    },
+    // onError: (error) => {
+    //   const errMessage = error.response?.data.message;
+    //   if (errMessage) notify({ type: "error", message: errMessage });
+    // },
   });
 
   const onSubmit: SubmitHandler<ChangePasswordPayload> = (payload) => {
@@ -43,13 +43,30 @@ export default function ChangePasswordForm(): JSX.Element {
     <form className="flex flex-col gap-16" onSubmit={(...rest) => void handleSubmit(onSubmit)(...rest)}>
       <h1 className="text-2xl-bold border-b-1 border-[#E8E8EA] py-8">비밀번호 변경</h1>
       <div>
-        <Input type="password" placeholder="현재 비밀번호" {...register("currentPassword")} />
-        <Input type="password" placeholder="새 비밀번호" {...register("newPassword")} />
+        <Input
+          type="password"
+          placeholder="현재 비밀번호"
+          error={errors.currentPassword}
+          {...register("currentPassword", {
+            required: "비밀번호를 입력해 주세요.",
+            minLength: { value: 4, message: "4자리 이상 입력해 주세요." },
+          })}
+        />
+        <Input
+          type="password"
+          placeholder="새 비밀번호"
+          error={errors.newPassword}
+          {...register("newPassword", {
+            required: "새 비밀번호를 입력해 주세요.",
+            minLength: { value: 4, message: "4자리 이상 입력해 주세요." },
+          })}
+        />
         <Input
           type="password"
           placeholder="새 비밀번호 확인"
+          error={errors.confirmPassword}
           {...register("confirmPassword", {
-            validate: (value) => value === watch("newPassword") || "새 비밀번호가 일치하지 않습니다.",
+            validate: (value) => value === watch("newPassword") || "비밀번호가 일치하지 않습니다.",
           })}
         />
         <Button className="text-lg-medium w-106 h-42" type="submit" variant="Secondary">

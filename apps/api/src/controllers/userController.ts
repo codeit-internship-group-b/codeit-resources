@@ -585,8 +585,8 @@ interface UpdateUserCredentialsRequest extends Request {
  *   patch:
  *     tags:
  *       - Users
- *     summary: 사용자 비밀번호 업데이트
- *     description: 현재 사용자의 비밀번호를 변경합니다.
+ *     summary: 사용자 비밀번호 변경
+ *     description: 현재 사용자의 비밀번호를 새 비밀번호로 변경합니다.
  *     requestBody:
  *       required: true
  *       content:
@@ -597,9 +597,11 @@ interface UpdateUserCredentialsRequest extends Request {
  *               currentPassword:
  *                 type: string
  *                 description: 현재 비밀번호
+ *                 example: currentPassword123
  *               newPassword:
  *                 type: string
  *                 description: 새 비밀번호
+ *                 example: newPassword456
  *     responses:
  *       200:
  *         description: 비밀번호가 성공적으로 변경되었습니다.
@@ -612,7 +614,7 @@ interface UpdateUserCredentialsRequest extends Request {
  *                   type: string
  *                   example: 비밀번호가 변경되었습니다.
  *       400:
- *         description: 필수 정보가 누락되었습니다.
+ *         description: 요청이 잘못되었습니다. (비밀번호 누락 또는 기존 비밀번호와 동일)
  *         content:
  *           application/json:
  *             schema:
@@ -620,9 +622,13 @@ interface UpdateUserCredentialsRequest extends Request {
  *               properties:
  *                 message:
  *                   type: string
- *                   example: 필수 정보가 누락되었습니다.
+ *                   examples:
+ *                     missingPassword:
+ *                       value: 비밀번호를 입력해 주세요.
+ *                     samePassword:
+ *                       value: 기존의 비밀번호와 동일합니다.
  *       401:
- *         description: 비밀번호가 일치하지 않습니다.
+ *         description: 인증 오류 또는 비밀번호 불일치
  *         content:
  *           application/json:
  *             schema:
@@ -630,7 +636,11 @@ interface UpdateUserCredentialsRequest extends Request {
  *               properties:
  *                 message:
  *                   type: string
- *                   example: 비밀번호가 일치하지 않습니다.
+ *                   examples:
+ *                     invalidToken:
+ *                       value: 인증 토큰이 유효하지 않습니다.
+ *                     passwordMismatch:
+ *                       value: 비밀번호가 일치하지 않습니다.
  *       404:
  *         description: 사용자를 찾을 수 없습니다.
  *         content:
@@ -647,12 +657,12 @@ export const updateUserCredentials = async (req: UpdateUserCredentialsRequest, r
   const { currentPassword, newPassword } = req.body;
 
   if (!userId) {
-    res.status(400).send({ message: "인증 토큰이 유효하지 않습니다." });
+    res.status(401).send({ message: "인증 토큰이 유효하지 않습니다." });
     return;
   }
 
   if (!currentPassword || !newPassword) {
-    res.status(400).send({ message: "필수 정보가 누락되었습니다." });
+    res.status(400).send({ message: "비밀번호를 입력해 주세요." });
     return;
   }
 
@@ -667,6 +677,10 @@ export const updateUserCredentials = async (req: UpdateUserCredentialsRequest, r
   if (!isMatch) {
     res.status(401).send({ message: "비밀번호가 일치하지 않습니다." });
     return;
+  }
+
+  if (currentPassword === newPassword) {
+    res.status(400).send({ message: "기존의 비밀번호와 동일합니다." });
   }
 
   user.password = newPassword;

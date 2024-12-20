@@ -1,6 +1,5 @@
 import { API_ENDPOINTS } from "@repo/constants";
 import { type IUser } from "@repo/types";
-import { type FieldValues } from "react-hook-form";
 import { axiosRequester } from "@/lib/axios";
 import { type ChangePasswordPayload } from "@/app/settings/_components/ChangePasswordForm";
 
