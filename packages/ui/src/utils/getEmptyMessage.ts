@@ -15,7 +15,7 @@ export const getEmptyMessage = ({ activeTab, keyword }: EmptyStateProps): EmptyM
 
   if (keyword) {
     return {
-      title: EMPTY_STATE_MESSAGES.SEARCH.NO_RESULT,
+      title: EMPTY_STATE_MESSAGES.SEARCH.NO_RESULT.MESSAGE,
       description: EMPTY_STATE_MESSAGES.SEARCH.CHECK_SPELLING,
     };
   }

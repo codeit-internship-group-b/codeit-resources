@@ -61,7 +61,10 @@ export const ERROR_MESSAGE = {
 
 export const EMPTY_STATE_MESSAGES = {
   SEARCH: {
-    NO_RESULT: "검색 결과가 없습니다.",
+    NO_RESULT: {
+      MESSAGE: "검색 결과가 없습니다.",
+      RECENT: "최근 검색어가 없습니다.",
+    },
     CHECK_SPELLING: "단어의 철자가 정확한지 확인해 보세요.",
   },
 
@@ -77,7 +80,7 @@ export const EMPTY_STATE_MESSAGES = {
   },
 
   TEAMS: {
-    title: "등록된 팀이 없습니다.",
-    description: "새로운 팀을 등록해 보세요.",
+    NOTICE: "등록된 팀이 없습니다.",
+    SUGGESTION: "새로운 팀을 등록해 보세요.",
   },
 } as const;

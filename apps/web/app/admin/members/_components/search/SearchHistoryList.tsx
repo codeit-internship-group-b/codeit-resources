@@ -1,3 +1,4 @@
+import { EMPTY_STATE_MESSAGES } from "@repo/constants/messages";
 import { CancelIcon } from "@ui/public";
 
 interface SearchHistoryListProps {
@@ -10,7 +11,7 @@ export default function SearchHistoryList({ keywords, onSelect, onRemove }: Sear
   if (keywords.length === 0) {
     return (
       <div className="justify h-130 flex items-center justify-center">
-        <p className="text-lg-regular text-gray-200">최근 검색어가 없습니다.</p>
+        <p className="text-lg-regular text-gray-200">{EMPTY_STATE_MESSAGES.SEARCH.NO_RESULT.RECENT}</p>
       </div>
     );
   }
