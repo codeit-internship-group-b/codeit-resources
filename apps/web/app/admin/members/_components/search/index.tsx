@@ -54,7 +54,6 @@ export default function SearchForm({ onSearch, keyword }: SearchFormProps): JSX.
           register={register}
           setValue={setValue}
           keyword={keyword}
-          onSearch={onSearch}
           onFocus={handleOpenKeyword}
           onClear={handleClearInput}
         />

@@ -8,7 +8,6 @@ interface SearchInputProps {
   register: UseFormRegister<KeywordsFormData>;
   setValue: UseFormSetValue<KeywordsFormData>;
   keyword: string;
-  onSearch: (keyword: string) => void;
   onFocus: () => void;
   onClear: () => void;
 }
