@@ -6,6 +6,7 @@ import { type MemberWithStaticImage, type SortOption } from "@repo/types/src/mem
 import { useLockBodyScroll } from "@ui/src/hooks/useLockBodyScroll";
 import { MEMBER_FORM_MESSAGES } from "@repo/constants/messages";
 import { PlusIcon } from "@ui/public";
+import cn from "@ui/src/utils/cn";
 import Header from "./Header";
 import Navbar from "./Navbar";
 import MemberList from "./MemberList";
@@ -35,7 +36,11 @@ export default function MembersContent(): JSX.Element {
   };
 
   return (
-    <div className={`flex h-screen flex-col ${isSidePanelOpen ? "overflow-hidden" : ""}`}>
+    <div
+      className={cn("flex h-screen flex-col", {
+        "overflow-hidden": isSidePanelOpen,
+      })}
+    >
       <div className="sticky top-0 z-10 bg-white md:mt-80">
         <Header onMemberSelect={handleOpenSidePanel} onSearch={setKeyword} keyword={keyword} />
         <Navbar
