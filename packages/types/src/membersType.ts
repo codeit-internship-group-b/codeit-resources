@@ -1,6 +1,5 @@
 import { type StaticImageData } from "next/image";
 import { IUser } from "./userType";
-import { ResponseType } from "./responseType";
 
 // 이미지 타입
 export type ImageUrlType = string;

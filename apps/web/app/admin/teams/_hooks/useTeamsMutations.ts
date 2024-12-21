@@ -16,10 +16,9 @@ export const useCreateTeam = (
   return useMutation({
     mutationFn: (name: ITeam) => postCreateTeam(name),
     onSuccess: (res) => {
-      // 토스트 피드백
-      if (typeof res.message === "string") notify({ type: "success", message: res.message });
-      // query key 초기화
+      notify({ type: "success", message: res.message });
       void queryClient.invalidateQueries({ queryKey: ["teamsResponse"] });
+
       // modal close
       debouncedOnClose();
     },
@@ -45,9 +44,7 @@ export const useDeleteTeam = (): UseMutationResult<MessageResponse, AxiosError<M
   return useMutation({
     mutationFn: (teamId: string) => deleteTeam(teamId),
     onSuccess: (res) => {
-      // 토스트 피드백
-      if (typeof res.message === "string") notify({ type: "success", message: res.message });
-      // query key 초기화
+      notify({ type: "success", message: res.message });
       void queryClient.invalidateQueries({ queryKey: ["teamsResponse"] });
     },
     onError: (error) => {
@@ -69,27 +66,22 @@ export const useUpdateTeamName = (): UseMutationResult<MessageResponse, AxiosErr
   return useMutation({
     mutationFn: ({ teamId, newName }: UpdateRequest) => updateTeamName({ teamId, newName }),
 
-    // 낙관적 업데이트 적용 === optimistic update
     onMutate: ({ teamId, newName }) => {
       void queryClient.cancelQueries({ queryKey: ["teamsResponse"] });
-      // 이전 상태 저장
       prevTeamsRef.current = queryClient.getQueryData<TeamType[]>(["teamsResponse"]);
-      // 팀 이름 수정
       void queryClient.setQueryData<TeamType[]>(["teamsResponse"], (oldTeams) =>
         oldTeams?.map((oldTeam) => (oldTeam._id === teamId ? { ...oldTeam, name: newName } : oldTeam)),
       );
     },
 
     onSuccess: (res) => {
-      // 토스트 피드백
-      if (typeof res.message === "string") notify({ type: "success", message: res.message });
+      notify({ type: "success", message: res.message });
     },
     onError: (error) => {
       if (prevTeamsRef.current) void queryClient.setQueryData<TeamType[]>(["teamsResponse"], prevTeamsRef.current);
       const errMessage = error.response?.data.message;
       if (errMessage) notify({ type: "error", message: errMessage });
     },
-    // finally 동작
     onSettled: () => {
       void queryClient.invalidateQueries({ queryKey: ["teamsResponse"] });
     },

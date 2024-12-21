@@ -1,8 +1,8 @@
-import { type MessageResponse, type ChangePasswordPayload } from "@repo/types";
+import { type MessageResponse, type ChangePasswordPayload, type ResponseType, type IUser } from "@repo/types";
 import { useMutation, type UseMutationResult } from "@tanstack/react-query";
 import { notify } from "@ui/index";
 import { type AxiosError } from "axios";
-import { patchUserPassword } from "@/api/users";
+import { patchUserImage, patchUserPassword } from "@/api/users";
 
 export const useChangeUserPasswordMutation = (): UseMutationResult<
   MessageResponse,
@@ -11,6 +11,23 @@ export const useChangeUserPasswordMutation = (): UseMutationResult<
 > => {
   return useMutation({
     mutationFn: (payload: ChangePasswordPayload) => patchUserPassword(payload),
+    onSuccess: (res) => {
+      notify({ type: "success", message: res.message });
+    },
+    onError: (error) => {
+      const errMessage = error.response?.data.message;
+      if (errMessage) notify({ type: "error", message: errMessage });
+    },
+  });
+};
+
+export const useChangeUserImageMutation = (): UseMutationResult<
+  ResponseType<IUser>,
+  AxiosError<MessageResponse>,
+  FormData
+> => {
+  return useMutation({
+    mutationFn: (formData: FormData) => patchUserImage(formData),
     onSuccess: (res) => {
       notify({ type: "success", message: res.message });
     },

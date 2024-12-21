@@ -551,7 +551,7 @@ export const updateProfileImage = async (req: UpdateProfileImageRequest, res: Re
   const profileImageUrl = (req.file as Express.MulterS3.File).location;
 
   if (!userId) {
-    res.status(400).send({ message: "인증 토큰이 유효하지 않습니다." });
+    res.status(401).send({ message: "인증 토큰이 유효하지 않습니다." });
     return;
   }
 
@@ -560,15 +560,8 @@ export const updateProfileImage = async (req: UpdateProfileImageRequest, res: Re
     return;
   }
 
-  const user = await User.findById(userId);
-
-  if (!user) {
-    res.status(404).send({ message: "사용자를 찾을 수 없습니다." });
-    return;
-  }
-
-  await User.findByIdAndUpdate(userId, { profileImage: profileImageUrl });
-  res.status(200).send({ message: "프로필 사진이 변경되었습니다." });
+  const user = await User.findByIdAndUpdate(userId, { profileImage: profileImageUrl });
+  res.status(200).send({ message: "프로필 사진이 변경되었습니다.", user });
 };
 
 interface UpdateUserCredentialsRequest extends Request {

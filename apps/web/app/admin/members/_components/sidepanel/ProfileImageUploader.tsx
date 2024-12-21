@@ -49,7 +49,9 @@ export default function ProfileImageUploader({
   };
 
   useEffect(() => {
-    if (imageObjectUrl) URL.revokeObjectURL(imageObjectUrl);
+    return () => {
+      if (imageObjectUrl) URL.revokeObjectURL(imageObjectUrl);
+    };
   }, [imageObjectUrl]);
 
   return (

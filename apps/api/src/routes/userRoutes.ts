@@ -31,7 +31,12 @@ userRouter.delete("/:userId", asyncHandler(deleteUser));
 userRouter.post("/create", upload.single("profileImage"), asyncHandler(createUser));
 
 // 내 사진 변경
-userRouter.patch("/me/image", upload.single("profileImage"), asyncHandler(updateProfileImage));
+userRouter.patch(
+  "/me/image",
+  asyncHandler(authenticateToken),
+  upload.single("profileImage"),
+  asyncHandler(updateProfileImage),
+);
 
 // 비밀변호 변경
 userRouter.patch("/me/password", asyncHandler(authenticateToken), asyncHandler(updateUserCredentials));
