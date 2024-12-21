@@ -1,26 +1,12 @@
-import { useEffect, useState } from "react";
 import ProfileImageUploader from "@/app/admin/members/_components/sidepanel/ProfileImageUploader";
 import { useSuspenseUserQuery } from "../_hooks/useUserQueries";
-import { useChangeUserImageMutation } from "../_hooks/useUserMutations";
+import { useProfileImage } from "../_hooks/useProfileImage";
 import ProfileTeams from "./ProfileTeams";
 
 export default function ProfileDetails(): JSX.Element {
   const { data: user } = useSuspenseUserQuery();
   const { email, name, teams, profileImage = "" } = user;
-  const [currentImage, setCurrentImage] = useState<string | File>(profileImage);
-  const { mutate: changeUserImageMutate } = useChangeUserImageMutation();
-
-  useEffect(() => {
-    if (currentImage instanceof File) {
-      const formData = new FormData();
-      formData.append("profileImage", currentImage);
-      changeUserImageMutate(formData);
-    }
-  }, [changeUserImageMutate, currentImage]);
-
-  const handleImageChange = (file: File): void => {
-    setCurrentImage(file);
-  };
+  const { currentImage, handleImageChange } = useProfileImage(profileImage);
 
   return (
     <div className="rounded-8 bg-gray-60 flex gap-16 border border-[#E4E3E8] px-16 py-12 md:gap-32 md:border-none md:bg-inherit md:p-0">
