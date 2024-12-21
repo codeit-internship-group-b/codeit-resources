@@ -1,5 +1,6 @@
 import ProfileImageUploader from "@/app/admin/members/_components/sidepanel/ProfileImageUploader";
 import { useSuspenseUserQuery } from "../_hooks/useUserQueries";
+import ProfileTeams from "./ProfileTeams";
 
 export default function ProfileDetails(): JSX.Element {
   const { data: user } = useSuspenseUserQuery();
@@ -16,7 +17,9 @@ export default function ProfileDetails(): JSX.Element {
       <div className="text-lg-regular flex flex-col justify-between gap-4 md:gap-16">
         <p>{name}</p>
         <p>{email}</p>
-        <p>{JSON.stringify(teams)}</p>
+        <div className="flex items-center gap-8">
+          <ProfileTeams teams={teams} />
+        </div>
         <ProfileImageUploader size="sm" currentImage={profileImage} />
       </div>
     </div>

@@ -16,7 +16,7 @@ export default function ProfileImageUploader({
   onImageChange,
   size = "md",
 }: ProfileImageUploaderProps): JSX.Element {
-  const [imageObjectUrl, setImageObjectUrl] = useState<string>("");
+  const [imageObjectUrl, setImageObjectUrl] = useState("");
   const [isImageError, setIsImageError] = useState(false);
 
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>): void => {

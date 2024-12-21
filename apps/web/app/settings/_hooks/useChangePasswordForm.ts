@@ -7,10 +7,9 @@ interface ChangePasswordRegisters {
   confirmPassword: UseFormRegisterReturn;
 }
 
-type ChangePasswordFormReturn = UseFormReturn<ChangePasswordPayload> & {
+interface ChangePasswordFormReturn extends UseFormReturn<ChangePasswordPayload> {
   registers: ChangePasswordRegisters;
-};
-
+}
 const MIN_LENGTH = 4;
 const DEFAULT_VALUES = {
   currentPassword: "",
