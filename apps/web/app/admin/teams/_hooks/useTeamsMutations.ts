@@ -1,10 +1,10 @@
 import { useMutation, type UseMutationResult, useQueryClient } from "@tanstack/react-query";
-import { notify } from "@ui/index";
 import { type FieldValues, useForm } from "react-hook-form";
 import { type AxiosError } from "axios";
 import { type ResponseType, type ITeam, type TeamType, type MessageResponse } from "@repo/types";
 import { useRef } from "react";
 import { deleteTeam, postCreateTeam, updateTeamName, updateTeamOrder } from "@/api/teams";
+import { notify } from "@/app/store/useToastStore";
 import { useDebouncedCallback } from "./useDebounceCallback";
 
 export const useCreateTeam = (
@@ -16,7 +16,7 @@ export const useCreateTeam = (
   return useMutation({
     mutationFn: (name: ITeam) => postCreateTeam(name),
     onSuccess: (res) => {
-      notify({ type: "success", message: res.message });
+      notify("success", res.message);
       void queryClient.invalidateQueries({ queryKey: ["teamsResponse"] });
 
       // modal close
@@ -24,7 +24,7 @@ export const useCreateTeam = (
     },
     onError: (error) => {
       const errMessage = error.response?.data.message;
-      if (errMessage) notify({ type: "error", message: errMessage });
+      if (errMessage) notify("error", errMessage);
     },
   });
 };
@@ -44,12 +44,12 @@ export const useDeleteTeam = (): UseMutationResult<MessageResponse, AxiosError<M
   return useMutation({
     mutationFn: (teamId: string) => deleteTeam(teamId),
     onSuccess: (res) => {
-      notify({ type: "success", message: res.message });
+      notify("success", res.message);
       void queryClient.invalidateQueries({ queryKey: ["teamsResponse"] });
     },
     onError: (error) => {
       const errMessage = error.response?.data.message;
-      if (errMessage) notify({ type: "error", message: errMessage });
+      if (errMessage) notify("error", errMessage);
     },
   });
 };
@@ -75,12 +75,12 @@ export const useUpdateTeamName = (): UseMutationResult<MessageResponse, AxiosErr
     },
 
     onSuccess: (res) => {
-      notify({ type: "success", message: res.message });
+      notify("success", res.message);
     },
     onError: (error) => {
       if (prevTeamsRef.current) void queryClient.setQueryData<TeamType[]>(["teamsResponse"], prevTeamsRef.current);
       const errMessage = error.response?.data.message;
-      if (errMessage) notify({ type: "error", message: errMessage });
+      if (errMessage) notify("error", errMessage);
     },
     onSettled: () => {
       void queryClient.invalidateQueries({ queryKey: ["teamsResponse"] });
@@ -105,7 +105,7 @@ export const useUpdateTeamOrder = (
     onError: (error) => {
       if (prevTeamsRef.current) void queryClient.setQueryData<TeamType[]>(["teamsResponse"], prevTeamsRef.current);
       const errMessage = error.response?.data.message;
-      if (errMessage) notify({ type: "error", message: errMessage });
+      if (errMessage) notify("error", errMessage);
     },
     onSettled: () => {
       void queryClient.invalidateQueries({ queryKey: ["teamsResponse"] });

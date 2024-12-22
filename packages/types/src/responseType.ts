@@ -9,7 +9,7 @@ export interface ResponseType<T> {
 
 export interface SignInResponseType<T> {
   accessToken?: T;
-  message?: string;
+  message: string;
   status?: "success" | "error";
   user?: IUser;
 }

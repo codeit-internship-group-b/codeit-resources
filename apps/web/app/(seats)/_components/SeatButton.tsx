@@ -1,16 +1,15 @@
- 
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 "use client";
 import { CancelIcon, RightIcon } from "@ui/public";
 import cn from "@ui/src/utils/cn";
 import { useMemo, useState } from "react";
-import { notify } from "@ui/index";
 import AlertModal from "@ui/src/components/common/ConditionalActionModal/AlertModal";
 import { usePathname } from "next/navigation";
 import { Sheet } from "react-modal-sheet";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { type ReservedResponse, type ReservationRequestBody, type ReservationResponse } from "@repo/types";
 import { formatSelectedDate } from "@ui/src/utils/date";
+import { notify } from "@/app/store/useToastStore";
 import useIsMobileStore from "@/app/store/useIsMobileStore";
 import Sidebar from "@/components/common/Sidebar";
 import { useDateStore } from "@/app/store/useDateStore";
@@ -63,11 +62,11 @@ export default function SeatButton({
         queryClient.invalidateQueries({ queryKey: ["seats"] }),
         queryClient.invalidateQueries({ queryKey: ["user", "reservations"] }),
       ]);
-      notify({ type: "success", message: response.message });
+      notify("success", response.message);
     },
     onError: (error) => {
       setIsChecked(false);
-      notify({ type: "error", message: `오류 발생: ${error.message}` });
+      notify("error", `오류 발생: ${error.message}`);
     },
   });
 
@@ -80,10 +79,10 @@ export default function SeatButton({
         queryClient.invalidateQueries({ queryKey: ["user", "reservations"] }),
       ]);
       setIsChecked(false);
-      notify({ type: "success", message: "자리 예약을 삭제했습니다" });
+      notify("success", "자리 예약을 삭제했습니다");
     },
     onError: (error) => {
-      notify({ type: "error", message: `오류 발생: ${error.message}` });
+      notify("error", `오류 발생: ${error.message}`);
     },
   });
 
@@ -106,10 +105,10 @@ export default function SeatButton({
         queryClient.invalidateQueries({ queryKey: ["user", "reservations"] }),
       ]);
       handleSelectSeat(seatNum);
-      notify({ type: "success", message: "좌석 예약 성공!" });
+      notify("success", "좌석 예약 성공!");
     },
     onError: (error) => {
-      notify({ type: "error", message: `오류 발생: ${error.message}` });
+      notify("error", `오류 발생: ${error.message}`);
     },
   });
 
@@ -228,12 +227,10 @@ export default function SeatButton({
             if (userSeatInfo.reservationId) {
               handleCancelButtonClick(userSeatInfo.reservationId);
             } else {
-              notify({
-                type: "error",
-                message: "예약 정보를 찾을 수 없습니다. 페이지를 새로고침해주세요.",
-              });
+              notify("error", "예약 정보를 찾을 수 없습니다. 페이지를 새로고침해주세요.");
             }
           }}
+          color="white"
           className={cn(
             "bg-custom-black absolute -right-6 -top-10 size-24 cursor-pointer rounded-full md:-right-4 md:-top-8",
             {

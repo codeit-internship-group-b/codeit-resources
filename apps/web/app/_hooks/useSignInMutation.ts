@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient, type UseMutationResult } from "@tanstack/react-query";
 import { type FieldValues } from "react-hook-form";
-import { notify } from "@ui/index";
 import { type AxiosError } from "axios";
 import { type SignInResponseType } from "@repo/types/src/responseType";
 import { useRouter } from "next/navigation";
 import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
+import { notify } from "@/app/store/useToastStore";
 import { postSignIn } from "@/api/auth";
 import { useAuthStore } from "@/src/stores/useAuthStore";
 
@@ -24,11 +24,11 @@ export const useSignInMutation = (): UseMutationResult<
   return useMutation({
     mutationFn: (payload: FieldValues) => postSignIn(payload),
     onSuccess: (res) => {
-      const { user, accessToken } = res;
+      const { user, accessToken, message } = res;
       if (accessToken && user) {
         login(user, accessToken);
-        queryClient.setQueryData(["userResponse"], res.user);
-        if (typeof res.message === "string") notify({ type: "success", message: res.message });
+        queryClient.setQueryData(["userResponse"], user);
+        notify("success", message);
         setTimeout(() => {
           router.replace(PAGE_NAME.DASHBOARD);
         }, 1000);
@@ -36,7 +36,7 @@ export const useSignInMutation = (): UseMutationResult<
     },
     onError: (error) => {
       const errMessage = error.response?.data.message;
-      if (errMessage) notify({ type: "error", message: errMessage });
+      if (errMessage) notify("error", errMessage);
     },
   });
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, notify } from "@ui/index";
+import { Button } from "@ui/index";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
 // import ProfileInfo from "./ProfileInfo";
 import { useAuthStore } from "@/src/stores/useAuthStore";
+import { notify } from "@/app/store/useToastStore";
 import SettingButtons from "./SettingButtons";
 import ChangePasswordForm from "./ChangePasswordForm";
 import ProfileInfoSkeleton from "./ProfileInfoSkeleton";
@@ -30,7 +31,7 @@ export default function ResponsiveSettingsPage(): JSX.Element {
 
   const handleLogout = (): void => {
     logout();
-    notify({ type: "success", message: "로그아웃 되었습니다." });
+    notify("success", "로그아웃 되었습니다.");
     router.replace(PAGE_NAME.SIGN_IN);
   };
 

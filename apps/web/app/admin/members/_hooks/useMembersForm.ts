@@ -26,25 +26,10 @@ export const useMembersForm = ({ selectedMember, onClose }: UseMembersForm): Use
   const { reset } = form;
   const { updateMember, createMember, isPending } = useMembersMutations({
     onSuccess: () => {
-      setTimeout(() => {
-        onClose();
-      }, 800);
+      reset(DEFAULT_VALUES);
+      onClose();
     },
   });
-
-  useEffect(() => {
-    if (selectedMember) {
-      reset({
-        role: selectedMember.role,
-        name: selectedMember.name,
-        email: selectedMember.email,
-        teams: selectedMember.teams,
-        profileImage: selectedMember.profileImage ?? null,
-      });
-    } else {
-      reset(DEFAULT_VALUES);
-    }
-  }, [selectedMember, reset]);
 
   const createMemberFormData = (data: SidePanelFormData): FormData => {
     const formData = new FormData();
@@ -53,7 +38,7 @@ export const useMembersForm = ({ selectedMember, onClose }: UseMembersForm): Use
     formData.append("email", data.email);
 
     data.teams.forEach((team) => {
-      formData.append("teams", team);
+      formData.append("teams[]", team);
     });
 
     if (data.profileImage instanceof File) {
@@ -64,13 +49,33 @@ export const useMembersForm = ({ selectedMember, onClose }: UseMembersForm): Use
   };
 
   const onSubmit = (data: SidePanelFormData): void => {
+    if (isPending) return;
+
     const formData = createMemberFormData(data);
+
     if (selectedMember) {
       updateMember({ id: selectedMember._id, data: formData });
       return;
     }
+
     createMember(formData);
   };
+
+  useEffect(() => {
+    if (selectedMember) {
+      const { role, name, email, teams, profileImage } = selectedMember;
+
+      reset({
+        role,
+        name,
+        email,
+        teams,
+        profileImage: profileImage ?? null,
+      });
+    } else {
+      reset(DEFAULT_VALUES);
+    }
+  }, [selectedMember, reset]);
 
   return { onSubmit, isPending, ...form };
 };
