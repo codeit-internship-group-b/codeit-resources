@@ -1,5 +1,5 @@
 import { type MessageResponse, type ChangePasswordPayload, type ResponseType, type IUser } from "@repo/types";
-import { useMutation, type UseMutationResult } from "@tanstack/react-query";
+import { useMutation, useQueryClient, type UseMutationResult } from "@tanstack/react-query";
 import { notify } from "@ui/index";
 import { type AxiosError } from "axios";
 import { patchUserImage, patchUserPassword } from "@/api/users";
@@ -26,9 +26,11 @@ export const useChangeUserImageMutation = (): UseMutationResult<
   AxiosError<MessageResponse>,
   FormData
 > => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (formData: FormData) => patchUserImage(formData),
     onSuccess: (res) => {
+      void queryClient.invalidateQueries({ queryKey: ["userResponse"] });
       notify({ type: "success", message: res.message });
     },
     onError: (error) => {

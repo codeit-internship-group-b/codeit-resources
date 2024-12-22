@@ -1,12 +1,11 @@
 "use client";
 
-import { Button } from "@ui/index";
+import { Button, notify } from "@ui/index";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useRouter } from "next/navigation";
 import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
-import useIsMobileStore from "@/app/store/useIsMobileStore";
 // import ProfileInfo from "./ProfileInfo";
 import { useAuthStore } from "@/src/stores/useAuthStore";
 import SettingButtons from "./SettingButtons";
@@ -23,14 +22,15 @@ const ProfileInfo = dynamic(() => import("./ProfileInfo"), {
 // TODO : suspense 401 server error 해결하기
 // TODO : Error boundary 렌더 컴포넌트 제작
 // TODO : 비밀번호 입력값으로 적용되도록 수정
+// TODO : 다른페이지 reposive redirect 처리
 
 export default function ResponsiveSettingsPage(): JSX.Element {
-  const isMobile = useIsMobileStore();
   const { logout } = useAuthStore();
   const router = useRouter();
 
   const handleLogout = (): void => {
     logout();
+    notify({ type: "success", message: "로그아웃 되었습니다." });
     router.replace(PAGE_NAME.SIGN_IN);
   };
 
@@ -45,7 +45,10 @@ export default function ResponsiveSettingsPage(): JSX.Element {
         </ErrorBoundary>
         <h1 className="text-2xl-bold border-b-1 hidden border-[#E8E8EA] py-8 md:block">내 프로필</h1>
       </div>
-      {isMobile ? <SettingButtons /> : <ChangePasswordForm />}
+      <SettingButtons />
+      <div className="hidden md:block">
+        <ChangePasswordForm />
+      </div>
       <div className="flex flex-col gap-24">
         <h1 className="text-2xl-bold border-b-1 hidden border-[#E8E8EA] py-8 md:block">계정</h1>
         <Button className="text-lg-medium w-106 h-42" type="button" variant="Secondary" onClick={handleLogout}>
