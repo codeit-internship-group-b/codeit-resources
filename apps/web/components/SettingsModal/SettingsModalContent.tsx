@@ -1,7 +1,9 @@
+import cn from "@ui/src/utils/cn";
 import { type ReactNode } from "react";
 
 interface SettingsModalContentProps {
   children: ReactNode;
+  className?: string;
 }
 
 /**
@@ -10,6 +12,6 @@ interface SettingsModalContentProps {
  * @returns {JSX.Element} - 스크롤 가능한 본문 영역 JSX 요소입니다.
  */
 
-export default function SettingsModalContent({ children }: SettingsModalContentProps): JSX.Element {
-  return <div className="no-scrollbar scrollbar-hidden mb-48 overflow-auto">{children}</div>;
+export default function SettingsModalContent({ children, className }: SettingsModalContentProps): JSX.Element {
+  return <div className={cn("no-scrollbar scrollbar-hidden mb-48 overflow-auto pt-8", `${className}`)}>{children}</div>;
 }
