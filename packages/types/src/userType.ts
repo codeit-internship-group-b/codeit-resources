@@ -13,3 +13,9 @@ export interface IUser {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface ChangePasswordPayload {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}

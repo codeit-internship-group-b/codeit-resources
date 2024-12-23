@@ -1,9 +1,9 @@
 import { API_ENDPOINTS } from "@repo/constants";
-import { type ResponseType, type ITeam, type TeamType } from "@repo/types";
+import { type ResponseType, type ITeam, type TeamType, type MessageResponse } from "@repo/types";
 import { axiosRequester } from "@/lib/axios";
 
 export const postCreateTeam = async (teamName: ITeam): Promise<ResponseType<ITeam>> => {
-  const { data } = await axiosRequester({
+  const { data } = await axiosRequester<ResponseType<ITeam>>({
     options: {
       method: "POST",
       url: API_ENDPOINTS.TEAMS.CREATE_TEAM,
@@ -11,33 +11,29 @@ export const postCreateTeam = async (teamName: ITeam): Promise<ResponseType<ITea
     },
   });
 
-  return data as ResponseType<ITeam>;
+  return data;
 };
 
 export const getTeams = async (): Promise<TeamType[]> => {
-  const { data } = await axiosRequester({
+  const { data } = await axiosRequester<TeamType[]>({
     options: {
       method: "GET",
       url: API_ENDPOINTS.TEAMS.GET_ALL,
     },
   });
 
-  return data as TeamType[];
+  return data;
 };
 
-interface MessageResponse {
-  message: string;
-}
-
 export const deleteTeam = async (teamId: string): Promise<MessageResponse> => {
-  const { data } = await axiosRequester({
+  const { data } = await axiosRequester<MessageResponse>({
     options: {
       method: "DELETE",
       url: API_ENDPOINTS.TEAMS.DELETE_TEAM(teamId),
     },
   });
 
-  return data as MessageResponse;
+  return data;
 };
 
 interface UpdateRequest {
@@ -46,7 +42,7 @@ interface UpdateRequest {
 }
 
 export const updateTeamName = async ({ teamId, newName }: UpdateRequest): Promise<MessageResponse> => {
-  const { data } = await axiosRequester({
+  const { data } = await axiosRequester<MessageResponse>({
     options: {
       method: "PUT",
       url: API_ENDPOINTS.TEAMS.UPDATE_TEAM_NAME(teamId),
@@ -54,7 +50,7 @@ export const updateTeamName = async ({ teamId, newName }: UpdateRequest): Promis
     },
   });
 
-  return data as MessageResponse;
+  return data;
 };
 
 export const updateTeamOrder = async (updatedTeams: TeamType[]): Promise<ResponseType<TeamType[]>> => {

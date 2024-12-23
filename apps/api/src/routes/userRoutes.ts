@@ -16,7 +16,7 @@ const userRouter: Router = Router();
 
 // 유저 정렬
 userRouter.get("/", asyncHandler(getUsers));
-userRouter.get("/user", asyncHandler(authenticateToken), asyncHandler(getUser));
+userRouter.get("/me", asyncHandler(authenticateToken), asyncHandler(getUser));
 
 // 유저 정보 변경
 // TODO : admin middleware 추가
@@ -31,9 +31,14 @@ userRouter.delete("/:userId", asyncHandler(deleteUser));
 userRouter.post("/create", upload.single("profileImage"), asyncHandler(createUser));
 
 // 내 사진 변경
-userRouter.patch("/me/image", upload.single("profileImage"), asyncHandler(updateProfileImage));
+userRouter.patch(
+  "/me/image",
+  asyncHandler(authenticateToken),
+  upload.single("profileImage"),
+  asyncHandler(updateProfileImage),
+);
 
 // 비밀변호 변경
-userRouter.patch("/me/password", asyncHandler(updateUserCredentials));
+userRouter.patch("/me/password", asyncHandler(authenticateToken), asyncHandler(updateUserCredentials));
 
 export default userRouter;
