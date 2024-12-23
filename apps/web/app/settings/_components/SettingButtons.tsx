@@ -1,7 +1,7 @@
 import { Chevron } from "@ui/public";
 import { useState } from "react";
 import { useAuthStore } from "@/src/stores/useAuthStore";
-import TeamSettingsModal from "@/app/admin/teams/_components/TeamSettingsModal";
+import TeamSettingsModal from "@/app/settings/_components/modals/TeamSettingsModal";
 import ChangePasswordModal from "./modals/ChangePasswordModal";
 
 const MEMBER_OPTION = [{ title: "비밀번호 변경", modal: ChangePasswordModal }];

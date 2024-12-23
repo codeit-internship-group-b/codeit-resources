@@ -10,7 +10,7 @@ import Dropdown from "@ui/src/components/common/Dropdown";
 import { Chevron } from "@ui/public";
 import useIsMobileStore from "@/app/store/useIsMobileStore";
 import { useDeleteTeam, useUpdateTeamName } from "../_hooks/useTeamsMutations";
-import ManageTeamModal from "./ManageTeamModal";
+import ManageTeamModal from "../../../settings/_components/modals/ManageTeamModal";
 import DeleteTeamModalContent from "./DeleteTeamModalContent";
 
 interface TeamListItemProps {
