@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMemo } from "react";
 import { debounce } from "es-toolkit";
 
@@ -7,7 +8,7 @@ import { debounce } from "es-toolkit";
  * @param delay - 디바운스 지연 시간 (ms)
  * @returns 디바운스 처리된 콜백 함수
  */
-export function useDebouncedCallback<T extends (...args: unknown[]) => unknown>(
+export function useDebouncedCallback<T extends (...args: any[]) => void>(
   callback: T,
   delay: number,
 ): (...args: Parameters<T>) => void {

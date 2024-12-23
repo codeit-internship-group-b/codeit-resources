@@ -3,7 +3,7 @@ import CategoryList from "../_components/CategoryList";
 
 export default function Rooms(): JSX.Element {
   return (
-    <section>
+    <section className="md:mt-80">
       <div>
         <h1>회의실 관리</h1>
       </div>
