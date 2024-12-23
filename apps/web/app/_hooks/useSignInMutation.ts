@@ -11,7 +11,7 @@ import { useAuthStore } from "@/src/stores/useAuthStore";
 import { notifyMutationError } from "@/src/utils/notifyMutationError";
 
 export const useSignInMutation = (): UseMutationResult<
-  SignInResponseType<string>,
+  SignInResponseType,
   AxiosError<MessageResponse>,
   FieldValues
 > => {
@@ -23,14 +23,12 @@ export const useSignInMutation = (): UseMutationResult<
     mutationFn: (payload: FieldValues) => postSignIn(payload),
     onSuccess: async (res) => {
       const { user, accessToken, message } = res;
-      if (accessToken && user) {
-        login(user, accessToken);
-        queryClient.setQueryData(["userResponse"], user);
-        notify("success", message);
-        // 화면전환 1초 지연
-        await delay(1000);
-        router.replace(PAGE_NAME.DASHBOARD);
-      }
+      login(user, accessToken);
+      queryClient.setQueryData(["userResponse"], user);
+      notify("success", message);
+      // 화면전환 1초 지연
+      await delay(1000);
+      router.replace(PAGE_NAME.DASHBOARD);
     },
     onError: (error) => {
       notifyMutationError(error);
