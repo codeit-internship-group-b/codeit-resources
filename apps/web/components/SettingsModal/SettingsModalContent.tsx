@@ -13,5 +13,5 @@ interface SettingsModalContentProps {
  */
 
 export default function SettingsModalContent({ children, className }: SettingsModalContentProps): JSX.Element {
-  return <div className={cn("no-scrollbar scrollbar-hidden mb-48 overflow-auto pt-8", `${className}`)}>{children}</div>;
+  return <div className={cn("no-scrollbar scrollbar-hidden mb-48 mt-8 overflow-auto", `${className}`)}>{children}</div>;
 }

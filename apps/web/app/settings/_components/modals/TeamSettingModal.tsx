@@ -13,7 +13,7 @@ interface TeamSettingsModalProps {
   onClose: () => void;
 }
 
-export default function TeamSettingsModal({ isOpen, onClose }: TeamSettingsModalProps): JSX.Element {
+export default function TeamSettingModal({ isOpen, onClose }: TeamSettingsModalProps): JSX.Element {
   const [isManageModalOpen, setIsManageModalOpen] = useState(false);
 
   const handleOpenManageModal = (): void => {

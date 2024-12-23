@@ -1,13 +1,14 @@
 import { Chevron } from "@ui/public";
 import { useState } from "react";
 import { useAuthStore } from "@/src/stores/useAuthStore";
-import TeamSettingsModal from "@/app/settings/_components/modals/TeamSettingsModal";
+import TeamSettingModal from "@/app/settings/_components/modals/TeamSettingModal";
 import ChangePasswordModal from "./modals/ChangePasswordModal";
+import MembersSettingModal from "./modals/MembersSettingModal";
 
 const MEMBER_OPTION = [{ title: "비밀번호 변경", modal: ChangePasswordModal }];
 const ADMIN_OPTION = [
   { title: "멤버 관리" },
-  { title: "팀 관리", modal: TeamSettingsModal },
+  { title: "팀 관리", modal: TeamSettingModal },
   { title: "회의실 설정" },
   { title: "좌석 설정" },
 ];
@@ -22,7 +23,7 @@ export default function SettingButtons(): JSX.Element {
   const handleClick = (): void => {
     setIsOpen((prev) => !prev);
   };
-  TeamSettingsModal;
+  TeamSettingModal;
   return (
     <>
       <div className="md:hidden">
@@ -48,7 +49,14 @@ export default function SettingButtons(): JSX.Element {
         }}
       /> */}
 
-      <TeamSettingsModal
+      {/* <TeamSettingModal
+        isOpen={isOpen}
+        onClose={() => {
+          setIsOpen(false);
+        }}
+      /> */}
+
+      <MembersSettingModal
         isOpen={isOpen}
         onClose={() => {
           setIsOpen(false);

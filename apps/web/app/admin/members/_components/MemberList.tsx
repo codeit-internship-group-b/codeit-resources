@@ -56,7 +56,7 @@ export default function MemberList({ selectedSort, activeTab, onMemberClick, key
   }
 
   return (
-    <div className="mb-80 flex flex-col gap-16 px-5 pt-16">
+    <div className="mb-80 flex flex-col gap-16 px-4 pt-16">
       {keyword ? <p className="text-2lg-bold">&apos;{keyword}&apos; 검색 결과</p> : null}
       {members.map((member) => (
         <MemberListItem key={member._id} member={member} onMemberClick={onMemberClick} />
