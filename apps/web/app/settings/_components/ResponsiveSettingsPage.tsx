@@ -19,11 +19,10 @@ const ProfileInfo = dynamic(() => import("./ProfileInfo"), {
 });
 
 // TODO : querykey 상수화
-// TODO : profile teams 다시 적용하기
 // TODO : suspense 401 server error 해결하기
 // TODO : Error boundary 렌더 컴포넌트 제작
 // TODO : 비밀번호 입력값으로 적용되도록 수정
-// TODO : 다른페이지 reposive redirect 처리
+// TODO : 다른페이지 responsive redirect 처리
 
 export default function ResponsiveSettingsPage(): JSX.Element {
   const { logout } = useAuthStore();

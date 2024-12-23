@@ -674,6 +674,7 @@ export const updateUserCredentials = async (req: UpdateUserCredentialsRequest, r
 
   if (currentPassword === newPassword) {
     res.status(400).send({ message: "기존의 비밀번호와 동일합니다." });
+    return;
   }
 
   user.password = newPassword;

@@ -14,8 +14,8 @@ export const postCreateTeam = async (teamName: ITeam): Promise<ResponseType<ITea
   return data;
 };
 
-export const getTeams = async (): Promise<TeamType[]> => {
-  const { data } = await axiosRequester<TeamType[]>({
+export const getTeams = async (): Promise<ResponseType<TeamType[]>> => {
+  const { data } = await axiosRequester<ResponseType<TeamType[]>>({
     options: {
       method: "GET",
       url: API_ENDPOINTS.TEAMS.GET_ALL,
