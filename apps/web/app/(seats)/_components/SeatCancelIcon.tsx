@@ -8,7 +8,7 @@ interface SeatCancelButtonProps {
   isAdmin: boolean;
 }
 
-export default function SeatCancelButton({ reservationId, onCancel, isAdmin }: SeatCancelButtonProps): JSX.Element {
+export default function SeatCancelIcon({ reservationId, onCancel, isAdmin }: SeatCancelButtonProps): JSX.Element {
   return (
     <CancelIcon
       onClick={(e) => {

@@ -14,9 +14,10 @@ import { useDateStore } from "@/app/store/useDateStore";
 import { useAuthStore } from "@/src/stores/useAuthStore";
 import { isSeat, isSeatReserved } from "@/src/utils/seats";
 import { useSeatReservation } from "@/app/_hooks/useSeatReservation";
+import { notify } from "@/app/store/useToastStore";
 import { useSeatContext } from "../../../src/contexts/SeatContext";
 import AdminSeatSetting from "./AdminSeatSetting";
-import SeatCancelButton from "./SeatCancelButton";
+import SeatCancelIcon from "./SeatCancelIcon";
 
 interface SeatButtonProps {
   isLoading?: boolean;
@@ -48,6 +49,7 @@ export default function SeatButton({
 
   const isAdmin = useMemo(() => pathname.includes("admin"), [pathname]);
   const isDisabled = !isAdmin && (checkedSeat === seatNum || status !== "available" || isLoading);
+  const currentTime = new Date().toISOString().slice(11, 19);
 
   // 예약 정보
   const reservationData = useMemo(() => {
@@ -57,11 +59,11 @@ export default function SeatButton({
     return {
       userId: authUser?._id,
       itemType: "seat" as const,
-      startAt: `${formatSelectedDate(selectedDate)}T${new Date().toISOString().slice(11, 19)}Z`,
+      startAt: `${formatSelectedDate(selectedDate)}T${currentTime}Z`,
       endAt: `${formatSelectedDate(selectedDate)}T23:59:59Z`,
       status: "reserved" as const,
     };
-  }, [authUser?._id, selectedDate, isLoggedIn]);
+  }, [authUser?._id, selectedDate, isLoggedIn, currentTime]);
 
   // 현재 로그인 된 사용자의 좌석정보를 기반으로 특정 좌석 예약 여부 확인
   const userSeatInfo = useMemo(() => {
@@ -91,7 +93,7 @@ export default function SeatButton({
     if (isSeatReserved(userReservationData)) {
       setIsModalOpen(true);
     } else if (!reservationData) {
-      throw new Error("예약 데이터가 없습니다");
+      notify("error", "예약 데이터가 없습니다. 예약을 다시 진행해주세요.");
     } else {
       createSeatReservation(
         {
@@ -190,7 +192,7 @@ export default function SeatButton({
         {isChecked && !isAdmin ? <RightIcon className="m-auto size-32 fill-white" /> : null}
       </button>
       {isChecked && !isAdmin ? (
-        <SeatCancelButton
+        <SeatCancelIcon
           reservationId={userSeatInfo?.reservationId}
           onCancel={handleCancelButtonClick}
           isAdmin={isAdmin}

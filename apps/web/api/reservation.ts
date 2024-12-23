@@ -92,7 +92,7 @@ export const createSeatReservationData = async ({
  */
 export const deleteReservationData = async (reservationId: string | null): Promise<ReservedResponse> => {
   if (!reservationId) {
-    throw new Error("Reservation ID is required");
+    throw new Error("예약 내역이 없습니다. 다시 한 번 확인해주세요.");
   }
 
   const { data } = await axiosRequester<ReservedResponse>({
@@ -119,7 +119,7 @@ export const modifyReservationData = async ({
   reservationId?: string | null;
 }): Promise<{ deleteResult: ReservedResponse; createResult: ReservedResponse }> => {
   if (!seatId || !reservationData || !reservationId) {
-    throw new Error("Seat ID, reservation data, reservation ID가 필요합니다.");
+    throw new Error("예약내역이 필요합니다. 다시 한 번 확인해주세요.");
   }
 
   // Step 1: 기존 예약 삭제

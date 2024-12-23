@@ -1,5 +1,6 @@
 import { type ReservationRequestBody, type ReservedResponse } from "@repo/types";
 import { type UseMutateFunction, useMutation, useQueryClient } from "@tanstack/react-query";
+import { type AxiosError } from "axios";
 import { createSeatReservationData, deleteReservationData, modifyReservationData } from "@/api/reservation";
 import { notify } from "../store/useToastStore";
 
@@ -40,7 +41,9 @@ export const useSeatReservation = (onSuccess?: () => void): SeatReservationMutat
       onSuccess?.();
     },
     onError: (error) => {
-      notify("error", `오류 발생: ${error.message}`);
+      const err = error as AxiosError<{ message: string }>;
+      const errMessage = err.response?.data.message;
+      if (errMessage) notify("error", errMessage);
     },
   });
 
@@ -52,7 +55,9 @@ export const useSeatReservation = (onSuccess?: () => void): SeatReservationMutat
       notify("success", "자리 예약을 삭제했습니다");
     },
     onError: (error) => {
-      notify("error", `오류 발생: ${error.message}`);
+      const err = error as AxiosError<{ message: string }>;
+      const errMessage = err.response?.data.message;
+      if (errMessage) notify("error", errMessage);
     },
   });
 
@@ -64,7 +69,9 @@ export const useSeatReservation = (onSuccess?: () => void): SeatReservationMutat
       notify("success", "좌석 예약 성공!");
     },
     onError: (error) => {
-      notify("error", `오류 발생: ${error.message}`);
+      const err = error as AxiosError<{ message: string }>;
+      const errMessage = err.response?.data.message;
+      if (errMessage) notify("error", errMessage);
     },
   });
 

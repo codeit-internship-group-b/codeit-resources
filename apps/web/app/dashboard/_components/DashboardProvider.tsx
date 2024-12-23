@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { type IReservation } from "@repo/types";
 import { useRouter } from "next/navigation";
+import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
 import { getUserReservations } from "@/api/reservation";
 import { useAuthStore } from "@/src/stores/useAuthStore";
 import DashboardSection from "./DashboardSection";
@@ -26,7 +27,7 @@ export default function DashboardProvider(): JSX.Element {
 
   useEffect(() => {
     if (!user?._id) {
-      router.push("/login");
+      router.push(PAGE_NAME.SIGN_IN);
     }
   }, [user?._id, router]);
 
