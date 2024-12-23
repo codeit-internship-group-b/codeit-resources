@@ -3,6 +3,7 @@ import { useMutation, useQueryClient, type UseMutationResult } from "@tanstack/r
 import { type AxiosError } from "axios";
 import { patchUserImage, patchUserPassword } from "@/api/users";
 import { notify } from "@/app/store/useToastStore";
+import { notifyMutationError } from "@/src/utils/notifyMutationError";
 
 export const useChangeUserPasswordMutation = (): UseMutationResult<
   MessageResponse,
@@ -15,8 +16,7 @@ export const useChangeUserPasswordMutation = (): UseMutationResult<
       notify("success", res.message);
     },
     onError: (error) => {
-      const errMessage = error.response?.data.message;
-      if (errMessage) notify("error", errMessage);
+      notifyMutationError(error);
     },
   });
 };
@@ -34,8 +34,7 @@ export const useChangeUserImageMutation = (): UseMutationResult<
       notify("success", res.message);
     },
     onError: (error) => {
-      const errMessage = error.response?.data.message;
-      if (errMessage) notify("error", errMessage);
+      notifyMutationError(error);
     },
   });
 };

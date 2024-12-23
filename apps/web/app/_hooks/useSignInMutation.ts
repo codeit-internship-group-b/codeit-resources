@@ -8,6 +8,7 @@ import { delay } from "es-toolkit";
 import { notify } from "@/app/store/useToastStore";
 import { postSignIn } from "@/api/auth";
 import { useAuthStore } from "@/src/stores/useAuthStore";
+import { notifyMutationError } from "@/src/utils/notifyMutationError";
 
 export const useSignInMutation = (): UseMutationResult<
   SignInResponseType<string>,
@@ -32,8 +33,7 @@ export const useSignInMutation = (): UseMutationResult<
       }
     },
     onError: (error) => {
-      const errMessage = error.response?.data.message;
-      if (errMessage) notify("error", errMessage);
+      notifyMutationError(error);
     },
   });
 };
