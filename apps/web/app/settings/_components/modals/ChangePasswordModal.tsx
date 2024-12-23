@@ -10,7 +10,7 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
   return (
     <SettingsModal isOpen={isOpen} onClose={onClose}>
       <SettingsModalHeader title="비밀번호 변경" />
-      <SettingsModalContent className="mt-16">
+      <SettingsModalContent className="pt-16">
         <ChangePasswordForm />
       </SettingsModalContent>
     </SettingsModal>
