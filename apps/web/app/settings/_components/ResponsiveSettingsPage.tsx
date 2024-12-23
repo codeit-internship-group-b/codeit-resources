@@ -43,14 +43,14 @@ export default function ResponsiveSettingsPage(): JSX.Element {
             <ProfileInfo />
           </Suspense>
         </ErrorBoundary>
-        <h1 className="text-2xl-bold border-b-1 hidden border-[#E8E8EA] py-8 md:block">내 프로필</h1>
+        <h2 className="text-2xl-bold border-b-1 hidden border-[#E8E8EA] py-8 md:block">내 프로필</h2>
       </div>
       <SettingButtons />
       <div className="hidden md:block">
         <ChangePasswordForm />
       </div>
       <div className="flex flex-col gap-24">
-        <h1 className="text-2xl-bold border-b-1 hidden border-[#E8E8EA] py-8 md:block">계정</h1>
+        <h2 className="text-2xl-bold border-b-1 hidden border-[#E8E8EA] py-8 md:block">계정</h2>
         <Button className="text-lg-medium w-106 h-42" type="button" variant="Secondary" onClick={handleLogout}>
           로그아웃
         </Button>
