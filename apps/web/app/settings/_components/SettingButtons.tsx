@@ -11,6 +11,8 @@ export default function SettingButtons(): JSX.Element {
     openModal(component);
   };
 
+  // TODO : 다른 모달도 훅으로 분리?
+
   return (
     <>
       <div className="md:hidden">
