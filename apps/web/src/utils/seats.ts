@@ -2,11 +2,11 @@
 import { type IReservation, type IEquipment, type IRoom, type ISeat } from "@repo/types";
 
 // 좌석 예약되어있는지 확인 (타입 가드)
-export function isSeatReserved(reservedData: IReservation[] | undefined): boolean | undefined {
+export function isSeatReserved(reservedData: IReservation[] | undefined): boolean {
   if (Array.isArray(reservedData)) {
     return reservedData.some((item) => item.itemType === "seat");
   }
-  return undefined;
+  return false;
 }
 
 // 좌석인지 아닌지 (타입 가드)

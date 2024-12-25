@@ -9,7 +9,7 @@ import { useAuthStore } from "../stores/useAuthStore";
 
 interface SeatContextType {
   checkedSeat: string | null;
-  handleSelectSeat: (seatNum: string) => void;
+  handleSelectSeat: (seatNum: string | null) => void;
   seatReservationId: string | null;
   userReservationData: IReservation[] | undefined;
 }
@@ -35,7 +35,8 @@ export function SeatProvider({ children }: { children: ReactNode }): JSX.Element
     enabled: Boolean(user?._id),
   });
 
-  const handleSelectSeat = (seatNum: string): void => {
+  const handleSelectSeat = (seatNum: string | null): void => {
+    if (seatNum === null) return;
     setCheckedSeat((prev) => (prev === seatNum ? null : seatNum));
   };
 

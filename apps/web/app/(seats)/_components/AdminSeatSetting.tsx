@@ -5,7 +5,7 @@ import Button from "@ui/src/components/common/Button";
 import MultiSelectDropdown from "@repo/ui/src/components/common/Dropdown/MultiSelectDropdown";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { type AdminSeatSettingFormValues } from "@repo/types";
+import { type SeatStatus, type AdminSeatSettingFormValues } from "@repo/types";
 import Profile from "@/components/common/Profile";
 import { getMembers } from "@/api/members";
 import { patchItem } from "@/api/items";
@@ -14,7 +14,7 @@ import { notify } from "@/app/store/useToastStore";
 interface AdminSeatSettingProps {
   itemId: string;
   seatNum: string;
-  status: "in-use" | "unavailable" | "available" | "reserved";
+  status: SeatStatus;
   userName: string | null | undefined;
   onClose: () => void;
 }
@@ -60,7 +60,7 @@ export default function AdminSeatSetting({
   const { mutate: patchItemMutation } = useMutation<string, Error, { itemId: string; formData: FormData }>({
     mutationFn: ({ itemId, formData }) => patchItem(itemId, formData),
     onSuccess: (response: string) => {
-      void Promise.all([queryClient.invalidateQueries({ queryKey: ["seats"] })]);
+      void queryClient.invalidateQueries({ queryKey: ["seats"] });
       notify("success", response);
     },
     onError: (error: Error) => {
@@ -89,9 +89,9 @@ export default function AdminSeatSetting({
 
   return (
     <>
-      <h1 className="text-custom-black my-8 hidden md:block">좌석편집</h1>
-      <form onSubmit={handleFormSubmit} className="flex h-full flex-col justify-between p-16 md:p-0 md:pb-40">
-        <div className="flex flex-col gap-36 px-8 pb-24 pt-4">
+      <h1 className="hidden my-8 text-custom-black md:block">좌석편집</h1>
+      <form onSubmit={handleFormSubmit} className="flex flex-col justify-between h-full p-16 md:p-0 md:pb-40">
+        <div className="flex flex-col px-8 pt-4 pb-24 gap-36">
           <Radio.Group
             defaultValue={status}
             onChange={(value) => {
@@ -127,7 +127,7 @@ export default function AdminSeatSetting({
               <MultiSelectDropdown.Toggle title="멤버">
                 {selectedMember && selectedMember.length > 0 && selectedMember[0]?.name ? (
                   <div>
-                    <div className="max-h-100 flex flex-wrap gap-10 overflow-y-auto">
+                    <div className="flex flex-wrap gap-10 overflow-y-auto max-h-100">
                       {selectedMember.slice(0, 1).map((member) => (
                         <Profile
                           size="size-27"
