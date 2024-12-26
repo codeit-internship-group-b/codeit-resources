@@ -3,9 +3,9 @@
 import ListItem from "@ui/src/components/common/ListItem";
 import { type IRoom } from "@repo/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { notify } from "@ui/index";
 import { useSidebarStore } from "@/app/store/useSidebarStore";
 import { deleteRoom } from "@/api/meetings";
+import { notify } from "@/app/store/useToastStore";
 import useMeetingsStore from "../_store/useMeetingsStore";
 import CategoryEditDropdown from "./CategoryEditDropdown";
 import ConfirmationModal from "./ConfirmationModal";
@@ -33,15 +33,15 @@ export default function CategoryListSubItem({ item }: CategoryListSubItemProps):
       return await deleteRoom(itemId);
     },
     onSuccess: async () => {
-      notify({ type: "success", message: "회의실이 삭제되었습니다." });
+      notify("success", "회의실이 삭제되었습니다.");
       await queryClient.invalidateQueries({ queryKey: ["rooms"] });
     },
     onError: () => {
-      notify({ type: "error", message: "회의실 삭제에 실패했습니다. 다시 시도해주세요" });
+      notify("error", "회의실 삭제에 실패했습니다. 다시 시도해주세요");
     },
   });
 
-  const handleDeleteRoom = (itemId: string) => {
+  const handleDeleteRoom = (itemId: string): void => {
     mutation.mutate(itemId);
   };
 

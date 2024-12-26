@@ -1,13 +1,14 @@
 "use client";
 
 import { type ICategory, type TItemStatus } from "@repo/types";
-import { Button, Input, Radio, notify } from "@ui/index";
+import { Button, Input, Radio } from "@ui/index";
 import Dropdown from "@ui/src/components/common/Dropdown";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { patchRoom, postNewRoom } from "@/api/meetings";
 import { useSidebarStore } from "@/app/store/useSidebarStore";
+import { notify } from "@/app/store/useToastStore";
 import useMeetingsStore from "../_store/useMeetingsStore";
 
 export default function EditItemForm(): JSX.Element {
@@ -62,12 +63,12 @@ export default function EditItemForm(): JSX.Element {
       throw new Error("Unknown panel state");
     },
     onSuccess: async () => {
-      notify({ type: "success", message: panelState === "add" ? "등록완료!" : "수정완료!" });
+      notify("success", panelState === "add" ? "등록완료!" : "수정완료!");
       closeSidebar();
       await queryClient.invalidateQueries({ queryKey: ["rooms"] });
     },
     onError: () => {
-      notify({ type: "error", message: "잘못된 요청입니다." });
+      notify("error", "잘못된 요청입니다.");
     },
   });
 
@@ -133,11 +134,3 @@ export default function EditItemForm(): JSX.Element {
     </form>
   );
 }
-
-// "name": "string",
-//   "description": "string",
-//   "status": "available",
-//   "imageUrl": "string",
-//   "category": "string",
-//   "capacity": 0,
-//   "location": "string"

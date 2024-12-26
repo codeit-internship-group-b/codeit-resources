@@ -1,9 +1,10 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button, Input, notify } from "@ui/index";
+import { Button, Input } from "@ui/index";
 import { useForm } from "react-hook-form";
 import { postNewCategory } from "@/api/meetings";
+import { notify } from "@/app/store/useToastStore";
 
 export default function AddCategoryForm(): JSX.Element {
   const { register, handleSubmit } = useForm();
@@ -14,11 +15,11 @@ export default function AddCategoryForm(): JSX.Element {
       return await postNewCategory(payload);
     },
     onSuccess: async () => {
-      notify({ type: "success", message: "카테고리가 추가되었습니다!" });
+      notify("success", "카테고리가 추가되었습니다!");
       await queryClient.invalidateQueries({ queryKey: ["categories"] });
     },
     onError: () => {
-      notify({ type: "error", message: "요청에 실패했습니다." });
+      notify("error", "요청에 실패했습니다.");
     },
   });
 

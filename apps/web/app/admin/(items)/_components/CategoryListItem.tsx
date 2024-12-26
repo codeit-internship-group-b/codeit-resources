@@ -7,9 +7,9 @@ import { TriangleIcon } from "@ui/public";
 import { type ICategory, type IRoom } from "@repo/types";
 import { motion } from "framer-motion";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { notify } from "@ui/index";
 import { useSidebarStore } from "@/app/store/useSidebarStore";
 import { deleteCategory, patchCategory } from "@/api/meetings";
+import { notify } from "@/app/store/useToastStore";
 import useMeetingsStore from "../_store/useMeetingsStore";
 import AddItemButton from "./AddItemButton";
 import CategoryListSubItem from "./CategoryListSubItem";
@@ -62,14 +62,11 @@ export default function CategoryListItem({ category, rooms }: CategoryListItemPr
       return await deleteCategory(categoryId);
     },
     onSuccess: async () => {
-      notify({
-        type: "success",
-        message: "카테고리가 삭제되었습니다.",
-      });
+      notify("success", "카테고리가 삭제되었습니다.");
       await queryClient.invalidateQueries({ queryKey: ["categories"] });
     },
     onError: () => {
-      notify({ type: "error", message: "삭제에 실패했습니다. 다시 시도해주세요." });
+      notify("error", "삭제에 실패했습니다. 다시 시도해주세요.");
     },
   });
 
@@ -82,14 +79,11 @@ export default function CategoryListItem({ category, rooms }: CategoryListItemPr
       return await patchCategory(category._id, payload);
     },
     onSuccess: async () => {
-      notify({
-        type: "success",
-        message: "카테고리가 수정되었습니다.",
-      });
+      notify("success", "카테고리가 수정되었습니다.");
       await queryClient.invalidateQueries({ queryKey: ["categories"] });
     },
     onError: () => {
-      notify({ type: "error", message: "수정에 실패했습니다. 다시 시도해주세요." });
+      notify("error", "수정에 실패했습니다. 다시 시도해주세요.");
     },
   });
 
