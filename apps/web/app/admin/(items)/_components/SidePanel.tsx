@@ -1,5 +1,6 @@
 "use client";
 
+import { ErrorBoundary } from "react-error-boundary";
 import Sidebar from "@/components/common/Sidebar";
 import { useSidebarStore } from "@/app/store/useSidebarStore";
 import useMeetingsStore from "../_store/useMeetingsStore";
@@ -17,9 +18,10 @@ export default function SidePanel(): JSX.Element {
         closeSidebar();
       }}
     >
-      {panelState === "add" && <EditItemForm />}
-      {panelState === "edit" && <EditItemForm />}
-      {panelState === "category" && <AddCategoryForm />}
+      <ErrorBoundary fallback={<div>오류가 발생했습니다.</div>}>
+        {(panelState === "add" || panelState === "edit") && <EditItemForm />}
+        {panelState === "category" && <AddCategoryForm />}
+      </ErrorBoundary>
     </Sidebar>
   );
 }
