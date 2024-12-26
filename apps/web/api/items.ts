@@ -29,6 +29,5 @@ export const patchItem = async (itemId: string, formData: FormData): Promise<str
       data: formData,
     },
   });
-
   return data;
 };
