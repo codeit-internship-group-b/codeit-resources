@@ -2,13 +2,13 @@ import { Modal } from "@ui/index";
 import Dropdown from "@ui/src/components/common/Dropdown";
 
 interface CategoryEditDropdownProps {
-  isModifying?: boolean;
+  isEditing?: boolean;
   onClickEdit: () => void;
 }
-export default function CategoryEditDropdown({ isModifying, onClickEdit }: CategoryEditDropdownProps): JSX.Element {
+export default function CategoryEditDropdown({ isEditing, onClickEdit }: CategoryEditDropdownProps): JSX.Element {
   return (
     <Dropdown
-      selectedValue={isModifying}
+      selectedValue={isEditing}
       onSelect={(value: string | boolean) => {
         if (value === "수정") {
           onClickEdit();
