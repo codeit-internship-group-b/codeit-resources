@@ -4,6 +4,7 @@ import type { ResponseWithMessage } from "@repo/types/src/membersType";
 import { postMember, patchMember, deleteMember } from "@/api/members";
 import { notify } from "@/app/store/useToastStore";
 import { notifyMutationError } from "@/src/utils/notifyMutationError";
+import { QUERY_KEYS } from "@/lib/queryKey";
 
 interface UpdateMemberParams {
   id: string;
@@ -26,7 +27,7 @@ export function useMembersMutations({ onSuccess }: UseMemberMutationsProps = {})
 
   const handleSuccess = (res: ResponseWithMessage): void => {
     notify("success", res.message);
-    void queryClient.invalidateQueries({ queryKey: ["members"] });
+    void queryClient.invalidateQueries({ queryKey: QUERY_KEYS.MEMBERS.ALL });
     onSuccess?.();
   };
 

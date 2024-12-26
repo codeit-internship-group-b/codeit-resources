@@ -6,6 +6,7 @@ import { useRef } from "react";
 import { deleteTeam, postCreateTeam, updateTeamName, updateTeamOrder } from "@/api/teams";
 import { notify } from "@/app/store/useToastStore";
 import { notifyMutationError } from "@/src/utils/notifyMutationError";
+import { QUERY_KEYS } from "@/lib/queryKey";
 import { useDebouncedCallback } from "./useDebounceCallback";
 
 export const useCreateTeam = (
@@ -18,7 +19,7 @@ export const useCreateTeam = (
     mutationFn: (name: ITeam) => postCreateTeam(name),
     onSuccess: (res) => {
       notify("success", res.message);
-      void queryClient.invalidateQueries({ queryKey: ["teamsResponse"] });
+      void queryClient.invalidateQueries({ queryKey: QUERY_KEYS.TEAMS.ALL });
 
       // modal close
       debouncedOnClose();
@@ -45,7 +46,7 @@ export const useDeleteTeam = (): UseMutationResult<MessageResponse, AxiosError<M
     mutationFn: (teamId: string) => deleteTeam(teamId),
     onSuccess: (res) => {
       notify("success", res.message);
-      void queryClient.invalidateQueries({ queryKey: ["teamsResponse"] });
+      void queryClient.invalidateQueries({ queryKey: QUERY_KEYS.TEAMS.ALL });
     },
     onError: (error) => {
       notifyMutationError(error);
@@ -66,9 +67,9 @@ export const useUpdateTeamName = (): UseMutationResult<MessageResponse, AxiosErr
     mutationFn: ({ teamId, newName }: UpdateRequest) => updateTeamName({ teamId, newName }),
 
     onMutate: ({ teamId, newName }) => {
-      void queryClient.cancelQueries({ queryKey: ["teamsResponse"] });
-      prevTeamsRef.current = queryClient.getQueryData<TeamType[]>(["teamsResponse"]);
-      void queryClient.setQueryData<TeamType[]>(["teamsResponse"], (oldTeams) =>
+      void queryClient.cancelQueries({ queryKey: QUERY_KEYS.TEAMS.ALL });
+      prevTeamsRef.current = queryClient.getQueryData<TeamType[]>(QUERY_KEYS.TEAMS.ALL);
+      void queryClient.setQueryData<TeamType[]>(QUERY_KEYS.TEAMS.ALL, (oldTeams) =>
         oldTeams?.map((oldTeam) => (oldTeam._id === teamId ? { ...oldTeam, name: newName } : oldTeam)),
       );
     },
@@ -77,11 +78,11 @@ export const useUpdateTeamName = (): UseMutationResult<MessageResponse, AxiosErr
       notify("success", res.message);
     },
     onError: (error) => {
-      if (prevTeamsRef.current) void queryClient.setQueryData<TeamType[]>(["teamsResponse"], prevTeamsRef.current);
+      if (prevTeamsRef.current) void queryClient.setQueryData<TeamType[]>(QUERY_KEYS.TEAMS.ALL, prevTeamsRef.current);
       notifyMutationError(error);
     },
     onSettled: () => {
-      void queryClient.invalidateQueries({ queryKey: ["teamsResponse"] });
+      void queryClient.invalidateQueries({ queryKey: QUERY_KEYS.TEAMS.ALL });
     },
   });
 };
@@ -95,17 +96,17 @@ export const useUpdateTeamOrder = (
   return useMutation({
     mutationFn: updateTeamOrder,
     onMutate: () => {
-      void queryClient.cancelQueries({ queryKey: ["teamsResponse"] });
-      prevTeamsRef.current = queryClient.getQueryData<TeamType[]>(["teamsResponse"]);
-      void queryClient.setQueryData<TeamType[]>(["teamsResponse"], () => updatedTeams);
+      void queryClient.cancelQueries({ queryKey: QUERY_KEYS.TEAMS.ALL });
+      prevTeamsRef.current = queryClient.getQueryData<TeamType[]>(QUERY_KEYS.TEAMS.ALL);
+      void queryClient.setQueryData<TeamType[]>(QUERY_KEYS.TEAMS.ALL, () => updatedTeams);
     },
 
     onError: (error) => {
-      if (prevTeamsRef.current) void queryClient.setQueryData<TeamType[]>(["teamsResponse"], prevTeamsRef.current);
+      if (prevTeamsRef.current) void queryClient.setQueryData<TeamType[]>(QUERY_KEYS.TEAMS.ALL, prevTeamsRef.current);
       notifyMutationError(error);
     },
     onSettled: () => {
-      void queryClient.invalidateQueries({ queryKey: ["teamsResponse"] });
+      void queryClient.invalidateQueries({ queryKey: QUERY_KEYS.TEAMS.ALL });
     },
   });
 };
