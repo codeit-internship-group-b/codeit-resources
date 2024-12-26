@@ -2,12 +2,13 @@
 const nextConfig = {
   reactStrictMode: true,
   output: "export",
+  trailingSlash: true,
 
   images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "codeit-re-images.s3.ap-northeast-2.amazonaws.com",
+        hostname: "codeit-server.s3.ap-northeast-2.amazonaws.com",
         port: "",
         pathname: "/**",
       },

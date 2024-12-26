@@ -5,6 +5,7 @@ interface CategoryEditDropdownProps {
   isEditing?: boolean;
   onClickEdit: () => void;
 }
+
 export default function CategoryEditDropdown({ isEditing, onClickEdit }: CategoryEditDropdownProps): JSX.Element {
   return (
     <Dropdown

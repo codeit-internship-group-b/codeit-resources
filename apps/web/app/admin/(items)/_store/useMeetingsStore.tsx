@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { type IRoom, type IEquipment, type ICategory } from "@repo/types";
-import { notify } from "@ui/index";
 import { postNewRoom, deleteRoom, patchRoom } from "@/api/meetings"; // API 요청 함수 예시
+import { notify } from "@/app/store/useToastStore";
 
 interface MeetingsStore {
   categories: ICategory[];
@@ -63,7 +63,7 @@ const useMeetingsStore = create<MeetingsStore>((set) => ({
       set({ isLoading: false });
       return res;
     } catch (error) {
-      notify({ type: "error", message: "잘못된 요청입니다." });
+      notify("error", "잘못된 요청입니다.");
       throw new Error();
     }
   },
@@ -74,16 +74,16 @@ const useMeetingsStore = create<MeetingsStore>((set) => ({
       set({ isLoading: false });
       return res;
     } catch (error) {
-      notify({ type: "error", message: "잘못된 요청입니다." });
+      notify("error", "잘못된 요청입니다.");
       throw new Error();
     }
   },
   handleDeleteItem: async (itemId): Promise<void> => {
     try {
       await deleteRoom(itemId);
-      notify({ type: "success", message: "삭제되었습니다." });
+      notify("success", "삭제되었습니다.");
     } catch (error) {
-      notify({ type: "error", message: "삭제 실패" });
+      notify("error", "삭제 실패");
     }
   },
 }));
