@@ -26,7 +26,7 @@ export default function Gnb(): JSX.Element | null {
       </div>
       {isLoggedIn ? (
         <Link
-          href={PAGE_NAME.PROFILE}
+          href={PAGE_NAME.SETTINGS}
           className="rounded-10 hidden px-16 py-10 hover:bg-[#3D3C40] active:bg-[#3D3C40] md:block"
           aria-label={`${user?.name}님의 프로필로 이동`}
         >

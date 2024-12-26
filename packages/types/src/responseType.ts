@@ -3,13 +3,13 @@ import { IUser } from "./userType";
 
 export interface ResponseType<T> {
   data?: T;
-  message?: string;
+  message: string;
   status?: "success" | "error";
 }
 
 export interface SignInResponseType<T> {
   accessToken?: T;
-  message?: string;
+  message: string;
   status?: "success" | "error";
   user?: IUser;
 }
@@ -17,4 +17,8 @@ export interface SignInResponseType<T> {
 export interface ReservationResponse {
   message: string;
   savedReservation: IReservation[];
+}
+
+export interface MessageResponse {
+  message: string;
 }

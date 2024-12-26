@@ -80,7 +80,7 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
       tabIndex={0}
       onClick={handleMemberClick}
       onKeyDown={handleKeyDown}
-      className="rounded-12 relative flex cursor-pointer items-center border border-gray-200/10 px-16 py-12 outline outline-1 outline-transparent transition-all duration-300 hover:border-transparent hover:bg-purple-700/5 hover:outline-purple-300 md:px-24 md:py-16"
+      className="rounded-12 relative flex cursor-pointer items-center border border-gray-200/10 px-16 py-12 outline outline-1 outline-transparent transition-all duration-300 hover:bg-gray-100/30 md:px-24 md:py-16"
     >
       <div className="flex items-center gap-8 md:gap-16">
         <Image
