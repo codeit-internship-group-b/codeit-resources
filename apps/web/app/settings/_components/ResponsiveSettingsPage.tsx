@@ -3,12 +3,13 @@
 import { Button } from "@ui/index";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
-import { ErrorBoundary } from "react-error-boundary";
 import { useRouter } from "next/navigation";
 import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
 // import ProfileInfo from "./ProfileInfo";
 import { useAuthStore } from "@/src/stores/useAuthStore";
 import { notify } from "@/app/store/useToastStore";
+import ErrorResetBoundary from "@/components/common/ErrorResetBoundary";
+import ErrorFallback from "@/components/common/Fallback";
 import SettingButtons from "./SettingButtons";
 import ChangePasswordForm from "./ChangePasswordForm";
 import ProfileInfoSkeleton from "./ProfileInfoSkeleton";
@@ -38,11 +39,11 @@ export default function ResponsiveSettingsPage(): JSX.Element {
     <div className="md:max-w-372 flex w-full flex-col gap-24 md:gap-56">
       <h1 className="text-2xl-bold md:hidden">설정</h1>
       <div className="flex flex-col gap-24 md:flex-col-reverse md:gap-16">
-        <ErrorBoundary fallback={<ProfileInfoSkeleton />}>
+        <ErrorResetBoundary fallbackComponent={ErrorFallback}>
           <Suspense fallback={<ProfileInfoSkeleton />}>
             <ProfileInfo />
           </Suspense>
-        </ErrorBoundary>
+        </ErrorResetBoundary>
         <h2 className="text-2xl-bold border-b-1 hidden border-[#E8E8EA] py-8 md:block">내 프로필</h2>
       </div>
       <SettingButtons />
