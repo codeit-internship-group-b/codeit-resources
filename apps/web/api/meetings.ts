@@ -78,8 +78,8 @@ export const postNewCategory = async (body: Record<string, string>): Promise<ICa
   return data;
 };
 
-export const patchCategory = async (categoryId: string, body: Record<string, string>): Promise<IRoom | IEquipment> => {
-  const { data } = await axiosRequester<IRoom | IEquipment>({
+export const patchCategory = async (categoryId: string, body: Record<string, string>): Promise<ICategory> => {
+  const { data } = await axiosRequester<ICategory>({
     options: {
       method: "PATCH",
       url: API_ENDPOINTS.CATEGORIES.UPDATE_CATEGORY(categoryId),
