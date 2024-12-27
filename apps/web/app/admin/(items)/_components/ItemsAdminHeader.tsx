@@ -16,7 +16,7 @@ export default function ItemsAdminHeader(): JSX.Element {
   };
 
   return (
-    <div className="flex justify-between">
+    <div className="mt-80 flex justify-between">
       <h1>회의실 관리</h1>
       <Button variant="Secondary" onClick={openPanel}>
         분류 추가
