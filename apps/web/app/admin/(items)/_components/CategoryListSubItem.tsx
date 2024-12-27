@@ -20,10 +20,10 @@ export default function CategoryListSubItem({ item }: CategoryListSubItemProps):
   const queryClient = useQueryClient();
 
   const openPanelToEditItem = (selectedItem: IRoom): void => {
+    setPanelState("edit");
+    setCurrentItem(selectedItem);
+    setCurrentCategory(selectedItem.category);
     if (!isSidebarOpen) {
-      setPanelState("edit");
-      setCurrentItem(selectedItem);
-      setCurrentCategory(selectedItem.category);
       openSidebar();
     }
   };
