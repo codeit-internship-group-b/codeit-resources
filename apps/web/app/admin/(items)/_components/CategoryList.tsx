@@ -45,8 +45,8 @@ export default function CategoryList(): JSX.Element {
     return <div>데이터를 불러오는데 실패했습니다.</div>;
   }
 
-  const filteredRoomsByCategory = categories.map((category) => ({
-    categoryId: category._id,
+  const categoriesWithRooms = categories.map((category) => ({
+    ...category,
     rooms: rooms.filter((room) => room.category._id === category._id),
   }));
 
@@ -56,9 +56,8 @@ export default function CategoryList(): JSX.Element {
       {!isCategoriesLoading && categories.length === 0 && (
         <EmptyState message={{ title: "", description: "등록된 카테고리가 없습니다." }} />
       )}
-      {categories.map((category) => {
-        const filteredRooms = filteredRoomsByCategory.find((item) => item.categoryId === category._id)?.rooms ?? [];
-        return <CategoryListItem key={category._id} category={category} rooms={filteredRooms} />;
+      {categoriesWithRooms.map((category) => {
+        return <CategoryListItem key={category._id} category={category} rooms={category.rooms} />;
       })}
       <SidePanel />
     </>
