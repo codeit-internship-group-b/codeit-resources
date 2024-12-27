@@ -1,9 +1,12 @@
-import { type SortOption } from "@repo/types/src/membersType";
+import { type UseMembersSuspenseInfiniteQueryParams } from "@/app/admin/members/_hooks/useMembersSuspenseInfiniteQuery";
 
-export const memberQueries = {
-  all: ["members"],
-  list: (params: { sort: SortOption; role?: string; team?: string; keyword?: string }) => [
-    ...memberQueries.all,
-    params,
-  ],
+export const QUERY_KEYS = {
+  MEMBERS: {
+    ALL: ["members"],
+    list: (params: UseMembersSuspenseInfiniteQueryParams) => [...QUERY_KEYS.MEMBERS.ALL, params],
+  },
+  TEAMS: {
+    ALL: ["teams"],
+  },
+  USER: ["user"],
 };

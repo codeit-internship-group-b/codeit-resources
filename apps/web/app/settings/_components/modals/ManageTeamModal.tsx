@@ -3,8 +3,13 @@ import { type FieldValues, type SubmitHandler } from "react-hook-form";
 import { type ReactNode, useEffect } from "react";
 import { type TeamType } from "@repo/types";
 import { debounce } from "es-toolkit";
-import { SettingsModal, SettingsModalButton, SettingsModalHeader } from "@/components/SettingsModal";
-import { useCreateForm, useCreateTeam, useUpdateTeamName } from "../_hooks/useTeamsMutations";
+import {
+  SettingsModal,
+  SettingsModalButton,
+  SettingsModalContent,
+  SettingsModalHeader,
+} from "@/components/SettingsModal";
+import { useCreateForm, useCreateTeam, useUpdateTeamName } from "@/app/admin/teams/_hooks/useTeamsMutations";
 
 interface ManageTeamModalProps {
   isOpen: boolean;
@@ -45,10 +50,12 @@ export default function ManageTeamModal({
   return (
     <SettingsModal isOpen={isOpen} onClose={onClose}>
       <SettingsModalHeader title={title} actions={actions} />
-      <form onSubmit={(...rest) => void handleSubmit(onSubmit)(...rest)}>
-        <Input id="teamName" placeholder="팀 이름" {...register("teamName")} />
-        <SettingsModalButton type="submit">{buttonText}</SettingsModalButton>
-      </form>
+      <SettingsModalContent className="pt-16">
+        <form onSubmit={(...rest) => void handleSubmit(onSubmit)(...rest)}>
+          <Input id="teamName" placeholder="팀 이름" {...register("teamName")} />
+        </form>
+      </SettingsModalContent>
+      <SettingsModalButton type="submit">{buttonText}</SettingsModalButton>
     </SettingsModal>
   );
 }

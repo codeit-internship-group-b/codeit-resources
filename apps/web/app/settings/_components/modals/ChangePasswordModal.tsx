@@ -1,4 +1,4 @@
-import { SettingsModal, SettingsModalHeader } from "@/components/SettingsModal";
+import { SettingsModal, SettingsModalContent, SettingsModalHeader } from "@/components/SettingsModal";
 import ChangePasswordForm from "../ChangePasswordForm";
 
 interface ChangePasswordModalProps {
@@ -10,7 +10,9 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
   return (
     <SettingsModal isOpen={isOpen} onClose={onClose}>
       <SettingsModalHeader title="비밀번호 변경" />
-      <ChangePasswordForm />
+      <SettingsModalContent className="pt-16">
+        <ChangePasswordForm />
+      </SettingsModalContent>
     </SettingsModal>
   );
 }

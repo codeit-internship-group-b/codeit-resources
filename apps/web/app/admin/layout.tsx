@@ -5,5 +5,5 @@ interface AdminLayout {
 }
 
 export default function AdminLayout({ children }: AdminLayout): JSX.Element {
-  return <div className="md:px-118 text-custom-black md:ml-200 px-16">{children}</div>;
+  return <div className="md:px-118 text-custom-black md:ml-200 h-screen px-16">{children}</div>;
 }
