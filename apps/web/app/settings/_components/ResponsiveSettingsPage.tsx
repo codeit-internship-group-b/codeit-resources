@@ -36,26 +36,26 @@ export default function ResponsiveSettingsPage(): JSX.Element {
   };
 
   return (
-    <div className="md:max-w-372 flex w-full flex-col gap-24 md:gap-56">
-      <h1 className="text-2xl-bold md:hidden">설정</h1>
-      <div className="flex flex-col gap-24 md:flex-col-reverse md:gap-16">
-        <ErrorResetBoundary fallbackComponent={ErrorFallback}>
+    <ErrorResetBoundary fallbackComponent={ErrorFallback}>
+      <div className="md:max-w-372 flex w-full flex-col gap-24 md:gap-56">
+        <h1 className="text-2xl-bold md:hidden">설정</h1>
+        <div className="flex flex-col gap-24 md:flex-col-reverse md:gap-16">
           <Suspense fallback={<ProfileInfoSkeleton />}>
             <ProfileInfo />
           </Suspense>
-        </ErrorResetBoundary>
-        <h2 className="text-2xl-bold border-b-1 hidden border-[#E8E8EA] py-8 md:block">내 프로필</h2>
+          <h2 className="text-2xl-bold border-b-1 hidden border-[#E8E8EA] py-8 md:block">내 프로필</h2>
+        </div>
+        <SettingButtons />
+        <div className="hidden md:block">
+          <ChangePasswordForm />
+        </div>
+        <div className="flex flex-col gap-24">
+          <h2 className="text-2xl-bold border-b-1 hidden border-[#E8E8EA] py-8 md:block">계정</h2>
+          <Button className="text-lg-medium w-106 h-42" type="button" variant="Secondary" onClick={handleLogout}>
+            로그아웃
+          </Button>
+        </div>
       </div>
-      <SettingButtons />
-      <div className="hidden md:block">
-        <ChangePasswordForm />
-      </div>
-      <div className="flex flex-col gap-24">
-        <h2 className="text-2xl-bold border-b-1 hidden border-[#E8E8EA] py-8 md:block">계정</h2>
-        <Button className="text-lg-medium w-106 h-42" type="button" variant="Secondary" onClick={handleLogout}>
-          로그아웃
-        </Button>
-      </div>
-    </div>
+    </ErrorResetBoundary>
   );
 }
