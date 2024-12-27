@@ -21,8 +21,8 @@ const ProfileInfo = dynamic(() => import("./ProfileInfo"), {
 
 // TODO : querykey 상수화
 // TODO : suspense 401 server error 해결하기
-// TODO : Error boundary 렌더 컴포넌트 제작 => 혜린이가 만든듯?
 // TODO : 비밀번호 입력값으로 적용되도록 수정
+// TODO : AuthGuard 수정
 // TODO : 회의실, 좌석 modal 추가 및 redirect 처리
 
 export default function ResponsiveSettingsPage(): JSX.Element {
