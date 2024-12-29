@@ -1,0 +1,63 @@
+name: preview-url
+
+permissions:
+  pull-requests: write
+  contents: read
+
+on:
+  pull_request:
+    branches: [develop]
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+          cache: "pnpm"
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Environment Variables File
+        run: |
+          echo "NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL" >> apps/web/.env.production.local
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+
+      - name: Build
+        run: pnpm -filter=web build
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Deploy to S3 with PR-specific prefix
+        run: aws s3 sync ./${{ secrets.BUILD_DIRECTORY }} s3://${{ secrets.AWS_S3_BUCKET_NAME }}/pr-${{ github.event.pull_request.number }} --delete
+
+      - name: CloudFront Invalidate Cache
+        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }} --paths '/*'
+
+      - name: Add Preview URL as a Comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          message: |
+            ## 🚀 Preview URL
+
+            **Branch:** ${{ github.head_ref }}
+            **Commit:** ${{ github.sha }}
+
+            Preview URL: https://codeit.click?pr=${{ github.event.pull_request.number }}
