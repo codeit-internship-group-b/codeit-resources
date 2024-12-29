@@ -36,7 +36,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_EC2_HOST: ${{ secrets.AWS_EC2_HOST }}
-          AWS_USERNAME: ${{ secrets.AWS_EC2_USER }}
+          AWS_EC2_USER: ${{ secrets.AWS_EC2_USER }}
         run: |
           ssh -o StrictHostKeyChecking=no -i codeit-server.pem $USERNAME@$HOST << 'EOF'
             cd /home/ubuntu/build/codeit-resources
