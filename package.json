@@ -22,13 +22,9 @@
     "turbo": "^2.2.1",
     "typescript": "^5.6.3"
   },
-  "packageManager": "pnpm@8.15.6",
+  "packageManager": "pnpm@9.12.1",
   "engines": {
     "node": ">=18"
   },
-  "prettier": "@org/prettier-config",
-  "workspaces": [
-    "packages/*",
-    "apps/*"
-  ]
+  "prettier": "@org/prettier-config"
 }
