@@ -25,10 +25,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Create SSH key
-        run: |
-          echo "${{ secrets.AWS_PRIVATE_KEY }}" > codeit-server.pem
-          chmod 600 codeit-server.pem
+      - name: Configure SSH
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.AWS_PRIVATE_KEY }}
 
       - name: Deploy to EC2
         env:
@@ -38,13 +38,10 @@ jobs:
           AWS_EC2_HOST: ${{ secrets.AWS_EC2_HOST }}
           AWS_EC2_USER: ${{ secrets.AWS_EC2_USER }}
         run: |
-          ssh -o StrictHostKeyChecking=no -i codeit-server.pem $USERNAME@$HOST << 'EOF'
+          ssh -o StrictHostKeyChecking=no $AWS_EC2_USER@$AWS_EC2_HOST << 'EOF'
             cd /home/ubuntu/build/codeit-resources
             git pull origin develop
             pnpm install --frozen-lockfile
             pnpm --filter=api build
             pm2 restart codeit-server
           EOF
-
-      - name: Cleanup
-        run: rm codeit-server.pem
