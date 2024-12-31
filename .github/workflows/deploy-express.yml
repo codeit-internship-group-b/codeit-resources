@@ -38,7 +38,7 @@ jobs:
           AWS_EC2_HOST: ${{ secrets.AWS_EC2_HOST }}
           AWS_EC2_USER: ${{ secrets.AWS_EC2_USER }}
         run: |
-          ssh -o StrictHostKeyChecking=no $AWS_EC2_USER@$AWS_EC2_HOST << 'EOF'
+          ssh -o StrictHostKeyChecking=no "$AWS_EC2_USER@$AWS_EC2_HOST" << 'EOF'
             cd /home/ubuntu/build/codeit-resources
             git pull origin develop
             pnpm install --frozen-lockfile
