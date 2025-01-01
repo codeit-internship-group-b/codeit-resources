@@ -63,6 +63,7 @@ const config: Omit<Config, "content"> = {
           20: "#00BE2F",
           30: "#80F188",
           40: "#025918",
+          50: "#07AC30",
         },
         pink: {
           10: "#FFEBF7",
@@ -130,25 +131,12 @@ const config: Omit<Config, "content"> = {
       "xxs-medium": ["11px", { lineHeight: "18px", fontWeight: "500" }],
       "xxs-regular": ["11px", { lineHeight: "18px", fontWeight: "400" }],
     },
-    keyframes: {
-      rotateIn: {
-        "0%": { transform: "rotate(0deg)" },
-        "100%": { transform: "rotate(180deg)" },
-      },
-      rotateOut: {
-        "0%": { transform: "rotate(180deg)" },
-        "100%": { transform: "rotate(0deg)" },
-      },
-    },
-    animation: {
-      "rotate-in": "rotateIn 0.3s ease-in-out",
-      "rotate-out": "rotateOut 0.3s ease-in-out",
-    },
     backgroundImage: {
       "custom-gradient": "linear-gradient(90deg, rgba(251, 251, 251, 0) 0%, #FBFBFB 50%)",
     },
     boxShadow: {
       custom: "0 2px 4px 0 rgba(51, 50, 54, 0.06)", // X: 0, Y: 2, Blur: 4, Spread: 0, 색상: #333236/6
+      "search-form": "0 4px 12px rgba(0, 0, 0, 0.08)",
     },
   },
   plugins: [],

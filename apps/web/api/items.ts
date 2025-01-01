@@ -1,5 +1,12 @@
 import { API_ENDPOINTS } from "@repo/constants";
-import { type TBaseItem, type TItemType, type IRoom, type ISeat, type IEquipment } from "@repo/types";
+import {
+  type TBaseItem,
+  type TItemType,
+  type IRoom,
+  type ISeat,
+  type IEquipment,
+  type MessageResponse,
+} from "@repo/types";
 import { axiosRequester } from "@/lib/axios";
 
 // 특정 타입의 아이템 조회
@@ -13,6 +20,21 @@ export const getAllItems = async (params: GetAllItemsParams): Promise<TBaseItem[
     options: {
       method: "GET",
       url: API_ENDPOINTS.ITEMS.GET_ALL(itemType),
+    },
+  });
+
+  return data;
+};
+
+/**
+ * 모든 좌석 데이터를 가져옵니다.
+ * @returns 모든 좌석 데이터를 포함하는 Promise.
+ */
+export const getAllSeats = async (): Promise<ISeat[]> => {
+  const { data } = await axiosRequester<ISeat[]>({
+    options: {
+      method: "GET",
+      url: API_ENDPOINTS.ITEMS.GET_ALL("seat"),
     },
   });
 
@@ -61,11 +83,27 @@ export const updateItem = async (params: UpdateItemParams): Promise<TBaseItem> =
 };
 
 // 아이템 삭제
-export const deleteItem = async (itemId: string): Promise<{ message: string }> => {
-  const { data } = await axiosRequester<{ message: string }>({
+export const deleteItem = async (itemId: string): Promise<MessageResponse> => {
+  const { data } = await axiosRequester<MessageResponse>({
     options: {
       method: "DELETE",
       url: API_ENDPOINTS.ITEMS.DELETE_ITEM(itemId),
+    },
+  });
+
+  return data;
+};
+
+/**
+ * 특정 아이템 데이터를 수정합니다.
+ * @returns 수정 결과 메시지를 포함하는 Promise.
+ */
+export const patchItem = async (itemId: string, formData: FormData): Promise<string> => {
+  const { data } = await axiosRequester<string, FormData>({
+    options: {
+      method: "PATCH",
+      url: API_ENDPOINTS.ITEMS.UPDATE_ITEM(itemId),
+      data: formData,
     },
   });
 

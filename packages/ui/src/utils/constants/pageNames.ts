@@ -10,5 +10,4 @@ export const PAGE_NAME = {
   ADMIN_SEATS: "/admin/seats",
 
   SIGN_IN: "/",
-  PROFILE: "/profile",
 };

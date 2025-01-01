@@ -30,7 +30,7 @@ export const upload: Multer = multer({
   },
   fileFilter(req, file, callback) {
     if (IMAGE_CONFIG.TYPES.some((type) => type === file.mimetype)) {
-      callback(null, true); // 파일 허용
+      callback(null, true);
       return;
     }
     callback(new Error("지원하지 않는 파일 형식입니다. JPEG, PNG, GIF 형식의 파일만 업로드할 수 있습니다."));

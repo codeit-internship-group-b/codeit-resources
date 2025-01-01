@@ -1,5 +1,5 @@
 import { API_ENDPOINTS } from "@repo/constants";
-import { type IUser } from "@repo/types";
+import { type ChangePasswordPayload, type MessageResponse, type IUser, type ResponseType } from "@repo/types";
 import { axiosRequester } from "@/lib/axios";
 
 export const getUser = async (): Promise<IUser> => {
@@ -13,11 +13,27 @@ export const getUser = async (): Promise<IUser> => {
   return data;
 };
 
-export const getAllUser = async (): Promise<IUser[]> => {
-  const { data } = await axiosRequester<IUser[]>({
+export const patchUserPassword = async (payload: ChangePasswordPayload): Promise<MessageResponse> => {
+  const { data } = await axiosRequester<MessageResponse>({
     options: {
-      method: "GET",
-      url: API_ENDPOINTS.USERS.GET_ALL,
+      method: "PATCH",
+      url: API_ENDPOINTS.USERS.ME_PASSWORD,
+      data: payload,
+    },
+  });
+
+  return data;
+};
+
+export const patchUserImage = async (formData: FormData): Promise<ResponseType<IUser>> => {
+  const { data } = await axiosRequester<ResponseType<IUser>>({
+    options: {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      url: API_ENDPOINTS.USERS.ME_IMAGE,
+      data: formData,
     },
   });
 

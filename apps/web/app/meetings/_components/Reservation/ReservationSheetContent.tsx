@@ -6,7 +6,6 @@
 import { useState } from "react";
 import { type IReservation } from "@repo/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { notify } from "@ui/index";
 import { type SelectedRoom } from "@/app/types/scheduletypes";
 import {
   createReservation,
@@ -19,6 +18,7 @@ import { useDateStore } from "@/app/store/useDateStore";
 import { MEETING_ROOMS_TYPE } from "@/app/constants/meetingRoomsType";
 import { formatDate } from "@/app/utils/formatDate";
 import { MODAL_TEXT, ModalType, NOTIFICATION_MESSAGES, QUERY_KEYS } from "@/app/constants/reservationConstants";
+import { notify } from "@/app/store/useToastStore";
 import ReservationModal from "./ReservationModal";
 import { ReservationForm } from "./ReservationForm";
 
@@ -58,10 +58,7 @@ export default function ReservationSheetContent(props: ReservationSheetContentPr
       return createReservation(formData.itemId, formData.data);
     },
     onSuccess: async () => {
-      notify({
-        type: "success",
-        message: isEditMode ? NOTIFICATION_MESSAGES.update : NOTIFICATION_MESSAGES.create,
-      });
+      notify("success", isEditMode ? NOTIFICATION_MESSAGES.update : NOTIFICATION_MESSAGES.create);
       await queryClient.invalidateQueries({
         queryKey: QUERY_KEYS.meetings(formattedDate, MEETING_ROOMS_TYPE),
       });
@@ -73,10 +70,7 @@ export default function ReservationSheetContent(props: ReservationSheetContentPr
   const deleteReservationMutation = useMutation({
     mutationFn: (reservationId: string) => deleteReservation(reservationId),
     onSuccess: async () => {
-      notify({
-        type: "success",
-        message: NOTIFICATION_MESSAGES.delete,
-      });
+      notify("success", NOTIFICATION_MESSAGES.delete);
       await queryClient.invalidateQueries({
         queryKey: QUERY_KEYS.meetings(formattedDate, MEETING_ROOMS_TYPE),
       });

@@ -1,8 +1,8 @@
 import { type IReservation } from "@repo/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { notify } from "@ui/index";
 import { formatTime, isInProgress } from "@ui/src/utils/date";
-import { patchMeetingStatus } from "@/api/dashboard";
+import { notify } from "@/app/store/useToastStore";
+import { patchMeetingStatus } from "@/api/reservation";
 import EmptyState from "./EmptyState";
 
 interface DashboardSectionProps {
@@ -16,10 +16,10 @@ export default function DashboardSection({ data = [] }: DashboardSectionProps): 
     mutationFn: (_id: string) => patchMeetingStatus(_id),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["dashboard"] });
-      notify({ type: "success", message: "회의가 종료되었습니다." });
+      notify("success", "회의가 종료되었습니다.");
     },
     onError: (error) => {
-      notify({ type: "error", message: `오류 발생: ${error.message}` });
+      notify("error", `오류 발생: ${error.message}`);
     },
   });
 

@@ -25,7 +25,7 @@ export const MEMBER_FORM_MESSAGES = {
       PROCESSING: "처리 중...",
     },
     WITHDRAW: "탈퇴하기",
-    UPLOAD_PHOTO: "사진 업로드",
+    UPLOAD_PHOTO: "사진 변경",
     CANCEL: "취소하기",
   },
 
@@ -57,4 +57,30 @@ export const MODAL_MESSAGES = {
 
 export const ERROR_MESSAGE = {
   DEFAULT: "요청 처리 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
-};
+} as const;
+
+export const EMPTY_STATE_MESSAGES = {
+  SEARCH: {
+    NO_RESULT: {
+      MESSAGE: "검색 결과가 없습니다.",
+      RECENT: "최근 검색어가 없습니다.",
+    },
+    CHECK_SPELLING: "단어의 철자가 정확한지 확인해 보세요.",
+  },
+
+  MEMBERS: {
+    NO_MEMBERS: {
+      title: "등록된 멤버가 없습니다.",
+      description: "멤버를 새로 등록해 보세요.",
+    },
+    NO_TEAM_MEMBERS: (team: string) => ({
+      title: `${team} 팀에 속한 멤버가 없습니다.`,
+      description: "멤버를 새로 등록해 보세요.",
+    }),
+  },
+
+  TEAMS: {
+    title: "등록된 팀이 없습니다.",
+    description: "새로운 팀을 등록해 보세요.",
+  },
+} as const;

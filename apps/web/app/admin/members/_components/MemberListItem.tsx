@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { useState, type MouseEvent, type KeyboardEvent } from "react";
 import Image from "next/image";
 import { Badge } from "@ui/index";
@@ -79,7 +80,7 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
       tabIndex={0}
       onClick={handleMemberClick}
       onKeyDown={handleKeyDown}
-      className="rounded-12 relative flex cursor-pointer items-center border border-gray-200/10 px-16 py-12 outline outline-1 outline-transparent transition-all duration-300 hover:border-transparent hover:bg-purple-700/5 hover:outline-purple-300 md:px-24 md:py-16"
+      className="rounded-12 relative flex h-72 cursor-pointer items-center border border-gray-200/10 px-16 py-12 outline outline-1 outline-transparent transition-all duration-300 hover:bg-gray-100/30 md:px-24 md:py-16"
     >
       <div className="flex items-center gap-8 md:gap-16">
         <Image
@@ -93,12 +94,10 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
           className="size-40 rounded-full"
         />
         <span className="text-custom-black text-md-regular md:text-lg-regular">{member.name}</span>
-        <span className="text-custom-black/60 max-w-200 overflow-wrap-break-word text-md-regular md:text-lg-regular mr-16 break-all">
-          {member.email}
-        </span>
+        <span className="text-md-regular md:text-lg-regular text-gray-30">{member.email}</span>
       </div>
 
-      <div data-dropdown="true" className="hidden md:absolute md:left-[356px] md:block">
+      <div data-dropdown="true" className="hidden md:absolute md:left-[400px] md:block">
         <Dropdown selectedValue={getRoleDisplay(member.role)} onSelect={handleRoleChange} size="sm">
           <Dropdown.Toggle>{getRoleDisplay(member.role)}</Dropdown.Toggle>
           <Dropdown.Wrapper className="top-42">
@@ -111,8 +110,8 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
         </Dropdown>
       </div>
 
-      <div className="hidden md:absolute md:left-[484px] md:flex md:flex-grow md:flex-wrap md:gap-16">
-        {member.teams.map((team) => (
+      <div className="hidden md:absolute md:left-[530px] md:flex md:flex-grow md:flex-wrap md:gap-16">
+        {member.teams?.map((team) => (
           <Badge key={team} color="purple" colorApplyTo="font" shape="round">
             {team}
           </Badge>

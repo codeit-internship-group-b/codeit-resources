@@ -17,3 +17,18 @@ export interface IReservation {
   notes?: string; // Optional
   attendees?: IUser[]; // Optional 참여자 (User)
 }
+
+export interface ReservationRequestBody {
+  userId?: string;
+  itemType: "room" | "seat" | "equipment";
+  startAt: string;
+  endAt: string;
+  status: TReservationStatus;
+  notes?: string;
+  attendees?: string[];
+}
+
+export interface ReservedResponse {
+  message: string;
+  savedReservation: IReservation[];
+}

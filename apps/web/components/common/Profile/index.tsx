@@ -5,7 +5,7 @@ import { ProfileDefaultIcon } from "@ui/public";
 
 interface ProfileProps {
   size?: string;
-  src?: string;
+  src?: string | null;
   name?: string;
   className?: string;
   textColor?: "white" | "black";

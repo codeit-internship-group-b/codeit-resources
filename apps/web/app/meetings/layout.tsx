@@ -1,4 +1,3 @@
-import "@repo/ui/styles/globals.css";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Header from "@/components/Header";
@@ -8,7 +7,7 @@ export const metadata: Metadata = {
   description: "회의 일정 및 관리를 위한 페이지입니다.",
 };
 
-export default function Layout({
+export default function MeetingsLayout({
   children,
 }: Readonly<{
   children: ReactNode;

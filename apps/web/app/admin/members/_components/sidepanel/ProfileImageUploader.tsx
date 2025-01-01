@@ -4,14 +4,20 @@ import DefaultProfileImage from "@ui/public/images/image_default_profile.png";
 import { type ImageFileType, type DisplayImageType, type FormImageType } from "@repo/types/src/membersType";
 import { MEMBER_FORM_MESSAGES } from "@repo/constants/messages";
 import { IMAGE_CONFIG } from "@repo/constants";
+import cn from "@ui/src/utils/cn";
 
 interface ProfileImageUploaderProps {
   currentImage: FormImageType;
-  onImageChange: (file: ImageFileType) => void;
+  onImageChange?: (file: ImageFileType) => void;
+  size?: "sm" | "md";
 }
 
-export default function ProfileImageUploader({ currentImage, onImageChange }: ProfileImageUploaderProps): JSX.Element {
-  const [imageObjectUrl, setImageObjectUrl] = useState<string>("");
+export default function ProfileImageUploader({
+  currentImage,
+  onImageChange,
+  size = "md",
+}: ProfileImageUploaderProps): JSX.Element {
+  const [imageObjectUrl, setImageObjectUrl] = useState("");
   const [isImageError, setIsImageError] = useState(false);
 
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>): void => {
@@ -20,7 +26,7 @@ export default function ProfileImageUploader({ currentImage, onImageChange }: Pr
 
     const newObjectUrl = URL.createObjectURL(file);
     setImageObjectUrl(newObjectUrl);
-    onImageChange(file);
+    onImageChange?.(file);
   };
 
   const getImageSource = (): DisplayImageType => {
@@ -45,23 +51,24 @@ export default function ProfileImageUploader({ currentImage, onImageChange }: Pr
 
   useEffect(() => {
     return () => {
-      if (imageObjectUrl) {
-        URL.revokeObjectURL(imageObjectUrl);
-      }
+      if (imageObjectUrl) URL.revokeObjectURL(imageObjectUrl);
     };
   }, [imageObjectUrl]);
 
   return (
-    <div className="mb-[262px] flex items-center gap-24">
+    <div className="flex items-center gap-16 md:gap-24">
       <Image
         src={getImageSource()}
         alt={currentImage ? MEMBER_FORM_MESSAGES.IMAGE.PREVIEW_ALT : MEMBER_FORM_MESSAGES.IMAGE.DEFAULT_ALT}
-        width={120}
-        height={120}
+        width={size === "sm" ? 72 : 120}
+        height={size === "sm" ? 72 : 120}
         placeholder="blur"
         blurDataURL={IMAGE_CONFIG.BLUR_DATA_URL}
         onError={handleError}
-        className="size-120 rounded-full object-cover"
+        className={cn("rounded-full object-cover", {
+          "size-72": size === "sm",
+          "size-120": size !== "sm",
+        })}
       />
       <label
         htmlFor="profileImage"

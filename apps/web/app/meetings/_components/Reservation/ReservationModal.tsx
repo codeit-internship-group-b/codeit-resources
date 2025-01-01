@@ -26,9 +26,7 @@ export default function ReservationModal({
     <AlertModal
       isOpen={isOpen}
       onClose={onClose}
-      onConfirm={() => {
-        onConfirm();
-      }}
+      onConfirm={onConfirm}
       title={title}
       content={content}
       cancelButtonName={cancelButtonName}

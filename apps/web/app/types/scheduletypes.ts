@@ -26,6 +26,7 @@ export interface ScheduleFormData {
   customEndTime: string;
   participants: string[];
 }
+
 export interface SelectedRoom {
   name: string;
   _id: string;

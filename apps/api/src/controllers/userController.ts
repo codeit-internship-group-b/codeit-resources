@@ -1,25 +1,17 @@
 import { type Request, type Response } from "express";
 import { Roles, type IUser, type TRole } from "@repo/types";
 import { config } from "dotenv";
-import { type FilterQuery } from "mongoose";
 import { compare } from "bcryptjs";
+import { PAGE_SIZE } from "@repo/constants";
 import { User } from "../models/userModel";
 import { areArraysEqual } from "../utils/areArraysEqual";
+import { buildFilters } from "../utils/buildFilters";
+import { getSortCriteria } from "../utils/getSortCriteria";
+import { formatPaginatedResponse } from "../utils/formatPaginatedResponse";
+import { fetchUsers } from "../utils/fetchUsers";
+import { type GetUsersRequest } from "../types";
 
 config();
-
-interface GetUsersRequest extends Request {
-  query: {
-    role?: TRole;
-    team?: string;
-    sortOption?: "newest" | "oldest" | "alphabetical";
-  };
-}
-
-interface Filters extends FilterQuery<IUser> {
-  role?: TRole;
-  teams?: { $in: string[] };
-}
 
 // Get all users
 /**
@@ -46,57 +38,69 @@ interface Filters extends FilterQuery<IUser> {
  *           type: string
  *           enum: [newest, oldest, alphabetical]
  *         description: 정렬 옵션을 선택합니다.
+ *       - in: query
+ *         name: cursor
+ *         schema:
+ *           type: string
+ *         description: 다음 페이지 조회를 위한 커서 ID
+ *       - in: query
+ *         name: keyword
+ *         schema:
+ *           type: string
+ *         description: 이름, 이메일로 검색합니다.
  *     responses:
  *       200:
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   _id:
- *                     type: string
- *                     description: 사용자 ID
- *                   name:
- *                     type: string
- *                     description: 사용자 이름
- *                   email:
- *                     type: string
- *                     description: 사용자 이메일
- *                   role:
- *                     type: string
- *                     description: 사용자 역할
- *                   teams:
- *                     type: array
- *                     items:
- *                       type: string
- *                     description: 사용자가 속한 팀
- *                   profileImage:
- *                     type: string
- *                     description: 프로필 이미지 URL
+ *               type: object
+ *               properties:
+ *                 users:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                         description: 사용자 ID
+ *                       name:
+ *                         type: string
+ *                         description: 사용자 이름
+ *                       email:
+ *                         type: string
+ *                         description: 사용자 이메일
+ *                       role:
+ *                         type: string
+ *                         description: 사용자 역할
+ *                       teams:
+ *                         type: array
+ *                         items:
+ *                           type: string
+ *                         description: 사용자가 속한 팀
+ *                       profileImage:
+ *                         type: string
+ *                         description: 프로필 이미지 URL
+ *                 nextCursor:
+ *                   type: string
+ *                   nullable: true
+ *                   description: 다음 페이지가 있는 경우 다음 페이지의 첫 번째 아이템 ID
+ *       400:
+ *         description: 잘못된 요청 파라미터입니다.
  */
+
 export const getUsers = async (req: GetUsersRequest, res: Response): Promise<void> => {
-  const { role, team, sortOption } = req.query;
-  const filters: Filters = {};
-
-  if (role) filters.role = role;
-  if (team) {
-    filters.teams = { $in: [team] };
-  }
-
-  let query = User.find(filters).select("-password");
-
-  if (sortOption === "alphabetical") {
-    query = query.sort({ name: 1 });
-  } else if (sortOption === "oldest") {
-    query = query.sort({ createdAt: 1 });
-  } else {
-    query = query.sort({ createdAt: -1 });
-  }
-
-  const users = await query.exec();
-  res.status(200).send(users);
+  const filters = buildFilters({ query: req.query });
+  const sortCriteria = getSortCriteria({ sortOption: req.query.sortOption });
+  const users = await fetchUsers({
+    filters,
+    sortCriteria,
+    pageSize: PAGE_SIZE,
+  });
+  const response = formatPaginatedResponse({
+    members: users,
+    pageSize: PAGE_SIZE,
+  });
+  res.status(200).json(response);
 };
 
 interface GetUserRequest extends Request {
@@ -395,7 +399,6 @@ export const updateUser = async (req: UpdateUserRequest, res: Response): Promise
       return;
     }
   }
-  console.log(teams);
 
   if (teams.length > 3) {
     res.status(400).send({ message: "팀은 최대 3개까지 추가 가능합니다." });
@@ -548,7 +551,7 @@ export const updateProfileImage = async (req: UpdateProfileImageRequest, res: Re
   const profileImageUrl = (req.file as Express.MulterS3.File).location;
 
   if (!userId) {
-    res.status(400).send({ message: "인증 토큰이 유효하지 않습니다." });
+    res.status(401).send({ message: "인증 토큰이 유효하지 않습니다." });
     return;
   }
 
@@ -557,15 +560,8 @@ export const updateProfileImage = async (req: UpdateProfileImageRequest, res: Re
     return;
   }
 
-  const user = await User.findById(userId);
-
-  if (!user) {
-    res.status(404).send({ message: "사용자를 찾을 수 없습니다." });
-    return;
-  }
-
-  await User.findByIdAndUpdate(userId, { profileImage: profileImageUrl });
-  res.status(200).send({ message: "프로필 사진이 변경되었습니다." });
+  const user = await User.findByIdAndUpdate(userId, { profileImage: profileImageUrl });
+  res.status(200).send({ message: "프로필 사진이 변경되었습니다.", user });
 };
 
 interface UpdateUserCredentialsRequest extends Request {
@@ -582,8 +578,8 @@ interface UpdateUserCredentialsRequest extends Request {
  *   patch:
  *     tags:
  *       - Users
- *     summary: 사용자 비밀번호 업데이트
- *     description: 현재 사용자의 비밀번호를 변경합니다.
+ *     summary: 사용자 비밀번호 변경
+ *     description: 현재 사용자의 비밀번호를 새 비밀번호로 변경합니다.
  *     requestBody:
  *       required: true
  *       content:
@@ -594,9 +590,11 @@ interface UpdateUserCredentialsRequest extends Request {
  *               currentPassword:
  *                 type: string
  *                 description: 현재 비밀번호
+ *                 example: currentPassword123
  *               newPassword:
  *                 type: string
  *                 description: 새 비밀번호
+ *                 example: newPassword456
  *     responses:
  *       200:
  *         description: 비밀번호가 성공적으로 변경되었습니다.
@@ -609,7 +607,7 @@ interface UpdateUserCredentialsRequest extends Request {
  *                   type: string
  *                   example: 비밀번호가 변경되었습니다.
  *       400:
- *         description: 필수 정보가 누락되었습니다.
+ *         description: 요청이 잘못되었습니다. (비밀번호 누락 또는 기존 비밀번호와 동일)
  *         content:
  *           application/json:
  *             schema:
@@ -617,9 +615,13 @@ interface UpdateUserCredentialsRequest extends Request {
  *               properties:
  *                 message:
  *                   type: string
- *                   example: 필수 정보가 누락되었습니다.
+ *                   examples:
+ *                     missingPassword:
+ *                       value: 비밀번호를 입력해 주세요.
+ *                     samePassword:
+ *                       value: 기존의 비밀번호와 동일합니다.
  *       401:
- *         description: 비밀번호가 일치하지 않습니다.
+ *         description: 인증 오류 또는 비밀번호 불일치
  *         content:
  *           application/json:
  *             schema:
@@ -627,7 +629,11 @@ interface UpdateUserCredentialsRequest extends Request {
  *               properties:
  *                 message:
  *                   type: string
- *                   example: 비밀번호가 일치하지 않습니다.
+ *                   examples:
+ *                     invalidToken:
+ *                       value: 인증 토큰이 유효하지 않습니다.
+ *                     passwordMismatch:
+ *                       value: 비밀번호가 일치하지 않습니다.
  *       404:
  *         description: 사용자를 찾을 수 없습니다.
  *         content:
@@ -644,12 +650,12 @@ export const updateUserCredentials = async (req: UpdateUserCredentialsRequest, r
   const { currentPassword, newPassword } = req.body;
 
   if (!userId) {
-    res.status(400).send({ message: "인증 토큰이 유효하지 않습니다." });
+    res.status(401).send({ message: "인증 토큰이 유효하지 않습니다." });
     return;
   }
 
   if (!currentPassword || !newPassword) {
-    res.status(400).send({ message: "필수 정보가 누락되었습니다." });
+    res.status(400).send({ message: "비밀번호를 입력해 주세요." });
     return;
   }
 
@@ -663,6 +669,11 @@ export const updateUserCredentials = async (req: UpdateUserCredentialsRequest, r
   const isMatch = await compare(currentPassword, user.password);
   if (!isMatch) {
     res.status(401).send({ message: "비밀번호가 일치하지 않습니다." });
+    return;
+  }
+
+  if (currentPassword === newPassword) {
+    res.status(400).send({ message: "기존의 비밀번호와 동일합니다." });
     return;
   }
 

@@ -1,5 +1,3 @@
-// ScheduleRow.tsx
-
 import { useState } from "react";
 import { type IReservation } from "@repo/types";
 import { useSidebarStore } from "@/app/store/useSidebarStore";

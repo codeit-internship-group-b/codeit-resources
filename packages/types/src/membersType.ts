@@ -1,6 +1,5 @@
 import { type StaticImageData } from "next/image";
 import { IUser } from "./userType";
-import { ResponseType } from "./responseType";
 
 // 이미지 타입
 export type ImageUrlType = string;
@@ -59,4 +58,9 @@ export interface ResponseWithMessage {
 
 export interface MemberResponse extends ResponseWithMessage {
   user: IUser;
+}
+
+export interface MembersResponse extends ResponseWithMessage {
+  members: IUser[];
+  nextCursor: string | null;
 }

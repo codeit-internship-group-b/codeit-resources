@@ -1,16 +1,13 @@
-/* eslint-disable  */
-
 "use client";
 
 import { useEffect, useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
 import { format, parse, differenceInMinutes, addMinutes } from "date-fns";
-import { type TBaseItem, type IUser, type IReservation } from "@repo/types";
+import { type TBaseItem, type IReservation } from "@repo/types";
 import { Button } from "@ui/index";
 import { useAuthStore } from "@/src/stores/useAuthStore";
 import { useDateStore } from "@/app/store/useDateStore";
-import { getAllUser } from "@/api/users";
 import { getAllItems } from "@/api/items";
 import { getReservationsByTypeAndDate, type CreateReservationRequest } from "@/api/reservations";
 import { BUTTON_TEXT, ERROR_MESSAGES } from "@/app/constants/reservationFormConstants";
@@ -19,6 +16,7 @@ import { formatDate } from "@/app/utils/formatDate";
 import { type SelectedRoom } from "@/app/types/scheduletypes";
 import { type ReservationFormProps } from "@/app/types/ReservationFormTypes";
 import { validateEndAt } from "@/app/utils/validateTime";
+import { getMembers } from "@/api/members";
 import { AttendeesMultiSelect } from "./ReservationForm/AttendeesMultiSelect";
 import { DeleteButton } from "./ReservationForm/DeleteButton";
 import { NotesInput } from "./ReservationForm/NotesInput";
@@ -51,12 +49,15 @@ export function ReservationForm({
   });
 
   const {
-    data: allUsersData = [],
+    data: allUsersData,
     isLoading: allUsersIsLoading,
     isError: allUsersIsError,
-  } = useQuery<IUser[]>({
-    queryKey: ["AllUsers"],
-    queryFn: getAllUser,
+  } = useQuery({
+    queryKey: ["members", "newest"],
+    queryFn: () =>
+      getMembers({
+        selectedSort: "newest",
+      }),
   });
 
   const getDefaultEndAt = (startAt: string): string => {
@@ -66,7 +67,7 @@ export function ReservationForm({
   };
 
   const defaultValues: CreateReservationRequest = {
-    userId: user!._id,
+    userId: user?._id ?? "",
     itemType: "room",
     notes: selectedSchedule?.notes ?? "",
     startAt: selectedSchedule ? format(new Date(selectedSchedule.startAt), "HH:mm") : selectedTime,
@@ -109,14 +110,12 @@ export function ReservationForm({
   const endAtValue = watch("endAt");
 
   useEffect(() => {
-    if (allUsersData.length > 0) {
+    if (allUsersData) {
       const newEndAt = selectedSchedule
         ? format(new Date(selectedSchedule.endAt), "HH:mm")
         : getDefaultEndAt(selectedTime);
       const attendeeNames = selectedSchedule?.attendees
-        ? selectedSchedule.attendees
-            .map((attendee) => attendee.name)
-            .filter((name): name is string => name !== undefined)
+        ? selectedSchedule.attendees.map((attendee) => attendee.name)
         : [];
       reset({
         ...defaultValues,
@@ -124,6 +123,7 @@ export function ReservationForm({
         attendees: attendeeNames,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resetTrigger, reset, selectedTime, selectedRoom, selectedSchedule, allUsersData]);
 
   useEffect(() => {
@@ -169,7 +169,7 @@ export function ReservationForm({
       let itemId: string;
       if (typeof reservation.item === "string") {
         itemId = reservation.item;
-      } else if (reservation.item && "_id" in reservation.item) {
+      } else if ("_id" in reservation.item) {
         itemId = reservation.item._id;
       } else {
         return false;
@@ -203,7 +203,7 @@ export function ReservationForm({
 
     const attendeeIds = data.attendees
       .map((name: string) => {
-        const selectedUser = allUsersData.find((user) => user.name === name);
+        const selectedUser = allUsersData?.members.find((member) => member.name === name);
         return selectedUser ? selectedUser._id : null;
       })
       .filter((id): id is string => id !== null);
@@ -231,10 +231,10 @@ export function ReservationForm({
       <RoomDropdown
         selectedRoom={selectedMeetingRoom?.name ?? ""}
         onSelect={(value: string) => {
-          const room = roomsData.find((room) => room.name === value);
-          if (room) {
-            setSelectedMeetingRoom({ _id: room._id, name: room.name });
-            trigger("endAt");
+          const roomData = roomsData.find((room) => room.name === value);
+          if (roomData) {
+            setSelectedMeetingRoom({ _id: roomData._id, name: roomData.name });
+            void trigger("endAt");
           }
         }}
       />
@@ -249,7 +249,7 @@ export function ReservationForm({
 
       <AttendeesMultiSelect
         control={control}
-        allUsersData={allUsersData}
+        allUsersData={allUsersData?.members ?? []}
         isLoading={allUsersIsLoading}
         isError={allUsersIsError}
       />
@@ -259,7 +259,9 @@ export function ReservationForm({
       <Button
         variant="Primary"
         className="mt-20 h-48 w-full"
-        onClick={handleSubmit(onFormSubmit)}
+        onClick={() => {
+          void handleSubmit(onFormSubmit)();
+        }}
         isActive={isValid ? attendeesSelected : undefined}
       >
         {isEditMode ? BUTTON_TEXT.update : BUTTON_TEXT.create}

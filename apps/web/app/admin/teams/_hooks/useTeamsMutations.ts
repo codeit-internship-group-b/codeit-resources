@@ -1,58 +1,55 @@
 import { useMutation, type UseMutationResult, useQueryClient } from "@tanstack/react-query";
-import { notify } from "@ui/index";
 import { type FieldValues, useForm } from "react-hook-form";
 import { type AxiosError } from "axios";
-import { type ResponseType, type ITeam, type TeamType } from "@repo/types";
+import { type ResponseType, type ITeam, type TeamType, type MessageResponse } from "@repo/types";
 import { useRef } from "react";
-import { deleteTeam, postCreateTeam, updateTeam } from "@/api/teams";
+import { deleteTeam, postCreateTeam, updateTeamName, updateTeamOrder } from "@/api/teams";
+import { notify } from "@/app/store/useToastStore";
+import { notifyMutationError } from "@/src/utils/notifyMutationError";
+import { QUERY_KEYS } from "@/lib/queryKey";
+import { useDebouncedCallback } from "./useDebounceCallback";
 
-export const useCreateTeam = (): UseMutationResult<ResponseType<ITeam>, AxiosError<{ message?: string }>, ITeam> => {
+export const useCreateTeam = (
+  onClose: () => void,
+): UseMutationResult<ResponseType<ITeam>, AxiosError<MessageResponse>, ITeam> => {
   const queryClient = useQueryClient();
+  const debouncedOnClose = useDebouncedCallback(onClose, 800);
 
   return useMutation({
     mutationFn: (name: ITeam) => postCreateTeam(name),
     onSuccess: (res) => {
-      // 토스트 피드백
-      if (typeof res.message === "string") notify({ type: "success", message: res.message });
-      // query key 초기화
-      void queryClient.invalidateQueries({ queryKey: ["teamsResponse"] });
+      notify("success", res.message);
+      void queryClient.invalidateQueries({ queryKey: QUERY_KEYS.TEAMS.ALL });
+
+      // modal close
+      debouncedOnClose();
     },
     onError: (error) => {
-      const err = error as AxiosError<{ message: string }>;
-      const errMessage = err.response?.data.message;
-      if (errMessage) notify({ type: "error", message: errMessage });
+      notifyMutationError(error);
     },
   });
 };
 
 export const useCreateForm = (): FieldValues => {
   return useForm({
-    mode: "onChange",
+    mode: "onBlur",
     defaultValues: {
       teamName: "",
     },
   });
 };
 
-interface DeleteResponse {
-  message: string;
-}
-
-export const useDeleteTeam = (): UseMutationResult<DeleteResponse, AxiosError<{ message?: string }>, string> => {
+export const useDeleteTeam = (): UseMutationResult<MessageResponse, AxiosError<MessageResponse>, string> => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (teamId: string) => deleteTeam(teamId),
     onSuccess: (res) => {
-      // 토스트 피드백
-      if (typeof res.message === "string") notify({ type: "success", message: res.message });
-      // query key 초기화
-      void queryClient.invalidateQueries({ queryKey: ["teamsResponse"] });
+      notify("success", res.message);
+      void queryClient.invalidateQueries({ queryKey: QUERY_KEYS.TEAMS.ALL });
     },
     onError: (error) => {
-      const err = error as AxiosError<{ message: string }>;
-      const errMessage = err.response?.data.message;
-      if (errMessage) notify({ type: "error", message: errMessage });
+      notifyMutationError(error);
     },
   });
 };
@@ -62,43 +59,54 @@ interface UpdateRequest {
   newName: string;
 }
 
-interface MessageResponse {
-  message: string;
-}
-
-export const useUpdateTeam = (): UseMutationResult<MessageResponse, AxiosError<{ message: string }>, UpdateRequest> => {
+export const useUpdateTeamName = (): UseMutationResult<MessageResponse, AxiosError<MessageResponse>, UpdateRequest> => {
   const queryClient = useQueryClient();
   const prevTeamsRef = useRef<TeamType[] | undefined>();
 
   return useMutation({
-    mutationFn: ({ teamId, newName }: UpdateRequest) => updateTeam({ teamId, newName }),
+    mutationFn: ({ teamId, newName }: UpdateRequest) => updateTeamName({ teamId, newName }),
 
-    // 낙관적 업데이트 적용 === optimistic update
     onMutate: ({ teamId, newName }) => {
-      void queryClient.cancelQueries({ queryKey: ["teamsResponse"] });
-      // 이전 상태 저장
-      prevTeamsRef.current = queryClient.getQueryData<TeamType[]>(["teamsResponse"]);
-      // 팀 이름 수정
-      void queryClient.setQueryData<TeamType[]>(["teamsResponse"], (oldTeams) =>
-        // 변수 스코프 이슈로 team === element 사용
-        oldTeams?.map((element) => (element._id === teamId ? { ...element, name: newName } : element)),
+      void queryClient.cancelQueries({ queryKey: QUERY_KEYS.TEAMS.ALL });
+      prevTeamsRef.current = queryClient.getQueryData<TeamType[]>(QUERY_KEYS.TEAMS.ALL);
+      void queryClient.setQueryData<TeamType[]>(QUERY_KEYS.TEAMS.ALL, (oldTeams) =>
+        oldTeams?.map((oldTeam) => (oldTeam._id === teamId ? { ...oldTeam, name: newName } : oldTeam)),
       );
     },
 
     onSuccess: (res) => {
-      // 토스트 피드백
-      if (typeof res.message === "string") notify({ type: "success", message: res.message });
+      notify("success", res.message);
     },
     onError: (error) => {
-      if (prevTeamsRef.current) void queryClient.setQueryData<TeamType[]>(["teamsResponse"], prevTeamsRef.current);
-
-      const err = error as AxiosError<{ message: string }>;
-      const errMessage = err.response?.data.message;
-      if (errMessage) notify({ type: "error", message: errMessage });
+      if (prevTeamsRef.current) void queryClient.setQueryData<TeamType[]>(QUERY_KEYS.TEAMS.ALL, prevTeamsRef.current);
+      notifyMutationError(error);
     },
-    // finally 동작
     onSettled: () => {
-      void queryClient.invalidateQueries({ queryKey: ["teamsResponse"] });
+      void queryClient.invalidateQueries({ queryKey: QUERY_KEYS.TEAMS.ALL });
+    },
+  });
+};
+
+export const useUpdateTeamOrder = (
+  updatedTeams: TeamType[],
+): UseMutationResult<ResponseType<TeamType[]>, AxiosError<MessageResponse>, TeamType[]> => {
+  const queryClient = useQueryClient();
+  const prevTeamsRef = useRef<TeamType[] | undefined>();
+
+  return useMutation({
+    mutationFn: updateTeamOrder,
+    onMutate: () => {
+      void queryClient.cancelQueries({ queryKey: QUERY_KEYS.TEAMS.ALL });
+      prevTeamsRef.current = queryClient.getQueryData<TeamType[]>(QUERY_KEYS.TEAMS.ALL);
+      void queryClient.setQueryData<TeamType[]>(QUERY_KEYS.TEAMS.ALL, () => updatedTeams);
+    },
+
+    onError: (error) => {
+      if (prevTeamsRef.current) void queryClient.setQueryData<TeamType[]>(QUERY_KEYS.TEAMS.ALL, prevTeamsRef.current);
+      notifyMutationError(error);
+    },
+    onSettled: () => {
+      void queryClient.invalidateQueries({ queryKey: QUERY_KEYS.TEAMS.ALL });
     },
   });
 };
