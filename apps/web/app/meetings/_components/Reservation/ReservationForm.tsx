@@ -1,48 +1,80 @@
 "use client";
 
-import Input from "@ui/src/components/common/Input";
-import Dropdown from "@ui/src/components/common/Dropdown";
-import { useForm, Controller } from "react-hook-form";
-import Button from "@ui/src/components/common/Button";
-import MultiSelectDropdown from "@repo/ui/src/components/common/Dropdown/MultiSelectDropdown";
-import { useEffect } from "react";
-import { timeOptions } from "@/app/constants/timeOptions";
-import Profile from "@/components/common/Profile";
-import { type ScheduleFormData, type Schedule } from "@/app/types/scheduletypes";
+import { useEffect, useState } from "react";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import { useQuery } from "@tanstack/react-query";
+import { format, parse, differenceInMinutes, addMinutes } from "date-fns";
+import { type TBaseItem, type IReservation } from "@repo/types";
+import { Button } from "@ui/index";
+import { useAuthStore } from "@/src/stores/useAuthStore";
+import { useDateStore } from "@/app/store/useDateStore";
+import { getAllItems } from "@/api/items";
+import { getReservationsByTypeAndDate, type CreateReservationRequest } from "@/api/reservations";
+import { BUTTON_TEXT, ERROR_MESSAGES } from "@/app/constants/reservationFormConstants";
+import { MEETING_ROOMS_TYPE } from "@/app/constants/meetingRoomsType";
+import { formatDate } from "@/app/utils/formatDate";
+import { type SelectedRoom } from "@/app/types/scheduletypes";
+import { type ReservationFormProps } from "@/app/types/ReservationFormTypes";
+import { validateEndAt } from "@/app/utils/validateTime";
+import { getMembers } from "@/api/members";
+import { AttendeesMultiSelect } from "./ReservationForm/AttendeesMultiSelect";
+import { DeleteButton } from "./ReservationForm/DeleteButton";
+import { NotesInput } from "./ReservationForm/NotesInput";
+import { RoomDropdown } from "./ReservationForm/RoomDropdown";
+import { TimeSelectors } from "./ReservationForm/TimeSelectors";
 
-interface ReservationFormProps {
-  onSubmit: (data: ScheduleFormData) => void;
-  selectedTime: string;
-  selectedSchedule?: Schedule | null;
-  resetTrigger?: number;
-  selectedRoom?: string | null;
-}
+export function ReservationForm({
+  onSubmit,
+  selectedTime,
+  resetTrigger,
+  selectedRoom,
+  selectedSchedule,
+  onDelete,
+}: ReservationFormProps): JSX.Element {
+  const user = useAuthStore((state) => state.user);
+  const isEditMode = selectedSchedule && selectedSchedule.user._id === user?._id;
 
-const addMinutes = (time: string, minutesToAdd: number): string => {
-  const parts = time.split(":");
+  const { selectedDate } = useDateStore();
 
-  if (parts.length !== 2) {
-    throw new Error("Invalid time format. Expected format HH:MM.");
-  }
+  const formattedDate = formatDate(selectedDate);
 
-  const [hoursStr, minutesStr] = parts;
-  const hours = Number(hoursStr);
-  const minutes = Number(minutesStr);
+  const { data: meetingsData = [] } = useQuery<IReservation[]>({
+    queryKey: ["meetings", formattedDate, MEETING_ROOMS_TYPE],
+    queryFn: () => getReservationsByTypeAndDate({ itemType: MEETING_ROOMS_TYPE, date: formattedDate }),
+  });
 
-  if (isNaN(hours) || isNaN(minutes)) {
-    throw new Error("Invalid time format. Hours and minutes must be numbers.");
-  }
+  const { data: roomsData = [] } = useQuery<TBaseItem[]>({
+    queryKey: ["Rooms", MEETING_ROOMS_TYPE],
+    queryFn: () => getAllItems({ itemType: MEETING_ROOMS_TYPE }),
+  });
 
-  const totalMinutes = hours * 60 + minutes + minutesToAdd;
-  const newHours = Math.floor(totalMinutes / 60) % 24;
-  const newMinutes = totalMinutes % 60;
-  const formattedHours = newHours.toString().padStart(2, "0");
-  const formattedMinutes = newMinutes.toString().padStart(2, "0");
-  return `${formattedHours}:${formattedMinutes}`;
-};
+  const {
+    data: allUsersData,
+    isLoading: allUsersIsLoading,
+    isError: allUsersIsError,
+  } = useQuery({
+    queryKey: ["members", "newest"],
+    queryFn: () =>
+      getMembers({
+        selectedSort: "newest",
+      }),
+  });
 
-export default function ReservationForm(props: ReservationFormProps): JSX.Element {
-  const { onSubmit, selectedTime, resetTrigger, selectedRoom } = props;
+  const getDefaultEndAt = (startAt: string): string => {
+    const start = parse(startAt, "HH:mm", new Date());
+    const end = addMinutes(start, 30);
+    return format(end, "HH:mm");
+  };
+
+  const defaultValues: CreateReservationRequest = {
+    userId: user?._id ?? "",
+    itemType: "room",
+    notes: selectedSchedule?.notes ?? "",
+    startAt: selectedSchedule ? format(new Date(selectedSchedule.startAt), "HH:mm") : selectedTime,
+    endAt: selectedSchedule ? format(new Date(selectedSchedule.endAt), "HH:mm") : getDefaultEndAt(selectedTime),
+    status: "reserved",
+    attendees: [],
+  };
 
   const {
     control,
@@ -50,268 +82,189 @@ export default function ReservationForm(props: ReservationFormProps): JSX.Elemen
     watch,
     formState: { errors, isValid },
     reset,
+    getValues,
+    trigger,
     setError,
     setValue,
     clearErrors,
-  } = useForm<ScheduleFormData>({
-    defaultValues: {
-      meetingTitle: "",
-      selectedRoom: selectedRoom ?? "",
-      startTime: selectedTime,
-      customStartTime: "",
-      endTime: "",
-      customEndTime: "",
-      participants: [],
-    },
+  } = useForm<CreateReservationRequest>({
+    defaultValues,
+    mode: "onChange",
   });
 
-  const rooms = ["미팅룸 A", "미팅룸 B", "미팅룸 C", "미팅룸 D", "미팅룸 E", "녹음실 A", "녹음실 B", "녹음실 C"];
-  const mockParticipants = [
-    "배영준",
-    "조현지",
-    "김보경",
-    "신승헌",
-    "소혜린",
-    "이대양",
-    "이영훈",
-    "이정민",
-    "이지현",
-    "천권희",
-  ];
-
-  const startTimeValue = watch("startTime");
-  const customStartTimeValue = watch("customStartTime");
-  const endTimeValue = watch("endTime");
-  const participantsSelected = watch("participants").length > 0;
-
-  // resetTrigger가 변경될 때마다 폼을 리셋
-  useEffect(() => {
-    reset({
-      meetingTitle: "",
-      selectedRoom: selectedRoom ?? "", // selectedRoom 포함
-      startTime: selectedTime,
-      customStartTime: "",
-      endTime: "",
-      customEndTime: "",
-      participants: [],
+  const validateEndAtFunction = (endAt: string): boolean | string => {
+    return validateEndAt({
+      endAt,
+      getValues,
+      selectedMeetingRoom,
+      selectedDate,
+      meetingsData,
+      selectedReservationId: selectedSchedule?._id, // 추가된 부분
     });
-  }, [resetTrigger, reset, selectedTime, selectedRoom]);
+  };
 
-  // startTime 또는 customStartTime이 변경될 때 endTime을 설정
+  const [selectedMeetingRoom, setSelectedMeetingRoom] = useState<SelectedRoom | null | undefined>(selectedRoom);
+
+  const attendeesSelected = watch("attendees").length > 0;
+  const startAtValue = watch("startAt");
+  const endAtValue = watch("endAt");
+
   useEffect(() => {
-    let currentStartTime = selectedTime;
-
-    if (startTimeValue === "custom-start" && customStartTimeValue) {
-      currentStartTime = customStartTimeValue;
-    } else if (startTimeValue && startTimeValue !== "custom-start") {
-      currentStartTime = startTimeValue;
+    if (allUsersData) {
+      const newEndAt = selectedSchedule
+        ? format(new Date(selectedSchedule.endAt), "HH:mm")
+        : getDefaultEndAt(selectedTime);
+      const attendeeNames = selectedSchedule?.attendees
+        ? selectedSchedule.attendees.map((attendee) => attendee.name)
+        : [];
+      reset({
+        ...defaultValues,
+        endAt: newEndAt,
+        attendees: attendeeNames,
+      });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resetTrigger, reset, selectedTime, selectedRoom, selectedSchedule, allUsersData]);
 
-    if (currentStartTime) {
-      try {
-        const newEndTime = addMinutes(currentStartTime, 30);
-        setValue("endTime", newEndTime, { shouldValidate: true });
-      } catch (error) {
-        null;
+  useEffect(() => {
+    if (startAtValue) {
+      const currentEndAt = parse(endAtValue, "HH:mm", new Date());
+      const calculatedEndAt = addMinutes(parse(startAtValue, "HH:mm", new Date()), 30);
+
+      if (differenceInMinutes(calculatedEndAt, currentEndAt) > 0) {
+        const newEndAt = format(calculatedEndAt, "HH:mm");
+        setValue("endAt", newEndAt);
       }
     }
-  }, [startTimeValue, customStartTimeValue, setValue, selectedTime]);
+  }, [startAtValue, endAtValue, setValue]);
 
-  useEffect(() => {
-    const compareTimes = (start: string, end: string): boolean => {
-      const [startHour = 0, startMinute = 0] = start.split(":").map((value) => {
-        const num = parseInt(value, 10);
-        return isNaN(num) ? 0 : num;
+  const onFormSubmit: SubmitHandler<CreateReservationRequest> = (data) => {
+    if (!user || !selectedMeetingRoom?._id) {
+      return;
+    }
+
+    const { year, month, day } = selectedDate;
+
+    const newStart = new Date(
+      `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}T${data.startAt}:00`,
+    );
+
+    const newEnd = new Date(
+      `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}T${data.endAt}:00`,
+    );
+
+    if (newEnd <= newStart) {
+      setError("endAt", {
+        type: "manual",
+        message: ERROR_MESSAGES.endTimeMinimum,
       });
+      return;
+    }
 
-      const [endHour = 0, endMinute = 0] = end.split(":").map((value) => {
-        const num = parseInt(value, 10);
-        return isNaN(num) ? 0 : num;
+    const isOverlap = meetingsData.some((reservation) => {
+      if (reservation.itemType !== MEETING_ROOMS_TYPE) {
+        return false;
+      }
+
+      let itemId: string;
+      if (typeof reservation.item === "string") {
+        itemId = reservation.item;
+      } else if ("_id" in reservation.item) {
+        itemId = reservation.item._id;
+      } else {
+        return false;
+      }
+
+      if (itemId !== selectedMeetingRoom._id) {
+        return false;
+      }
+
+      if (selectedSchedule && reservation._id === selectedSchedule._id) {
+        return false;
+      }
+
+      const existingStart = new Date(reservation.startAt);
+      const existingEnd = new Date(reservation.endAt);
+
+      return newStart < existingEnd && newEnd > existingStart;
+    });
+
+    if (isOverlap) {
+      setError("startAt", {
+        type: "manual",
+        message: ERROR_MESSAGES.timeOverlap,
       });
+      setError("endAt", {
+        type: "manual",
+        message: ERROR_MESSAGES.timeOverlap,
+      });
+      return;
+    }
 
-      return startHour > endHour || (startHour === endHour && startMinute >= endMinute);
+    const attendeeIds = data.attendees
+      .map((name: string) => {
+        const selectedUser = allUsersData?.members.find((member) => member.name === name);
+        return selectedUser ? selectedUser._id : null;
+      })
+      .filter((id): id is string => id !== null);
+
+    const startAt = newStart.toISOString();
+    const endAt = newEnd.toISOString();
+
+    const mappedData: CreateReservationRequest = {
+      userId: user._id,
+      itemType: "room",
+      startAt,
+      endAt,
+      status: "reserved",
+      notes: data.notes,
+      attendees: attendeeIds,
     };
 
-    const currentStartTime = startTimeValue === "custom-start" ? customStartTimeValue : startTimeValue;
-    if (currentStartTime && endTimeValue && compareTimes(currentStartTime, endTimeValue)) {
-      setError("endTime", {
-        type: "manual",
-        message: "종료 시간은 시작 시간보다 이후여야 합니다.",
-      });
-    } else {
-      clearErrors("endTime");
-    }
-  }, [startTimeValue, customStartTimeValue, endTimeValue, setError, clearErrors]);
+    onSubmit(mappedData, selectedMeetingRoom._id, selectedSchedule?._id);
+  };
 
   return (
     <div className="px-16">
-      {/* 미팅 제목 입력 */}
-      <Controller
-        name="meetingTitle"
-        control={control}
-        rules={{ required: "미팅 제목을 입력해주세요." }}
-        render={({ field }) => <Input id="meeting-title" placeholder="미팅 제목" {...field} />}
-      />
-      {/* 미팅룸 선택 */}
-      <Controller
-        name="selectedRoom"
-        control={control}
-        rules={{ required: "회의실을 선택해주세요." }}
-        render={({ field }) => (
-          <Dropdown
-            selectedValue={field.value}
-            onSelect={(value: string | boolean) => {
-              field.onChange(value);
-            }}
-            isError={Boolean(errors.selectedRoom)}
-            errorMessage={errors.selectedRoom?.message ?? ""}
-          >
-            <Dropdown.Toggle title="회의실">{field.value || "회의실 선택"}</Dropdown.Toggle>
-            <Dropdown.Wrapper className="max-h-160 md:max-h-300 no-scrollbar overflow-y-auto">
-              {" "}
-              {/* 스크롤 추가 */}
-              {rooms.map((room) => (
-                <Dropdown.Item key={room} value={room}>
-                  {room}
-                </Dropdown.Item>
-              ))}
-            </Dropdown.Wrapper>
-          </Dropdown>
-        )}
-      />
-      {/* 시작 시간 및 종료 시간 선택 */}
-      <div className="my-16 flex justify-between gap-16">
-        {/* 시작 시간 */}
-        <div className="flex-1">
-          <Controller
-            name="startTime"
-            control={control}
-            rules={{ required: "시작 시간을 선택해주세요." }}
-            render={({ field }) => (
-              <Dropdown
-                selectedValue={field.value}
-                onSelect={(value: string | boolean) => {
-                  field.onChange(value);
-                }}
-                isError={Boolean(errors.startTime)}
-                errorMessage={errors.startTime?.message ?? ""}
-              >
-                <Dropdown.Toggle title="시작 시간">{field.value || selectedTime}</Dropdown.Toggle>
-                <Dropdown.Wrapper className="max-h-160 md:max-h-300 no-scrollbar overflow-y-auto">
-                  {" "}
-                  {/* 스크롤 추가 */}
-                  <Dropdown.Item value="custom-start">직접입력</Dropdown.Item>
-                  {timeOptions.map((time) => (
-                    <Dropdown.Item key={time} value={time}>
-                      {time}
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown.Wrapper>
-              </Dropdown>
-            )}
-          />
-          {startTimeValue === "custom-start" && (
-            <Controller
-              name="customStartTime"
-              control={control}
-              rules={{ required: "시작 시간을 입력해주세요." }}
-              render={({ field }) => <Input id="custom-start-time" placeholder="시작 시간 (HH:MM)" {...field} />}
-            />
-          )}
-        </div>
+      <NotesInput control={control} />
 
-        {/* 종료 시간 */}
-        <div className="flex-1">
-          <Controller
-            name="endTime"
-            control={control}
-            rules={{ required: "종료 시간을 선택해주세요." }}
-            render={({ field }) => (
-              <Dropdown
-                selectedValue={field.value}
-                onSelect={(value: string | boolean) => {
-                  field.onChange(value);
-                }}
-                isError={Boolean(errors.endTime)}
-                errorMessage={errors.endTime?.message ?? ""}
-              >
-                <Dropdown.Toggle title="종료 시간">{field.value || "종료 시간 선택"}</Dropdown.Toggle>
-                <Dropdown.Wrapper className="max-h-160 md:max-h-300 no-scrollbar overflow-y-auto">
-                  <Dropdown.Item value="custom-end">직접입력</Dropdown.Item>
-                  {timeOptions.map((time) => (
-                    <Dropdown.Item key={time} value={time}>
-                      {time}
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown.Wrapper>
-              </Dropdown>
-            )}
-          />
-          {endTimeValue === "custom-end" && (
-            <Controller
-              name="customEndTime"
-              control={control}
-              rules={{ required: "종료 시간을 입력해주세요." }}
-              render={({ field }) => <Input id="custom-end-time" placeholder="종료 시간 (HH:MM)" {...field} />}
-            />
-          )}
-        </div>
-      </div>
-      {/* 참여자 선택 */}
-      <Controller
-        name="participants"
-        control={control}
-        render={({ field }) => (
-          <MultiSelectDropdown
-            selectedValue={field.value}
-            onSelect={(value: string[]) => {
-              field.onChange(value);
-            }}
-          >
-            <MultiSelectDropdown.Toggle title="참여자">
-              {field.value.length > 0 ? (
-                <div className="flex flex-wrap justify-between gap-2">
-                  {field.value.slice(0, 3).map((name) => (
-                    <Profile key={name} size="size-27" name={name} textColor="black" className="ml-10" />
-                  ))}
-                  {field.value.length > 3 && (
-                    <span className="text-purple-30 text-xs-semibold mx-10">+{field.value.length - 3}명</span>
-                  )}
-                </div>
-              ) : (
-                "참여자 선택"
-              )}
-            </MultiSelectDropdown.Toggle>
-            <MultiSelectDropdown.Wrapper>
-              {" "}
-              {/* 스크롤 추가 */}
-              {mockParticipants
-                .sort((a, b) => {
-                  const isASelected = field.value.includes(a);
-                  const isBSelected = field.value.includes(b);
-
-                  if (isASelected && !isBSelected) return -1;
-                  if (!isASelected && isBSelected) return 1;
-                  return 0;
-                })
-                .map((name) => (
-                  <MultiSelectDropdown.Item key={name} value={name}>
-                    <Profile name={name} size="size-27" textColor="black" />
-                  </MultiSelectDropdown.Item>
-                ))}
-            </MultiSelectDropdown.Wrapper>
-          </MultiSelectDropdown>
-        )}
+      <RoomDropdown
+        selectedRoom={selectedMeetingRoom?.name ?? ""}
+        onSelect={(value: string) => {
+          const roomData = roomsData.find((room) => room.name === value);
+          if (roomData) {
+            setSelectedMeetingRoom({ _id: roomData._id, name: roomData.name });
+            void trigger("endAt");
+          }
+        }}
       />
+
+      <TimeSelectors
+        control={control}
+        errors={errors}
+        trigger={trigger}
+        clearErrors={clearErrors}
+        validateEndAt={validateEndAtFunction}
+      />
+
+      <AttendeesMultiSelect
+        control={control}
+        allUsersData={allUsersData?.members ?? []}
+        isLoading={allUsersIsLoading}
+        isError={allUsersIsError}
+      />
+
+      {isEditMode ? <DeleteButton onDelete={onDelete} /> : null}
+
       <Button
         variant="Primary"
         className="mt-20 h-48 w-full"
         onClick={() => {
-          void handleSubmit(onSubmit)();
+          void handleSubmit(onFormSubmit)();
         }}
-        isActive={isValid ? participantsSelected : undefined} // 모든 필드가 유효하고 참여자가 선택된 경우에만 활성화
+        isActive={isValid ? attendeesSelected : undefined}
       >
-        예약하기
+        {isEditMode ? BUTTON_TEXT.update : BUTTON_TEXT.create}
       </Button>
     </div>
   );

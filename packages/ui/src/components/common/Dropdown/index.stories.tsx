@@ -13,10 +13,10 @@ type Story = StoryObj<typeof Dropdown>;
 
 export const Default: Story = {
   render: () => {
-    const [selectedValue, setSelectedValue] = useState("");
+    const [selectedValue, setSelectedValue] = useState<string | boolean>("");
 
     return (
-      <Dropdown selectedValue={selectedValue} onSelect={(value: string) => setSelectedValue(value)}>
+      <Dropdown selectedValue={selectedValue} onSelect={(_value: string | boolean) => setSelectedValue(_value)}>
         <Dropdown.Toggle title="미팅제목">최신순</Dropdown.Toggle>
         <Dropdown.Wrapper>
           <Dropdown.Item value="아이템 1">아이템 1</Dropdown.Item>

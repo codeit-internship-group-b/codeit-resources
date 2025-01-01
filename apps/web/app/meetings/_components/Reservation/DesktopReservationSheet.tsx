@@ -1,30 +1,20 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-"use client";
-
-import { useEffect, useState } from "react";
-import Sidebar from "@/components/common/Sidebar";
-import { type ScheduleFormData, type Schedule } from "@/app/types/scheduletypes";
+import { useEffect } from "react";
+import { type IReservation } from "@repo/types";
 import { useSidebarStore } from "@/app/store/useSidebarStore";
-import ReservationForm from "./ReservationForm";
-import ReservationModal from "./ReservationModal";
+import Sidebar from "@/components/common/Sidebar";
+import { type SelectedRoom } from "@/app/types/scheduletypes";
+import ReservationSheetContent from "./ReservationSheetContent";
 
 interface DesktopReservationSheetProps {
   onClose: () => void;
   selectedTime: string;
-  selectedSchedule?: Schedule | null;
-  selectedRoom: string;
+  selectedSchedule?: IReservation | null;
+  selectedRoom?: SelectedRoom | null;
 }
 
 export default function DesktopReservationSheet(props: DesktopReservationSheetProps): JSX.Element {
   const { onClose, selectedTime, selectedSchedule, selectedRoom } = props;
-
   const { isSidebarOpen, closeSidebar } = useSidebarStore();
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleSubmit = (data: ScheduleFormData): void => {
-    setIsModalOpen(true);
-  };
 
   useEffect(() => {
     if (!isSidebarOpen) {
@@ -41,23 +31,13 @@ export default function DesktopReservationSheet(props: DesktopReservationSheetPr
           onClose();
         }}
       >
-        <ReservationForm
-          onSubmit={handleSubmit}
+        <ReservationSheetContent
+          onClose={onClose}
           selectedTime={selectedTime}
           selectedSchedule={selectedSchedule}
           selectedRoom={selectedRoom}
         />
       </Sidebar>
-      <ReservationModal
-        isOpen={isModalOpen}
-        onClose={() => {
-          setIsModalOpen(false);
-        }}
-        onConfirm={() => {
-          setIsModalOpen(false);
-          onClose();
-        }}
-      />
     </div>
   );
 }
