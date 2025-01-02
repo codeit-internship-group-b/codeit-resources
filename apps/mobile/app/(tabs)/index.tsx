@@ -12,7 +12,7 @@ export default function HomeScreen() {
       headerImage={<Image source={require("@/assets/images/partial-react-logo.png")} style={styles.reactLogo} />}
     >
       <ThemedView style={styles.titleContainer}>
-        <ThemedText className="rounded-lg border-2 border-purple-500 bg-purple-950" type="title">
+        <ThemedText className="bg-custom-black rounded-lg border-2 border-purple-500" type="title">
           Welcome! 테일윈드 확인용
         </ThemedText>
         <HelloWave />
