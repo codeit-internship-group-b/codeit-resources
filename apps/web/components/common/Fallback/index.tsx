@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@ui/index";
+import { getQueryClient } from "@/lib/queryClient";
 
 interface ErrorFallbackProps {
   error: Error;
@@ -8,7 +9,10 @@ interface ErrorFallbackProps {
 }
 
 export default function ErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps): JSX.Element {
+  const queryClient = getQueryClient();
+
   const handleResetErrorBoundary = (): void => {
+    queryClient.removeQueries();
     resetErrorBoundary();
   };
 
