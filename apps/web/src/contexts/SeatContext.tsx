@@ -1,4 +1,3 @@
-/* eslint-disable @tanstack/query/exhaustive-deps */
 "use client";
 
 import { createContext, useContext, useState, type ReactNode, useMemo } from "react";

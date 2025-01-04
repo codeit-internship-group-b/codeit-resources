@@ -1,5 +1,5 @@
-/* eslint-disable @tanstack/query/exhaustive-deps */
 "use client";
+
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { type IReservation } from "@repo/types";
