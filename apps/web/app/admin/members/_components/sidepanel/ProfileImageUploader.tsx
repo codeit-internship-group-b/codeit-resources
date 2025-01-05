@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect, type ChangeEvent } from "react";
 import Image from "next/image";
 import DefaultProfileImage from "@ui/public/images/image_default_profile.png";
