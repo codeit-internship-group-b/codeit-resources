@@ -1,25 +1,33 @@
 {
   "expo": {
     "name": "mobile",
-    "slug": "mobile",
+    "slug": "codeit-resources",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
+    "extra": {
+      "eas": {
+        "projectId": "bfe45ae3-7825-4681-a6c3-d54d1d78bebf"
+      }
+    },
+    "owner": "bokeeeey",
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.bokeeeey.codeitresources"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.bokeeeey.codeitresources"
     },
     "web": {
       "bundler": "metro",
