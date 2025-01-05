@@ -57,59 +57,60 @@ export default function MemberForm({ selectedMember, onClose }: MemberFormProps)
   };
 
   return (
-    <form onSubmit={(...args) => void handleSubmit(membersFormSubmit)(...args)}>
-      <div className="w-154 mb-24">
-        <Controller
-          name="role"
-          control={control}
-          rules={{ required: MEMBER_FORM_MESSAGES.VALIDATION.ROLE.REQUIRED }}
-          render={({ field: { value, onChange } }) => (
-            <Radio.Group
-              value={getRoleDisplay(value)}
-              onChange={(displayText) => {
-                onChange(getRoleValue(displayText));
-              }}
-            >
-              <Radio.Option value={ROLE_LABELS.member}>{ROLE_LABELS.member}</Radio.Option>
-              <Radio.Option value={ROLE_LABELS.admin}>{ROLE_LABELS.admin}</Radio.Option>
-            </Radio.Group>
-          )}
+    <form
+      className="flex h-full flex-col justify-between"
+      onSubmit={(...args) => void handleSubmit(membersFormSubmit)(...args)}
+    >
+      <div>
+        <div className="w-154 mb-24">
+          <Controller
+            name="role"
+            control={control}
+            rules={{ required: MEMBER_FORM_MESSAGES.VALIDATION.ROLE.REQUIRED }}
+            render={({ field: { value, onChange } }) => (
+              <Radio.Group
+                value={getRoleDisplay(value)}
+                onChange={(displayText) => {
+                  onChange(getRoleValue(displayText));
+                }}
+              >
+                <Radio.Option value={ROLE_LABELS.member}>{ROLE_LABELS.member}</Radio.Option>
+                <Radio.Option value={ROLE_LABELS.admin}>{ROLE_LABELS.admin}</Radio.Option>
+              </Radio.Group>
+            )}
+          />
+        </div>
+        <Input
+          placeholder={MEMBER_FORM_MESSAGES.PLACEHOLDER.NAME}
+          error={errors.name}
+          {...register("name", {
+            required: MEMBER_FORM_MESSAGES.VALIDATION.NAME.REQUIRED,
+            minLength: {
+              value: 2,
+              message: MEMBER_FORM_MESSAGES.VALIDATION.NAME.MIN_LENGTH,
+            },
+          })}
         />
-      </div>
-
-      <Input
-        placeholder={MEMBER_FORM_MESSAGES.PLACEHOLDER.NAME}
-        error={errors.name}
-        {...register("name", {
-          required: MEMBER_FORM_MESSAGES.VALIDATION.NAME.REQUIRED,
-          minLength: {
-            value: 2,
-            message: MEMBER_FORM_MESSAGES.VALIDATION.NAME.MIN_LENGTH,
-          },
-        })}
-      />
-
-      <Input
-        placeholder={MEMBER_FORM_MESSAGES.PLACEHOLDER.EMAIL}
-        error={errors.email}
-        {...register("email", {
-          required: MEMBER_FORM_MESSAGES.VALIDATION.EMAIL.REQUIRED,
-          pattern: {
-            value: REGEXP_PATTERNS.EMAIL,
-            message: MEMBER_FORM_MESSAGES.VALIDATION.EMAIL.PATTERN,
-          },
-        })}
-      />
-
-      <div className="mb-24">
-        <Controller
-          name="teams"
-          control={control}
-          render={({ field: { value, onChange } }) => <TeamDropdown value={value} onSelect={onChange} />}
+        <Input
+          placeholder={MEMBER_FORM_MESSAGES.PLACEHOLDER.EMAIL}
+          error={errors.email}
+          {...register("email", {
+            required: MEMBER_FORM_MESSAGES.VALIDATION.EMAIL.REQUIRED,
+            pattern: {
+              value: REGEXP_PATTERNS.EMAIL,
+              message: MEMBER_FORM_MESSAGES.VALIDATION.EMAIL.PATTERN,
+            },
+          })}
         />
+        <div className="mb-24">
+          <Controller
+            name="teams"
+            control={control}
+            render={({ field: { value, onChange } }) => <TeamDropdown value={value} onSelect={onChange} />}
+          />
+        </div>
+        <ProfileImageUploader currentImage={getCurrentImage()} onImageChange={handleImageChange} />
       </div>
-
-      <ProfileImageUploader currentImage={getCurrentImage()} onImageChange={handleImageChange} />
 
       <Button variant="Primary" type="submit" className="h-48 w-full" isPending={isPending}>
         {getButtonText()}
