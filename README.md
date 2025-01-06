@@ -16,6 +16,7 @@
 <br />
 
 ## 💫 Contents
+
 - [<code>📋 Overview</code>](#-overview)
 - [<code>👥 Team</code>](#-team)
 - [<code>🛠️ Tech stack</code>](#️-tech-stack)
@@ -30,7 +31,7 @@
 
 ❗**GIF 추가 예정**
 
-Codeit Resources는 회사의 리소스를 효율적으로 예약, 대여, 반납할 수 있는 통합 플랫폼입니다. 
+Codeit Resources는 회사의 리소스를 효율적으로 예약, 대여, 반납할 수 있는 통합 플랫폼입니다.
 
 실시간 예약 시스템과 직관적인 사용자 인터페이스를 통해 사용자와 관리자 모두 쉽게 사용할 수 있도록 개발하였습니다.
 
@@ -109,46 +110,49 @@ Codeit Resources는 회사의 리소스를 효율적으로 예약, 대여, 반�
 ## 🛠️ Tech stack
 
 ### 1. Frontend
-  - **Language**
-    
-    <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">
-  
-  - **Library & Framework**
-  
-    <img src="https://img.shields.io/badge/Next.js-black?style=for-the-badge&logo=next.js&logoColor=white">
-    <img src="https://img.shields.io/badge/Tailwind%20CSS-38bdf8?style=for-the-badge&logo=tailwindcss&logoColor=white">
-    <img src="https://img.shields.io/badge/TanStack%20Query-ff5a1f?style=for-the-badge&logo=react-query&logoColor=white">
-    <img src="https://img.shields.io/badge/Storybook-ff4785?style=for-the-badge&logo=storybook&logoColor=white">
-    <img src="https://img.shields.io/badge/Zustand-1c6c7e?style=for-the-badge&logo=zustand&logoColor=white">
-    <img src="https://img.shields.io/badge/React%20Hook%20Form-61dafb?style=for-the-badge&logo=react-hook-form&logoColor=black">
-  
-  - **Deploy**
-  
-    <img src="https://img.shields.io/badge/AWS%20S3-232f3e?style=for-the-badge&logo=amazon-s3&logoColor=white">
-    <img src="https://img.shields.io/badge/AWS%20CloudFront-ff9900?style=for-the-badge&logo=aws&logoColor=white">
+
+- **Language**
+
+  <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">
+
+- **Library & Framework**
+
+  <img src="https://img.shields.io/badge/Next.js-black?style=for-the-badge&logo=next.js&logoColor=white">
+  <img src="https://img.shields.io/badge/Tailwind%20CSS-38bdf8?style=for-the-badge&logo=tailwindcss&logoColor=white">
+  <img src="https://img.shields.io/badge/TanStack%20Query-ff5a1f?style=for-the-badge&logo=react-query&logoColor=white">
+  <img src="https://img.shields.io/badge/Storybook-ff4785?style=for-the-badge&logo=storybook&logoColor=white">
+  <img src="https://img.shields.io/badge/Zustand-1c6c7e?style=for-the-badge&logo=zustand&logoColor=white">
+  <img src="https://img.shields.io/badge/React%20Hook%20Form-61dafb?style=for-the-badge&logo=react-hook-form&logoColor=black">
+
+- **Deploy**
+
+  <img src="https://img.shields.io/badge/AWS%20S3-232f3e?style=for-the-badge&logo=amazon-s3&logoColor=white">
+  <img src="https://img.shields.io/badge/AWS%20CloudFront-ff9900?style=for-the-badge&logo=aws&logoColor=white">
 
 ### 2. Mobile❗**진행중**
 
 ### 3. Backend
-  - **Language**
-  
-    <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">
-    
-  - **Library & Framework**
-  
-    <img src="https://img.shields.io/badge/express-000000?style=for-the-badge&logo=express&logoColor=white">
-  
-  - **Database**
-  
-    <img src="https://img.shields.io/badge/mongoDB-47A248?style=for-the-badge&logo=MongoDB&logoColor=white">
-      
-  - **Deploy**
-  
-    <img src="https://img.shields.io/badge/AWS%20EC2-ff9900?style=for-the-badge&logo=amazon-ec2&logoColor=white">
+
+- **Language**
+
+  <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">
+
+- **Library & Framework**
+
+  <img src="https://img.shields.io/badge/express-000000?style=for-the-badge&logo=express&logoColor=white">
+
+- **Database**
+
+  <img src="https://img.shields.io/badge/mongoDB-47A248?style=for-the-badge&logo=MongoDB&logoColor=white">
+
+- **Deploy**
+
+  <img src="https://img.shields.io/badge/AWS%20EC2-ff9900?style=for-the-badge&logo=amazon-ec2&logoColor=white">
 
 <br />
 
 ## 🚀 Installation
+
 ### 패키지 설치
 
 ```bash
@@ -164,40 +168,61 @@ pnpm run dev
 ### 프로덕션 모드
 
 ```bash
-pnpm build
+pnpm run build
 ```
 
 <br />
 
 ## ✨ Features
+
 ❗**페이지 별 이미지 추가 예정**
+
 ## 1. Member 기능
+
 ### 대시보드
+
 오늘 예약된 회의나 좌석을 확인할 수 있습니다.
+
 ### 회의실 예약
+
 특정 날짜와 시간을 선택하여 회의실을 예약할 수 있습니다. 회의는 제목, 회의실, 시간, 참여자를 선택할 수 있으며 예약한 회의는 수정, 취소가 가능합니다.
+
 ### 좌석 예약
+
 원하는 좌석을 예약할 수 있습니다. 좌석은 이동과 반납이 가능합니다.
+
 ### 내 프로필
+
 개인 프로필 정보를 확인할 수 있습니다.
 
 ## 2. Admin 기능
+
 ### 멤버 관리
+
 전체 멤버 목록을 확인하고 추가할 수 있습니다. 멤버 검색을 통해 특정 멤버를 찾을 수 있고 해당 멤버의 정보를 수정하거나 삭제가 가능합니다.
+
 ### 팀 관리
+
 전체 팀 목록을 확인하고 추가할 수 있습니다. 팀은 수정과 삭제가 가능합니다.
+
 ### 회의실 설정
+
 전체 회의실 목록을 확인하고 추가할 수 있습니다. 회의실은 수정과 삭제가 가능합니다.
+
 ### 좌석 설정
+
 특정 좌석의 상태(예약 가능, 고정 좌석, 사용 불가)를 변경할 수 있습니다.
 
 <br />
 
 ## 📁 Project Structure
+
 ### MonoRepo
+
 웹과 모바일 앱이 동일한 백엔드 API를 사용하고, UI 컴포넌트를 공유하기 때문에 모노레포로 구성하였습니다. 또한 TurboRepo를 도입하여 빌드 속도를 개선하고 효율적인 개발 환경을 구축했습니다.
 
 전체적인 폴더구조는 아래와 같습니다.
+
 ```
 codeit-resources/              # Project Root
 ├── apps/
@@ -224,17 +249,21 @@ codeit-resources/              # Project Root
 ```
 
 ### Architecture
+
 **1. Web / Mobile**
-- AWS S3에 빌드된 정적 파일을 저장하고, 이를 AWS CloudFront를 통해 배포히였습니다.
+
+- AWS S3에 빌드된 정적 파일을 저장하고, 이를 AWS CloudFront를 통해 배포하였습니다.
 - React Native Webview를 사용하여 Next.js로 만든 웹을 모바일 앱 내에 표시하였습니다.
-   
+
 **2. Backend**
-- AWS EC2 인스턴스에서 Express.js 서버를 실행한 뒤, MongoDB 데이터베이스와 연동하였습니다. 
+
+- AWS EC2 인스턴스에서 Express.js 서버를 실행한 뒤, MongoDB 데이터베이스와 연동하였습니다.
 - AWS S3를 이용하여 이미지를 저장하였습니다.
-  
+
 <div align="center">
   <img src="https://github.com/user-attachments/assets/0a76d65a-1662-4843-a3a2-37791ac55a53" width="800px" />
 </div>
 
 ## 🌟 Challenges
+
 ❗**추가 예정**
