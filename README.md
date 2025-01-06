@@ -4,14 +4,29 @@
   
 [![GitHub issues](https://img.shields.io/github/issues/codeit-internship-group-b/codeit-resources?color=red)]()
 [![GitHub stars](https://img.shields.io/github/stars/codeit-internship-group-b/codeit-resources?color=yellow)]()
- [![GitHub forks](https://img.shields.io/github/forks/codeit-internship-group-b/codeit-resources?color=orange)]()
-  [![GitHub watchers](https://img.shields.io/github/watchers/codeit-internship-group-b/codeit-resources?color=blue)]()
+[![GitHub forks](https://img.shields.io/github/forks/codeit-internship-group-b/codeit-resources?color=orange)]()
+[![GitHub watchers](https://img.shields.io/github/watchers/codeit-internship-group-b/codeit-resources?color=blue)]()
     
-사내 리소스 예약, 대여, 반납 플랫폼
+사내 리소스 예약/대여/반납 플랫폼
 
 ❗**GIF 추가 예정**
 
+<p align="center">
+  <a href="https://codeit.click">View Web Site</a>
+  ·
+  <a href="https://api.codeit.click">API Docs</a>
+</p>
 </div>
+
+<br />
+
+## 📋 Overview
+
+❗**GIF 추가 예정**
+
+**Codeit Resources**는 회사의 리소스를 효율적으로 예약, 대여, 반납할 수 있는 통합 플랫폼입니다.
+
+**실시간 예약 시스템**과 **직관적인 사용자 인터페이스**를 통해 사용자와 관리자 모두 손쉽게 이용할 수 있습니다.
 
 <br />
 
@@ -24,16 +39,6 @@
 - [<code>✨ Features</code>](#-features)
 - [<code>📁 Project structure</code>](#-project-structure)
 - [<code>🌟 Challenges</code>](#-challenges)
-
-<br />
-
-## 📋 Overview
-
-❗**GIF 추가 예정**
-
-Codeit Resources는 회사의 리소스를 효율적으로 예약, 대여, 반납할 수 있는 통합 플랫폼입니다.
-
-실시간 예약 시스템과 직관적인 사용자 인터페이스를 통해 사용자와 관리자 모두 쉽게 사용할 수 있도록 개발하였습니다.
 
 <br />
 
@@ -111,11 +116,11 @@ Codeit Resources는 회사의 리소스를 효율적으로 예약, 대여, 반�
 
 ### 1. Frontend
 
-- **Language**
+- Language
 
   <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">
 
-- **Library & Framework**
+- Library & Framework
 
   <img src="https://img.shields.io/badge/Next.js-black?style=for-the-badge&logo=next.js&logoColor=white">
   <img src="https://img.shields.io/badge/Tailwind%20CSS-38bdf8?style=for-the-badge&logo=tailwindcss&logoColor=white">
@@ -124,31 +129,35 @@ Codeit Resources는 회사의 리소스를 효율적으로 예약, 대여, 반�
   <img src="https://img.shields.io/badge/Zustand-1c6c7e?style=for-the-badge&logo=zustand&logoColor=white">
   <img src="https://img.shields.io/badge/React%20Hook%20Form-61dafb?style=for-the-badge&logo=react-hook-form&logoColor=black">
 
-- **Deploy**
+- Deploy
 
   <img src="https://img.shields.io/badge/AWS%20S3-232f3e?style=for-the-badge&logo=amazon-s3&logoColor=white">
   <img src="https://img.shields.io/badge/AWS%20CloudFront-ff9900?style=for-the-badge&logo=aws&logoColor=white">
 
-### 2. Mobile❗**진행중**
+### 2. Mobile❗진행중
 
 ### 3. Backend
 
-- **Language**
+- Language
 
   <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">
 
-- **Library & Framework**
+- Library & Framework
 
   <img src="https://img.shields.io/badge/express-000000?style=for-the-badge&logo=express&logoColor=white">
 
-- **Database**
+- Database
 
   <img src="https://img.shields.io/badge/mongoDB-47A248?style=for-the-badge&logo=MongoDB&logoColor=white">
 
-- **Deploy**
+- Deploy
 
   <img src="https://img.shields.io/badge/AWS%20EC2-ff9900?style=for-the-badge&logo=amazon-ec2&logoColor=white">
 
+### 4. CI/CD
+
+<img src="https://img.shields.io/badge/githubactions-2088FF?style=for-the-badge&logo=github-actions&logoColor=black">
+  
 <br />
 
 ## 🚀 Installation
@@ -252,13 +261,13 @@ codeit-resources/              # Project Root
 
 **1. Web / Mobile**
 
-- AWS S3에 빌드된 정적 파일을 저장하고, 이를 AWS CloudFront를 통해 배포하였습니다.
-- React Native Webview를 사용하여 Next.js로 만든 웹을 모바일 앱 내에 표시하였습니다.
+- **AWS S3**에 빌드된 정적 파일을 저장하고, 이를 **AWS CloudFront**를 통해 배포하였습니다.
+- **React Native Webview**를 사용하여 **Next.js**로 만든 웹을 모바일 앱 내에 표시하였습니다.
 
 **2. Backend**
 
-- AWS EC2 인스턴스에서 Express.js 서버를 실행한 뒤, MongoDB 데이터베이스와 연동하였습니다.
-- AWS S3를 이용하여 이미지를 저장하였습니다.
+- **AWS EC2** 인스턴스에서 **Express.js** 서버를 실행한 뒤, **MongoDB** 데이터베이스와 연동하였습니다.
+- **AWS S3**를 이용하여 이미지를 저장하였습니다.
 
 <div align="center">
   <img src="https://github.com/user-attachments/assets/0a76d65a-1662-4843-a3a2-37791ac55a53" width="800px" />
