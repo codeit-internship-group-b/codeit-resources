@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { type IReservation } from "@repo/types";
 import { useSidebarStore } from "@/app/store/useSidebarStore";
-import { useAuthStore } from "@/src/stores/useAuthStore";
+import { useAuthStore } from "@/app/store/useAuthStore";
 
 interface ScheduleSlotProps {
   index: number;

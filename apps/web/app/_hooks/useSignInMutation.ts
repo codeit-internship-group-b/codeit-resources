@@ -7,8 +7,8 @@ import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
 import { delay } from "es-toolkit";
 import { notify } from "@/app/store/useToastStore";
 import { postSignIn } from "@/api/auth";
-import { useAuthStore } from "@/src/stores/useAuthStore";
-import { notifyMutationError } from "@/src/utils/notifyMutationError";
+import { useAuthStore } from "@/app/store/useAuthStore";
+import { notifyMutationError } from "@/app/utils/notifyMutationError";
 
 export const useSignInMutation = (): UseMutationResult<
   SignInResponseType,

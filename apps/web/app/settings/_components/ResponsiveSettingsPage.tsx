@@ -6,7 +6,7 @@ import { Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
 // import ProfileInfo from "./ProfileInfo";
-import { useAuthStore } from "@/src/stores/useAuthStore";
+import { useAuthStore } from "@/app/store/useAuthStore";
 import { notify } from "@/app/store/useToastStore";
 import ErrorResetBoundary from "@/components/common/ErrorResetBoundary";
 import ErrorFallback from "@/components/common/Fallback";

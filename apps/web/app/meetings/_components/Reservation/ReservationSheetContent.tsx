@@ -13,7 +13,7 @@ import {
   updateReservation,
   type CreateReservationRequest,
 } from "@/api/reservations";
-import { useAuthStore } from "@/src/stores/useAuthStore";
+import { useAuthStore } from "@/app/store/useAuthStore";
 import { useDateStore } from "@/app/store/useDateStore";
 import { MEETING_ROOMS_TYPE } from "@/app/constants/meetingRoomsType";
 import { formatDate } from "@/app/utils/formatDate";

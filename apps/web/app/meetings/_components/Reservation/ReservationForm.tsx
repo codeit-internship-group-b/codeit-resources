@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { format, parse, differenceInMinutes, addMinutes } from "date-fns";
 import { type TBaseItem, type IReservation } from "@repo/types";
 import { Button } from "@ui/index";
-import { useAuthStore } from "@/src/stores/useAuthStore";
+import { useAuthStore } from "@/app/store/useAuthStore";
 import { useDateStore } from "@/app/store/useDateStore";
 import { getAllItems } from "@/api/items";
 import { getReservationsByTypeAndDate, type CreateReservationRequest } from "@/api/reservations";
