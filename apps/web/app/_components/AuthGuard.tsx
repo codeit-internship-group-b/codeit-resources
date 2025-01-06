@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/src/stores/useAuthStore";
+import { useAuthStore } from "@/app/store/useAuthStore";
 import SignInForm from "./SignInForm";
 
 export default function AuthGuard(): JSX.Element | null {

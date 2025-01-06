@@ -3,7 +3,7 @@ import { useMutation, useQueryClient, type UseMutationResult } from "@tanstack/r
 import { type AxiosError } from "axios";
 import { patchUserImage, patchUserPassword } from "@/api/users";
 import { notify } from "@/app/store/useToastStore";
-import { notifyMutationError } from "@/src/utils/notifyMutationError";
+import { notifyMutationError } from "@/app/utils/notifyMutationError";
 import { QUERY_KEYS } from "@/lib/queryKey";
 
 export const useChangeUserPasswordMutation = (): UseMutationResult<

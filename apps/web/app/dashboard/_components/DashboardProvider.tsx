@@ -6,7 +6,7 @@ import { type IReservation } from "@repo/types";
 import { useRouter } from "next/navigation";
 import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
 import { getUserReservations } from "@/api/reservation";
-import { useAuthStore } from "@/src/stores/useAuthStore";
+import { useAuthStore } from "@/app/store/useAuthStore";
 import DashboardSection from "./DashboardSection";
 import DashboardSectionLoading from "./DashboardSectionLoading";
 

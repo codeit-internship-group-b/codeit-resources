@@ -11,11 +11,11 @@ import { type SeatStatus } from "@repo/types";
 import useIsMobileStore from "@/app/store/useIsMobileStore";
 import Sidebar from "@/components/common/Sidebar";
 import { useDateStore } from "@/app/store/useDateStore";
-import { useAuthStore } from "@/src/stores/useAuthStore";
-import { isSeat, isSeatReserved } from "@/src/utils/seats";
+import { useAuthStore } from "@/app/store/useAuthStore";
+import { isSeat, isSeatReserved } from "@/app/utils/seats";
 import { useSeatReservation } from "@/app/_hooks/useSeatReservation";
 import { notify } from "@/app/store/useToastStore";
-import { useSeatContext } from "../../../src/contexts/SeatContext";
+import { useSeatContext } from "../../context/SeatContext";
 import AdminSeatSetting from "./AdminSeatSetting";
 import SeatCancelIcon from "./SeatCancelIcon";
 
@@ -166,7 +166,7 @@ export default function SeatButton({
   }
 
   return (
-    <span className="relative group">
+    <span className="group relative">
       <button
         type="button"
         onClick={isAdmin ? handleAdminButtonClick : handleButtonClick}
