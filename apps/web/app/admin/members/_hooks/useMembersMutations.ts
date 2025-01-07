@@ -3,7 +3,7 @@ import axios, { type AxiosError } from "axios";
 import type { ResponseWithMessage } from "@repo/types/src/membersType";
 import { postMember, patchMember, deleteMember } from "@/api/members";
 import { notify } from "@/app/store/useToastStore";
-import { notifyMutationError } from "@/src/utils/notifyMutationError";
+import { notifyMutationError } from "@/app/utils/notifyMutationError";
 import { QUERY_KEYS } from "@/lib/queryKey";
 
 interface UpdateMemberParams {

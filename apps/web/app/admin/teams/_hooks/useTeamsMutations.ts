@@ -5,7 +5,7 @@ import { type ResponseType, type ITeam, type TeamType, type MessageResponse } fr
 import { useRef } from "react";
 import { deleteTeam, postCreateTeam, updateTeamName, updateTeamOrder } from "@/api/teams";
 import { notify } from "@/app/store/useToastStore";
-import { notifyMutationError } from "@/src/utils/notifyMutationError";
+import { notifyMutationError } from "@/app/utils/notifyMutationError";
 import { QUERY_KEYS } from "@/lib/queryKey";
 import { useDebouncedCallback } from "./useDebounceCallback";
 

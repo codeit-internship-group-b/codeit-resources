@@ -1,5 +1,5 @@
 import { type ModalComponentType, type SettingsModalProps } from "@ui/src/types/ModalType";
-import { useAuthStore } from "@/src/stores/useAuthStore";
+import { useAuthStore } from "@/app/store/useAuthStore";
 import ChangePasswordModal from "../_components/modals/ChangePasswordModal";
 import MembersSettingModal from "../_components/modals/MembersSettingModal";
 import TeamSettingModal from "../_components/modals/TeamSettingModal";
