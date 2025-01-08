@@ -2,6 +2,7 @@
   "extends": "@repo/typescript-config/nextjs.json",
   "include": [
     "svgr.d.ts",
+    "global.d.ts",
     "next-env.d.ts",
     "next.config.mjs",
     "**/*.ts",
