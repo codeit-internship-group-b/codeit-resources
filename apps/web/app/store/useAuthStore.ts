@@ -19,10 +19,24 @@ export const useAuthStore = create(
       login: (user: IUser, accessToken: string) => {
         set({ isLoggedIn: true, user });
         setCookie("accessToken", accessToken);
+
+        window.ReactNativeWebView.postMessage(
+          JSON.stringify({
+            type: "LOGIN_SUCCESS",
+            data: { user, accessToken },
+          }),
+        );
       },
       logout: () => {
         set({ isLoggedIn: false, user: null });
         deleteCookie("accessToken");
+
+        window.ReactNativeWebView.postMessage(
+          JSON.stringify({
+            type: "LOGIN_SUCCESS",
+            data: null,
+          }),
+        );
       },
     }),
     {
