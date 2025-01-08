@@ -39,7 +39,8 @@ export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element | null {
     [PAGE_NAME.ADMIN_SEATS]: PAGE_NAME.SEATS,
   };
 
-  const handleClick = () => {
+  const handleClick = (): void => {
+    // bridge 테스트용
     push(PAGE_NAME.DASHBOARD);
   };
 

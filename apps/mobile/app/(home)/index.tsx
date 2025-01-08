@@ -7,7 +7,7 @@ export default function HomeScreen() {
   const requestOnMessage = (e: WebViewMessageEvent) => {
     const nativeEvent = JSON.parse(e.nativeEvent.data);
 
-    if (nativeEvent.type === "ROUTER.EVENT") {
+    if (nativeEvent.type === "ROUTER_EVENT") {
       const { path } = nativeEvent;
       router.push(path);
     }
