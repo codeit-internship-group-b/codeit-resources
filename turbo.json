@@ -12,6 +12,8 @@
     "S3_BUCKET_NAME",
     "DEFAULT_PROFILE_IMAGE_URL",
     "NEXT_PUBLIC_API_URL",
+    "ANDROID_API_URL",
+    "DEV_SERVER_URL_ANDROID",
     "NODE_ENV"
   ],
   "tasks": {
