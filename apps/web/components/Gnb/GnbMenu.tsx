@@ -7,6 +7,7 @@ import { clsx } from "clsx";
 import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
 import cn from "@ui/src/utils/cn";
 import useIsMobileStore from "@/app/store/useIsMobileStore";
+import { useAppRouter } from "@/app/_hooks/useAppRouter";
 
 const NAV_ITEMS = [
   { href: PAGE_NAME.DASHBOARD, name: "대시보드", icon: PersonIcon },
@@ -31,10 +32,15 @@ interface GnbMenuProps {
 export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element | null {
   const pathname = usePathname();
   const isMobile = useIsMobileStore();
+  const { push } = useAppRouter();
 
   const adminPathMapping = {
     [PAGE_NAME.ADMIN_MEETINGS]: PAGE_NAME.MEETINGS,
     [PAGE_NAME.ADMIN_SEATS]: PAGE_NAME.SEATS,
+  };
+
+  const handleClick = () => {
+    push(PAGE_NAME.DASHBOARD);
   };
 
   return (
@@ -68,23 +74,25 @@ export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element | null {
       })}
 
       {isMobile ? (
-        <Link key={SETTINGS_ITEM.name} href={SETTINGS_ITEM.href}>
-          <div
-            className={clsx(
-              "rounded-10 flex size-full w-48 flex-col items-center md:w-full md:flex-row md:gap-10 md:px-16 md:py-8",
-              pathname === SETTINGS_ITEM.href ? "md:bg-gray-300" : "md:hover:bg-gray-300",
-            )}
-          >
-            <SettingsIcon
-              className={cn("fill-white/60", pathname === SETTINGS_ITEM.href ? "fill-white" : "fill-white/60")}
-            />
+        <button type="button" onClick={handleClick}>
+          <Link key={SETTINGS_ITEM.name} href={SETTINGS_ITEM.href}>
             <div
-              className={clsx("text-12 md:text-16", pathname === SETTINGS_ITEM.href ? "text-white" : "text-white/60")}
+              className={clsx(
+                "rounded-10 flex size-full w-48 flex-col items-center md:w-full md:flex-row md:gap-10 md:px-16 md:py-8",
+                pathname === SETTINGS_ITEM.href ? "md:bg-gray-300" : "md:hover:bg-gray-300",
+              )}
             >
-              {SETTINGS_ITEM.name}
+              <SettingsIcon
+                className={cn("fill-white/60", pathname === SETTINGS_ITEM.href ? "fill-white" : "fill-white/60")}
+              />
+              <div
+                className={clsx("text-12 md:text-16", pathname === SETTINGS_ITEM.href ? "text-white" : "text-white/60")}
+              >
+                {SETTINGS_ITEM.name}
+              </div>
             </div>
-          </div>
-        </Link>
+          </Link>
+        </button>
       ) : null}
 
       {isAdmin ? (

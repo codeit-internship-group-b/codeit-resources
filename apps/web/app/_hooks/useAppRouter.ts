@@ -1,4 +1,4 @@
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { sendRouterEvent } from "../utils/sendRouterEvent";
 import { useWebView } from "./useWebView";
 
@@ -18,7 +18,7 @@ export const useAppRouter = (): UseAppRouterResult => {
       return;
     }
 
-    void router.push(url);
+    router.push(url);
   };
 
   return { push };
