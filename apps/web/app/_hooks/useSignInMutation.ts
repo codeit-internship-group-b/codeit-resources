@@ -9,6 +9,7 @@ import { notify } from "@/app/store/useToastStore";
 import { postSignIn } from "@/api/auth";
 import { useAuthStore } from "@/app/store/useAuthStore";
 import { notifyMutationError } from "@/app/utils/notifyMutationError";
+import { useIsReactNativeWebview } from "./useIsReactNativeWebview";
 
 export const useSignInMutation = (): UseMutationResult<
   SignInResponseType,
@@ -18,6 +19,7 @@ export const useSignInMutation = (): UseMutationResult<
   const router = useRouter();
   const queryClient = useQueryClient();
   const { login } = useAuthStore();
+  const isReactNativeWebview = useIsReactNativeWebview();
 
   return useMutation({
     mutationFn: (payload: FieldValues) => postSignIn(payload),
@@ -26,9 +28,12 @@ export const useSignInMutation = (): UseMutationResult<
       login(user, accessToken);
       queryClient.setQueryData(["userResponse"], user);
       notify("success", message);
-      // 화면전환 1초 지연
-      await delay(1000);
-      router.replace(PAGE_NAME.DASHBOARD);
+
+      if (!isReactNativeWebview) {
+        // 화면전환 1초 지연
+        await delay(1000);
+        router.replace(PAGE_NAME.DASHBOARD);
+      }
     },
     onError: (error) => {
       notifyMutationError(error);
