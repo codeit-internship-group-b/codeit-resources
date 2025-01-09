@@ -9,7 +9,7 @@ import {
   SettingsModalContent,
   SettingsModalHeader,
 } from "@/components/SettingsModal";
-import { useCreateForm, useCreateTeam, useUpdateTeamName } from "@/app/admin/teams/_hooks/useTeamsMutations";
+import { useCreateForm, useCreateTeam, useUpdateTeamName } from "@/app/(admin)/teams/_hooks/useTeamsMutations";
 
 interface ManageTeamModalProps {
   isOpen: boolean;

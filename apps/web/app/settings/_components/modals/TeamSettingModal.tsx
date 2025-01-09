@@ -5,7 +5,7 @@ import {
   SettingsModalContent,
   SettingsModalHeader,
 } from "@/components/SettingsModal";
-import TeamList from "@/app/admin/teams/_components/TeamList";
+import TeamList from "@/app/(admin)/teams/_components/TeamList";
 import ManageTeamModal from "./ManageTeamModal";
 
 interface TeamSettingsModalProps {

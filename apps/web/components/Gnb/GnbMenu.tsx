@@ -19,9 +19,9 @@ const SETTINGS_ITEM = { href: PAGE_NAME.SETTINGS, name: "설정", icon: GearIcon
 const SettingsIcon = SETTINGS_ITEM.icon;
 
 const ADMIN_ITEMS = [
-  { href: PAGE_NAME.ADMIN_MEMBERS, name: "멤버 관리", icon: PersonIcon },
-  { href: PAGE_NAME.ADMIN_TEAMS, name: "팀 관리", icon: TeamIcon },
-  { href: PAGE_NAME.ADMIN_MEETINGS, name: "회의실 설정", icon: MeetingIcon },
+  { href: PAGE_NAME.MEMBERS, name: "멤버 관리", icon: PersonIcon },
+  { href: PAGE_NAME.TEAMS, name: "팀 관리", icon: TeamIcon },
+  { href: PAGE_NAME.ROOMS, name: "회의실 설정", icon: MeetingIcon },
   { href: PAGE_NAME.ADMIN_SEATS, name: "좌석 설정", icon: SeatsIcon },
 ];
 
@@ -34,11 +34,6 @@ export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element | null {
   const isMobile = useIsMobileStore();
   const { push } = useAppRouter();
 
-  const adminPathMapping = {
-    [PAGE_NAME.ADMIN_MEETINGS]: PAGE_NAME.MEETINGS,
-    [PAGE_NAME.ADMIN_SEATS]: PAGE_NAME.SEATS,
-  };
-
   const handleClick = (): void => {
     // bridge 테스트용
     push(PAGE_NAME.SETTINGS);
@@ -47,12 +42,7 @@ export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element | null {
   return (
     <menu className="md:w-168 flex w-full justify-around gap-12 p-16 md:flex-col md:p-0">
       {NAV_ITEMS.map(({ href, name, icon: Icon }) => {
-        const isActive = isMobile
-          ? pathname.includes(href) ||
-            Object.keys(adminPathMapping).some(
-              (adminPath) => pathname.startsWith(adminPath) && adminPathMapping[adminPath] === href,
-            )
-          : pathname === href;
+        const isActive = isMobile ? pathname.includes(href) : pathname === href;
 
         const iconClassName =
           Icon === GearIcon
@@ -75,8 +65,7 @@ export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element | null {
       })}
 
       {isMobile ? (
-        <button type="button" onClick={handleClick}>
-          {/* <Link key={SETTINGS_ITEM.name} href={SETTINGS_ITEM.href}> */}
+        <Link key={SETTINGS_ITEM.name} href={SETTINGS_ITEM.href}>
           <div
             className={clsx(
               "rounded-10 flex size-full w-48 flex-col items-center md:w-full md:flex-row md:gap-10 md:px-16 md:py-8",
@@ -92,8 +81,7 @@ export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element | null {
               {SETTINGS_ITEM.name}
             </div>
           </div>
-          {/* </Link> */}
-        </button>
+        </Link>
       ) : null}
 
       {isAdmin ? (

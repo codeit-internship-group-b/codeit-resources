@@ -1,4 +1,4 @@
-import ProfileImageUploader from "@/app/admin/members/_components/sidepanel/ProfileImageUploader";
+import ProfileImageUploader from "@/app/(admin)/members/_components/sidepanel/ProfileImageUploader";
 import { useSuspenseUserQuery } from "../_hooks/useUserQueries";
 import { useProfileImage } from "../_hooks/useProfileImage";
 import ProfileTeams from "./ProfileTeams";
