@@ -41,7 +41,7 @@ export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element | null {
 
   const handleClick = (): void => {
     // bridge 테스트용
-    push(PAGE_NAME.DASHBOARD);
+    push(PAGE_NAME.SETTINGS);
   };
 
   return (
@@ -76,23 +76,23 @@ export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element | null {
 
       {isMobile ? (
         <button type="button" onClick={handleClick}>
-          <Link key={SETTINGS_ITEM.name} href={SETTINGS_ITEM.href}>
+          {/* <Link key={SETTINGS_ITEM.name} href={SETTINGS_ITEM.href}> */}
+          <div
+            className={clsx(
+              "rounded-10 flex size-full w-48 flex-col items-center md:w-full md:flex-row md:gap-10 md:px-16 md:py-8",
+              pathname === SETTINGS_ITEM.href ? "md:bg-gray-300" : "md:hover:bg-gray-300",
+            )}
+          >
+            <SettingsIcon
+              className={cn("fill-white/60", pathname === SETTINGS_ITEM.href ? "fill-white" : "fill-white/60")}
+            />
             <div
-              className={clsx(
-                "rounded-10 flex size-full w-48 flex-col items-center md:w-full md:flex-row md:gap-10 md:px-16 md:py-8",
-                pathname === SETTINGS_ITEM.href ? "md:bg-gray-300" : "md:hover:bg-gray-300",
-              )}
+              className={clsx("text-12 md:text-16", pathname === SETTINGS_ITEM.href ? "text-white" : "text-white/60")}
             >
-              <SettingsIcon
-                className={cn("fill-white/60", pathname === SETTINGS_ITEM.href ? "fill-white" : "fill-white/60")}
-              />
-              <div
-                className={clsx("text-12 md:text-16", pathname === SETTINGS_ITEM.href ? "text-white" : "text-white/60")}
-              >
-                {SETTINGS_ITEM.name}
-              </div>
+              {SETTINGS_ITEM.name}
             </div>
-          </Link>
+          </div>
+          {/* </Link> */}
         </button>
       ) : null}
 

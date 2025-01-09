@@ -13,7 +13,7 @@ export const useAppRouter = (): UseAppRouterResult => {
   const push = (url: string): void => {
     if (isWebView) {
       sendRouterEvent({
-        path: `${process.env.NEXT_PUBLIC_BASE_URL}${url}`,
+        path: `http://10.0.2.2:3000${url}`,
       });
       return;
     }

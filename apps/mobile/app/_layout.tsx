@@ -19,19 +19,19 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
+    if (loaded) SplashScreen.hideAsync();
   }, [loaded]);
 
-  if (!loaded) {
-    return null;
-  }
+  if (!loaded) return null;
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(home)" options={{ headerShown: false, animation: "flip" }} />
+      <Stack initialRouteName="index">
+        <Stack.Screen name="index" options={{ headerShown: false, animation: "flip" }} />
+        <Stack.Screen name="(route)/dashboard" options={{ headerShown: false, animation: "flip" }} />
+        <Stack.Screen name="(route)/meetings" options={{ headerShown: false, animation: "flip" }} />
+        <Stack.Screen name="(route)/seats" options={{ headerShown: false, animation: "flip" }} />
+        <Stack.Screen name="(route)/settings" options={{ headerShown: false, animation: "flip" }} />
         <Stack.Screen name="+not-found" />
       </Stack>
     </ThemeProvider>
