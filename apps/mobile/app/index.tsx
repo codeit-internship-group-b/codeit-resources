@@ -1,5 +1,7 @@
+import { ROUTES } from "@/constants/routes";
 import { StackActions } from "@react-navigation/native";
-import { useNavigation } from "expo-router";
+import { Link, useNavigation } from "expo-router";
+import { View } from "react-native";
 import { WebView, WebViewMessageEvent } from "react-native-webview";
 
 export default function HomeScreen() {
@@ -16,12 +18,15 @@ export default function HomeScreen() {
   };
 
   return (
-    <WebView
-      className="flex-1"
-      source={{ uri: "http://10.0.2.2:3000" }}
-      onMessage={requestOnMessage}
-      javaScriptEnabled
-      domStorageEnabled
-    />
+    <View>
+      <Link href={{ pathname: ROUTES.DASHBOARD }}>하이</Link>
+      <WebView
+        className="flex-1"
+        source={{ uri: "http://10.0.2.2:3000" }}
+        onMessage={requestOnMessage}
+        javaScriptEnabled
+        domStorageEnabled
+      />
+    </View>
   );
 }

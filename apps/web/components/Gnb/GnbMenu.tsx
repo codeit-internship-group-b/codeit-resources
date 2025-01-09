@@ -6,17 +6,13 @@ import Link from "next/link";
 import { clsx } from "clsx";
 import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
 import cn from "@ui/src/utils/cn";
-import useIsMobileStore from "@/app/store/useIsMobileStore";
-import { useAppRouter } from "@/app/_hooks/useAppRouter";
 
 const NAV_ITEMS = [
   { href: PAGE_NAME.DASHBOARD, name: "대시보드", icon: PersonIcon },
   { href: PAGE_NAME.MEETINGS, name: "회의실", icon: MeetingIcon },
   { href: PAGE_NAME.SEATS, name: "좌석", icon: SeatsIcon },
+  { href: PAGE_NAME.SETTINGS, name: "설정", icon: GearIcon },
 ];
-
-const SETTINGS_ITEM = { href: PAGE_NAME.SETTINGS, name: "설정", icon: GearIcon };
-const SettingsIcon = SETTINGS_ITEM.icon;
 
 const ADMIN_ITEMS = [
   { href: PAGE_NAME.MEMBERS, name: "멤버 관리", icon: PersonIcon },
@@ -31,26 +27,17 @@ interface GnbMenuProps {
 
 export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element | null {
   const pathname = usePathname();
-  const isMobile = useIsMobileStore();
-  const { push } = useAppRouter();
-
-  const handleClick = (): void => {
-    // bridge 테스트용
-    push(PAGE_NAME.SETTINGS);
-  };
 
   return (
     <menu className="md:w-168 flex w-full justify-around gap-12 p-16 md:flex-col md:p-0">
-      {NAV_ITEMS.map(({ href, name, icon: Icon }) => {
-        const isActive = isMobile ? pathname.includes(href) : pathname === href;
-
+      {NAV_ITEMS.map(({ href, name, icon: Icon }, index) => {
+        const isActive = pathname === href;
         const iconClassName =
           Icon === GearIcon
             ? cn("fill-white/60", isActive ? "fill-white" : "fill-white/60")
             : cn("stroke-white/60", isActive ? "stroke-white" : "stroke-white/60");
-
         return (
-          <Link key={name} href={href}>
+          <Link className={cn(index === 3 && "block md:hidden")} key={name} href={href}>
             <div
               className={clsx(
                 "rounded-10 flex size-full w-48 flex-col items-center md:w-full md:flex-row md:gap-10 md:px-16 md:py-8",
@@ -64,32 +51,12 @@ export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element | null {
         );
       })}
 
-      {isMobile ? (
-        <Link key={SETTINGS_ITEM.name} href={SETTINGS_ITEM.href}>
-          <div
-            className={clsx(
-              "rounded-10 flex size-full w-48 flex-col items-center md:w-full md:flex-row md:gap-10 md:px-16 md:py-8",
-              pathname === SETTINGS_ITEM.href ? "md:bg-gray-300" : "md:hover:bg-gray-300",
-            )}
-          >
-            <SettingsIcon
-              className={cn("fill-white/60", pathname === SETTINGS_ITEM.href ? "fill-white" : "fill-white/60")}
-            />
-            <div
-              className={clsx("text-12 md:text-16", pathname === SETTINGS_ITEM.href ? "text-white" : "text-white/60")}
-            >
-              {SETTINGS_ITEM.name}
-            </div>
-          </div>
-        </Link>
-      ) : null}
-
       {isAdmin ? (
         <>
           <hr className="hidden border-white/10 pb-10 md:block" />
           <div className="text-sm-bold hidden px-16 pt-8 text-white/30 md:block">어드민 기능</div>
           {ADMIN_ITEMS.map(({ href, name, icon: Icon }) => {
-            const isActive = !isMobile && pathname.startsWith(href);
+            const isActive = pathname === href;
             return (
               <Link key={name} href={href} className="hidden md:block">
                 <div

@@ -1,16 +1,23 @@
-import { DarkTheme, DefaultTheme, ThemeProvider, NavigationIndependentTree } from "@react-navigation/native";
+import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
+import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { ROUTES } from "@/constants/routes";
 
-import "react-native-reanimated";
 import "@repo/ui/styles/globals.css";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
+
+const STACK_OPTIONS = {
+  DEFAULT: { headerShown: false },
+  DASHBOARD: { headerTitle: "내 회의" },
+  SETTINGS: { headerTitle: "세팅" },
+};
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -26,13 +33,13 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack initialRouteName="index">
-        <Stack.Screen name="index" options={{ headerShown: false, animation: "flip" }} />
-        <Stack.Screen name="(route)/dashboard" options={{ headerShown: false, animation: "flip" }} />
-        <Stack.Screen name="(route)/meetings" options={{ headerShown: false, animation: "flip" }} />
-        <Stack.Screen name="(route)/seats" options={{ headerShown: false, animation: "flip" }} />
-        <Stack.Screen name="(route)/settings" options={{ headerShown: false, animation: "flip" }} />
-        <Stack.Screen name="+not-found" />
+      <Stack initialRouteName={ROUTES.HOME} screenOptions={{ animation: "flip" }}>
+        <Stack.Screen name={ROUTES.HOME} options={STACK_OPTIONS.DEFAULT} />
+        <Stack.Screen name={ROUTES.DASHBOARD} options={STACK_OPTIONS.DEFAULT} />
+        <Stack.Screen name={ROUTES.MEETINGS} options={STACK_OPTIONS.DEFAULT} />
+        <Stack.Screen name={ROUTES.SEATS} options={STACK_OPTIONS.DEFAULT} />
+        <Stack.Screen name={ROUTES.SETTINGS} options={STACK_OPTIONS.SETTINGS} />
+        <Stack.Screen name={ROUTES.NOT_FOUND} />
       </Stack>
     </ThemeProvider>
   );
