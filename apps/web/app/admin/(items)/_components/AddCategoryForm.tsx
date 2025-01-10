@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { AxiosError } from "axios";
 import { postNewCategory } from "@/api/meetings";
 import { notify } from "@/app/store/useToastStore";
+import { QUERY_KEYS } from "@/lib/queryKey";
 
 export default function AddCategoryForm(): JSX.Element {
   const {
@@ -26,7 +27,7 @@ export default function AddCategoryForm(): JSX.Element {
     },
     onSuccess: () => {
       notify("success", "카테고리가 추가되었습니다!");
-      void queryClient.invalidateQueries({ queryKey: ["categories"] });
+      void queryClient.invalidateQueries({ queryKey: QUERY_KEYS.CATEGORIES });
       reset();
     },
     onError: (error) => {
