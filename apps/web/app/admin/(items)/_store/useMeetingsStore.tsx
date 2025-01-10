@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { type IRoom, type IEquipment, type ICategory } from "@repo/types";
+import { AxiosError } from "axios";
 import { postNewRoom, deleteRoom, patchRoom } from "@/api/meetings"; // API 요청 함수 예시
 import { notify } from "@/app/store/useToastStore";
 
@@ -63,8 +64,12 @@ const useMeetingsStore = create<MeetingsStore>((set) => ({
       set({ isLoading: false });
       return res;
     } catch (error) {
-      notify("error", "잘못된 요청입니다.");
-      throw new Error();
+      set({ isLoading: false });
+      if (error instanceof AxiosError && error.response) {
+        throw new Error(error.response.data.message);
+      } else {
+        throw new Error("An unknown error occurred");
+      }
     }
   },
   handleEditItem: async (data, itemId): Promise<IRoom | IEquipment | string> => {
@@ -74,8 +79,12 @@ const useMeetingsStore = create<MeetingsStore>((set) => ({
       set({ isLoading: false });
       return res;
     } catch (error) {
-      notify("error", "잘못된 요청입니다.");
-      throw new Error();
+      set({ isLoading: false });
+      if (error instanceof AxiosError && error.response) {
+        throw new Error(error.response.data.message);
+      } else {
+        throw new Error("An unknown error occurred");
+      }
     }
   },
   handleDeleteItem: async (itemId): Promise<void> => {

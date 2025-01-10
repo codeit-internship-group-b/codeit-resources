@@ -6,14 +6,13 @@ import Dropdown from "@ui/src/components/common/Dropdown";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { patchRoom, postNewRoom } from "@/api/meetings";
 import { useSidebarStore } from "@/app/store/useSidebarStore";
 import { notify } from "@/app/store/useToastStore";
 import useMeetingsStore from "../_store/useMeetingsStore";
 
 export default function EditItemForm(): JSX.Element {
   const { closeSidebar } = useSidebarStore();
-  const { panelState, currentItem, categories, currentCategory } = useMeetingsStore();
+  const { panelState, currentItem, categories, currentCategory, handleAddItem, handleEditItem } = useMeetingsStore();
   const [selectedCategory, setSelectedCategory] = useState<ICategory>();
   const queryClient = useQueryClient();
 
@@ -53,11 +52,11 @@ export default function EditItemForm(): JSX.Element {
   const mutation = useMutation({
     mutationFn: async (payload: Record<string, string>) => {
       if (panelState === "add") {
-        return await postNewRoom("room", payload);
+        return await handleAddItem(payload);
       }
 
       if (panelState === "edit" && currentItem) {
-        return await patchRoom(currentItem._id, payload);
+        return await handleEditItem(payload, currentItem._id);
       }
 
       throw new Error("Unknown panel state");
@@ -67,8 +66,8 @@ export default function EditItemForm(): JSX.Element {
       closeSidebar();
       await queryClient.invalidateQueries({ queryKey: ["rooms"] });
     },
-    onError: () => {
-      notify("error", "잘못된 요청입니다.");
+    onError: (error) => {
+      notify("error", error.message || "An unknown error occurred");
     },
   });
 
