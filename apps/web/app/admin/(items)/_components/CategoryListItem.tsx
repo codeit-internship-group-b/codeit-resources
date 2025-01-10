@@ -7,6 +7,7 @@ import { TriangleIcon } from "@ui/public";
 import { type ICategory, type IRoom } from "@repo/types";
 import { motion } from "framer-motion";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { input } from "framer-motion/client";
 import { useSidebarStore } from "@/app/store/useSidebarStore";
 import { deleteCategory, patchCategory } from "@/api/meetings";
 import { notify } from "@/app/store/useToastStore";
@@ -27,7 +28,7 @@ export default function CategoryListItem({ category, rooms }: CategoryListItemPr
   const [isOpen, setIsOpen] = useState(false);
 
   const [isModifyingCategoryName, setIsModifyingCategoryName] = useState(false);
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState(category.name);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const queryClient = useQueryClient();
@@ -101,7 +102,7 @@ export default function CategoryListItem({ category, rooms }: CategoryListItemPr
         <span className="flex flex-grow items-center gap-32 text-left">
           {isModifyingCategoryName ? (
             <input
-              defaultValue={category.name}
+              defaultValue={inputValue}
               ref={inputRef}
               placeholder="카테고리명"
               className="placeholder:text-custom-black/50 bg-gray-60 w-full placeholder:underline placeholder:underline-offset-4 focus:outline-none"
@@ -116,7 +117,7 @@ export default function CategoryListItem({ category, rooms }: CategoryListItemPr
               }}
             />
           ) : (
-            category.name
+            inputValue
           )}
         </span>
 
