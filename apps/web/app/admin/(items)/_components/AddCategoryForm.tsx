@@ -3,7 +3,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button, Input } from "@ui/index";
 import { useForm } from "react-hook-form";
-import { type AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { postNewCategory } from "@/api/meetings";
 import { notify } from "@/app/store/useToastStore";
 
@@ -24,16 +24,16 @@ export default function AddCategoryForm(): JSX.Element {
     mutationFn: async (payload: Record<string, string>) => {
       return await postNewCategory(payload);
     },
-    onSuccess: async () => {
+    onSuccess: () => {
       notify("success", "카테고리가 추가되었습니다!");
-      await queryClient.invalidateQueries({ queryKey: ["categories"] });
+      void queryClient.invalidateQueries({ queryKey: ["categories"] });
       reset();
     },
-    onError: (error: AxiosError) => {
-      if (error.response?.status === 409) {
-        notify("error", "이미 존재하는 카테고리입니다.");
+    onError: (error) => {
+      if (error instanceof AxiosError && error.response) {
+        notify("error", error.response.data.message);
       } else {
-        notify("error", "요청에 실패했습니다.");
+        notify("error", "알 수 없는 오류가 발생했습니다. 다시 시도해주세요.");
       }
     },
   });

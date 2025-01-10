@@ -68,7 +68,7 @@ const useMeetingsStore = create<MeetingsStore>((set) => ({
       if (error instanceof AxiosError && error.response) {
         throw new Error(error.response.data.message);
       } else {
-        throw new Error("An unknown error occurred");
+        throw new Error("알 수 없는 오류가 발생했습니다. 다시 시도해주세요.");
       }
     }
   },
@@ -83,7 +83,7 @@ const useMeetingsStore = create<MeetingsStore>((set) => ({
       if (error instanceof AxiosError && error.response) {
         throw new Error(error.response.data.message);
       } else {
-        throw new Error("An unknown error occurred");
+        throw new Error("알 수 없는 오류가 발생했습니다. 다시 시도해주세요.");
       }
     }
   },

@@ -67,7 +67,7 @@ export default function EditItemForm(): JSX.Element {
       await queryClient.invalidateQueries({ queryKey: ["rooms"] });
     },
     onError: (error) => {
-      notify("error", error.message || "An unknown error occurred");
+      notify("error", error.message || "알 수 없는 오류가 발생했습니다. 다시 시도해주세요.");
     },
   });
 
