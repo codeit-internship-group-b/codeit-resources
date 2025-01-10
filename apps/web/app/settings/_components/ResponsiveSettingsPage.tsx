@@ -10,6 +10,7 @@ import { useAuthStore } from "@/app/store/useAuthStore";
 import { notify } from "@/app/store/useToastStore";
 import ErrorResetBoundary from "@/components/common/ErrorResetBoundary";
 import ErrorFallback from "@/components/common/Fallback";
+import { usePostMessageToRN } from "@/app/_hooks/usePostMessageToRN";
 import SettingButtons from "./SettingButtons";
 import ChangePasswordForm from "./ChangePasswordForm";
 import ProfileInfoSkeleton from "./ProfileInfoSkeleton";
@@ -28,10 +29,15 @@ const ProfileInfo = dynamic(() => import("./ProfileInfo"), {
 export default function ResponsiveSettingsPage(): JSX.Element {
   const { logout } = useAuthStore();
   const router = useRouter();
+  const postMessageToRN = usePostMessageToRN();
 
   const handleLogout = (): void => {
     logout();
     notify("success", "로그아웃 되었습니다.");
+    postMessageToRN({
+      type: "LOGOUT_SUCCESS",
+      data: null,
+    });
     router.replace(PAGE_NAME.SIGN_IN);
   };
 

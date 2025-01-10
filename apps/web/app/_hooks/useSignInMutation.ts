@@ -10,6 +10,7 @@ import { postSignIn } from "@/api/auth";
 import { useAuthStore } from "@/app/store/useAuthStore";
 import { notifyMutationError } from "@/app/utils/notifyMutationError";
 import { useIsReactNativeWebview } from "./useIsReactNativeWebview";
+import { usePostMessageToRN } from "./usePostMessageToRN";
 
 export const useSignInMutation = (): UseMutationResult<
   SignInResponseType,
@@ -20,6 +21,7 @@ export const useSignInMutation = (): UseMutationResult<
   const queryClient = useQueryClient();
   const { login } = useAuthStore();
   const isReactNativeWebview = useIsReactNativeWebview();
+  const postMessageToRN = usePostMessageToRN();
 
   return useMutation({
     mutationFn: (payload: FieldValues) => postSignIn(payload),
@@ -28,6 +30,11 @@ export const useSignInMutation = (): UseMutationResult<
       login(user, accessToken);
       queryClient.setQueryData(["userResponse"], user);
       notify("success", message);
+
+      postMessageToRN({
+        type: "LOGIN_SUCCESS",
+        data: { user, accessToken },
+      });
 
       if (!isReactNativeWebview) {
         // 화면전환 1초 지연
