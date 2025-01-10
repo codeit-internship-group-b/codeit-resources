@@ -79,6 +79,14 @@ export default function EditItemForm(): JSX.Element {
     mutation.mutate(payload);
   });
 
+  const handleSelectCategory = (value: string | boolean): void => {
+    const selectedValue = categories.find((category) => category._id === value);
+    if (selectedValue) {
+      setSelectedCategory(selectedValue);
+      setValue("category", String(value));
+    }
+  };
+
   return (
     <form onSubmit={handleFormSubmit} className="flex h-full flex-col justify-between">
       <div>
@@ -100,13 +108,7 @@ export default function EditItemForm(): JSX.Element {
         <div className="mb-24">
           <Dropdown
             selectedValue={selectedCategory?.name ?? currentCategory?.name}
-            onSelect={(value) => {
-              const selectedValue = categories.find((category) => category._id === value);
-              if (selectedValue) {
-                setSelectedCategory(selectedValue);
-                setValue("category", String(value));
-              }
-            }}
+            onSelect={handleSelectCategory}
             isError={false}
             errorMessage="Error"
           >
