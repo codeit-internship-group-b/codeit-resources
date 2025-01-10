@@ -21,7 +21,7 @@ export default function AddCategoryForm(): JSX.Element {
   });
   const queryClient = useQueryClient();
 
-  const mutation = useMutation({
+  const { mutate: addCategory } = useMutation({
     mutationFn: async (payload: Record<string, string>) => {
       return await postNewCategory(payload);
     },
@@ -45,7 +45,7 @@ export default function AddCategoryForm(): JSX.Element {
       itemType: "room",
     };
 
-    mutation.mutate(payload);
+    addCategory(payload);
   });
 
   return (
