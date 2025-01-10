@@ -1,9 +1,12 @@
+"use client";
+
 import { useState, useEffect, type ChangeEvent } from "react";
 import Image from "next/image";
 import DefaultProfileImage from "@ui/public/images/image_default_profile.png";
 import { type ImageFileType, type DisplayImageType, type FormImageType } from "@repo/types/src/membersType";
 import { MEMBER_FORM_MESSAGES } from "@repo/constants/messages";
 import { IMAGE_CONFIG } from "@repo/constants";
+import cn from "@ui/src/utils/cn";
 
 interface ProfileImageUploaderProps {
   currentImage: FormImageType;
@@ -64,7 +67,10 @@ export default function ProfileImageUploader({
         placeholder="blur"
         blurDataURL={IMAGE_CONFIG.BLUR_DATA_URL}
         onError={handleError}
-        className={`rounded-full object-cover ${size === "sm" ? "size-72" : "size-120"}`}
+        className={cn("rounded-full object-cover", {
+          "size-72": size === "sm",
+          "size-120": size !== "sm",
+        })}
       />
       <label
         htmlFor="profileImage"

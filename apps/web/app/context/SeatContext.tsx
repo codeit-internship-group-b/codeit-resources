@@ -1,11 +1,10 @@
-/* eslint-disable @tanstack/query/exhaustive-deps */
 "use client";
 
 import { createContext, useContext, useState, type ReactNode, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { type IReservation } from "@repo/types";
 import { getUserReservations } from "@/api/reservation";
-import { useAuthStore } from "../stores/useAuthStore";
+import { useAuthStore } from "../store/useAuthStore";
 
 interface SeatContextType {
   checkedSeat: string | null;

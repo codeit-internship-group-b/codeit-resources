@@ -1,36 +1,25 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
-import useIsMobileStore from "@/app/store/useIsMobileStore";
+import { Suspense } from "react";
+import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
+import { useRedirectOnMobile } from "@/app/_hooks/useRediectOnMobile";
+import ErrorResetBoundary from "@/components/common/ErrorResetBoundary";
+import ErrorFallback from "@/components/common/Fallback";
 import TeamListHeader from "./TeamListHeader";
 import TeamListSkeletonGroup from "./skeleton/TeamListSkeletonGroup";
 import TeamList from "./TeamList";
-import TeamSettingsModal from "./TeamSettingsModal";
 
 export default function ResponsiveTeamsPage(): JSX.Element | null {
-  const isMobile = useIsMobileStore();
-  const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    if (isMobile) setIsOpen(true);
-    else setIsOpen(false);
-  }, [isMobile]);
-
-  // TODO : 모달 닫으면 settings 페이지로 이동?
+  useRedirectOnMobile(PAGE_NAME.SETTINGS);
 
   return (
     <>
       <TeamListHeader />
-      <Suspense fallback={<TeamListSkeletonGroup />}>
-        <TeamList />
-      </Suspense>
-
-      <TeamSettingsModal
-        isOpen={isOpen}
-        onClose={() => {
-          setIsOpen(false);
-        }}
-      />
+      <ErrorResetBoundary fallbackComponent={ErrorFallback}>
+        <Suspense fallback={<TeamListSkeletonGroup />}>
+          <TeamList />
+        </Suspense>
+      </ErrorResetBoundary>
     </>
   );
 }

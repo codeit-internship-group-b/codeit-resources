@@ -18,7 +18,7 @@ export default function ChangePasswordForm(): JSX.Element {
 
   return (
     <form className="flex flex-col gap-16" onSubmit={(...rest) => void handleSubmit(onSubmit)(...rest)}>
-      <h1 className="text-2xl-bold border-b-1 hidden border-[#E8E8EA] py-8 md:block">비밀번호 변경</h1>
+      <h2 className="text-2xl-bold border-b-1 hidden border-[#E8E8EA] py-8 md:block">비밀번호 변경</h2>
       <div>
         <Input
           type="password"

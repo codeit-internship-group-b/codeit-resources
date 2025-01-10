@@ -32,7 +32,7 @@ function Profile({ src, name, className, textColor = "white" }: ProfileProps): J
         src={src}
         width={32}
         height={32}
-        style={{ borderRadius: 9999 }}
+        className="h-32 w-32 rounded-full object-cover"
         onError={() => {
           setIsError(true);
         }}

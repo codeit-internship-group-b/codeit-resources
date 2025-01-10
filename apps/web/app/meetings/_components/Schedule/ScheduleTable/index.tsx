@@ -1,18 +1,22 @@
 "use client";
 
-import { type ScheduleDate } from "@/app/types/scheduletypes";
+import { type TBaseItem, type IReservation } from "@repo/types";
 import ScheduleTableMobile from "./ScheduleTableMobile";
 import ScheduleTableDesktop from "./ScheduleTableDesktop";
 
-type ScheduleTableProps = ScheduleDate;
+interface ScheduleTableProps {
+  rooms: TBaseItem[];
+  meetingsData: IReservation[];
+  selectedDate: string;
+}
 
 export default function ScheduleTable(props: ScheduleTableProps): JSX.Element {
-  const { rooms, selectedDate } = props;
+  const { rooms, meetingsData, selectedDate } = props;
 
   return (
     <div className="overflow-hidden">
-      <ScheduleTableMobile rooms={rooms} selectedDate={selectedDate} />
-      <ScheduleTableDesktop rooms={rooms} selectedDate={selectedDate} />
+      <ScheduleTableMobile rooms={rooms} meetingsData={meetingsData} selectedDate={selectedDate} />
+      <ScheduleTableDesktop rooms={rooms} meetingsData={meetingsData} selectedDate={selectedDate} />
     </div>
   );
 }

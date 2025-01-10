@@ -8,7 +8,7 @@ import { formatSelectedDate } from "@ui/src/utils/date";
 import { useDateStore } from "@/app/store/useDateStore";
 import { getAllSeats } from "@/api/items";
 import { getReservedSeats } from "@/api/reservation";
-import { SeatProvider } from "../../../src/contexts/SeatContext";
+import { SeatProvider } from "../../context/SeatContext";
 import SeatBlock from "./SeatBlock";
 
 export default function SeatGrid(): JSX.Element {

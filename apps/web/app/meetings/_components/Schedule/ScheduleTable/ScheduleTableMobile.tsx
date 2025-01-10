@@ -1,31 +1,51 @@
 "use client";
 
-import { type ScheduleDate } from "@/app/types/scheduletypes";
+import { type TBaseItem } from "@repo/types";
+import { type IReservation } from "@repo/types/src/reservationType";
 import RoomName from "../RoomName";
 import ScheduleRow from "../ScheduleRow";
 import TimeText from "../ScheduleRow/TimeText";
 
-type ScheduleTableMobileProps = ScheduleDate;
+interface ScheduleTableMobileProps {
+  rooms: TBaseItem[];
+  meetingsData: IReservation[];
+  selectedDate: string;
+}
 
 export default function ScheduleTableMobile(props: ScheduleTableMobileProps): JSX.Element {
-  const { rooms, selectedDate } = props;
+  const { rooms, meetingsData, selectedDate } = props;
 
   return (
     <div className="mx-16 my-24 block w-full md:hidden">
-      {rooms.map((room) => (
-        <div key={room.id} className="mb-26">
-          <RoomName name={room.title} />
-          <div className="mt-30 no-scrollbar overflow-x-auto pb-20">
-            <TimeText />
-            <div className="ml-36 mt-8">
-              <ScheduleRow
-                schedules={room.schedules.filter((schedule) => schedule.date === selectedDate)}
-                room={room.title}
-              />
+      {rooms.map((room) => {
+        const roomSchedules = meetingsData.filter((schedule) => {
+          const scheduleItemId = typeof schedule.item === "string" ? schedule.item : schedule.item._id;
+
+          const isSameRoom = scheduleItemId === room._id;
+
+          const scheduleDate = new Date(schedule.startAt).toLocaleDateString("en-CA", { timeZone: "Asia/Seoul" });
+          const isSameDate = scheduleDate === selectedDate;
+
+          return isSameRoom && isSameDate;
+        });
+
+        return (
+          <div key={room._id} className="mb-26">
+            <RoomName>{room.name}</RoomName>
+            <div className="mt-30 no-scrollbar overflow-x-auto pb-20">
+              <TimeText />
+              <div className="ml-36 mt-8">
+                <ScheduleRow
+                  schedules={roomSchedules}
+                  room={{ name: room.name, _id: room._id }} // name과 _id를 함께 전달
+                  slotWidth={72}
+                  slotHeight={80}
+                />
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

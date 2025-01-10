@@ -1,27 +1,36 @@
 "use client";
 
 import AlertModal from "@ui/src/components/common/ConditionalActionModal/AlertModal";
-import { notify } from "@/app/store/useToastStore";
+import { type ReactNode } from "react";
 
 interface ReservationModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
+  title: string; // 추가
+  content: ReactNode; // 추가
+  cancelButtonName: string; // 추가
+  confirmButtonName: string; // 추가
 }
 
-export default function ReservationModal({ isOpen, onClose, onConfirm }: ReservationModalProps): JSX.Element {
+export default function ReservationModal({
+  isOpen,
+  onClose,
+  onConfirm,
+  title,
+  content,
+  cancelButtonName,
+  confirmButtonName,
+}: ReservationModalProps): JSX.Element {
   return (
     <AlertModal
       isOpen={isOpen}
       onClose={onClose}
-      onConfirm={() => {
-        onConfirm();
-        notify("success", "회의실이 예약되었습니다!");
-      }}
-      title="회의실을 예약하시겠어요?"
-      content={<>선택한 시간대의 회의실이 예약됩니다.</>}
-      cancelButtonName="취소하기"
-      confirmButtonName="예약하기"
+      onConfirm={onConfirm}
+      title={title}
+      content={content}
+      cancelButtonName={cancelButtonName}
+      confirmButtonName={confirmButtonName}
     />
   );
 }

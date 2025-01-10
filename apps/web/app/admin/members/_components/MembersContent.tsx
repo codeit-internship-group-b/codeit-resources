@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { Button } from "@ui/index";
 import { type MemberWithStaticImage, type SortOption } from "@repo/types/src/membersType";
 import { useLockBodyScroll } from "@ui/src/hooks/useLockBodyScroll";
@@ -11,6 +11,7 @@ import Header from "./Header";
 import Navbar from "./Navbar";
 import MemberList from "./MemberList";
 import SidePanel from "./sidepanel";
+import MemberListSkeleton from "./skeleton/MemberListSkeleton";
 
 export default function MembersContent(): JSX.Element {
   const [activeTab, setActiveTab] = useState("전체");
@@ -52,12 +53,14 @@ export default function MembersContent(): JSX.Element {
       </div>
 
       <div className="no-scrollbar overflow-y-auto">
-        <MemberList
-          selectedSort={selectedSort}
-          activeTab={activeTab}
-          onMemberClick={handleMemberClick}
-          keyword={keyword}
-        />
+        <Suspense fallback={<MemberListSkeleton />}>
+          <MemberList
+            selectedSort={selectedSort}
+            activeTab={activeTab}
+            onMemberClick={handleMemberClick}
+            keyword={keyword}
+          />
+        </Suspense>
       </div>
 
       <div className="fixed bottom-0 left-0 right-0 z-10 mx-16 mb-32 bg-white shadow-[0px_4px_12px_0px_rgba(0,0,0,0.2)] md:hidden">
