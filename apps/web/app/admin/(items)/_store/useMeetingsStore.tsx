@@ -88,10 +88,13 @@ const useMeetingsStore = create<MeetingsStore>((set) => ({
     }
   },
   handleDeleteItem: async (itemId): Promise<void> => {
+    set({ isLoading: true, error: null });
     try {
       await deleteRoom(itemId);
+      set({ isLoading: false });
       notify("success", "삭제되었습니다.");
     } catch (error) {
+      set({ isLoading: false });
       notify("error", "삭제 실패");
     }
   },
