@@ -58,8 +58,6 @@ export default function EditItemForm(): JSX.Element {
       if (panelState === "edit" && currentItem) {
         return await handleEditItem(payload, currentItem._id);
       }
-
-      throw new Error("Unknown panel state");
     },
     onSuccess: async () => {
       notify("success", panelState === "add" ? "등록완료!" : "수정완료!");
