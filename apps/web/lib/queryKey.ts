@@ -10,4 +10,5 @@ export const QUERY_KEYS = {
   },
   USER: ["user"],
   CATEGORIES: ["categories"],
+  ROOMS: ["rooms"],
 };

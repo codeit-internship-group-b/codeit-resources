@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSidebarStore } from "@/app/store/useSidebarStore";
 import { notify } from "@/app/store/useToastStore";
+import { QUERY_KEYS } from "@/lib/queryKey";
 import useMeetingsStore from "../_store/useMeetingsStore";
 
 export default function EditItemForm(): JSX.Element {
@@ -49,7 +50,7 @@ export default function EditItemForm(): JSX.Element {
     }
   }, [panelState, currentItem, currentCategory, reset]);
 
-  const mutation = useMutation({
+  const { mutate: EditItem } = useMutation({
     mutationFn: async (payload: Record<string, string>) => {
       if (panelState === "add") {
         return await handleAddItem(payload);
@@ -59,10 +60,10 @@ export default function EditItemForm(): JSX.Element {
         return await handleEditItem(payload, currentItem._id);
       }
     },
-    onSuccess: async () => {
+    onSuccess: () => {
       notify("success", panelState === "add" ? "등록완료!" : "수정완료!");
       closeSidebar();
-      await queryClient.invalidateQueries({ queryKey: ["rooms"] });
+      void queryClient.invalidateQueries({ queryKey: QUERY_KEYS.ROOMS });
     },
     onError: (error) => {
       notify("error", error.message || "알 수 없는 오류가 발생했습니다. 다시 시도해주세요.");
@@ -76,7 +77,7 @@ export default function EditItemForm(): JSX.Element {
       capacity: String(data.capacity),
     };
 
-    mutation.mutate(payload);
+    EditItem(payload);
   });
 
   const handleSelectCategory = (value: string | boolean): void => {
