@@ -32,7 +32,7 @@ export default function AddCategoryForm(): JSX.Element {
     },
     onError: (error) => {
       if (error instanceof AxiosError && error.response) {
-        notify("error", error.response.data.message);
+        notify("error", String(error.response.data.message));
       } else {
         notify("error", "알 수 없는 오류가 발생했습니다. 다시 시도해주세요.");
       }

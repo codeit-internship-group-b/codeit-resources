@@ -7,6 +7,7 @@ import { TriangleIcon } from "@ui/public";
 import { type ICategory, type IRoom } from "@repo/types";
 import { motion } from "framer-motion";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { useSidebarStore } from "@/app/store/useSidebarStore";
 import { deleteCategory, patchCategory } from "@/api/meetings";
 import { notify } from "@/app/store/useToastStore";
@@ -65,12 +66,16 @@ export default function CategoryListItem({ category, rooms }: CategoryListItemPr
       notify("success", "카테고리가 삭제되었습니다.");
       await queryClient.invalidateQueries({ queryKey: ["categories"] });
     },
-    onError: () => {
-      notify("error", "삭제에 실패했습니다. 다시 시도해주세요.");
+    onError: (error) => {
+      if (error instanceof AxiosError && error.response) {
+        notify("error", String(error.response.data.message));
+      } else {
+        notify("error", "알 수 없는 오류가 발생했습니다. 다시 시도해주세요.");
+      }
     },
   });
 
-  const handleDeleteCategory = (categoryId: string) => {
+  const handleDeleteCategory = (categoryId: string): void => {
     deleteMutation.mutate(categoryId);
   };
 
@@ -82,8 +87,12 @@ export default function CategoryListItem({ category, rooms }: CategoryListItemPr
       notify("success", "카테고리가 수정되었습니다.");
       await queryClient.invalidateQueries({ queryKey: ["categories"] });
     },
-    onError: () => {
-      notify("error", "수정에 실패했습니다. 다시 시도해주세요.");
+    onError: (error) => {
+      if (error instanceof AxiosError && error.response) {
+        notify("error", String(error.response.data.message));
+      } else {
+        notify("error", "알 수 없는 오류가 발생했습니다. 다시 시도해주세요.");
+      }
     },
   });
 
