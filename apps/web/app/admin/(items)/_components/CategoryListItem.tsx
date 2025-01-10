@@ -11,6 +11,7 @@ import { AxiosError } from "axios";
 import { useSidebarStore } from "@/app/store/useSidebarStore";
 import { deleteCategory, patchCategory } from "@/api/meetings";
 import { notify } from "@/app/store/useToastStore";
+import { QUERY_KEYS } from "@/lib/queryKey";
 import useMeetingsStore from "../_store/useMeetingsStore";
 import AddItemButton from "./AddItemButton";
 import CategoryListSubItem from "./CategoryListSubItem";
@@ -59,12 +60,12 @@ export default function CategoryListItem({ category, rooms }: CategoryListItemPr
   };
 
   const { mutate: deleteMutation } = useMutation({
-    mutationFn: async (categoryId: string) => {
-      return await deleteCategory(categoryId);
+    mutationFn: (categoryId: string) => {
+      return deleteCategory(categoryId);
     },
-    onSuccess: async () => {
+    onSuccess: () => {
       notify("success", "카테고리가 삭제되었습니다.");
-      await queryClient.invalidateQueries({ queryKey: ["categories"] });
+      void queryClient.invalidateQueries({ queryKey: QUERY_KEYS.CATEGORIES });
     },
     onError: (error) => {
       if (error instanceof AxiosError && error.response) {
@@ -80,12 +81,12 @@ export default function CategoryListItem({ category, rooms }: CategoryListItemPr
   };
 
   const { mutate: updateMutation } = useMutation({
-    mutationFn: async (payload: Record<string, string>) => {
-      return await patchCategory(category._id, payload);
+    mutationFn: (payload: Record<string, string>) => {
+      return patchCategory(category._id, payload);
     },
-    onSuccess: async () => {
+    onSuccess: () => {
       notify("success", "카테고리가 수정되었습니다.");
-      await queryClient.invalidateQueries({ queryKey: ["categories"] });
+      void queryClient.invalidateQueries({ queryKey: QUERY_KEYS.CATEGORIES });
     },
     onError: (error) => {
       if (error instanceof AxiosError && error.response) {
