@@ -55,7 +55,6 @@ export default function AddCategoryForm(): JSX.Element {
         <Input
           placeholder="카테고리명"
           {...register("name", { required: true })}
-          name="name"
           error={errors.name}
           disabled={isSubmitting}
         />

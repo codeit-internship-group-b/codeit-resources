@@ -103,8 +103,8 @@ export default function EditItemForm(): JSX.Element {
             <Radio.Option value="unavailable">사용 불가</Radio.Option>
           </Radio.Group>
         </div>
-        <Input {...register("name", { required: true })} name="name" placeholder="회의실 이름" type="text" />
-        <Input {...register("description")} name="description" placeholder="설명" type="text" />
+        <Input {...register("name", { required: true })} placeholder="회의실 이름" type="text" />
+        <Input {...register("description")} placeholder="설명" type="text" />
         <div className="mb-24">
           <Dropdown
             selectedValue={selectedCategory?.name ?? currentCategory?.name}
@@ -124,8 +124,8 @@ export default function EditItemForm(): JSX.Element {
             </Dropdown.Wrapper>
           </Dropdown>
         </div>
-        <Input {...register("capacity")} name="capacity" placeholder="수용인원" type="text" />
-        <Input {...register("location")} name="location" placeholder="위치" type="text" />
+        <Input {...register("capacity")} placeholder="수용인원" type="text" />
+        <Input {...register("location")} placeholder="위치" type="text" />
       </div>
       <Button type="submit" variant="Action">
         회의실 {panelState === "add" ? "추가" : "수정"}
