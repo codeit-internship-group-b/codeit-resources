@@ -55,10 +55,10 @@ export default function CategoryListItem({ category, rooms }: CategoryListItemPr
   };
 
   const toggleListItem = (): void => {
-    setIsOpen(!isOpen);
+    setIsOpen((prev) => !prev);
   };
 
-  const deleteMutation = useMutation({
+  const { mutate: deleteMutation } = useMutation({
     mutationFn: async (categoryId: string) => {
       return await deleteCategory(categoryId);
     },
@@ -76,10 +76,10 @@ export default function CategoryListItem({ category, rooms }: CategoryListItemPr
   });
 
   const handleDeleteCategory = (categoryId: string): void => {
-    deleteMutation.mutate(categoryId);
+    deleteMutation(categoryId);
   };
 
-  const updateMutation = useMutation({
+  const { mutate: updateMutation } = useMutation({
     mutationFn: async (payload: Record<string, string>) => {
       return await patchCategory(category._id, payload);
     },
@@ -109,7 +109,7 @@ export default function CategoryListItem({ category, rooms }: CategoryListItemPr
       name: inputValue,
     };
 
-    updateMutation.mutate(payload);
+    updateMutation(payload);
   };
 
   return (
