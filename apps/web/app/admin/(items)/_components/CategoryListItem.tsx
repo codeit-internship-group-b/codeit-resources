@@ -7,7 +7,6 @@ import { TriangleIcon } from "@ui/public";
 import { type ICategory, type IRoom } from "@repo/types";
 import { motion } from "framer-motion";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { input } from "framer-motion/client";
 import { useSidebarStore } from "@/app/store/useSidebarStore";
 import { deleteCategory, patchCategory } from "@/api/meetings";
 import { notify } from "@/app/store/useToastStore";
@@ -89,6 +88,14 @@ export default function CategoryListItem({ category, rooms }: CategoryListItemPr
   });
 
   const handleUpdateCategory = (): void => {
+    if (!inputValue.trim()) {
+      notify("error", "카테고리명을 입력해주세요.");
+      return;
+    }
+    if (inputValue.trim() === category.name) {
+      setIsModifyingCategoryName(false);
+      return;
+    }
     const payload = {
       name: inputValue,
     };
