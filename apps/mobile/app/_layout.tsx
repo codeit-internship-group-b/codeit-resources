@@ -27,8 +27,6 @@ export default function RootLayout() {
 
   if (!loaded) return null;
 
-  console.log(pathname);
-
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Stack screenOptions={{ headerShown: false, animation: "default" }}>
