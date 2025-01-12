@@ -6,7 +6,9 @@ import Link from "next/link";
 import { clsx } from "clsx";
 import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
 import cn from "@ui/src/utils/cn";
+import { Button } from "@ui/index";
 import { useAppRouter } from "@/app/_hooks/useAppRouter";
+import { useWebView } from "@/app/_hooks/useWebView";
 
 const NAV_ITEMS = [
   { href: PAGE_NAME.DASHBOARD, name: "대시보드", icon: PersonIcon },
@@ -29,8 +31,9 @@ interface GnbMenuProps {
 export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element | null {
   const pathname = usePathname();
   const { push } = useAppRouter();
+  const { isWebView } = useWebView();
 
-  const handleClick = (path: string): void => {
+  const handleButtonClick = (path: string): void => {
     push(path);
   };
 
@@ -43,25 +46,32 @@ export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element | null {
             ? cn("fill-white/60", isActive ? "fill-white" : "fill-white/60")
             : cn("stroke-white/60", isActive ? "stroke-white" : "stroke-white/60");
         return (
-          <button
+          <Button
             key={name}
-            type="button"
-            onClick={() => {
-              handleClick(href);
-            }}
+            as={isWebView ? "button" : Link}
+            {...(isWebView
+              ? {
+                  type: "button",
+                  onClick: () => {
+                    handleButtonClick(href);
+                  },
+                }
+              : {
+                  href,
+                })}
+            className={cn("h-full justify-start md:h-40 md:w-full md:px-0 md:py-0", index === 3 && "block md:hidden")}
+            variant="Text"
           >
-            <Link className={cn(index === 3 && "block md:hidden")} key={name} href={href}>
-              <div
-                className={clsx(
-                  "rounded-10 flex size-full w-48 flex-col items-center md:w-full md:flex-row md:gap-10 md:px-16 md:py-8",
-                  isActive ? "md:bg-gray-300" : "md:hover:bg-gray-300",
-                )}
-              >
-                <Icon className={iconClassName} />
-                <div className={clsx("text-12 md:text-16", isActive ? "text-white" : "text-white/60")}>{name}</div>
-              </div>
-            </Link>
-          </button>
+            <div
+              className={clsx(
+                "rounded-10 md:w-168 flex w-48 flex-col items-center md:flex-row md:gap-10 md:px-16 md:py-8",
+                isActive ? "md:bg-gray-300" : "md:hover:bg-gray-300",
+              )}
+            >
+              <Icon className={iconClassName} />
+              <div className={clsx("text-12 md:text-16", isActive ? "text-white" : "text-white/60")}>{name}</div>
+            </div>
+          </Button>
         );
       })}
 
