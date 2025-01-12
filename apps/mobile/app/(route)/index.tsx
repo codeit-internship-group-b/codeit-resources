@@ -1,11 +1,13 @@
 import { StackActions } from "@react-navigation/native";
-import { useNavigation } from "expo-router";
-import WebView, { WebViewMessageEvent } from "react-native-webview";
+import { useNavigation, usePathname } from "expo-router";
+import { WebView, WebViewMessageEvent } from "react-native-webview";
 
-import { DIR_NAME, ROUTES } from "@/constants/routes";
+import { DIR_NAME } from "@/constants/routes";
 import { getBaseUrl } from "@/utils/getBaseUrl";
 
-export default function DashboardScreen() {
+export default function HomeScreen() {
+  // TODO : login상태에 따른 분기 처리 설정
+
   const baseUrl = getBaseUrl();
   const navigation = useNavigation();
 
@@ -15,9 +17,11 @@ export default function DashboardScreen() {
     if (nativeEvent.type === "ROUTER_EVENT") {
       const { path } = nativeEvent;
       const pushAction = StackActions.push(`${DIR_NAME}${path}`, { url: path, isStack: true });
+
+      console.log(path);
       navigation.dispatch(pushAction);
     }
   };
 
-  return <WebView className="flex-1" source={{ uri: `${baseUrl}${ROUTES.DASHBOARD}` }} onMessage={requestOnMessage} />;
+  return <WebView className="flex-1" source={{ uri: `${baseUrl}` }} onMessage={requestOnMessage} />;
 }

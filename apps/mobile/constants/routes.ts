@@ -1,10 +1,10 @@
-const dirName = "(route)";
+export const DIR_NAME = "(route)";
 
 export const ROUTES = {
   HOME: "/index",
-  DASHBOARD: `/${dirName}/dashboard`,
-  MEETINGS: `/${dirName}/meetings`,
-  SEATS: `/${dirName}/seats`,
-  SETTINGS: `/${dirName}/settings`,
-  NOT_FOUND: "/+not-found",
+  DASHBOARD: "/dashboard",
+  MEETINGS: "/meetings",
+  SEATS: "/seats",
+  SETTINGS: "/settings",
+  NOT_FOUND: "+not-found",
 };

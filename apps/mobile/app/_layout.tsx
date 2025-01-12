@@ -1,26 +1,22 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { Stack, usePathname } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
 
+import { DIR_NAME, ROUTES } from "@/constants/routes";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { ROUTES } from "@/constants/routes";
 
 import "@repo/ui/styles/globals.css";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-const STACK_OPTIONS = {
-  DEFAULT: { headerShown: false },
-  DASHBOARD: { headerTitle: "내 회의" },
-  SETTINGS: { headerTitle: "세팅" },
-};
-
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+  const pathname = usePathname();
+
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
@@ -31,14 +27,16 @@ export default function RootLayout() {
 
   if (!loaded) return null;
 
+  console.log(pathname);
+
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack initialRouteName={ROUTES.HOME} screenOptions={{ animation: "flip" }}>
-        <Stack.Screen name={ROUTES.HOME} options={STACK_OPTIONS.DEFAULT} />
-        <Stack.Screen name={ROUTES.DASHBOARD} options={STACK_OPTIONS.DEFAULT} />
-        <Stack.Screen name={ROUTES.MEETINGS} options={STACK_OPTIONS.DEFAULT} />
-        <Stack.Screen name={ROUTES.SEATS} options={STACK_OPTIONS.DEFAULT} />
-        <Stack.Screen name={ROUTES.SETTINGS} options={STACK_OPTIONS.SETTINGS} />
+      <Stack screenOptions={{ headerShown: false, animation: "default" }}>
+        <Stack.Screen name={`${DIR_NAME}${ROUTES.HOME}`} />
+        <Stack.Screen name={`${DIR_NAME}${ROUTES.DASHBOARD}`} />
+        <Stack.Screen name={`${DIR_NAME}${ROUTES.MEETINGS}`} />
+        <Stack.Screen name={`${DIR_NAME}${ROUTES.SEATS}`} />
+        <Stack.Screen name={`${DIR_NAME}${ROUTES.SETTINGS}`} />
         <Stack.Screen name={ROUTES.NOT_FOUND} />
       </Stack>
     </ThemeProvider>

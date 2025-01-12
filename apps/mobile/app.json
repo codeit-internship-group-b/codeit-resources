@@ -20,7 +20,8 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.bokeeeey.codeitresources"
+      "bundleIdentifier": "com.bokeeeey.codeitresources",
+      "newArchEnabled": true
     },
     "android": {
       "adaptiveIcon": {

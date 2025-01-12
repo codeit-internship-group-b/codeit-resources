@@ -13,7 +13,7 @@ export const useAppRouter = (): UseAppRouterResult => {
   const push = (url: string): void => {
     if (isWebView) {
       sendRouterEvent({
-        path: `http://10.0.2.2:3000${url}`,
+        path: url,
       });
       return;
     }
