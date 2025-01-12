@@ -6,7 +6,8 @@
     "paths": {
       "@/*": ["./*"],
       "@ui/*": ["../../packages/ui/*"],
-      "@/public/*": ["./public/*"]
+      "@/public/*": ["./public/*"],
+      "@repo/types/*": ["../../packages/types/src/*"]
     }
   },
   "include": [

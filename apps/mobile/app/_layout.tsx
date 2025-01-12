@@ -10,7 +10,7 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 
 import "@repo/ui/styles/globals.css";
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
+// TODO : splash 적용할건지?
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
