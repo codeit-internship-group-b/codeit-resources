@@ -1,6 +1,7 @@
 import { WebView, WebViewMessageEvent } from "react-native-webview";
-import { getBaseUrl } from "@/utils/getBaseUrl";
+
 import { useHandleNavigationActions } from "@/hooks/useHandleNavigationActions";
+import { getBaseUrl } from "@/utils/getBaseUrl";
 
 export default function HomeScreen() {
   // TODO : login상태에 따른 분기 처리 설정

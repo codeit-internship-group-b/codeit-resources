@@ -1,7 +1,8 @@
 import WebView, { WebViewMessageEvent } from "react-native-webview";
+
 import { ROUTES } from "@/constants/routes";
-import { getBaseUrl } from "@/utils/getBaseUrl";
 import { useHandleNavigationActions } from "@/hooks/useHandleNavigationActions";
+import { getBaseUrl } from "@/utils/getBaseUrl";
 
 export default function DashboardScreen() {
   const baseUrl = getBaseUrl();

@@ -1,8 +1,9 @@
-import { DIR_NAME } from "@/constants/routes";
-import { parseMessageEvent } from "@/utils/parseMessageEvent";
 import { StackActions } from "@react-navigation/native";
 import { useNavigation, usePathname } from "expo-router";
 import { WebViewMessageEvent } from "react-native-webview";
+
+import { DIR_NAME } from "@/constants/routes";
+import { parseMessageEvent } from "@/utils/parseMessageEvent";
 
 export const useHandleNavigationActions = () => {
   const pathname = usePathname();
