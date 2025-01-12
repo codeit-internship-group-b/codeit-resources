@@ -1,8 +1,8 @@
 import { StackActions } from "@react-navigation/native";
+import { WEBVIEW_MESSAGE_TYPES } from "@repo/constants";
 import { useNavigation, usePathname } from "expo-router";
 import { WebViewMessageEvent } from "react-native-webview";
 
-import { WEBVIEW_MESSAGE_TYPES } from "@repo/constants";
 import { DIR_NAME } from "@/constants/routes";
 import { parseMessageEvent } from "@/utils/parseMessageEvent";
 
