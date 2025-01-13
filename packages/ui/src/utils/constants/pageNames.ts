@@ -4,9 +4,9 @@ export const PAGE_NAME = {
   SEATS: "/seats",
   SETTINGS: "/settings",
 
-  ADMIN_MEMBERS: "/admin/members",
-  ADMIN_TEAMS: "/admin/teams",
-  ADMIN_MEETINGS: "/admin/meetings",
+  MEMBERS: "/members",
+  TEAMS: "/teams",
+  ROOMS: "/rooms",
   ADMIN_SEATS: "/admin/seats",
 
   SIGN_IN: "/",

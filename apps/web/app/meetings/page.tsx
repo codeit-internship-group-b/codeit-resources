@@ -1,5 +1,5 @@
 import MeetingRoomSchedule from "./_components/MeetingRoomSchedule";
 
-export default function MeetingsPaga(): JSX.Element {
+export default function MeetingsPage(): JSX.Element {
   return <MeetingRoomSchedule />;
 }

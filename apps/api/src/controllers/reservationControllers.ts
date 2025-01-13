@@ -73,10 +73,7 @@ export const getUserReservations = async (
   })
     .populate("user", "name email")
     .populate("attendees", "name email")
-    .populate({
-      path: "item",
-      select: "name itemType",
-    })
+    .populate("item", "name itemType")
     .sort({ itemType: 1, startAt: 1 });
 
   if (userReservations.length === 0) {

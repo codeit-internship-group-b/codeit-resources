@@ -1,0 +1,136 @@
+"use client";
+
+import { type ICategory, type TItemStatus } from "@repo/types";
+import { Button, Input, Radio } from "@ui/index";
+import Dropdown from "@ui/src/components/common/Dropdown";
+import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useSidebarStore } from "@/app/store/useSidebarStore";
+import { notify } from "@/app/store/useToastStore";
+import { QUERY_KEYS } from "@/lib/queryKey";
+import useMeetingsStore from "../_store/useMeetingsStore";
+
+export default function EditItemForm(): JSX.Element {
+  const { closeSidebar } = useSidebarStore();
+  const { panelState, currentItem, categories, currentCategory, handleAddItem, handleEditItem } = useMeetingsStore();
+  const [selectedCategory, setSelectedCategory] = useState<ICategory>();
+  const queryClient = useQueryClient();
+
+  const { register, handleSubmit, setValue, reset } = useForm({
+    defaultValues: {
+      name: currentItem?.name ?? "",
+      description: currentItem?.description ?? "",
+      capacity: currentItem?.capacity ?? 1,
+      location: currentItem?.location ?? "",
+      status: currentItem?.status ?? "available",
+      category: currentCategory?._id,
+    },
+  });
+
+  useEffect(() => {
+    if (panelState === "add") {
+      reset({
+        name: "",
+        description: "",
+        capacity: 1,
+        location: "",
+        status: "available",
+        category: currentCategory?._id,
+      });
+    } else if (panelState === "edit" && currentItem) {
+      reset({
+        name: currentItem.name,
+        description: currentItem.description,
+        capacity: currentItem.capacity,
+        location: currentItem.location,
+        status: currentItem.status,
+        category: currentItem.category._id,
+      });
+    }
+  }, [panelState, currentItem, currentCategory, reset]);
+
+  const { mutate: EditItem } = useMutation({
+    mutationFn: async (payload: Record<string, string>) => {
+      if (panelState === "add") {
+        return await handleAddItem(payload);
+      }
+
+      if (panelState === "edit" && currentItem) {
+        return await handleEditItem(payload, currentItem._id);
+      }
+    },
+    onSuccess: () => {
+      notify("success", panelState === "add" ? "등록완료!" : "수정완료!");
+      closeSidebar();
+      void queryClient.invalidateQueries({ queryKey: QUERY_KEYS.ROOMS });
+    },
+    onError: (error) => {
+      notify("error", error.message || "알 수 없는 오류가 발생했습니다. 다시 시도해주세요.");
+    },
+  });
+
+  const handleFormSubmit = handleSubmit((data) => {
+    const payload = {
+      ...data,
+      category: selectedCategory?._id ?? String(currentCategory?._id),
+      capacity: String(data.capacity),
+    };
+
+    EditItem(payload);
+  });
+
+  const handleSelectCategory = (value: string | boolean): void => {
+    const selectedValue = categories.find((category) => category._id === value);
+    if (selectedValue) {
+      setSelectedCategory(selectedValue);
+      setValue("category", String(value));
+    }
+  };
+
+  return (
+    <form onSubmit={handleFormSubmit} className="flex h-full flex-col justify-between">
+      <div>
+        <h1>회의실 {panelState === "add" ? "추가" : "수정"}</h1>
+        <div className="my-20">
+          <Radio.Group
+            value={currentItem?.status}
+            defaultValue={currentItem?.status ?? "available"}
+            onChange={(value) => {
+              setValue("status", value as TItemStatus);
+            }}
+          >
+            <Radio.Option value="available">사용 가능</Radio.Option>
+            <Radio.Option value="unavailable">사용 불가</Radio.Option>
+          </Radio.Group>
+        </div>
+        <Input {...register("name", { required: true })} placeholder="회의실 이름" type="text" />
+        <Input {...register("description")} placeholder="설명" type="text" />
+        <div className="mb-24">
+          <Dropdown
+            selectedValue={selectedCategory?.name ?? currentCategory?.name}
+            onSelect={handleSelectCategory}
+            isError={false}
+            errorMessage="Error"
+          >
+            <Dropdown.Toggle title="카테고리">{currentItem ? currentItem.category.name : ""}</Dropdown.Toggle>
+            <Dropdown.Wrapper>
+              {categories.map((category) => {
+                return (
+                  <Dropdown.Item key={category._id} value={category._id}>
+                    {category.name}
+                  </Dropdown.Item>
+                );
+              })}
+            </Dropdown.Wrapper>
+          </Dropdown>
+        </div>
+        <Input {...register("capacity")} placeholder="수용인원" type="text" />
+        <Input {...register("location")} placeholder="위치" type="text" />
+      </div>
+      <Button type="submit" variant="Action">
+        회의실 {panelState === "add" ? "추가" : "수정"}
+      </Button>
+    </form>
+  );
+}
