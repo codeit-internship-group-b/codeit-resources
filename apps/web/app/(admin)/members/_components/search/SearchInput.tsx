@@ -2,7 +2,7 @@ import { type ChangeEvent } from "react";
 import { type UseFormSetValue, type UseFormRegister } from "react-hook-form";
 import { SearchIcon, CancelIcon } from "@ui/public";
 import { type KeywordsFormData } from "@repo/types/src/searchFormType";
-import { useDebouncedCallback } from "@/app/admin/teams/_hooks/useDebounceCallback";
+import { useDebouncedCallback } from "@/app/(admin)/teams/_hooks/useDebounceCallback";
 
 interface SearchInputProps {
   register: UseFormRegister<KeywordsFormData>;

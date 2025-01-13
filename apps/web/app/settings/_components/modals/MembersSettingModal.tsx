@@ -1,4 +1,4 @@
-import MembersContent from "@/app/admin/members/_components/MembersContent";
+import MembersContent from "@/app/(admin)/members/_components/MembersContent";
 import { SettingsModal, SettingsModalContent, SettingsModalHeader } from "@/components/SettingsModal";
 
 interface MembersSettingModalProps {

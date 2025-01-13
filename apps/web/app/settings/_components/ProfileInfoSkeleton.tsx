@@ -1,5 +1,5 @@
 import DefaultProfileImage from "@ui/public/images/image_default_profile.png";
-import ProfileImageUploader from "@/app/admin/members/_components/sidepanel/ProfileImageUploader";
+import ProfileImageUploader from "@/app/(admin)/members/_components/sidepanel/ProfileImageUploader";
 
 export default function ProfileInfoSkeleton(): JSX.Element {
   return (

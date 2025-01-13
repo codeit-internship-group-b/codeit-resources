@@ -1,7 +1,7 @@
-import AddCategoryButton from "../_components/AddCategoryButton";
-import CategoryList from "../_components/CategoryList";
+import AddCategoryButton from "./_components/AddCategoryButton";
+import CategoryList from "./_components/CategoryList";
 
-export default function Rooms(): JSX.Element {
+export default function RoomsPage(): JSX.Element {
   return (
     <section className="md:mt-80">
       <div>

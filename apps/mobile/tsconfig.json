@@ -6,7 +6,8 @@
     "paths": {
       "@/*": ["./*"],
       "@ui/*": ["../../packages/ui/*"],
-      "@/public/*": ["./public/*"]
+      "@/public/*": ["./public/*"],
+      "@repo/types/*": ["../../packages/types/src/*"]
     }
   },
   "include": [
@@ -18,5 +19,6 @@
     "**/__tests__/**/*.tsx",
     "**/*.d.ts",
     "expo-env.d.ts"
-  ]
+  ],
+  "exclude": ["node_modules"]
 }

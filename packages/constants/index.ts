@@ -49,3 +49,7 @@ export const IMAGE_CONFIG = {
 };
 
 export const PAGE_SIZE = 20;
+
+export const WEBVIEW_MESSAGE_TYPES = {
+  ROUTER_EVENT: "ROUTER_EVENT",
+};
