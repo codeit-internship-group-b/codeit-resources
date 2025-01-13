@@ -1,5 +1,6 @@
 import { useRouter } from "next/navigation";
-import { sendRouterEvent } from "../utils/sendRouterEvent";
+import { WEBVIEW_MESSAGE_TYPES } from "@repo/constants";
+import { sendMessageToNative } from "../utils/sendMessageToNative";
 import { useWebView } from "./useWebView";
 
 interface UseAppRouterResult {
@@ -12,8 +13,9 @@ export const useAppRouter = (): UseAppRouterResult => {
 
   const push = (url: string): void => {
     if (isWebView) {
-      sendRouterEvent({
-        path: url,
+      sendMessageToNative({
+        type: WEBVIEW_MESSAGE_TYPES.ROUTER_EVENT,
+        data: url,
       });
       return;
     }
