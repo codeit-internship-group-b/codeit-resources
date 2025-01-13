@@ -1,4 +1,4 @@
-import { type UseMembersSuspenseInfiniteQueryParams } from "@/app/admin/members/_hooks/useMembersSuspenseInfiniteQuery";
+import { type UseMembersSuspenseInfiniteQueryParams } from "@/app/(admin)/members/_hooks/useMembersSuspenseInfiniteQuery";
 
 export const QUERY_KEYS = {
   MEMBERS: {

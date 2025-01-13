@@ -1,6 +1,6 @@
 import { MEMBER_FORM_MESSAGES } from "@repo/constants/messages";
 import MultiSelectDropdown from "@ui/src/components/common/Dropdown/MultiSelectDropdown";
-import { useTeamsQuery } from "@/app/admin/teams/_hooks/useTeamsQueries";
+import { useTeamsQuery } from "@/app/(admin)/teams/_hooks/useTeamsQueries";
 
 interface TeamDropdownProps {
   value: string[];
