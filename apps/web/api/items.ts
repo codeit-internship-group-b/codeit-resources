@@ -52,7 +52,7 @@ export const createItem = async (params: CreateItemParams): Promise<TBaseItem> =
   const { data } = await axiosRequester<TBaseItem>({
     options: {
       method: "POST",
-      url: API_ENDPOINTS.ITEMS.CREATE_ITEM,
+      url: API_ENDPOINTS.ITEMS.CREATE_ITEM(itemType),
       data: {
         itemType,
         ...itemData,

@@ -193,6 +193,7 @@ function Item({ children, value, position = "center", hoverStyle = "gray" }: Ite
       onClick={() => selectedItem(value)}
       onKeyDown={(e) => handleKeyPress(e, () => selectedItem(value))}
       role="button"
+      type="button"
       tabIndex={0}
     >
       {children}

@@ -1,88 +1,185 @@
 "use client";
 
-import { Modal } from "@ui/index";
-import Dropdown from "@ui/src/components/common/Dropdown";
 import ListItem from "@ui/src/components/common/ListItem";
 import { useOnClickOutside } from "@ui/src/hooks/useOnClickOutside";
-import { useRef, useState } from "react";
+import { type PropsWithChildren, useRef, useState, useEffect } from "react";
+import { TriangleIcon } from "@ui/public";
+import { type ICategory, type IRoom } from "@repo/types";
+import { motion } from "framer-motion";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { useSidebarStore } from "@/app/store/useSidebarStore";
+import { deleteCategory, patchCategory } from "@/api/meetings";
+import { notify } from "@/app/store/useToastStore";
+import { QUERY_KEYS } from "@/lib/queryKey";
+import useMeetingsStore from "../_store/useMeetingsStore";
+import AddItemButton from "./AddItemButton";
+import CategoryListSubItem from "./CategoryListSubItem";
+import CategoryEditDropdown from "./CategoryEditDropdown";
+import ConfirmationModal from "./ConfirmationModal";
 
-const MOCK_TITLE = "회의실";
+interface CategoryListItemProps extends PropsWithChildren {
+  category: ICategory;
+  rooms: IRoom[];
+}
 
-export default function CategoryListItem(): JSX.Element {
-  const [isModify, setIsModify] = useState(false);
-  const [changeName, setChangeName] = useState("");
+export default function CategoryListItem({ category, rooms }: CategoryListItemProps): JSX.Element {
+  const { isSidebarOpen, openSidebar } = useSidebarStore();
+  const { setPanelState, setCurrentItem, setCurrentCategory } = useMeetingsStore();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const [isModifyingCategoryName, setIsModifyingCategoryName] = useState(false);
+  const [inputValue, setInputValue] = useState(category.name);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const queryClient = useQueryClient();
+
   useOnClickOutside(inputRef, () => {
-    if (isModify) {
-      setIsModify(false);
+    if (isModifyingCategoryName) {
+      setIsModifyingCategoryName(false);
     }
   });
+
+  useEffect(() => {
+    if (isModifyingCategoryName && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isModifyingCategoryName]);
+
+  const openPanelToAddItem = (selectedCategory: ICategory): void => {
+    if (!isSidebarOpen) {
+      setPanelState("add");
+      setCurrentItem(null);
+      setCurrentCategory(selectedCategory);
+      openSidebar();
+    }
+  };
+
+  const toggleListItem = (): void => {
+    setIsOpen((prev) => !prev);
+  };
+
+  const { mutate: deleteMutation } = useMutation({
+    mutationFn: (categoryId: string) => {
+      return deleteCategory(categoryId);
+    },
+    onSuccess: () => {
+      notify("success", "카테고리가 삭제되었습니다.");
+      void queryClient.invalidateQueries({ queryKey: QUERY_KEYS.CATEGORIES });
+    },
+    onError: (error) => {
+      if (error instanceof AxiosError && error.response) {
+        notify("error", String(error.response.data.message));
+      } else {
+        notify("error", "알 수 없는 오류가 발생했습니다. 다시 시도해주세요.");
+      }
+    },
+  });
+
+  const handleDeleteCategory = (categoryId: string): void => {
+    deleteMutation(categoryId);
+  };
+
+  const { mutate: updateMutation } = useMutation({
+    mutationFn: (payload: Record<string, string>) => {
+      return patchCategory(category._id, payload);
+    },
+    onSuccess: () => {
+      notify("success", "카테고리가 수정되었습니다.");
+      void queryClient.invalidateQueries({ queryKey: QUERY_KEYS.CATEGORIES });
+    },
+    onError: (error) => {
+      if (error instanceof AxiosError && error.response) {
+        notify("error", String(error.response.data.message));
+      } else {
+        notify("error", "알 수 없는 오류가 발생했습니다. 다시 시도해주세요.");
+      }
+    },
+  });
+
+  const handleUpdateCategory = (): void => {
+    if (!inputValue.trim()) {
+      notify("error", "카테고리명을 입력해주세요.");
+      return;
+    }
+    if (inputValue.trim() === category.name) {
+      setIsModifyingCategoryName(false);
+      return;
+    }
+    const payload = {
+      name: inputValue,
+    };
+
+    updateMutation(payload);
+  };
+
   return (
-    <ListItem>
-      <span className="flex flex-grow items-center gap-32 text-left">
-        {isModify ? (
-          <input
-            ref={inputRef}
-            placeholder="카테고리명"
-            className="placeholder:text-custom-black/50 w-full placeholder:underline placeholder:underline-offset-4 focus:outline-none"
-            onChange={(e) => {
-              setChangeName(e.target.value);
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                // TODO: input 데이터 patch
-                // eslint-disable-next-line no-console
-                console.log(changeName);
-              }
+    <>
+      <ListItem color="gray" thickness="thick">
+        <span className="flex flex-grow items-center gap-32 text-left">
+          {isModifyingCategoryName ? (
+            <input
+              defaultValue={inputValue}
+              ref={inputRef}
+              placeholder="카테고리명"
+              className="placeholder:text-custom-black/50 bg-gray-60 w-full placeholder:underline placeholder:underline-offset-4 focus:outline-none"
+              onChange={(e) => {
+                setInputValue(e.target.value);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleUpdateCategory();
+                  setIsModifyingCategoryName(false);
+                }
+              }}
+            />
+          ) : (
+            inputValue
+          )}
+        </span>
+
+        <div className="flex gap-12">
+          <AddItemButton
+            onClick={() => {
+              openPanelToAddItem(category);
             }}
           />
-        ) : (
-          MOCK_TITLE
-        )}
-      </span>
-      <Modal.Root>
-        <Dropdown
-          selectedValue={isModify}
-          onSelect={(value: string | boolean) => {
-            if (value === "수정") {
-              setIsModify(true);
-            }
-          }}
-          size="sm"
-        >
-          <Dropdown.Toggle iconType="kebab" />
-          <Dropdown.Wrapper className="-left-30 top-56">
-            <Dropdown.Item hoverStyle="purple" value="수정">
-              이름 편집
-            </Dropdown.Item>
-            <Modal.Trigger>
-              <Dropdown.Item hoverStyle="purple" value="삭제">
-                삭제
-              </Dropdown.Item>
-            </Modal.Trigger>
-          </Dropdown.Wrapper>
-        </Dropdown>
-        <Modal.Content>
-          <Modal.Title>
-            <p className="text-20 mb-10 text-center font-extrabold">{MOCK_TITLE}</p>
-            <p>해당 카테고리를 삭제하시겠습니까?</p>
-          </Modal.Title>
-          <Modal.Description>
-            <p>삭제된 카테고리는 복구할 수 없습니다.</p>
-            <p>카테고리 하위의 아이템들도 함께 삭제됩니다.</p>
-          </Modal.Description>
-          <Modal.Close
+          <ConfirmationModal
+            title={category.name}
+            type="category"
             onConfirm={() => {
-              // TODO: 삭제 로직 작성
+              handleDeleteCategory(category._id);
             }}
-            confirmText="확인"
-            cancelText="취소"
           >
-            예
-          </Modal.Close>
-        </Modal.Content>
-      </Modal.Root>
-    </ListItem>
+            <CategoryEditDropdown
+              onClickEdit={() => {
+                setIsModifyingCategoryName(true);
+              }}
+            />
+          </ConfirmationModal>
+        </div>
+
+        <button
+          className="hover:bg-custom-black/5 ml-40 flex size-32 cursor-pointer items-center justify-center rounded-full transition-colors duration-300 ease-in-out"
+          type="button"
+          onClick={toggleListItem}
+        >
+          <TriangleIcon className={`transition-transform duration-300 ${isOpen ? "rotate-180" : "rotate-0"}`} />
+        </button>
+      </ListItem>
+      {isOpen ? (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: rooms.length * 75 }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+          className="pl-24"
+        >
+          {rooms.map((item) => (
+            <CategoryListSubItem key={item._id} item={item} />
+          ))}
+        </motion.div>
+      ) : null}
+    </>
   );
 }

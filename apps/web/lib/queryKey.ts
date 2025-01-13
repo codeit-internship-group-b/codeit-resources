@@ -9,4 +9,6 @@ export const QUERY_KEYS = {
     ALL: ["teams"],
   },
   USER: ["user"],
+  CATEGORIES: ["categories"],
+  ROOMS: ["rooms"],
 };
