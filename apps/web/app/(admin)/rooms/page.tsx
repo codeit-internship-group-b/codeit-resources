@@ -1,5 +1,5 @@
-import CategoryList from "../_components/CategoryList";
-import ItemsAdminHeader from "../_components/ItemsAdminHeader";
+import CategoryList from "./_components/CategoryList";
+import ItemsAdminHeader from "./_components/ItemsAdminHeader";
 
 export default function Rooms(): JSX.Element {
   return (
