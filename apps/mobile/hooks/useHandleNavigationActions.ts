@@ -14,7 +14,7 @@ export const useHandleNavigationActions = () => {
     const parsedMessage = parseMessageEvent(e);
     if (!parsedMessage || parsedMessage.type !== WEBVIEW_MESSAGE_TYPES.ROUTER_EVENT) return;
 
-    const { path } = parsedMessage;
+    const { data: path } = parsedMessage;
     if (pathname === path) return;
 
     const action = path === "back" ? StackActions.pop(1) : StackActions.push(`${DIR_NAME}${path}`);
