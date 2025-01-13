@@ -50,12 +50,12 @@ export default function ManageTeamModal({
   return (
     <SettingsModal isOpen={isOpen} onClose={onClose}>
       <SettingsModalHeader title={title} actions={actions} />
-      <SettingsModalContent className="pt-16">
-        <form onSubmit={(...rest) => void handleSubmit(onSubmit)(...rest)}>
+      <form onSubmit={(...rest) => void handleSubmit(onSubmit)(...rest)}>
+        <SettingsModalContent className="pt-16">
           <Input id="teamName" placeholder="팀 이름" {...register("teamName")} />
-        </form>
-      </SettingsModalContent>
-      <SettingsModalButton type="submit">{buttonText}</SettingsModalButton>
+        </SettingsModalContent>
+        <SettingsModalButton type="submit">{buttonText}</SettingsModalButton>
+      </form>
     </SettingsModal>
   );
 }

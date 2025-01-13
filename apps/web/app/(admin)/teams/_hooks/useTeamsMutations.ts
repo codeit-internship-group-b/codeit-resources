@@ -59,7 +59,9 @@ interface UpdateRequest {
   newName: string;
 }
 
-export const useUpdateTeamName = (): UseMutationResult<MessageResponse, AxiosError<MessageResponse>, UpdateRequest> => {
+export const useUpdateTeamName = (
+  onClose?: () => void,
+): UseMutationResult<MessageResponse, AxiosError<MessageResponse>, UpdateRequest> => {
   const queryClient = useQueryClient();
   const prevTeamsRef = useRef<TeamType[] | undefined>();
 
@@ -76,6 +78,7 @@ export const useUpdateTeamName = (): UseMutationResult<MessageResponse, AxiosErr
 
     onSuccess: (res) => {
       notify("success", res.message);
+      onClose?.();
     },
     onError: (error) => {
       if (prevTeamsRef.current) void queryClient.setQueryData<TeamType[]>(QUERY_KEYS.TEAMS.ALL, prevTeamsRef.current);
