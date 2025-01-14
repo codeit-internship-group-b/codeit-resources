@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
-import { useAuthStore } from "@/src/stores/useAuthStore";
+import { useAuthStore } from "@/app/store/useAuthStore";
 import Profile from "../common/Profile";
 import GnbMenu from "./GnbMenu";
 import GnbLogo from "./GnbLogo";

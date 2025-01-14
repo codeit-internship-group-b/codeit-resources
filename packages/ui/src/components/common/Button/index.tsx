@@ -12,7 +12,7 @@ interface ButtonProps {
 
 type PolymorphicButtonProps<C extends ElementType> = ButtonProps & {
   as?: C;
-} & Omit<ComponentPropsWithoutRef<C>, keyof ButtonProps>;
+} & ComponentPropsWithoutRef<C>;
 
 /**
  * Button 컴포넌트는 다양한 스타일 변형(variant)을 가진 다형성(polymorphic) 컴포넌트입니다.

@@ -1,4 +1,4 @@
-import { TItemType } from "@repo/types/src/itemType";
+import { IRoom, TItemType } from "@repo/types/src/itemType";
 
 export const API_ENDPOINTS = {
   AUTH: {
@@ -22,9 +22,9 @@ export const API_ENDPOINTS = {
   },
   ITEMS: {
     GET_ALL: (itemType?: TItemType) => `/items${itemType ? `/${itemType}` : ""}`, // 아이템 전체 조회 (optional itemType)
-    CREATE_ITEM: `/items`, // 아이템 생성
-    UPDATE_ITEM: (itemId: string | number) => `/items/${itemId}`, // 아이템 수정
-    DELETE_ITEM: (itemId: string | number) => `/items/${itemId}`, // 아이템 삭제
+    CREATE_ITEM: (itemType: TItemType) => `/items/${itemType}`, // 아이템 생성
+    UPDATE_ITEM: (itemId: string) => `/items/${itemId}`, // 아이템 수정
+    DELETE_ITEM: (itemId: string) => `/items/${itemId}`, // 아이템 삭제
   },
   CATEGORIES: {
     GET_ALL: `/categories`, // 카테고리 전체 조회
@@ -49,3 +49,7 @@ export const IMAGE_CONFIG = {
 };
 
 export const PAGE_SIZE = 20;
+
+export const WEBVIEW_MESSAGE_TYPES = {
+  ROUTER_EVENT: "ROUTER_EVENT",
+};

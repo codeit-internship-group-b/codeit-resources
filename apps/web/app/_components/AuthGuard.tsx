@@ -2,14 +2,19 @@
 
 import { useEffect, useState } from "react";
 import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
-import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/src/stores/useAuthStore";
+import { redirect, useRouter } from "next/navigation";
+import { useAuthStore } from "@/app/store/useAuthStore";
+import { useWebView } from "../_hooks/useWebView";
 import SignInForm from "./SignInForm";
 
 export default function AuthGuard(): JSX.Element | null {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const { isLoggedIn } = useAuthStore();
+
+  // 웹뷰 작업 추가
+  const { isWebView } = useWebView();
+  if (isWebView) redirect(PAGE_NAME.DASHBOARD);
 
   useEffect(() => {
     if (isLoggedIn) {

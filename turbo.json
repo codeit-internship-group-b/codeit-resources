@@ -12,7 +12,9 @@
     "S3_BUCKET_NAME",
     "DEFAULT_PROFILE_IMAGE_URL",
     "NEXT_PUBLIC_API_URL",
-    "NODE_ENV"
+    "NODE_ENV",
+    "EXPO_PUBLIC_API_URL_IOS",
+    "EXPO_PUBLIC_API_URL_ANDROID"
   ],
   "tasks": {
     "build": {
