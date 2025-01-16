@@ -1,5 +1,4 @@
 import { isAndroid, isIOS } from "react-device-detect";
-import { WEBVIEW_MESSAGE_TYPES } from "@repo/constants";
 import type { Message, LoginData } from "@ui/src/types/WebviewMessageTypes";
 import webviewMessageBridge from "./webviewLoginBridge";
 
@@ -10,19 +9,16 @@ export const getMessagesFromNative = (): void => {
     const { type, data } = JSON.parse((event as MessageEvent<string>).data) as Message<LoginData>;
     const handler = webviewMessageBridge.get(type);
 
-    if (handler) {
+    if (handler && data.accessToken) {
       void handler(data);
     }
   };
 
-  if (isAndroid) {
-    document.addEventListener("message", listener);
-  }
   if (isIOS) {
     window.addEventListener("message", listener);
+  } else if (isAndroid) {
+    document.addEventListener("message", listener);
   }
-
-  webviewMessageBridge.get(WEBVIEW_MESSAGE_TYPES.AUTO_LOGIN);
 };
 
 export const sendMessageToNative = <T>({ type, data }: Message<T>): void => {
