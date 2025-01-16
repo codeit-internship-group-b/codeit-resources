@@ -7,6 +7,7 @@ import { WebViewProgressEvent, WebViewMessageEvent } from "react-native-webview/
 
 import webviewLoginBridge from "@/utils/webviewLoginBridge";
 
+import { parseMessage } from "./parseMessage";
 import { sendMessageToWeb } from "./sendMessageToWeb";
 
 const isIos = Platform.OS === "ios";
@@ -43,11 +44,10 @@ export const handleLoadCurried = (webViewRef: RefObject<WebView<object>>) => () 
 };
 
 export const handleReceiveMessage = (e: WebViewMessageEvent) => {
-  const data = e.nativeEvent.data;
-  const parsedData = JSON.parse(data);
-  const handler = webviewLoginBridge.get(parsedData.type);
+  const { type, data } = parseMessage(e);
+  const handler = webviewLoginBridge.get(type);
 
   if (handler) {
-    handler(parsedData.data);
+    handler(data);
   }
 };

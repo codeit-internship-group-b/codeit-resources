@@ -4,14 +4,14 @@ import { useNavigation, usePathname } from "expo-router";
 import { WebViewMessageEvent } from "react-native-webview";
 
 import { DIR_NAME } from "@/constants/routes";
-import { parseMessageEvent } from "@/utils/parseMessageEvent";
+import { parseMessage } from "@/utils/parseMessage";
 
 export const useHandleNavigationActions = () => {
   const pathname = usePathname();
   const navigation = useNavigation();
 
   const handleNavigationActions = (e: WebViewMessageEvent) => {
-    const parsedMessage = parseMessageEvent(e);
+    const parsedMessage = parseMessage(e);
     if (!parsedMessage || parsedMessage.type !== WEBVIEW_MESSAGE_TYPES.ROUTER_EVENT) return;
 
     const { data: path } = parsedMessage;
