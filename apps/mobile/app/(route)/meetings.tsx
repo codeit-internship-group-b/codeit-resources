@@ -2,10 +2,10 @@ import WebView, { WebViewMessageEvent } from "react-native-webview";
 
 import { ROUTES } from "@/constants/routes";
 import { useHandleNavigationActions } from "@/hooks/useHandleNavigationActions";
-import { getBaseUrl } from "@/utils/getBaseUrl";
+import { getNativeApiUrl } from "@/utils/getNativeApiUrl";
 
 export default function MeetingsScreen() {
-  const baseUrl = getBaseUrl();
+  const baseUrl = getNativeApiUrl();
   const handleNavigationActions = useHandleNavigationActions();
 
   const requestOnMessage = (e: WebViewMessageEvent) => {
