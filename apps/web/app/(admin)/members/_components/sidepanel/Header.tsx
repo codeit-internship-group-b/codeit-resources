@@ -20,7 +20,7 @@ export default function PanelHeader({ selectedMember, onClose }: PanelHeaderProp
 
   return (
     <>
-      <button onClick={onClose} type="button" className="flex flex-row">
+      <button onClick={onClose} type="button">
         <DoubleChevron />
       </button>
       <div className={selectedMember ? "flex justify-between" : ""}>
