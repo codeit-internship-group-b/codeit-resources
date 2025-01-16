@@ -1,11 +1,11 @@
 import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
 import { getCookie } from "cookies-next";
+import { getWebApiUrl } from "@/app/utils/getWebApiUrl";
 
-const isWebView = typeof window !== "undefined" && window.ReactNativeWebView;
-const API_URL = isWebView ? process.env.NEXT_PUBLIC_ANDROID_API_URL : process.env.NEXT_PUBLIC_API_URL;
+const baseURL = getWebApiUrl();
 
 export const axiosInstance = axios.create({
-  baseURL: API_URL,
+  baseURL,
   timeout: 10_000,
 });
 
