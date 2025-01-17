@@ -1,21 +1,32 @@
-import { useEffect, useRef } from "react";
-
 interface UseWebViewResult {
   isWebView: boolean;
+  isIOSWebView: boolean;
+  isAndroidWebView: boolean;
+  isIOS: boolean;
+  isAndroid: boolean;
 }
 
-export const useWebView = (): UseWebViewResult => {
-  const isWebViewRef = useRef(false);
+export const useDetectWebView = (): UseWebViewResult => {
+  const userAgent = navigator.userAgent;
 
-  useEffect(() => {
-    if (isWebViewRef.current) return;
+  // iOS 웹뷰 감지
+  const isIOS = /iPhone|iPad|iPod/.test(userAgent);
+  const isWebKit = userAgent.includes("AppleWebKit");
+  const isSafari = userAgent.includes("Safari") || /Version\/[\d.]+.*Safari/.test(userAgent);
+  const isNotCriOS = !userAgent.includes("CriOS");
+  const isNotFxiOS = !userAgent.includes("FxiOS");
 
-    if (typeof window !== "undefined" && window.ReactNativeWebView) {
-      isWebViewRef.current = true;
-    }
-  }, []);
+  const isIOSWebView = isIOS && isWebKit && isNotCriOS && isNotFxiOS && !isSafari;
+
+  // Android 웹뷰 감지
+  const isAndroid = userAgent.includes("Android");
+  const isAndroidWebView = isAndroid && userAgent.includes("wv");
 
   return {
-    isWebView: isWebViewRef.current,
+    isWebView: isIOSWebView || isAndroidWebView,
+    isIOSWebView,
+    isAndroidWebView,
+    isIOS,
+    isAndroid,
   };
 };
