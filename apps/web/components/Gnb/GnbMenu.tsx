@@ -8,7 +8,7 @@ import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
 import cn from "@ui/src/utils/cn";
 import { Button } from "@ui/index";
 import { useAppRouter } from "@/app/_hooks/useAppRouter";
-import { useDetectWebView } from "@/app/_hooks/useWebView";
+import { useDetectWebView } from "@/app/_hooks/useDetectWebView";
 
 const NAV_ITEMS = [
   { href: PAGE_NAME.DASHBOARD, name: "대시보드", icon: PersonIcon },

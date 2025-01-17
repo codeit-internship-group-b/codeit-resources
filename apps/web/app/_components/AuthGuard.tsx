@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
 import { redirect, useRouter } from "next/navigation";
 import { useAuthStore } from "@/app/store/useAuthStore";
-import { useDetectWebView } from "../_hooks/useWebView";
+import { useDetectWebView } from "../_hooks/useDetectWebView";
 import SignInForm from "./SignInForm";
 
 export default function AuthGuard(): JSX.Element | null {

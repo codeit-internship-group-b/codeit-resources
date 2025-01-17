@@ -1,7 +1,7 @@
 import { useRouter } from "next/navigation";
 import { WEBVIEW_MESSAGE_TYPES } from "@repo/constants";
 import { sendMessageToNative } from "../utils/sendMessageToNative";
-import { useDetectWebView } from "./useWebView";
+import { useDetectWebView } from "./useDetectWebView";
 
 interface UseAppRouterResult {
   push: (url: string) => void;

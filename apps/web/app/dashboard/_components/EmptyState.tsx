@@ -5,13 +5,12 @@ import Button from "@ui/src/components/common/Button";
 import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
 import Link from "next/link";
 import { memo } from "react";
-import { useDetectWebView } from "@/app/_hooks/useWebView";
+import { useDetectWebView } from "@/app/_hooks/useDetectWebView";
 import { useAppRouter } from "@/app/_hooks/useAppRouter";
 
 function EmptyState(): JSX.Element {
   const { push } = useAppRouter();
   const { isWebView } = useDetectWebView();
-  console.log(isWebView);
 
   const handleButtonClick = (): void => {
     push(PAGE_NAME.MEETINGS);
