@@ -35,6 +35,8 @@ export default function RootLayout() {
         <Stack.Screen name={`${DIR_NAME}${ROUTES.SEATS}`} />
         <Stack.Screen name={`${DIR_NAME}${ROUTES.SETTINGS}`} />
         <Stack.Screen name={ROUTES.NOT_FOUND} />
+
+        <Stack.Screen name="modal" options={{ presentation: "modal" }} />
       </Stack>
     </ThemeProvider>
   );
