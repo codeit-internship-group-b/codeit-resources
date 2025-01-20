@@ -6,22 +6,8 @@ import { useModal } from "../_hooks/useModal";
 export default function SettingButtons(): JSX.Element {
   const options = useUserSettingOptions();
   const { isOpen, currentModal: CurrentModal, openModal, closeModal } = useModal();
-  // const { isWebView } = useDetectWebView();
 
   const handleClick = (component: ModalComponentType<SettingsModalProps>): void => {
-    // web view 실행 data
-
-    // web view 실행
-    // if (isWebView) {
-    //   sendMessageToNative({
-    //     type: "MODAL_TO_STACK",
-    //     data: fuckWebView,
-    //   });
-
-    //   return;
-    // }
-
-    // web 실행
     openModal(component);
   };
 
