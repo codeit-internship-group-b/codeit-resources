@@ -1,36 +1,33 @@
-import { WEBVIEW_MESSAGE_TYPES } from "@repo/constants";
 import { useRef } from "react";
 import { WebView, WebViewMessageEvent } from "react-native-webview";
 
 import { useHandleNavigationActions } from "@/hooks/useHandleNavigationActions";
-import { handleReceiveMessage, handleLoadProgressCurried, handleLoadCurried } from "@/utils/bridgeHandler";
+import { handleAuthStorage } from "@/store/authStorage";
 import { getNativeApiUrl } from "@/utils/getNativeApiUrl";
 import { parseMessage } from "@/utils/parseMessage";
+import { webViewLoadHandler } from "@/utils/webViewLoadHandler";
 
 export default function HomeScreen() {
   const webviewRef = useRef<WebView>(null);
 
   const baseUrl = getNativeApiUrl();
   const handleNavigationActions = useHandleNavigationActions();
+  const { event, handler } = webViewLoadHandler(webviewRef);
 
-  const handleWebviewMessage = (e: WebViewMessageEvent) => {
-    const { type } = parseMessage(e);
+  const handleMessage = (e: WebViewMessageEvent) => {
+    handleNavigationActions(e);
 
-    if (type === WEBVIEW_MESSAGE_TYPES.ROUTER_EVENT) {
-      handleNavigationActions(e);
-    } else {
-      handleReceiveMessage(e);
-    }
+    const { type, data } = parseMessage(e);
+    handleAuthStorage(type, data);
   };
 
   return (
     <WebView
       ref={webviewRef}
-      className="flex-1"
       source={{ uri: `${baseUrl}` }}
-      onMessage={handleWebviewMessage}
-      onLoadProgress={handleLoadProgressCurried(webviewRef)}
-      onLoad={handleLoadCurried(webviewRef)}
+      onMessage={handleMessage}
+      {...{ [event]: handler }}
+      className="flex-1"
       cacheEnabled
       javaScriptEnabled
       domStorageEnabled
