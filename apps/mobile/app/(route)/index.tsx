@@ -3,14 +3,14 @@ import { WebView, WebViewMessageEvent } from "react-native-webview";
 
 import { useHandleNavigationActions } from "@/hooks/useHandleNavigationActions";
 import { handleAuthStorage } from "@/store/authStorage";
-import { getNativeApiUrl } from "@/utils/getNativeApiUrl";
+import { getWebViewApiUrl } from "@/utils/getWebViewApiUrl";
 import { parseMessage } from "@/utils/parseMessage";
 import { webViewLoadHandler } from "@/utils/webViewLoadHandler";
 
 export default function HomeScreen() {
   const webviewRef = useRef<WebView>(null);
 
-  const baseUrl = getNativeApiUrl();
+  const baseUrl = getWebViewApiUrl();
   const handleNavigationActions = useHandleNavigationActions();
   const { event, handler } = webViewLoadHandler(webviewRef);
 

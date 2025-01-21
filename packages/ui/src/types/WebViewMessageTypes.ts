@@ -8,4 +8,5 @@ export interface Message<T> {
   type: string;
   data: T;
 }
-export type WebviewLoginMessageHandler = (_data: LoginData) => void | Promise<void>;
+
+export type AuthStorageHandler = (_data: LoginData) => void | Promise<void>;

@@ -1,5 +1,5 @@
 import { stringifyJson } from "@repo/ui/src/utils/stringifyJson";
-import { Message } from "@ui/src/types/WebviewMessageTypes";
+import { Message } from "@ui/src/types/WebViewMessageTypes";
 import { RefObject } from "react";
 import WebView from "react-native-webview";
 

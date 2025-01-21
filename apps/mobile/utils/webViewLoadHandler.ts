@@ -3,12 +3,10 @@ import { RefObject } from "react";
 import { Platform } from "react-native";
 import WebView from "react-native-webview";
 import { WebViewProgressEvent } from "react-native-webview/lib/WebViewTypes";
-
 import { getAuthData } from "@/store/authStorage";
-
 import { sendMessageToWeb } from "./sendMessageToWeb";
 
-interface WebviewLoadHandler {
+interface WebViewLoadHandler {
   event: "onLoadProgress" | "onLoad";
   handler: (e: WebViewProgressEvent) => void;
 }
@@ -22,7 +20,7 @@ const sendAuthData = async (webViewRef: RefObject<WebView<object>>) => {
   });
 };
 
-export const webViewLoadHandler = (webViewRef: RefObject<WebView<object>>): WebviewLoadHandler => {
+export const webViewLoadHandler = (webViewRef: RefObject<WebView<object>>): WebViewLoadHandler => {
   if (Platform.OS === "ios") {
     return {
       event: "onLoadProgress",

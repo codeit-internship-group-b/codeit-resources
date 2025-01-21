@@ -5,7 +5,7 @@ interface Message<T> {
   data: T | null;
 }
 
-export const sendMessageToNative = <T>({ type, data }: Message<T>): void => {
+export const sendMessageToWebView = <T>({ type, data }: Message<T>): void => {
   if (typeof window !== "undefined" && window.ReactNativeWebView) {
     window.ReactNativeWebView.postMessage(stringifyJson({ type, data }));
   }
