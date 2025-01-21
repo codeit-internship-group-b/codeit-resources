@@ -4,16 +4,19 @@ import { useEffect, useState } from "react";
 import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/app/store/useAuthStore";
-import { getMessagesFromNative } from "../utils/reactNativeMessage";
+import { createWebViewMessageBridge } from "../../lib/bridge/createWebViewMessageBridge";
+import { parseWebViewAuthMessage } from "../../lib/bridge/parseWebViewAuthMessage";
 import SignInForm from "./SignInForm";
 
 export default function AuthGuard(): JSX.Element | null {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const { isLoggedIn } = useAuthStore();
+  const webViewMessageBridge = createWebViewMessageBridge();
 
   useEffect(() => {
-    getMessagesFromNative();
+    webViewMessageBridge.addMessageListener(parseWebViewAuthMessage);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

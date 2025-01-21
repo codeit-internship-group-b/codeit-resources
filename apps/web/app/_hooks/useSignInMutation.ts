@@ -10,7 +10,7 @@ import { notify } from "@/app/store/useToastStore";
 import { postSignIn } from "@/api/auth";
 import { useAuthStore } from "@/app/store/useAuthStore";
 import { notifyMutationError } from "@/app/utils/notifyMutationError";
-import { sendMessageToNative } from "../utils/reactNativeMessage";
+import { createWebViewMessageBridge } from "../../lib/bridge/createWebViewMessageBridge";
 
 export const useSignInMutation = (): UseMutationResult<
   SignInResponseType,
@@ -20,6 +20,7 @@ export const useSignInMutation = (): UseMutationResult<
   const router = useRouter();
   const queryClient = useQueryClient();
   const { login } = useAuthStore();
+  const webViewMessageBridge = createWebViewMessageBridge();
 
   return useMutation({
     mutationFn: (payload: FieldValues) => postSignIn(payload),
@@ -28,7 +29,11 @@ export const useSignInMutation = (): UseMutationResult<
       login(user, accessToken);
       queryClient.setQueryData(["userResponse"], user);
       notify("success", message);
-      sendMessageToNative({ type: WEBVIEW_MESSAGE_TYPES.SIGN_IN_SUCCESS, data: { user, accessToken } });
+
+      webViewMessageBridge.sendMessageToWebView({
+        type: WEBVIEW_MESSAGE_TYPES.SIGN_IN_SUCCESS,
+        data: { user, accessToken },
+      });
 
       // 화면전환 1초 지연
       await delay(1000);

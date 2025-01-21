@@ -1,4 +1,4 @@
-import { detectDevice } from "./detectDevice";
+import { detectDevice } from "../app/utils/detectDevice";
 
 export const getWebApiUrl = (): string | undefined => {
   if (typeof window === "undefined") {

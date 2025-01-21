@@ -1,6 +1,6 @@
 import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
 import { getCookie } from "cookies-next";
-import { getWebApiUrl } from "@/app/utils/getWebApiUrl";
+import { getWebApiUrl } from "@/api/getWebApiUrl";
 
 const baseURL = getWebApiUrl();
 

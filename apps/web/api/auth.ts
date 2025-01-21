@@ -2,7 +2,7 @@ import { API_ENDPOINTS } from "@repo/constants";
 import { type FieldValues } from "react-hook-form";
 import axios from "axios";
 import { type SignInResponseType } from "@repo/types/src/responseType";
-import { getWebApiUrl } from "@/app/utils/getWebApiUrl";
+import { getWebApiUrl } from "@/api/getWebApiUrl";
 
 const baseUrl = getWebApiUrl();
 

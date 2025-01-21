@@ -11,7 +11,7 @@ import { useAuthStore } from "@/app/store/useAuthStore";
 import { notify } from "@/app/store/useToastStore";
 import ErrorResetBoundary from "@/components/common/ErrorResetBoundary";
 import ErrorFallback from "@/components/common/Fallback";
-import { sendMessageToNative } from "@/app/utils/reactNativeMessage";
+import { createWebViewMessageBridge } from "@/lib/bridge/createWebViewMessageBridge";
 import SettingButtons from "./SettingButtons";
 import ChangePasswordForm from "./ChangePasswordForm";
 import ProfileInfoSkeleton from "./ProfileInfoSkeleton";
@@ -30,11 +30,12 @@ const ProfileInfo = dynamic(() => import("./ProfileInfo"), {
 export default function ResponsiveSettingsPage(): JSX.Element {
   const { logout } = useAuthStore();
   const router = useRouter();
+  const webViewMessageBridge = createWebViewMessageBridge();
 
   const handleLogout = (): void => {
     logout();
     notify("success", "로그아웃 되었습니다.");
-    sendMessageToNative({
+    webViewMessageBridge.sendMessageToWebView({
       type: WEBVIEW_MESSAGE_TYPES.SIGN_OUT_SUCCESS,
       data: null,
     });

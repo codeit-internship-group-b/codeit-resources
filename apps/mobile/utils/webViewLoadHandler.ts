@@ -3,7 +3,9 @@ import { RefObject } from "react";
 import { Platform } from "react-native";
 import WebView from "react-native-webview";
 import { WebViewProgressEvent } from "react-native-webview/lib/WebViewTypes";
+
 import { getAuthData } from "@/store/authStorage";
+
 import { sendMessageToWeb } from "./sendMessageToWeb";
 
 interface WebViewLoadHandler {
@@ -13,6 +15,7 @@ interface WebViewLoadHandler {
 
 const sendAuthData = async (webViewRef: RefObject<WebView<object>>) => {
   const authData = await getAuthData();
+
   sendMessageToWeb({
     webViewRef,
     type: WEBVIEW_MESSAGE_TYPES.AUTO_LOGIN,

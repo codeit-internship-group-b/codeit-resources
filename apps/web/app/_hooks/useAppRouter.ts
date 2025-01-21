@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
 import { WEBVIEW_MESSAGE_TYPES } from "@repo/constants";
-import { sendMessageToWebView } from "../utils/sendMessageToWebView";
+import { sendMessageToWebView } from "../../lib/bridge/sendMessageToWebView";
 import { useDetectWebView } from "./useDetectWebView";
 
 interface UseAppRouterResult {
