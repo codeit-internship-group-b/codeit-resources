@@ -1,14 +1,14 @@
 import { useRouter } from "next/navigation";
 import { WEBVIEW_MESSAGE_TYPES } from "@repo/constants";
 import { sendMessageToNative } from "../utils/sendMessageToNative";
-import { useWebView } from "./useWebView";
+import { useDetectWebView } from "./useDetectWebView";
 
 interface UseAppRouterResult {
   push: (url: string) => void;
 }
 
 export const useAppRouter = (): UseAppRouterResult => {
-  const { isWebView } = useWebView();
+  const { isWebView } = useDetectWebView();
   const router = useRouter();
 
   const push = (url: string): void => {

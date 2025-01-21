@@ -8,7 +8,7 @@ import { PAGE_NAME } from "@ui/src/utils/constants/pageNames";
 import cn from "@ui/src/utils/cn";
 import { Button } from "@ui/index";
 import { useAppRouter } from "@/app/_hooks/useAppRouter";
-import { useWebView } from "@/app/_hooks/useWebView";
+import { useDetectWebView } from "@/app/_hooks/useDetectWebView";
 
 const NAV_ITEMS = [
   { href: PAGE_NAME.DASHBOARD, name: "대시보드", icon: PersonIcon },
@@ -31,7 +31,7 @@ interface GnbMenuProps {
 export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element | null {
   const pathname = usePathname();
   const { push } = useAppRouter();
-  const { isWebView } = useWebView();
+  const { isWebView } = useDetectWebView();
 
   const handleButtonClick = (path: string): void => {
     push(path);
