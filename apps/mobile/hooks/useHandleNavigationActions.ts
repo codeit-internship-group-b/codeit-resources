@@ -1,9 +1,9 @@
 import { StackActions } from "@react-navigation/native";
 import { WEBVIEW_MESSAGE_TYPES } from "@repo/constants";
+import { Message } from "@ui/src/types/WebViewMessageTypes";
 import { useNavigation, usePathname } from "expo-router";
 
 import { DIR_NAME } from "@/constants/routes";
-import { Message } from "@ui/src/types/WebViewMessageTypes";
 
 export const useHandleNavigationActions = () => {
   const pathname = usePathname();
