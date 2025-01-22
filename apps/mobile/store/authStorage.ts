@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { WEBVIEW_MESSAGE_TYPES } from "@repo/constants";
 import { IUser } from "@repo/types/userType";
-import { LoginData } from "@repo/ui/src/types/WebViewMessageTypes";
+import { LoginData, Message } from "@repo/ui/src/types/WebViewMessageTypes";
 import { stringifyJson } from "@repo/ui/src/utils/stringifyJson";
 
 export const getAuthData = async () => {
@@ -13,7 +13,7 @@ export const getAuthData = async () => {
   };
 };
 
-export const setAuthData = async (accessToken: string, user: IUser) => {
+export const setAuthData = async ({ accessToken, user }: LoginData) => {
   await Promise.all([
     AsyncStorage.setItem("accessToken", accessToken),
     AsyncStorage.setItem("user", stringifyJson(user)),
@@ -24,11 +24,11 @@ export const clearAuthData = async () => {
   await Promise.all([AsyncStorage.removeItem("accessToken"), AsyncStorage.removeItem("user")]);
 };
 
-export const handleAuthStorage = async (type: string, data: LoginData) => {
+export const handleAuthStorage = async ({ type, data }: Message<LoginData>) => {
   switch (type) {
     case WEBVIEW_MESSAGE_TYPES.SIGN_IN_SUCCESS:
       const { user, accessToken } = data;
-      await setAuthData(accessToken, user);
+      await setAuthData({ accessToken, user });
       break;
     case WEBVIEW_MESSAGE_TYPES.SIGN_OUT_SUCCESS:
       await clearAuthData();

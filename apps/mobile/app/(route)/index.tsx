@@ -15,10 +15,10 @@ export default function HomeScreen() {
   const { event, handler } = webViewLoadHandler(webviewRef);
 
   const handleMessage = (e: WebViewMessageEvent) => {
-    handleNavigationActions(e);
-
     const { type, data } = parseMessage(e);
-    handleAuthStorage(type, data);
+
+    handleNavigationActions({ type, data });
+    handleAuthStorage({ type, data });
   };
 
   return (
@@ -28,9 +28,6 @@ export default function HomeScreen() {
       onMessage={handleMessage}
       {...{ [event]: handler }}
       className="flex-1"
-      cacheEnabled
-      javaScriptEnabled
-      domStorageEnabled
     />
   );
 }
