@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
 import { WEBVIEW_MESSAGE_TYPES } from "@repo/constants";
-import { sendMessageToWebView } from "../../lib/bridge/sendMessageToWebView";
+import { sendMessageToWebView } from "@/lib/bridge/sendMessageToWebView";
 import { useDetectWebView } from "./useDetectWebView";
 
 interface UseAppRouterResult {
@@ -8,8 +8,8 @@ interface UseAppRouterResult {
 }
 
 export const useAppRouter = (): UseAppRouterResult => {
-  const { isWebView } = useDetectWebView();
   const router = useRouter();
+  const { isWebView } = useDetectWebView();
 
   const push = (url: string): void => {
     if (isWebView) {
