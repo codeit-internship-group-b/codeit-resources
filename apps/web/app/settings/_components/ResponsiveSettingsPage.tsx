@@ -11,7 +11,8 @@ import { useAuthStore } from "@/app/store/useAuthStore";
 import { notify } from "@/app/store/useToastStore";
 import ErrorResetBoundary from "@/components/common/ErrorResetBoundary";
 import ErrorFallback from "@/components/common/Fallback";
-import { createWebViewMessageBridge } from "@/lib/bridge/createWebViewMessageBridge";
+import { useDetectWebView } from "@/app/_hooks/useDetectWebView";
+import { sendMessageToWebView } from "@/lib/bridge/sendMessageToWebView";
 import SettingButtons from "./SettingButtons";
 import ChangePasswordForm from "./ChangePasswordForm";
 import ProfileInfoSkeleton from "./ProfileInfoSkeleton";
@@ -28,17 +29,21 @@ const ProfileInfo = dynamic(() => import("./ProfileInfo"), {
 // TODO : 회의실, 좌석 modal 추가 및 redirect 처리
 
 export default function ResponsiveSettingsPage(): JSX.Element {
-  const { logout } = useAuthStore();
   const router = useRouter();
-  const webViewMessageBridge = createWebViewMessageBridge();
+  const { logout } = useAuthStore();
+  const { isWebView } = useDetectWebView();
 
   const handleLogout = (): void => {
     logout();
     notify("success", "로그아웃 되었습니다.");
-    webViewMessageBridge.sendMessageToWebView({
-      type: WEBVIEW_MESSAGE_TYPES.SIGN_OUT_SUCCESS,
-      data: null,
-    });
+
+    if (isWebView) {
+      sendMessageToWebView({
+        type: WEBVIEW_MESSAGE_TYPES.SIGN_OUT_SUCCESS,
+        data: null,
+      });
+    }
+
     router.replace(PAGE_NAME.SIGN_IN);
   };
 

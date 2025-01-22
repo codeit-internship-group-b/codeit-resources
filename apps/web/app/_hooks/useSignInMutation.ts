@@ -10,7 +10,8 @@ import { notify } from "@/app/store/useToastStore";
 import { postSignIn } from "@/api/auth";
 import { useAuthStore } from "@/app/store/useAuthStore";
 import { notifyMutationError } from "@/app/utils/notifyMutationError";
-import { createWebViewMessageBridge } from "../../lib/bridge/createWebViewMessageBridge";
+import { sendMessageToWebView } from "@/lib/bridge/sendMessageToWebView";
+import { useDetectWebView } from "./useDetectWebView";
 
 export const useSignInMutation = (): UseMutationResult<
   SignInResponseType,
@@ -20,20 +21,23 @@ export const useSignInMutation = (): UseMutationResult<
   const router = useRouter();
   const queryClient = useQueryClient();
   const { login } = useAuthStore();
-  const webViewMessageBridge = createWebViewMessageBridge();
+  const { isWebView } = useDetectWebView();
 
   return useMutation({
     mutationFn: (payload: FieldValues) => postSignIn(payload),
     onSuccess: async (res) => {
       const { user, accessToken, message } = res;
+
       login(user, accessToken);
       queryClient.setQueryData(["userResponse"], user);
       notify("success", message);
 
-      webViewMessageBridge.sendMessageToWebView({
-        type: WEBVIEW_MESSAGE_TYPES.SIGN_IN_SUCCESS,
-        data: { user, accessToken },
-      });
+      if (isWebView) {
+        sendMessageToWebView({
+          type: WEBVIEW_MESSAGE_TYPES.SIGN_IN_SUCCESS,
+          data: { user, accessToken },
+        });
+      }
 
       // 화면전환 1초 지연
       await delay(1000);
