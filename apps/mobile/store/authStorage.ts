@@ -26,10 +26,11 @@ export const clearAuthData = async () => {
 
 export const handleAuthStorage = async ({ type, data }: Message<LoginData>) => {
   switch (type) {
-    case WEBVIEW_MESSAGE_TYPES.SIGN_IN_SUCCESS:
+    case WEBVIEW_MESSAGE_TYPES.SIGN_IN_SUCCESS: {
       const { user, accessToken } = data;
       await setAuthData({ accessToken, user });
       break;
+    }
     case WEBVIEW_MESSAGE_TYPES.SIGN_OUT_SUCCESS:
       await clearAuthData();
       break;
