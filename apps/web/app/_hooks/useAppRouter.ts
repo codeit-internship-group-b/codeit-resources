@@ -18,7 +18,6 @@ export const useAppRouter = (): UseAppRouterResult => {
         type: WEBVIEW_MESSAGE_TYPES.ROUTER_EVENT,
         data: url,
       });
-      return;
     }
 
     // web 실행
