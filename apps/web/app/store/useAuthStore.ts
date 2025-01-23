@@ -15,7 +15,6 @@ export const useAuthStore = create(
     (set) => ({
       user: null,
       isLoggedIn: false,
-
       login: (user: IUser, accessToken: string) => {
         set({ isLoggedIn: true, user });
         setCookie("accessToken", accessToken);

@@ -2,10 +2,10 @@ import WebView, { WebViewMessageEvent } from "react-native-webview";
 
 import { ROUTES } from "@/constants/routes";
 import { useHandleNavigationActions } from "@/hooks/useHandleNavigationActions";
-import { getBaseUrl } from "@/utils/getBaseUrl";
+import { getWebViewApiUrl } from "@/utils/getWebViewApiUrl";
 
 export default function SettingsScreen() {
-  const baseUrl = getBaseUrl();
+  const baseUrl = getWebViewApiUrl();
   const handleNavigationActions = useHandleNavigationActions();
 
   const requestOnMessage = (e: WebViewMessageEvent) => {

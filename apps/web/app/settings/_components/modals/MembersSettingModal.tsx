@@ -8,7 +8,7 @@ interface MembersSettingModalProps {
 
 export default function MembersSettingModal({ isOpen, onClose }: MembersSettingModalProps): JSX.Element {
   return (
-    <SettingsModal isOpen={isOpen} onClose={onClose}>
+    <SettingsModal isOpen={isOpen} onClose={onClose} className="gap-0">
       <SettingsModalHeader title="멤버 관리" />
       <SettingsModalContent>
         <MembersContent />

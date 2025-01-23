@@ -1,8 +1,11 @@
 import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
 import { getCookie } from "cookies-next";
+import { getWebApiUrl } from "@/api/getWebApiUrl";
+
+const baseURL = getWebApiUrl();
 
 export const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL,
   timeout: 10_000,
 });
 

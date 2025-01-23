@@ -1,17 +1,33 @@
+import { useRef } from "react";
 import { WebView, WebViewMessageEvent } from "react-native-webview";
 
 import { useHandleNavigationActions } from "@/hooks/useHandleNavigationActions";
-import { getBaseUrl } from "@/utils/getBaseUrl";
+import { handleAuthStorage } from "@/store/authStorage";
+import { getWebViewApiUrl } from "@/utils/getWebViewApiUrl";
+import { parseMessage } from "@/utils/parseMessage";
+import { webViewLoadHandler } from "@/utils/webViewLoadHandler";
 
 export default function HomeScreen() {
-  // TODO : login상태에 따른 분기 처리 설정
+  const webviewRef = useRef<WebView>(null);
 
-  const baseUrl = getBaseUrl();
+  const baseUrl = getWebViewApiUrl();
   const handleNavigationActions = useHandleNavigationActions();
+  const { event, handler } = webViewLoadHandler(webviewRef);
 
-  const requestOnMessage = (e: WebViewMessageEvent) => {
-    handleNavigationActions(e);
+  const handleMessage = (e: WebViewMessageEvent) => {
+    const { type, data } = parseMessage(e);
+
+    handleNavigationActions({ type, data });
+    handleAuthStorage({ type, data });
   };
 
-  return <WebView className="flex-1" source={{ uri: `${baseUrl}` }} onMessage={requestOnMessage} />;
+  return (
+    <WebView
+      ref={webviewRef}
+      source={{ uri: `${baseUrl}` }}
+      onMessage={handleMessage}
+      {...{ [event]: handler }}
+      className="flex-1"
+    />
+  );
 }

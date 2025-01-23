@@ -1,5 +1,6 @@
 import { useLockBodyScroll } from "@ui/src/hooks/useLockBodyScroll";
 import { createContext, type ReactNode, useContext } from "react";
+import cn from "@repo/ui/src/utils/cn";
 
 /**
  * SettingsModalProps는 SettingsModal 컴포넌트의 props를 정의합니다.
@@ -10,6 +11,7 @@ import { createContext, type ReactNode, useContext } from "react";
 interface SettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
+  className?: string;
   children: ReactNode;
 }
 
@@ -35,13 +37,23 @@ export const useSettingsModal = (): SettingsModalContextProps => {
   return context ?? { onClose: () => {} };
 };
 
-export default function SettingsModal({ isOpen, onClose, children }: SettingsModalProps): JSX.Element | null {
+export default function SettingsModal({
+  isOpen,
+  onClose,
+  className,
+  children,
+}: SettingsModalProps): JSX.Element | null {
   useLockBodyScroll(isOpen);
   if (!isOpen) return null;
 
   return (
     <SettingsModalContext.Provider value={{ onClose }}>
-      <div className="no-scrollbar scrollbar-hidden fixed left-0 top-0 z-40 flex h-screen w-screen flex-col gap-28 overflow-hidden bg-white px-16 pb-32 pt-36">
+      <div
+        className={cn(
+          "no-scrollbar scrollbar-hidden fixed left-0 top-0 z-40 flex h-screen w-screen flex-col gap-28 overflow-hidden bg-white px-16 pb-32 pt-36",
+          `${className}`,
+        )}
+      >
         {children}
       </div>
     </SettingsModalContext.Provider>
