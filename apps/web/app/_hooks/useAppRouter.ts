@@ -12,6 +12,7 @@ export const useAppRouter = (): UseAppRouterResult => {
   const { isWebView } = useDetectWebView();
 
   const push = (url: string): void => {
+    // web view 실행
     if (isWebView) {
       sendMessageToWebView({
         type: WEBVIEW_MESSAGE_TYPES.ROUTER_EVENT,
@@ -20,6 +21,7 @@ export const useAppRouter = (): UseAppRouterResult => {
       return;
     }
 
+    // web 실행
     router.push(url);
   };
 

@@ -6,7 +6,7 @@ export interface TeamDocument extends Omit<TeamType, "_id">, Document {}
 const TeamSchema = new Schema<TeamDocument>(
   {
     name: { type: String, unique: true, required: true },
-    order: { type: Number, unique: true, required: false },
+    order: { type: Number },
   },
   { timestamps: true, versionKey: false },
 );

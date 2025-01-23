@@ -350,8 +350,8 @@ export const updateTeamOrder = async (req: UpdateTeamOrderRequest, res: Response
       update: { $set: { order: index } },
     },
   }));
-
   await Team.bulkWrite(bulkOperations);
+
   const reorderedTeams = await Team.find().sort({ order: 1 }).lean();
 
   res.status(200).send({
