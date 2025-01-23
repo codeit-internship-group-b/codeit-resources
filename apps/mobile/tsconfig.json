@@ -8,7 +8,8 @@
       "@ui/*": ["../../packages/ui/*"],
       "@/public/*": ["./public/*"],
       "@repo/types/*": ["../../packages/types/src/*"]
-    }
+    },
+    "jsx": "preserve"
   },
   "include": [
     "**/*.ts",
