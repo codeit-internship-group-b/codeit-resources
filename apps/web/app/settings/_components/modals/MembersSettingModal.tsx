@@ -1,4 +1,4 @@
-import MembersContent from "@/app/(admin)/members/_components/MembersContent";
+import ResponsiveMembersPage from "@/app/(admin)/members/_components/ResponsiveMembersPage";
 import { SettingsModal, SettingsModalContent, SettingsModalHeader } from "@/components/SettingsModal";
 
 interface MembersSettingModalProps {
@@ -11,7 +11,7 @@ export default function MembersSettingModal({ isOpen, onClose }: MembersSettingM
     <SettingsModal isOpen={isOpen} onClose={onClose} className="gap-0">
       <SettingsModalHeader title="멤버 관리" />
       <SettingsModalContent>
-        <MembersContent />
+        <ResponsiveMembersPage />
       </SettingsModalContent>
     </SettingsModal>
   );
