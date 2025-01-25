@@ -9,7 +9,6 @@ import { WEBVIEW_MESSAGE_TYPES } from "@repo/constants";
 import { notify } from "@/app/store/useToastStore";
 import { postSignIn } from "@/api/auth";
 import { useAuthStore } from "@/app/store/useAuthStore";
-import { notifyMutationError } from "@/app/utils/notifyMutationError";
 import { sendMessageToWebView } from "@/lib/bridge/sendMessageToWebView";
 import { useDetectWebView } from "./useDetectWebView";
 
@@ -42,9 +41,6 @@ export const useSignInMutation = (): UseMutationResult<
       // 화면전환 1초 지연
       await delay(1000);
       router.replace(PAGE_NAME.DASHBOARD);
-    },
-    onError: (error) => {
-      notifyMutationError(error);
     },
   });
 };
