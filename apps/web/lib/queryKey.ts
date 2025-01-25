@@ -1,9 +1,9 @@
-import { type UseMembersSuspenseInfiniteQueryParams } from "@/app/(admin)/members/_hooks/useMembersSuspenseInfiniteQuery";
+import { type MembersQueryParams } from "@repo/types/src/membersType";
 
 export const QUERY_KEYS = {
   MEMBERS: {
     ALL: ["members"],
-    list: (params: UseMembersSuspenseInfiniteQueryParams) => [...QUERY_KEYS.MEMBERS.ALL, params],
+    list: (params: MembersQueryParams) => [...QUERY_KEYS.MEMBERS.ALL, params],
   },
   TEAMS: {
     ALL: ["teams"],

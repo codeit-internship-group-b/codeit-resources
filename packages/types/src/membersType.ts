@@ -64,3 +64,10 @@ export interface MembersResponse extends ResponseWithMessage {
   members: IUser[];
   nextCursor: string | null;
 }
+
+export interface MembersQueryParams {
+  selectedSort: SortOption;
+  role?: string;
+  team?: string;
+  keyword?: string;
+}

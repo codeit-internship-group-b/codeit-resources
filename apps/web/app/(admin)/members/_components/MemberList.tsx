@@ -1,5 +1,4 @@
-import { useMemo } from "react";
-import { type MemberWithStaticImage, type SortOption } from "@repo/types/src/membersType";
+import { type MembersQueryParams, type MemberWithStaticImage, type SortOption } from "@repo/types/src/membersType";
 import { SpinnerIcon } from "@ui/public";
 import { useIntersectionObserver } from "@repo/ui/src/hooks/useIntersectionObserver";
 import { getEmptyMessage } from "@repo/ui/src/utils/getEmptyMessage";
@@ -15,7 +14,7 @@ interface MemberListProps {
 }
 
 export default function MemberList({ selectedSort, activeTab, onMemberClick, keyword }: MemberListProps): JSX.Element {
-  const queryParams = useMemo(() => {
+  const getQueryParams = (): MembersQueryParams => {
     const baseParams = {
       selectedSort,
       keyword,
@@ -32,7 +31,9 @@ export default function MemberList({ selectedSort, activeTab, onMemberClick, key
     }
 
     return { ...baseParams, team: activeTab };
-  }, [activeTab, selectedSort, keyword]);
+  };
+
+  const queryParams = getQueryParams();
 
   const {
     data: members,
