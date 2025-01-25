@@ -1,4 +1,4 @@
-import { IRoom, TItemType } from "@repo/types/src/itemType";
+import { TItemType } from "@repo/types/src/itemType";
 
 export const API_ENDPOINTS = {
   AUTH: {
