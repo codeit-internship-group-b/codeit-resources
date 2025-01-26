@@ -1,74 +1,53 @@
-/* eslint-disable @typescript-eslint/no-shadow */
 import { useForm, type UseFormProps, type UseFormReturn } from "react-hook-form";
 import { storage } from "@repo/ui/src/utils/storage";
 import { type KeywordsFormData } from "@repo/types/src/searchFormType";
+import { DEFAULT_KEYWORD_VALUES } from "@repo/constants";
 
 interface UseKeywordsFormProps extends UseFormProps {
-  onSearch: (keyword: string) => void;
-  keyword: string;
   onClose: () => void;
 }
 
 interface UseKeywordsFormReturn extends UseFormReturn<KeywordsFormData> {
-  recentKeywords: string[];
-  handleClearInput: () => void;
-  onSubmit: (data: KeywordsFormData) => void;
-  handleRemoveKeyword: (keywordToRemove: string) => void;
-  clearAllKeywords: () => void;
+  searchHistory: string[];
+  saveSearchHistory: (keywords: string[]) => void;
+  clearInput: () => void;
+  removeKeyword: (keywordToRemove: string) => void;
+  removeAllKeywords: () => void;
 }
 
-const DEFAULT_VALUES: KeywordsFormData = {
-  keyword: "",
-  recentKeywords: [],
-};
-
-export const useKeywordsForm = ({ onSearch, keyword, onClose }: UseKeywordsFormProps): UseKeywordsFormReturn => {
+export const useKeywordsForm = ({ onClose }: UseKeywordsFormProps): UseKeywordsFormReturn => {
   const form = useForm<KeywordsFormData>({
-    defaultValues: {
-      ...DEFAULT_VALUES,
-      keyword,
-    },
+    defaultValues: DEFAULT_KEYWORD_VALUES,
   });
-
   const { setValue, watch } = form;
-  const recentKeywords = watch("recentKeywords");
+  const searchHistory = watch("searchHistory");
 
-  const updateKeywords = (keywords: string[]): void => {
-    setValue("recentKeywords", keywords);
-    storage.set<string[]>("recentKeywords", keywords);
+  const saveSearchHistory = (keywords: string[]): void => {
+    setValue("searchHistory", keywords);
+    storage.set<string[]>("searchHistory", keywords);
   };
 
-  const handleClearInput = (): void => {
+  const clearInput = (): void => {
     setValue("keyword", "");
   };
 
-  const handleRemoveKeyword = (keywordToRemove: string): void => {
-    const updatedKeywords = recentKeywords.filter((keyword) => keyword !== keywordToRemove);
-    updateKeywords(updatedKeywords);
+  const removeKeyword = (keywordToRemove: string): void => {
+    const updatedKeywords = searchHistory.filter((keyword) => keyword !== keywordToRemove);
+
+    saveSearchHistory(updatedKeywords);
   };
 
-  const clearAllKeywords = (): void => {
-    updateKeywords([]);
-    onClose();
-  };
-
-  const onSubmit = (data: KeywordsFormData): void => {
-    const trimmedKeyword = data.keyword.trim();
-    const updatedKeywords = [trimmedKeyword, ...data.recentKeywords.filter((k) => k !== trimmedKeyword)].slice(0, 5);
-
-    if (!trimmedKeyword) return;
-
-    updateKeywords(updatedKeywords);
-    onSearch(trimmedKeyword);
+  const removeAllKeywords = (): void => {
+    saveSearchHistory([]);
     onClose();
   };
 
   return {
-    recentKeywords,
-    handleClearInput,
-    onSubmit,
-    handleRemoveKeyword,
-    clearAllKeywords,
+    searchHistory,
+    saveSearchHistory,
+    clearInput,
+    removeKeyword,
+    removeAllKeywords,
     ...form,
   };
 };
