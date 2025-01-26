@@ -6,7 +6,7 @@ import { useRef } from "react";
 import { deleteTeam, postCreateTeam, updateTeamName, updateTeamOrder } from "@/api/teams";
 import { notify } from "@/app/store/useToastStore";
 import { QUERY_KEYS } from "@/lib/queryKey";
-import { useDebouncedCallback } from "./useDebounceCallback";
+import { useDebouncedCallback } from "../../../_hooks/useDebounceCallback";
 
 export const useCreateTeam = (
   onClose: () => void,

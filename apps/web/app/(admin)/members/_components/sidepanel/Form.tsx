@@ -10,7 +10,7 @@ import {
   type MemberWithFileImage,
   type SidePanelFormData,
 } from "@repo/types/src/membersType";
-import { DEFAULT_VALUES } from "@repo/constants";
+import { DEFAULT_MEMBER_FORM_VALUES } from "@repo/constants";
 import { useEffect } from "react";
 import type { FormImageType, ImageFileType } from "@/app/types/ImageType";
 import { useMembersMutations } from "../../_hooks/useMembersMutations";
@@ -32,10 +32,10 @@ export default function MemberForm({ selectedMember, onClose }: MemberFormProps)
     setValue,
     watch,
     reset,
-  } = useForm({ defaultValues: DEFAULT_VALUES, resolver: zodResolver(memberFormSchema) });
+  } = useForm({ defaultValues: DEFAULT_MEMBER_FORM_VALUES, resolver: zodResolver(memberFormSchema) });
   const { updateMember, createMember, isPending } = useMembersMutations({
     onSuccess: () => {
-      reset(DEFAULT_VALUES);
+      reset(DEFAULT_MEMBER_FORM_VALUES);
       onClose();
     },
   });
@@ -96,7 +96,7 @@ export default function MemberForm({ selectedMember, onClose }: MemberFormProps)
     if (selectedMember) {
       reset({ ...selectedMember });
     } else {
-      reset(DEFAULT_VALUES);
+      reset(DEFAULT_MEMBER_FORM_VALUES);
     }
   }, [reset, selectedMember]);
 
