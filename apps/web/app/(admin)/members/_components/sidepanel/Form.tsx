@@ -7,13 +7,12 @@ import { MEMBER_FORM_MESSAGES } from "@repo/constants/messages";
 import {
   ROLE_LABELS,
   type RoleOption,
-  type FormImageType,
   type MemberWithFileImage,
-  type ImageFileType,
   type SidePanelFormData,
 } from "@repo/types/src/membersType";
 import { DEFAULT_VALUES } from "@repo/constants";
 import { useEffect } from "react";
+import type { FormImageType, ImageFileType } from "@/app/types/ImageType";
 import { useMembersMutations } from "../../_hooks/useMembersMutations";
 import { memberFormSchema } from "../../_schemas/Form.schema";
 import ProfileImageUploader from "./ProfileImageUploader";

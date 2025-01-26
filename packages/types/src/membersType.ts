@@ -1,12 +1,5 @@
-import { type StaticImageData } from "next/image";
+import { DisplayImageType, FormImageType } from "../../../apps/web/app/types/ImageType";
 import { IUser } from "./userType";
-
-// 이미지 타입
-export type ImageUrlType = string;
-export type StaticImageType = StaticImageData;
-export type ImageFileType = File;
-export type DisplayImageType = ImageUrlType | StaticImageType;
-export type FormImageType = DisplayImageType | ImageFileType | null;
 
 // 멤버 타입
 export type MemberWithStaticImage = Omit<IUser, "profileImage"> & {
