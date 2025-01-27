@@ -6,7 +6,6 @@ import { Button } from "@ui/index";
 import { type MemberWithStaticImage, type SortOption } from "@repo/types/src/membersType";
 import { useLockBodyScroll } from "@ui/src/hooks/useLockBodyScroll";
 import { MEMBER_FORM_MESSAGES } from "@repo/constants/messages";
-import { PlusIcon } from "@ui/public";
 import cn from "@ui/src/utils/cn";
 import ErrorFallback from "@/components/common/Fallback";
 import { useRedirectOnMobile } from "@/app/_hooks/useRediectOnMobile";
@@ -72,8 +71,7 @@ export default function ResponsiveMembersPage(): JSX.Element {
         <div className="fixed bottom-0 left-0 right-0 z-10 mx-16 mb-32 bg-white shadow-[0px_4px_12px_0px_rgba(0,0,0,0.2)] md:hidden">
           <Button variant="Primary" type="button" className="flex h-48 w-full md:hidden" onClick={handleOpenSidePanel}>
             <div className="flex items-center gap-10">
-              <PlusIcon width={12} height={12} fill="white" />
-              <span>{MEMBER_FORM_MESSAGES.TITLE.ADD}</span>
+              <span>{`+ ${MEMBER_FORM_MESSAGES.TITLE.ADD}`}</span>
             </div>
           </Button>
         </div>

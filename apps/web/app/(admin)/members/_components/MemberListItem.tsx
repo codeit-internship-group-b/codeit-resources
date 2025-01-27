@@ -97,7 +97,7 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
         <span className="text-md-regular md:text-lg-regular text-gray-30">{member.email}</span>
       </div>
 
-      <div data-dropdown="true" className="hidden md:absolute md:left-[400px] md:block">
+      <div data-dropdown="true" className="hidden lg:absolute lg:left-[400px] lg:block">
         <Dropdown selectedValue={getRoleDisplay(member.role)} onSelect={handleRoleChange} size="sm">
           <Dropdown.Toggle>{getRoleDisplay(member.role)}</Dropdown.Toggle>
           <Dropdown.Wrapper className="top-42">
@@ -110,7 +110,7 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
         </Dropdown>
       </div>
 
-      <div className="hidden md:absolute md:left-[530px] md:flex md:flex-grow md:flex-wrap md:gap-16">
+      <div className="hidden lg:absolute lg:left-[530px] lg:flex lg:flex-grow lg:flex-wrap lg:gap-16">
         {member.teams?.map((team) => (
           <Badge key={team} color="purple" colorApplyTo="font" shape="round">
             {team}
