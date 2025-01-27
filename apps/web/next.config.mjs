@@ -71,6 +71,17 @@ const nextConfig = {
       },
     },
   },
+
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: "/pr-:number/:path*",
+          destination: "/:path*",
+        },
+      ],
+    };
+  },
 };
 
 export default nextConfig;

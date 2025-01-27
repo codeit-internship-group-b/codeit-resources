@@ -60,4 +60,4 @@ jobs:
             **Branch:** ${{ github.head_ref }}
             **Commit:** ${{ github.sha }}
 
-            Preview URL: https://codeit.click?pr=${{ github.event.pull_request.number }}
+            Preview URL: https://codeit.click/pr-${{ github.event.pull_request.number }}
