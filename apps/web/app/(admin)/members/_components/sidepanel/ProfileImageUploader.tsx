@@ -5,7 +5,6 @@ import Image from "next/image";
 import DefaultProfileImage from "@ui/public/images/image_default_profile.png";
 import { MEMBER_FORM_MESSAGES } from "@repo/constants/messages";
 import { IMAGE_CONFIG, IMAGE_SIZES } from "@repo/constants";
-import cn from "@ui/src/utils/cn";
 import { type ImageFileType, type DisplayImageType, type FormImageType, type ImageSize } from "@/app/types/ImageType";
 
 interface ProfileImageUploaderProps {
