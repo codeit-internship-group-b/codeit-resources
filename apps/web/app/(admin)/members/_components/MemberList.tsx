@@ -17,7 +17,7 @@ export default function MemberList({ selectedSort, activeTab, onMemberClick, key
   const getQueryParams = (): MembersQueryParams => {
     const baseParams = {
       selectedSort,
-      keyword,
+      ...(keyword && { keyword }),
     };
 
     if (activeTab === "전체") {
