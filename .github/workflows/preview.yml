@@ -38,8 +38,6 @@ jobs:
 
       - name: Build
         run: pnpm -filter=web build
-        env:
-          NEXT_PUBLIC_BASE_PATH: /pr-${{ github.event.pull_request.number }}
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -63,4 +61,4 @@ jobs:
             **Branch:** ${{ github.head_ref }}
             **Commit:** ${{ github.sha }}
 
-            Preview URL: https://codeit.click/pr-${{ github.event.pull_request.number }}
+            Preview URL: https://codeit.click?pr=${{ github.event.pull_request.number }}
