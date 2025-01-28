@@ -42,6 +42,11 @@ jobs:
           GITHUB_EVENT_NAME: ${{ github.event_name }}
           GITHUB_EVENT_NUMBER: ${{ github.event.pull_request.number }}
 
+      - name: Check build output
+        run: |
+          echo "Build directory contents:"
+          ls -la ${{ secrets.BUILD_DIRECTORY }}
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -50,7 +55,11 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Deploy to S3 with PR-specific prefix
-        run: aws s3 sync ./${{ secrets.BUILD_DIRECTORY }} s3://${{ secrets.AWS_S3_BUCKET_NAME }}/pr-${{ github.event.pull_request.number }} --delete
+        run: |
+          echo "Syncing files to S3..."
+          aws s3 sync ${{ secrets.BUILD_DIRECTORY }} s3://${{ secrets.AWS_S3_BUCKET_NAME }}/pr-${{ github.event.pull_request.number }} --delete
+          echo "Files uploaded to S3:"
+          aws s3 ls s3://${{ secrets.AWS_S3_BUCKET_NAME }}/pr-${{ github.event.pull_request.number }} --recursive
 
       - name: CloudFront Invalidate Cache
         run: aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }} --paths "/pr-${{ github.event.pull_request.number }}/*"
