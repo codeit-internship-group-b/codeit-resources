@@ -28,24 +28,20 @@ export default function AuthGuard(): JSX.Element | null {
       return;
     }
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const prNumber = urlParams.get("pr");
+    if (pathname === "/" && typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      const prNumber = urlParams.get("pr");
 
-    const handleRootPath = (): void => {
       if (prNumber) {
         router.replace(`/dashboard?pr=${prNumber}`);
-        return;
+      } else {
+        router.replace(PAGE_NAME.DASHBOARD);
       }
-      router.replace(PAGE_NAME.DASHBOARD);
-    };
-
-    if (pathname === "/") {
-      handleRootPath();
     }
+
     setIsLoading(false);
   }, [isLoggedIn, router, pathname]);
 
   if (isLoading) return null;
-
   return isLoggedIn ? null : <SignInForm />;
 }

@@ -32,10 +32,18 @@ export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element | null {
   const pathname = usePathname();
   const { push } = useAppRouter();
   const { isWebView } = useDetectWebView();
-  const urlParams = new URLSearchParams(window.location.search);
-  const prNumber = urlParams.get("pr");
+
+  const getPrNumber = (): string | null => {
+    if (typeof window === "undefined") return null;
+
+    const urlParams = new URLSearchParams(window.location.search);
+
+    return urlParams.get("pr");
+  };
 
   const getUrlWithPR = (path: string): string => {
+    const prNumber = getPrNumber();
+
     return prNumber ? `${path}?pr=${prNumber}` : path;
   };
 
