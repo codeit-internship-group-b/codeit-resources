@@ -35,7 +35,7 @@ export default function AuthGuard(): JSX.Element | null {
 
       // PR preview URL인 경우
       if (isPrURL) {
-        const isRootPath = path.endsWith("/") || path.match(/\/pr-\d+$/);
+        const isRootPath = path.endsWith("/") || /\/pr-\d+$/.exec(path);
         const targetPath = isRootPath ? `${path}/dashboard`.replace(/\/+/g, "/") : path;
 
         router.replace(targetPath);
