@@ -24,7 +24,22 @@ export default function AuthGuard(): JSX.Element | null {
 
   useEffect(() => {
     if (isLoggedIn) {
-      router.replace(PAGE_NAME.DASHBOARD);
+      const path = window.location.pathname;
+      const isPrURL = path.includes("pr-");
+
+      // 일반 URL인 경우
+      if (path === "/") {
+        router.replace(PAGE_NAME.DASHBOARD);
+        return;
+      }
+
+      // PR preview URL인 경우
+      if (isPrURL) {
+        const isRootPath = path.endsWith("/") || path.match(/\/pr-\d+$/);
+        const targetPath = isRootPath ? `${path}/dashboard`.replace(/\/+/g, "/") : path;
+
+        router.replace(targetPath);
+      }
     }
 
     setIsLoading(false);
