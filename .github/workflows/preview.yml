@@ -38,6 +38,9 @@ jobs:
 
       - name: Build
         run: pnpm -filter=web build
+        env:
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+          GITHUB_EVENT_NUMBER: ${{ github.event.pull_request.number }}
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
