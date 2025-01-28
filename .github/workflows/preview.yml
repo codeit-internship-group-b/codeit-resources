@@ -37,7 +37,11 @@ jobs:
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
 
       - name: Build
-        run: pnpm -filter=web build
+        run: |
+          echo "Current branch: ${{ github.head_ref }}"
+          echo "PR number: ${{ github.event.pull_request.number }}"
+          echo "Event name: ${{ github.event_name }}"
+          pnpm -filter=web build
         env:
           GITHUB_EVENT_NAME: ${{ github.event_name }}
           GITHUB_EVENT_NUMBER: ${{ github.event.pull_request.number }}
