@@ -38,6 +38,8 @@ jobs:
 
       - name: Build
         run: pnpm -filter=web build
+        env:
+          NEXT_PUBLIC_BASE_PATH: /pr-${{ github.event.pull_request.number }}
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
