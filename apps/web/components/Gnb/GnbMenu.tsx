@@ -32,9 +32,15 @@ export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element | null {
   const pathname = usePathname();
   const { push } = useAppRouter();
   const { isWebView } = useDetectWebView();
+  const urlParams = new URLSearchParams(window.location.search);
+  const prNumber = urlParams.get("pr");
+
+  const getUrlWithPR = (path: string): string => {
+    return prNumber ? `${path}?pr=${prNumber}` : path;
+  };
 
   const handleButtonClick = (path: string): void => {
-    push(path);
+    push(getUrlWithPR(path));
   };
 
   return (
@@ -57,7 +63,7 @@ export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element | null {
                   },
                 }
               : {
-                  href,
+                  href: getUrlWithPR(href),
                 })}
             className={cn("h-full justify-start md:h-40 md:w-full md:px-0 md:py-0", index === 3 && "block md:hidden")}
             variant="Text"
@@ -82,7 +88,7 @@ export default function GnbMenu({ isAdmin }: GnbMenuProps): JSX.Element | null {
           {ADMIN_ITEMS.map(({ href, name, icon: Icon }) => {
             const isActive = pathname === href;
             return (
-              <Link key={name} href={href} className="hidden md:block">
+              <Link key={name} href={getUrlWithPR(href)} className="hidden md:block">
                 <div
                   className={clsx(
                     "rounded-10 flex size-full w-48 flex-col items-center md:w-full md:flex-row md:gap-10 md:px-16 md:py-8",
