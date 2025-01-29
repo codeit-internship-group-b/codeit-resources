@@ -49,7 +49,7 @@ jobs:
       - name: Check build output
         run: |
           echo "Checking index.html content:"
-          cat out/index.html
+          cat ${{ secrets.BUILD_DIRECTORY }}/index.html
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
