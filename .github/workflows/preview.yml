@@ -33,7 +33,7 @@ jobs:
       - name: Check Next.js config
         run: |
           echo "Next.js config content:"
-          cat next.config.mjs
+          cat apps/web/next.config.mjs
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
