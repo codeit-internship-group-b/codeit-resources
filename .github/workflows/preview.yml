@@ -62,8 +62,8 @@ jobs:
           pnpm -filter=web build
           echo "Checking dashboard directory contents:"
           ls -la ${{ secrets.BUILD_DIRECTORY }}/_next/static/chunks/app/dashboard/
-          echo "Checking all dashboard related files:"
-          find ${{ secrets.BUILD_DIRECTORY }} -name "*dashboard*"
+          echo "Checking dashboard page chunk content:"
+          cat ${{ secrets.BUILD_DIRECTORY }}/_next/static/chunks/app/dashboard/page-1f3a077437d59918.js
         env:
           GITHUB_EVENT_NAME: ${{ github.event_name }}
           GITHUB_EVENT_NUMBER: ${{ github.event.pull_request.number }}
