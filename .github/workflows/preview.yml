@@ -54,12 +54,17 @@ jobs:
         env:
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
 
-      - name: Build with verbose logging
+      - name: Build
         run: |
           echo "Current branch: ${{ github.head_ref }}"
           echo "PR number: ${{ github.event.pull_request.number }}"
           echo "Event name: ${{ github.event_name }}"
-          pnpm -filter=web build --verbose
+          # 빌드 결과물 확인
+          pnpm -filter=web build
+          echo "Build output files:"
+          ls -la ${{ secrets.BUILD_DIRECTORY }}
+          echo "Checking dashboard page content:"
+          cat ${{ secrets.BUILD_DIRECTORY }}/dashboard.html
         env:
           GITHUB_EVENT_NAME: ${{ github.event_name }}
           GITHUB_EVENT_NUMBER: ${{ github.event.pull_request.number }}
