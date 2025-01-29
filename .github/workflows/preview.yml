@@ -16,12 +16,19 @@ jobs:
       - name: Git Checkout
         uses: actions/checkout@v4
 
-      - name: Check DashboardSection content and location
+      - name: Check DashboardSection changes
         run: |
-          echo "Finding DashboardSection file:"
-          find . -name "DashboardSection.tsx"
-          echo "Git status:"
+          echo "Git branch info:"
+          git branch -v
+          echo "Recent commits:"
+          git log -3 --oneline
+          echo "Working directory status:"
           git status
+
+      - name: Check file content
+        run: |
+          echo "DashboardSection.tsx location and content:"
+          find . -name "DashboardSection.tsx" -exec sh -c 'echo "Location: {}"; cat "{}"' \;
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
