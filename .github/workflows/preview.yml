@@ -16,23 +16,12 @@ jobs:
       - name: Git Checkout
         uses: actions/checkout@v4
 
-      - name: Check git status
+      - name: Check DashboardSection content and location
         run: |
-          echo "Current branch and commit:"
-          git branch
-          git rev-parse HEAD
-          echo "Last commit message:"
-          git log -1 --pretty=%B
-
-      - name: Check PR changes
-        run: |
-          echo "DashboardSection content:"
-          cat apps/web/app/dashboard/_components/DashboardSection.tsx
-
-      - name: Check AuthGuard content
-        run: |
-          echo "Looking for AuthGuard.tsx:"
-          find . -name "AuthGuard.tsx"
+          echo "Finding DashboardSection file:"
+          find . -name "DashboardSection.tsx"
+          echo "Git status:"
+          git status
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
@@ -54,16 +43,13 @@ jobs:
         env:
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
 
-      - name: Build with debug
+      - name: Clean build and rebuild
         run: |
-          echo "Current branch: ${{ github.head_ref }}"
-          echo "PR number: ${{ github.event.pull_request.number }}"
-          echo "Event name: ${{ github.event_name }}"
+          echo "Cleaning Next.js cache..."
+          rm -rf apps/web/.next
+          rm -rf apps/web/out
+          echo "Building again..."
           pnpm -filter=web build
-          echo "Checking dashboard directory contents:"
-          ls -la ${{ secrets.BUILD_DIRECTORY }}/_next/static/chunks/app/dashboard/
-          echo "Checking dashboard page chunk content:"
-          cat ${{ secrets.BUILD_DIRECTORY }}/_next/static/chunks/app/dashboard/page-1f3a077437d59918.js
         env:
           GITHUB_EVENT_NAME: ${{ github.event_name }}
           GITHUB_EVENT_NUMBER: ${{ github.event.pull_request.number }}
