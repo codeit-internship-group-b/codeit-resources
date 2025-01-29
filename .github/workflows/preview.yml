@@ -30,6 +30,11 @@ jobs:
           echo "DashboardSection.tsx location and content:"
           find . -name "DashboardSection.tsx" -exec sh -c 'echo "Location: {}"; cat "{}"' \;
 
+      - name: Check Next.js config
+        run: |
+          echo "Next.js config content:"
+          cat next.config.mjs
+
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
