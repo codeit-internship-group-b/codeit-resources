@@ -36,11 +36,6 @@ jobs:
         env:
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
 
-      - name: Check AuthGuard content
-        run: |
-          echo "AuthGuard content:"
-          cat apps/web/app/components/auth/AuthGuard.tsx
-
       - name: Build
         run: |
           echo "Current branch: ${{ github.head_ref }}"
