@@ -1,13 +1,12 @@
 const isPR = process.env.GITHUB_EVENT_NAME === "pull_request";
 const prNumber = process.env.GITHUB_EVENT_NUMBER;
+const assetPrefix = isPR ? `/pr-${prNumber}` : "";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   output: "export",
-  ...(isPR && {
-    assetPrefix: `/pr-${prNumber}`,
-  }),
+  assetPrefix,
 
   images: {
     remotePatterns: [
