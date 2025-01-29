@@ -54,14 +54,16 @@ jobs:
         env:
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
 
-      - name: Build widh debug
+      - name: Build with debug
         run: |
           echo "Current branch: ${{ github.head_ref }}"
           echo "PR number: ${{ github.event.pull_request.number }}"
           echo "Event name: ${{ github.event_name }}"
           pnpm -filter=web build
-          echo "Checking chunk contents:"
-          ls -la ${{ secrets.BUILD_DIRECTORY }}/_next/static/chunks/
+          echo "Checking app chunks:"
+          ls -la ${{ secrets.BUILD_DIRECTORY }}/_next/static/chunks/app/
+          echo "Checking dashboard chunk content:"
+          cat ${{ secrets.BUILD_DIRECTORY }}/_next/static/chunks/app/dashboard/page-*.js
         env:
           GITHUB_EVENT_NAME: ${{ github.event_name }}
           GITHUB_EVENT_NUMBER: ${{ github.event.pull_request.number }}
