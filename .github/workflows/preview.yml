@@ -16,6 +16,14 @@ jobs:
       - name: Git Checkout
         uses: actions/checkout@v4
 
+      - name: Check git status
+        run: |
+          echo "Current branch and commit:"
+          git branch
+          git rev-parse HEAD
+          echo "Last commit message:"
+          git log -1 --pretty=%B
+
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
