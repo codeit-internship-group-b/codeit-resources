@@ -24,6 +24,16 @@ jobs:
           echo "Last commit message:"
           git log -1 --pretty=%B
 
+      - name: Check PR changes
+        run: |
+          echo "DashboardSection content:"
+          cat apps/web/app/dashboard/_components/DashboardSection.tsx
+
+      - name: Check AuthGuard content
+        run: |
+          echo "Looking for AuthGuard.tsx:"
+          find . -name "AuthGuard.tsx"
+
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
@@ -44,12 +54,12 @@ jobs:
         env:
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
 
-      - name: Build
+      - name: Build with verbose logging
         run: |
           echo "Current branch: ${{ github.head_ref }}"
           echo "PR number: ${{ github.event.pull_request.number }}"
           echo "Event name: ${{ github.event_name }}"
-          pnpm -filter=web build
+          pnpm -filter=web build --verbose
         env:
           GITHUB_EVENT_NAME: ${{ github.event_name }}
           GITHUB_EVENT_NUMBER: ${{ github.event.pull_request.number }}
