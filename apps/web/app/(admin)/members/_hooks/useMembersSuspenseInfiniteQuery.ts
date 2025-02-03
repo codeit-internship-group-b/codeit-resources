@@ -20,7 +20,7 @@ export function useMembersSuspenseInfiniteQuery({
   keyword,
 }: MembersQueryParams): UseSuspenseInfiniteQueryResult<IUser[]> {
   const options = infiniteQueryOptions({
-    queryKey: QUERY_KEYS.MEMBERS.list({ selectedSort, role, team, keyword }),
+    queryKey: QUERY_KEYS.MEMBERS.LIST({ selectedSort, role, team, keyword }),
     queryFn: ({ pageParam }: PageParam): Promise<MembersResponse> =>
       getMembers({
         selectedSort,
