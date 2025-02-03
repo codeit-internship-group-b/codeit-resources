@@ -1,5 +1,4 @@
 import { TItemType } from "@repo/types/src/itemType";
-import { SidePanelFormData } from "@repo/types/src/membersType";
 
 export const API_ENDPOINTS = {
   AUTH: {
@@ -50,6 +49,7 @@ export const IMAGE_CONFIG = {
 };
 
 export const IMAGE_SIZES = {
+  SM: 72,
   MD: 120,
 };
 
@@ -61,12 +61,4 @@ export const WEBVIEW_MESSAGE_TYPES = {
   SIGN_OUT_SUCCESS: "SIGN_OUT_SUCCESS",
   SIGN_IN_ERROR: "SIGN_IN_ERROR",
   ROUTER_EVENT: "ROUTER_EVENT",
-};
-
-export const DEFAULT_MEMBER_FORM_VALUES: SidePanelFormData = {
-  role: "member",
-  name: "",
-  email: "",
-  teams: [],
-  profileImage: null,
 };

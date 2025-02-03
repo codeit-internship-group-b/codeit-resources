@@ -4,19 +4,21 @@ import { Radio } from "@ui/index";
 import Input from "@ui/src/components/common/Input";
 import Button from "@ui/src/components/common/Button";
 import { MEMBER_FORM_MESSAGES } from "@repo/constants/messages";
-import {
-  ROLE_LABELS,
-  type RoleOption,
-  type MemberWithFileImage,
-  type SidePanelFormData,
-} from "@repo/types/src/membersType";
-import { DEFAULT_MEMBER_FORM_VALUES } from "@repo/constants";
+import { ROLE_LABELS, type RoleOption, type MemberWithFileImage } from "@repo/types/src/membersType";
 import { useEffect } from "react";
 import type { FormImageType, ImageFileType } from "@/app/types/ImageType";
 import { useMembersMutations } from "../../_hooks/useMembersMutations";
-import { memberFormSchema } from "../../_schemas/Form.schema";
+import { MembersSchema, type MembersType } from "../../_schemas/Form.schema";
 import ProfileImageUploader from "./ProfileImageUploader";
 import TeamDropdown from "./TeamDropdown";
+
+export const DEFAULT_MEMBER_FORM_VALUES: MembersType = {
+  role: "member",
+  name: "",
+  email: "",
+  teams: [],
+  profileImage: null,
+};
 
 export interface MemberFormProps {
   selectedMember: MemberWithFileImage | null;
@@ -32,7 +34,7 @@ export default function MemberForm({ selectedMember, onClose }: MemberFormProps)
     setValue,
     watch,
     reset,
-  } = useForm({ defaultValues: DEFAULT_MEMBER_FORM_VALUES, resolver: zodResolver(memberFormSchema) });
+  } = useForm({ defaultValues: DEFAULT_MEMBER_FORM_VALUES, resolver: zodResolver(MembersSchema) });
   const { updateMember, createMember, isPending } = useMembersMutations({
     onSuccess: () => {
       reset(DEFAULT_MEMBER_FORM_VALUES);
@@ -64,7 +66,7 @@ export default function MemberForm({ selectedMember, onClose }: MemberFormProps)
     return selectedMember ? MEMBER_FORM_MESSAGES.BUTTON.SUBMIT.UPDATE : MEMBER_FORM_MESSAGES.BUTTON.SUBMIT.ADD;
   };
 
-  const createMemberFormData = (data: SidePanelFormData): FormData => {
+  const createMemberFormData = (data: MembersType): FormData => {
     const formData = new FormData();
     formData.append("role", data.role);
     formData.append("name", data.name);
@@ -81,7 +83,7 @@ export default function MemberForm({ selectedMember, onClose }: MemberFormProps)
     return formData;
   };
 
-  const onSubmit = (data: SidePanelFormData): void => {
+  const onSubmit = (data: MembersType): void => {
     if (isPending) return;
 
     const formData = createMemberFormData(data);

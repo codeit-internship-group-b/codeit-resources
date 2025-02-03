@@ -3,7 +3,7 @@ import { type StaticImageData } from "next/image";
 import { ROLE_LABELS } from "@repo/types/src/membersType";
 import { MEMBER_FORM_MESSAGES } from "@repo/constants/messages";
 
-export const memberFormSchema = z.object({
+export const MembersSchema = z.object({
   role: z.enum(Object.keys(ROLE_LABELS) as [keyof typeof ROLE_LABELS]).default("member"),
   name: z
     .string()
@@ -16,3 +16,5 @@ export const memberFormSchema = z.object({
   teams: z.array(z.string()),
   profileImage: z.union([z.string(), z.instanceof(File), z.custom<StaticImageData>(), z.null()]),
 });
+
+export type MembersType = z.infer<typeof MembersSchema>;

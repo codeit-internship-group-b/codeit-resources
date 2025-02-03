@@ -9,14 +9,6 @@ export type MemberWithFileImage = Omit<IUser, "profileImage"> & {
   profileImage?: FormImageType;
 };
 
-// 폼 타입
-export type SidePanelFormData = Omit<
-  IUser,
-  "_id" | "createdAt" | "updatedAt" | "department" | "password" | "profileImage"
-> & {
-  profileImage: FormImageType;
-};
-
 export const SORT_OPTIONS = {
   NEWEST: "newest",
   OLDEST: "oldest",
