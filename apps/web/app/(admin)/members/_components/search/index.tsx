@@ -1,11 +1,15 @@
 import { useRef, useState } from "react";
 import { useOnClickOutside } from "@ui/src/hooks/useOnClickOutside";
 import { SEARCH } from "@repo/constants/messages";
-import { type KeywordsFormData } from "@repo/types/src/searchFormType";
-import { useKeywordsForm } from "../../_hooks/useKeywordsForm";
+import { useForm } from "react-hook-form";
+import { storage } from "@ui/src/utils/storage";
 import SearchInput from "./SearchInput";
 import SearchHistoryList from "./SearchHistoryList";
 
+export interface KeywordsFormData {
+  keyword: string;
+  searchHistory: string[];
+}
 interface SearchFormProps {
   onSearch: (keyword: string) => void;
   keyword: string;
@@ -15,6 +19,36 @@ export default function SearchForm({ onSearch, keyword }: SearchFormProps): JSX.
   const searchFormRef = useRef<HTMLDivElement>(null);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
+  const { register, setValue, watch, handleSubmit } = useForm<KeywordsFormData>({
+    defaultValues: {
+      keyword: "",
+      searchHistory: [],
+    },
+  });
+
+  const searchHistory = watch("searchHistory");
+
+  const saveSearchHistory = (keywords: string[]): void => {
+    setValue("searchHistory", keywords);
+    storage.set<string[]>("searchHistory", keywords);
+  };
+
+  const handleClearInput = (): void => {
+    setValue("keyword", "");
+  };
+
+  const handleRemovekeyword = (keywordToRemove: string): void => {
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    const updatedKeywords = searchHistory.filter((keyword) => keyword !== keywordToRemove);
+
+    saveSearchHistory(updatedKeywords);
+  };
+
+  const handleRemoveAllKeywords = (): void => {
+    saveSearchHistory([]);
+    handleCloseHistory();
+  };
+
   const handleOpenHistory = (): void => {
     setIsHistoryOpen(true);
   };
@@ -23,25 +57,10 @@ export default function SearchForm({ onSearch, keyword }: SearchFormProps): JSX.
     setIsHistoryOpen(false);
   };
 
-  useOnClickOutside(searchFormRef, handleCloseHistory);
-
   const handleSelectKeyword = (selectedKeyword: string): void => {
     setValue("keyword", selectedKeyword);
     handleCloseHistory();
   };
-
-  const {
-    register,
-    setValue,
-    handleSubmit,
-    searchHistory,
-    saveSearchHistory,
-    handleClearInput,
-    handleRemovekeyword,
-    handleRemoveAllKeywords,
-  } = useKeywordsForm({
-    handleCloseHistory,
-  });
 
   const onSubmit = (formData: KeywordsFormData): void => {
     const trimmedKeyword = formData.keyword.trim();
@@ -57,6 +76,8 @@ export default function SearchForm({ onSearch, keyword }: SearchFormProps): JSX.
     onSearch(trimmedKeyword);
     handleCloseHistory();
   };
+
+  useOnClickOutside(searchFormRef, handleCloseHistory);
 
   return (
     <div ref={searchFormRef} className="h-54 md:h-42 relative w-full md:w-[240px]">

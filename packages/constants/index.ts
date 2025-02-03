@@ -1,6 +1,5 @@
 import { TItemType } from "@repo/types/src/itemType";
 import { SidePanelFormData } from "@repo/types/src/membersType";
-import { KeywordsFormData } from "./../types/src/searchFormType";
 
 export const API_ENDPOINTS = {
   AUTH: {
@@ -70,9 +69,4 @@ export const DEFAULT_MEMBER_FORM_VALUES: SidePanelFormData = {
   email: "",
   teams: [],
   profileImage: null,
-};
-
-export const DEFAULT_KEYWORD_VALUES: KeywordsFormData = {
-  keyword: "",
-  searchHistory: [],
 };
