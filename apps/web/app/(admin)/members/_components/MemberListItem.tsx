@@ -109,15 +109,13 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
           </Dropdown.Wrapper>
         </Dropdown>
       </div>
-
-      <div className="hidden lg:absolute lg:left-[530px] lg:flex lg:flex-grow lg:flex-wrap lg:gap-16">
+      <div className="hidden 2xl:absolute 2xl:left-[530px] 2xl:flex 2xl:flex-grow 2xl:flex-wrap 2xl:gap-16">
         {member.teams?.map((team) => (
           <Badge key={team} color="purple" colorApplyTo="font" shape="round">
             {team}
           </Badge>
         ))}
       </div>
-
       <Chevron className="top-22 md:top-26 absolute right-16 rotate-180 md:right-24" />
     </div>
   );
