@@ -15,19 +15,19 @@ export default function SearchForm({ onSearch, keyword }: SearchFormProps): JSX.
   const searchFormRef = useRef<HTMLDivElement>(null);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
-  const openSearchHistory = (): void => {
+  const handleOpenHistory = (): void => {
     setIsHistoryOpen(true);
   };
 
-  const closeSearchHistory = (): void => {
+  const handleCloseHistory = (): void => {
     setIsHistoryOpen(false);
   };
 
-  useOnClickOutside(searchFormRef, closeSearchHistory);
+  useOnClickOutside(searchFormRef, handleCloseHistory);
 
-  const selectKeyword = (selectedKeyword: string): void => {
+  const handleSelectKeyword = (selectedKeyword: string): void => {
     setValue("keyword", selectedKeyword);
-    closeSearchHistory();
+    handleCloseHistory();
   };
 
   const {
@@ -36,11 +36,11 @@ export default function SearchForm({ onSearch, keyword }: SearchFormProps): JSX.
     handleSubmit,
     searchHistory,
     saveSearchHistory,
-    clearInput,
-    removeKeyword,
-    removeAllKeywords,
+    handleClearInput,
+    handleRemovekeyword,
+    handleRemoveAllKeywords,
   } = useKeywordsForm({
-    onClose: closeSearchHistory,
+    handleCloseHistory,
   });
 
   const onSubmit = (formData: KeywordsFormData): void => {
@@ -55,7 +55,7 @@ export default function SearchForm({ onSearch, keyword }: SearchFormProps): JSX.
 
     saveSearchHistory(updatedKeywords);
     onSearch(trimmedKeyword);
-    closeSearchHistory();
+    handleCloseHistory();
   };
 
   return (
@@ -68,8 +68,8 @@ export default function SearchForm({ onSearch, keyword }: SearchFormProps): JSX.
           register={register}
           setValue={setValue}
           keyword={keyword}
-          onFocus={openSearchHistory}
-          onClear={clearInput}
+          onFocus={handleOpenHistory}
+          onClear={handleClearInput}
         />
       </form>
 
@@ -79,12 +79,12 @@ export default function SearchForm({ onSearch, keyword }: SearchFormProps): JSX.
             <div className="mb-12 flex justify-between">
               <span className="text-md-medium text-gray-200/50">{SEARCH.LABEL.RECENT}</span>
               {searchHistory.length > 0 && (
-                <button type="button" className="text-xs-semibold text-gray-200/50" onClick={removeAllKeywords}>
+                <button type="button" className="text-xs-semibold text-gray-200/50" onClick={handleRemoveAllKeywords}>
                   {SEARCH.LABEL.REMOVE_ALL}
                 </button>
               )}
             </div>
-            <SearchHistoryList keywords={searchHistory} onSelect={selectKeyword} onRemove={removeKeyword} />
+            <SearchHistoryList keywords={searchHistory} onSelect={handleSelectKeyword} onRemove={handleRemovekeyword} />
           </div>
         </div>
       ) : null}

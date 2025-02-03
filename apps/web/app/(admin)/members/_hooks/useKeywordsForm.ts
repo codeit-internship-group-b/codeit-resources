@@ -4,18 +4,18 @@ import { type KeywordsFormData } from "@repo/types/src/searchFormType";
 import { DEFAULT_KEYWORD_VALUES } from "@repo/constants";
 
 interface UseKeywordsFormProps extends UseFormProps {
-  onClose: () => void;
+  handleCloseHistory: () => void;
 }
 
 interface UseKeywordsFormReturn extends UseFormReturn<KeywordsFormData> {
   searchHistory: string[];
   saveSearchHistory: (keywords: string[]) => void;
-  clearInput: () => void;
-  removeKeyword: (keywordToRemove: string) => void;
-  removeAllKeywords: () => void;
+  handleClearInput: () => void;
+  handleRemovekeyword: (keywordToRemove: string) => void;
+  handleRemoveAllKeywords: () => void;
 }
 
-export const useKeywordsForm = ({ onClose }: UseKeywordsFormProps): UseKeywordsFormReturn => {
+export const useKeywordsForm = ({ handleCloseHistory }: UseKeywordsFormProps): UseKeywordsFormReturn => {
   const form = useForm<KeywordsFormData>({
     defaultValues: DEFAULT_KEYWORD_VALUES,
   });
@@ -27,27 +27,27 @@ export const useKeywordsForm = ({ onClose }: UseKeywordsFormProps): UseKeywordsF
     storage.set<string[]>("searchHistory", keywords);
   };
 
-  const clearInput = (): void => {
+  const handleClearInput = (): void => {
     setValue("keyword", "");
   };
 
-  const removeKeyword = (keywordToRemove: string): void => {
+  const handleRemovekeyword = (keywordToRemove: string): void => {
     const updatedKeywords = searchHistory.filter((keyword) => keyword !== keywordToRemove);
 
     saveSearchHistory(updatedKeywords);
   };
 
-  const removeAllKeywords = (): void => {
+  const handleRemoveAllKeywords = (): void => {
     saveSearchHistory([]);
-    onClose();
+    handleCloseHistory();
   };
 
   return {
     searchHistory,
     saveSearchHistory,
-    clearInput,
-    removeKeyword,
-    removeAllKeywords,
+    handleClearInput,
+    handleRemovekeyword,
+    handleRemoveAllKeywords,
     ...form,
   };
 };

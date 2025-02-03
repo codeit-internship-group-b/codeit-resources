@@ -17,7 +17,7 @@ export default function SearchInput({ register, setValue, keyword, onFocus, onCl
     setValue("keyword", value);
   }, 300);
 
-  const updateInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const value = e.target.value;
     debouncedSetValue(value);
   };
@@ -32,7 +32,7 @@ export default function SearchInput({ register, setValue, keyword, onFocus, onCl
         className="h-18 w-full bg-transparent focus:outline-none"
         onFocus={onFocus}
         {...register("keyword", {
-          onChange: updateInputChange,
+          onChange: handleInputChange,
         })}
       />
       {keyword ? (
