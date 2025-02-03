@@ -4,6 +4,7 @@ import { useState, useEffect, type ChangeEvent } from "react";
 import Image from "next/image";
 import DefaultProfileImage from "@ui/public/images/image_default_profile.png";
 import { MEMBER_FORM_MESSAGES } from "@repo/constants/messages";
+import cn from "@ui/src/utils/cn";
 import { IMAGE_CONFIG, IMAGE_SIZES } from "@repo/constants";
 import { type ImageFileType, type DisplayImageType, type FormImageType, type ImageSize } from "@/app/types/ImageType";
 
@@ -13,7 +14,11 @@ interface ProfileImageUploaderProps {
   size?: ImageSize;
 }
 
-export default function ProfileImageUploader({ currentImage, onImageChange }: ProfileImageUploaderProps): JSX.Element {
+export default function ProfileImageUploader({
+  currentImage,
+  onImageChange,
+  size = "md",
+}: ProfileImageUploaderProps): JSX.Element {
   const [imageObjectUrl, setImageObjectUrl] = useState("");
   const [isImageError, setIsImageError] = useState(false);
 
@@ -53,12 +58,15 @@ export default function ProfileImageUploader({ currentImage, onImageChange }: Pr
       <Image
         src={getImageSource()}
         alt={currentImage ? MEMBER_FORM_MESSAGES.IMAGE.PREVIEW_ALT : MEMBER_FORM_MESSAGES.IMAGE.DEFAULT_ALT}
-        width={IMAGE_SIZES.MD}
-        height={IMAGE_SIZES.MD}
+        width={size === "sm" ? IMAGE_SIZES.SM : IMAGE_SIZES.MD}
+        height={size === "sm" ? IMAGE_SIZES.SM : IMAGE_SIZES.MD}
         placeholder="blur"
         blurDataURL={IMAGE_CONFIG.BLUR_DATA_URL}
         onError={handleError}
-        className={`rounded-full object-cover size-${IMAGE_SIZES.MD}`}
+        className={cn("rounded-full object-cover", {
+          [`size-${IMAGE_SIZES.SM}`]: size === "sm",
+          [`size-${IMAGE_SIZES.MD}`]: size !== "sm",
+        })}
       />
       <label
         htmlFor="profileImage"
