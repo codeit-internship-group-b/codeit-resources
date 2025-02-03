@@ -97,7 +97,7 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
         <span className="text-md-regular md:text-lg-regular text-gray-30">{member.email}</span>
       </div>
 
-      <div data-dropdown="true" className="hidden md:absolute md:left-[400px] md:block">
+      <div data-dropdown="true" className="hidden lg:absolute lg:left-[400px] lg:block">
         <Dropdown selectedValue={getRoleDisplay(member.role)} onSelect={handleRoleChange} size="sm">
           <Dropdown.Toggle>{getRoleDisplay(member.role)}</Dropdown.Toggle>
           <Dropdown.Wrapper className="top-42">
@@ -109,15 +109,13 @@ export default function MemberListItem({ member, onMemberClick }: MemberListItem
           </Dropdown.Wrapper>
         </Dropdown>
       </div>
-
-      <div className="hidden md:absolute md:left-[530px] md:flex md:flex-grow md:flex-wrap md:gap-16">
+      <div className="hidden 2xl:absolute 2xl:left-[530px] 2xl:flex 2xl:flex-grow 2xl:flex-wrap 2xl:gap-16">
         {member.teams?.map((team) => (
           <Badge key={team} color="purple" colorApplyTo="font" shape="round">
             {team}
           </Badge>
         ))}
       </div>
-
       <Chevron className="top-22 md:top-26 absolute right-16 rotate-180 md:right-24" />
     </div>
   );

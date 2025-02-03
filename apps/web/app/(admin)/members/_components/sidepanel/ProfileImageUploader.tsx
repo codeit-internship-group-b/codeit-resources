@@ -3,15 +3,15 @@
 import { useState, useEffect, type ChangeEvent } from "react";
 import Image from "next/image";
 import DefaultProfileImage from "@ui/public/images/image_default_profile.png";
-import { type ImageFileType, type DisplayImageType, type FormImageType } from "@repo/types/src/membersType";
 import { MEMBER_FORM_MESSAGES } from "@repo/constants/messages";
-import { IMAGE_CONFIG } from "@repo/constants";
 import cn from "@ui/src/utils/cn";
+import { IMAGE_CONFIG } from "@repo/constants";
+import { type ImageFileType, type DisplayImageType, type FormImageType, type ImageSize } from "@/app/types/ImageType";
 
 interface ProfileImageUploaderProps {
   currentImage: FormImageType;
   onImageChange?: (file: ImageFileType) => void;
-  size?: "sm" | "md";
+  size?: ImageSize;
 }
 
 export default function ProfileImageUploader({
@@ -32,7 +32,7 @@ export default function ProfileImageUploader({
   };
 
   const getImageSource = (): DisplayImageType => {
-    if (isImageError) {
+    if (isImageError || !currentImage) {
       return DefaultProfileImage;
     }
 
@@ -40,11 +40,7 @@ export default function ProfileImageUploader({
       return imageObjectUrl;
     }
 
-    if (typeof currentImage === "string") {
-      return currentImage;
-    }
-
-    return DefaultProfileImage;
+    return currentImage;
   };
 
   const handleError = (): void => {

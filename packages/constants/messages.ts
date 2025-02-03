@@ -84,3 +84,10 @@ export const EMPTY_STATE_MESSAGES = {
     description: "새로운 팀을 등록해 보세요.",
   },
 } as const;
+
+export const SEARCH = {
+  LABEL: {
+    RECENT: "최근 검색어",
+    REMOVE_ALL: "전체 삭제",
+  },
+} as const;

@@ -3,7 +3,6 @@ import { useMutation, useQueryClient, type UseMutationResult } from "@tanstack/r
 import { type AxiosError } from "axios";
 import { patchUserImage, patchUserPassword } from "@/api/users";
 import { notify } from "@/app/store/useToastStore";
-import { notifyMutationError } from "@/app/utils/notifyMutationError";
 import { QUERY_KEYS } from "@/lib/queryKey";
 
 export const useChangeUserPasswordMutation = (): UseMutationResult<
@@ -15,9 +14,6 @@ export const useChangeUserPasswordMutation = (): UseMutationResult<
     mutationFn: (payload: ChangePasswordPayload) => patchUserPassword(payload),
     onSuccess: (res) => {
       notify("success", res.message);
-    },
-    onError: (error) => {
-      notifyMutationError(error);
     },
   });
 };
@@ -33,9 +29,6 @@ export const useChangeUserImageMutation = (): UseMutationResult<
     onSuccess: (res) => {
       void queryClient.invalidateQueries({ queryKey: QUERY_KEYS.USER });
       notify("success", res.message);
-    },
-    onError: (error) => {
-      notifyMutationError(error);
     },
   });
 };

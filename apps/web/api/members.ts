@@ -1,12 +1,13 @@
 import { API_ENDPOINTS } from "@repo/constants";
-import type { MemberResponse, ResponseWithMessage, SortOption, MembersResponse } from "@repo/types/src/membersType";
+import type {
+  MemberResponse,
+  ResponseWithMessage,
+  MembersResponse,
+  MembersQueryParams,
+} from "@repo/types/src/membersType";
 import { axiosRequester } from "@/lib/axios";
 
-interface GetMembersProps {
-  selectedSort: SortOption;
-  role?: string;
-  team?: string;
-  keyword?: string;
+interface GetMembersProps extends MembersQueryParams {
   cursor?: string | null;
 }
 

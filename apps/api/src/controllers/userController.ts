@@ -5,9 +5,9 @@ import { compare } from "bcryptjs";
 import { PAGE_SIZE } from "@repo/constants";
 import { User } from "../models/userModel";
 import { areArraysEqual } from "../utils/areArraysEqual";
-import { buildFilters } from "../utils/buildFilters";
+import { createFilters } from "../utils/createFilters";
 import { getSortCriteria } from "../utils/getSortCriteria";
-import { formatPaginatedResponse } from "../utils/formatPaginatedResponse";
+import { createPagedMembers } from "../utils/createPagedMembers";
 import { fetchUsers } from "../utils/fetchUsers";
 import { type GetUsersRequest } from "../types";
 
@@ -19,37 +19,33 @@ config();
  * /users:
  *   get:
  *     tags: [Users]
- *     summary: 모든 사용자 조회
- *     description: 필터링 및 정렬 옵션을 사용하여 모든 사용자를 조회합니다.
+ *     summary: 사용자 리스트 조회
+ *     description: 필터 및 정렬 옵션을 이용하여 사용자 리스트를 조회합니다.
  *     parameters:
  *       - in: query
  *         name: role
  *         schema:
  *           type: string
- *         description: 사용자의 역할로 필터링합니다.
  *       - in: query
  *         name: team
  *         schema:
  *           type: string
- *         description: 팀으로 필터링합니다.
  *       - in: query
  *         name: sortOption
  *         schema:
  *           type: string
  *           enum: [newest, oldest, alphabetical]
- *         description: 정렬 옵션을 선택합니다.
  *       - in: query
  *         name: cursor
  *         schema:
  *           type: string
- *         description: 다음 페이지 조회를 위한 커서 ID
  *       - in: query
  *         name: keyword
  *         schema:
  *           type: string
- *         description: 이름, 이메일로 검색합니다.
  *     responses:
  *       200:
+ *         description: 사용자 정보를 반환합니다.
  *         content:
  *           application/json:
  *             schema:
@@ -89,23 +85,20 @@ config();
  */
 
 export const getUsers = async (req: GetUsersRequest, res: Response): Promise<void> => {
-  const filters = buildFilters({ query: req.query });
+  const filters = createFilters({ query: req.query });
   const sortCriteria = getSortCriteria({ sortOption: req.query.sortOption });
   const users = await fetchUsers({
     filters,
     sortCriteria,
     pageSize: PAGE_SIZE,
   });
-  const response = formatPaginatedResponse({
+  const response = createPagedMembers({
     members: users,
     pageSize: PAGE_SIZE,
   });
+
   res.status(200).json(response);
 };
-
-interface GetUserRequest extends Request {
-  user?: IUser;
-}
 
 /**
  * @swagger
@@ -113,15 +106,14 @@ interface GetUserRequest extends Request {
  *   get:
  *     tags:
  *       - Users
- *     summary: 사용자 ID로 사용자 조회
- *     description: 주어진 사용자 ID로 사용자의 상세 정보를 조회합니다.
+ *     summary: 사용자 상세 조회
+ *     description: 사용자의 상세 정보를 조회합니다.
  *     parameters:
  *       - in: path
  *         name: userId
  *         required: true
  *         schema:
  *           type: string
- *         description: 조회할 사용자 ID
  *     responses:
  *       200:
  *         description: 사용자 정보를 반환합니다.
@@ -153,8 +145,13 @@ interface GetUserRequest extends Request {
  *       404:
  *         description: 사용자를 찾을 수 없습니다.
  */
+
+interface GetUserRequest extends Request {
+  user?: IUser;
+}
+
 export const getUser = async (req: GetUserRequest, res: Response): Promise<void> => {
-  const userId = req.user?._id;
+  const { userId } = req.params;
   const user = await User.findById(userId).select("-password");
 
   if (!user) {
@@ -165,31 +162,23 @@ export const getUser = async (req: GetUserRequest, res: Response): Promise<void>
   res.status(200).send(user);
 };
 
-interface CreateUserRequest extends Request {
-  body: {
-    name: string;
-    email: string;
-    password: string;
-    role?: TRole;
-    teams?: string[];
-  };
-  file?: Express.Multer.File | Express.MulterS3.File;
-}
-
 /**
  * @swagger
  * /users/create:
  *   post:
  *     tags:
  *       - Users
- *     summary: 새로운 사용자 생성
- *     description: 새로운 사용자를 생성합니다.
+ *     summary: 사용자 생성
+ *     description: 사용자를 생성합니다.
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *              - name
+ *              - email
  *             properties:
  *               name:
  *                 type: string
@@ -208,7 +197,7 @@ interface CreateUserRequest extends Request {
  *                 type: array
  *                 items:
  *                   type: string
- *                 description: 사용자가 속할 팀
+ *                 description: 사용자 팀
  *     responses:
  *       201:
  *         description: 새로운 사용자가 생성되었습니다.
@@ -246,6 +235,18 @@ interface CreateUserRequest extends Request {
  *       409:
  *         description: 이미 존재하는 이메일입니다.
  */
+
+interface CreateUserRequest extends Request {
+  body: {
+    name: string;
+    email: string;
+    password: string;
+    role?: TRole;
+    teams?: string[];
+  };
+  file?: Express.Multer.File | Express.MulterS3.File;
+}
+
 export const createUser = async (req: CreateUserRequest, res: Response): Promise<void> => {
   const { name, email, role, teams } = req.body;
 
@@ -260,7 +261,7 @@ export const createUser = async (req: CreateUserRequest, res: Response): Promise
     return;
   }
 
-  if (Array.isArray(teams) && teams.length > 3) {
+  if (teams && teams.length > 3) {
     res.status(400).send({ message: "팀은 최대 3개까지 추가 가능합니다." });
     return;
   }
@@ -279,24 +280,9 @@ export const createUser = async (req: CreateUserRequest, res: Response): Promise
   });
 
   await user.save();
+
   res.status(201).send({ message: "새로운 사용자가 생성되었습니다.", user });
 };
-
-interface UserFields {
-  name: string;
-  email: string;
-  role?: TRole;
-  teams?: string[];
-  profileImage?: string;
-}
-
-interface UpdateUserRequest extends Request {
-  params: {
-    userId: string;
-  };
-  body: UserFields;
-  file?: Express.Multer.File | Express.MulterS3.File;
-}
 
 /**
  * @swagger
@@ -304,15 +290,14 @@ interface UpdateUserRequest extends Request {
  *   patch:
  *     tags:
  *       - Users
- *     summary: 사용자 정보 업데이트
- *     description: 주어진 사용자 ID로 사용자의 정보를 업데이트합니다. 기존 값과 새 값을 비교하여 변경된 데이터만 업데이트합니다. 변경사항이 없을 경우 400 에러를 반환합니다.
+ *     summary: 사용자 정보 수정
+ *     description: 사용자의 정보를 수정합니다.
  *     parameters:
  *       - in: path
  *         name: userId
  *         required: true
  *         schema:
  *           type: string
- *         description: 업데이트할 사용자 ID
  *     requestBody:
  *       required: true
  *       content:
@@ -341,7 +326,7 @@ interface UpdateUserRequest extends Request {
  *                 description: 새로운 프로필 이미지 파일
  *     responses:
  *       200:
- *         description: 사용자 정보가 성공적으로 업데이트되었습니다.
+ *         description: 사용자 정보가 성공적으로 수정되었습니다.
  *         content:
  *           application/json:
  *             schema:
@@ -372,7 +357,7 @@ interface UpdateUserRequest extends Request {
  *                   type: string
  *                   example: 사용자를 찾을 수 없습니다.
  *       409:
- *         description: 중복된 이메일로 인해 업데이트할 수 없습니다.
+ *         description: 중복된 이메일로 인해 수정할 수 없습니다.
  *         content:
  *           application/json:
  *             schema:
@@ -382,9 +367,26 @@ interface UpdateUserRequest extends Request {
  *                   type: string
  *                   example: 이미 존재하는 이메일입니다.
  */
+
+interface UserFields {
+  name: string;
+  email: string;
+  role?: TRole;
+  teams?: string[];
+  profileImage?: string;
+}
+
+interface UpdateUserRequest extends Request {
+  params: {
+    userId: string;
+  };
+  body: UserFields;
+  file?: Express.Multer.File | Express.MulterS3.File;
+}
+
 export const updateUser = async (req: UpdateUserRequest, res: Response): Promise<void> => {
   const { userId } = req.params;
-  const { email, teams = [], name, role } = req.body;
+  const { email, teams, name, role } = req.body;
   const user = await User.findById(userId);
 
   if (!user) {
@@ -394,13 +396,14 @@ export const updateUser = async (req: UpdateUserRequest, res: Response): Promise
 
   if (email && email !== user.email) {
     const emailExists = await User.exists({ email });
+
     if (emailExists) {
       res.status(409).send({ message: "이미 존재하는 이메일입니다." });
       return;
     }
   }
 
-  if (teams.length > 3) {
+  if (teams && teams.length > 3) {
     res.status(400).send({ message: "팀은 최대 3개까지 추가 가능합니다." });
     return;
   }
@@ -410,36 +413,31 @@ export const updateUser = async (req: UpdateUserRequest, res: Response): Promise
     return;
   }
 
-  const updateFields: Partial<typeof req.body> = {};
+  const updateFields: UserFields = {
+    name: name || user.name,
+    email: email || user.email,
+  };
 
-  if (email && email !== user.email) updateFields.email = email;
-  if (!areArraysEqual(teams, user.teams)) {
+  if (role && role !== user.role) updateFields.role = role;
+  if (teams && !areArraysEqual(teams, user.teams)) {
     updateFields.teams = teams;
   }
-  if (name && name !== user.name) updateFields.name = name;
-  if (role && role !== user.role) updateFields.role = role;
   if (req.file) {
     const profileImageUrl = (req.file as Express.MulterS3.File).location;
     updateFields.profileImage = profileImageUrl;
   }
-
   if (Object.keys(updateFields).length === 0) {
     res.status(400).send({ message: "변경사항이 없습니다." });
     return;
   }
 
   const updatedUser = await User.findByIdAndUpdate(userId, { $set: updateFields }, { new: true });
+
   res.status(200).send({
-    message: "사용자 정보가 성공적으로 업데이트되었습니다.",
+    message: "사용자 정보가 성공적으로 수정되었습니다.",
     user: updatedUser,
   });
 };
-
-interface DeleteUserRequest extends Request {
-  params: {
-    userId: string;
-  };
-}
 
 /**
  * @swagger
@@ -448,14 +446,13 @@ interface DeleteUserRequest extends Request {
  *     tags:
  *       - Users
  *     summary: 사용자 삭제
- *     description: 주어진 사용자 ID로 사용자를 삭제합니다.
+ *     description: 사용자를 삭제합니다.
  *     parameters:
  *       - in: path
  *         name: userId
  *         required: true
  *         schema:
  *           type: string
- *         description: 삭제할 사용자 ID
  *     responses:
  *       200:
  *         description: 사용자가 성공적으로 삭제되었습니다.
@@ -478,6 +475,13 @@ interface DeleteUserRequest extends Request {
  *                   type: string
  *                   example: 사용자를 찾을 수 없습니다.
  */
+
+interface DeleteUserRequest extends Request {
+  params: {
+    userId: string;
+  };
+}
+
 export const deleteUser = async (req: DeleteUserRequest, res: Response): Promise<void> => {
   const { userId } = req.params;
   const deletedUser = await User.findByIdAndDelete(userId);
@@ -489,11 +493,6 @@ export const deleteUser = async (req: DeleteUserRequest, res: Response): Promise
 
   res.status(200).send({ message: "사용자가 삭제되었습니다." });
 };
-
-interface UpdateProfileImageRequest extends Request {
-  user?: IUser;
-  file?: Express.Multer.File | Express.MulterS3.File;
-}
 
 /**
  * @swagger
@@ -546,6 +545,12 @@ interface UpdateProfileImageRequest extends Request {
  *                   type: string
  *                   example: 사용자를 찾을 수 없습니다.
  */
+
+interface UpdateProfileImageRequest extends Request {
+  user?: IUser;
+  file?: Express.Multer.File | Express.MulterS3.File;
+}
+
 export const updateProfileImage = async (req: UpdateProfileImageRequest, res: Response): Promise<void> => {
   const userId = req.user?._id;
   const profileImageUrl = (req.file as Express.MulterS3.File).location;
@@ -563,14 +568,6 @@ export const updateProfileImage = async (req: UpdateProfileImageRequest, res: Re
   const user = await User.findByIdAndUpdate(userId, { profileImage: profileImageUrl });
   res.status(200).send({ message: "프로필 사진이 변경되었습니다.", user });
 };
-
-interface UpdateUserCredentialsRequest extends Request {
-  user?: IUser;
-  body: {
-    currentPassword: string;
-    newPassword: string;
-  };
-}
 
 /**
  * @swagger
@@ -645,6 +642,15 @@ interface UpdateUserCredentialsRequest extends Request {
  *                   type: string
  *                   example: 사용자를 찾을 수 없습니다.
  */
+
+interface UpdateUserCredentialsRequest extends Request {
+  user?: IUser;
+  body: {
+    currentPassword: string;
+    newPassword: string;
+  };
+}
+
 export const updateUserCredentials = async (req: UpdateUserCredentialsRequest, res: Response): Promise<void> => {
   const userId = req.user?._id;
   const { currentPassword, newPassword } = req.body;

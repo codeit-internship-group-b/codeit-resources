@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import useIsMobileStore from "@/app/store/useIsMobileStore";
 import { Tab } from "./Tab";
 import SortDropdown from "./SortDropdown";
-import TabsSkeleton from "./skeleton/TabSkeleton";
+import TabSkeleton from "./skeleton/TabSkeleton";
 
 interface NavbarProps {
   activeTab: string;
@@ -18,7 +18,7 @@ export default function Navbar({ activeTab, onTabChange, selectedSort, onSortCha
   return (
     <nav className="relative">
       <div className="no-scrollbar w-full overflow-x-auto border-b border-gray-200/10">
-        <Suspense fallback={<TabsSkeleton />}>
+        <Suspense fallback={<TabSkeleton />}>
           <Tab activeTab={activeTab} onTabChange={onTabChange} />
         </Suspense>
         {!isMobile && (

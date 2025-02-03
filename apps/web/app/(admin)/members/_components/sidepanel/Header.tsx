@@ -8,13 +8,14 @@ export interface PanelHeaderProps {
   onClose: () => void;
 }
 
-export default function PanelHeader({ selectedMember, onClose }: PanelHeaderProps): JSX.Element {
+export default function Header({ selectedMember, onClose }: PanelHeaderProps): JSX.Element {
   const { removeMember } = useMembersMutations({
     onSuccess: onClose,
   });
 
   const handleWithdraw = (): void => {
     if (!selectedMember) return;
+
     removeMember(selectedMember._id);
   };
 

@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { useOnClickOutside } from "@ui/src/hooks/useOnClickOutside";
 import type { MemberWithFileImage } from "@repo/types/src/membersType";
-import PanelHeader from "./Header";
+import Header from "./Header";
 import MemberForm from "./Form";
 
 export interface SidePanelProps {
@@ -24,7 +24,7 @@ export default function SidePanel({ isOpen, onClose, selectedMember }: SidePanel
         isOpen ? "translate-x-0" : "translate-x-full"
       }`}
     >
-      <PanelHeader selectedMember={selectedMember} onClose={onClose} />
+      <Header selectedMember={selectedMember} onClose={onClose} />
       <MemberForm selectedMember={selectedMember} onClose={onClose} />
     </div>
   );

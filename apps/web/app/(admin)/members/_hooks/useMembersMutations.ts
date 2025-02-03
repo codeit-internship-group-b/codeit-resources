@@ -1,9 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios, { type AxiosError } from "axios";
 import type { ResponseWithMessage } from "@repo/types/src/membersType";
 import { postMember, patchMember, deleteMember } from "@/api/members";
 import { notify } from "@/app/store/useToastStore";
-import { notifyMutationError } from "@/app/utils/notifyMutationError";
 import { QUERY_KEYS } from "@/lib/queryKey";
 
 interface UpdateMemberParams {
@@ -31,35 +29,19 @@ export function useMembersMutations({ onSuccess }: UseMemberMutationsProps = {})
     onSuccess?.();
   };
 
-  const handleError = (error: Error | AxiosError<ResponseWithMessage>): void => {
-    if (axios.isAxiosError(error)) {
-      if (error.response?.status === 500) {
-        throw error;
-      }
-
-      const err = error as AxiosError<ResponseWithMessage>;
-      notifyMutationError(err);
-    } else {
-      throw error;
-    }
-  };
-
   const { mutate: createMember, isPending: isCreateMemberPending } = useMutation({
     mutationFn: postMember,
     onSuccess: handleSuccess,
-    onError: handleError,
   });
 
   const { mutate: updateMember, isPending: isUpdateMemberPending } = useMutation({
     mutationFn: ({ id, data }: UpdateMemberParams) => patchMember(id, data),
     onSuccess: handleSuccess,
-    onError: handleError,
   });
 
   const { mutate: removeMember, isPending: isRemoveMemberPending } = useMutation({
     mutationFn: (userId: string) => deleteMember(userId),
     onSuccess: handleSuccess,
-    onError: handleError,
   });
 
   return {

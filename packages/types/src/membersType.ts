@@ -1,12 +1,5 @@
-import { type StaticImageData } from "next/image";
+import { DisplayImageType, FormImageType } from "../../../apps/web/app/types/ImageType";
 import { IUser } from "./userType";
-
-// 이미지 타입
-export type ImageUrlType = string;
-export type StaticImageType = StaticImageData;
-export type ImageFileType = File;
-export type DisplayImageType = ImageUrlType | StaticImageType;
-export type FormImageType = DisplayImageType | ImageFileType | null;
 
 // 멤버 타입
 export type MemberWithStaticImage = Omit<IUser, "profileImage"> & {
@@ -14,14 +7,6 @@ export type MemberWithStaticImage = Omit<IUser, "profileImage"> & {
 };
 export type MemberWithFileImage = Omit<IUser, "profileImage"> & {
   profileImage?: FormImageType;
-};
-
-// 폼 타입
-export type SidePanelFormData = Omit<
-  IUser,
-  "_id" | "createdAt" | "updatedAt" | "department" | "password" | "profileImage"
-> & {
-  profileImage: FormImageType;
 };
 
 export const SORT_OPTIONS = {
@@ -63,4 +48,11 @@ export interface MemberResponse extends ResponseWithMessage {
 export interface MembersResponse extends ResponseWithMessage {
   members: IUser[];
   nextCursor: string | null;
+}
+
+export interface MembersQueryParams {
+  selectedSort: SortOption;
+  role?: string;
+  team?: string;
+  keyword?: string;
 }

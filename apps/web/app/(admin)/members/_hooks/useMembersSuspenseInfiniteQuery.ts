@@ -4,17 +4,10 @@ import {
   useSuspenseInfiniteQuery,
   type UseSuspenseInfiniteQueryResult,
 } from "@tanstack/react-query";
-import type { MembersResponse, SortOption } from "@repo/types/src/membersType";
+import type { MembersResponse, MembersQueryParams } from "@repo/types/src/membersType";
 import { type IUser } from "@repo/types";
 import { getMembers } from "@/api/members";
 import { QUERY_KEYS } from "@/lib/queryKey";
-
-export interface UseMembersSuspenseInfiniteQueryParams {
-  selectedSort: SortOption;
-  role?: string;
-  team?: string;
-  keyword?: string;
-}
 
 interface PageParam {
   pageParam: string | null;
@@ -25,9 +18,9 @@ export function useMembersSuspenseInfiniteQuery({
   role,
   team,
   keyword,
-}: UseMembersSuspenseInfiniteQueryParams): UseSuspenseInfiniteQueryResult<IUser[]> {
+}: MembersQueryParams): UseSuspenseInfiniteQueryResult<IUser[]> {
   const options = infiniteQueryOptions({
-    queryKey: QUERY_KEYS.MEMBERS.list({ selectedSort, role, team, keyword }),
+    queryKey: QUERY_KEYS.MEMBERS.LIST({ selectedSort, role, team, keyword }),
     queryFn: ({ pageParam }: PageParam): Promise<MembersResponse> =>
       getMembers({
         selectedSort,

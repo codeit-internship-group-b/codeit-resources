@@ -1,16 +1,16 @@
 import { type IUser } from "@repo/types";
 
-interface FormatPaginatedResponseParams {
+interface CreatePagedMembersParams {
   members: IUser[];
   pageSize: number;
 }
 
-interface PaginatedResponse {
+interface PagedMembersResult {
   members: IUser[];
   nextCursor: string | null;
 }
 
-export const formatPaginatedResponse = ({ members, pageSize }: FormatPaginatedResponseParams): PaginatedResponse => {
+export const createPagedMembers = ({ members, pageSize }: CreatePagedMembersParams): PagedMembersResult => {
   const hasNextPage = members.length > pageSize;
   const results = hasNextPage ? members.slice(0, -1) : members;
   const lastMember = results[results.length - 1];

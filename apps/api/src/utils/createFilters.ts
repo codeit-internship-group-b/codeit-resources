@@ -4,7 +4,7 @@ interface BuildFiltersParams {
   query: GetUsersRequest["query"];
 }
 
-export const buildFilters = ({ query }: BuildFiltersParams): Filters => {
+export const createFilters = ({ query }: BuildFiltersParams): Filters => {
   const filters: Filters = {};
 
   if (query.role) {

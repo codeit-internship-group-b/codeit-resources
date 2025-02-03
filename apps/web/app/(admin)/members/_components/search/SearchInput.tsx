@@ -1,9 +1,12 @@
 import { type ChangeEvent } from "react";
 import { type UseFormSetValue, type UseFormRegister } from "react-hook-form";
 import { SearchIcon, CancelIcon } from "@ui/public";
-import { type KeywordsFormData } from "@repo/types/src/searchFormType";
-import { useDebouncedCallback } from "@/app/(admin)/teams/_hooks/useDebounceCallback";
+import { useDebouncedCallback } from "@/app/_hooks/useDebounceCallback";
 
+interface KeywordsFormData {
+  keyword: string;
+  searchHistory: string[];
+}
 interface SearchInputProps {
   register: UseFormRegister<KeywordsFormData>;
   setValue: UseFormSetValue<KeywordsFormData>;
@@ -18,7 +21,8 @@ export default function SearchInput({ register, setValue, keyword, onFocus, onCl
   }, 300);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    debouncedSetValue(e.target.value);
+    const value = e.target.value;
+    debouncedSetValue(value);
   };
 
   return (
@@ -27,12 +31,12 @@ export default function SearchInput({ register, setValue, keyword, onFocus, onCl
         <SearchIcon className="transition-colors duration-200 group-focus-within:text-purple-400" />
       </label>
       <input
-        {...register("keyword", {
-          onChange: handleInputChange,
-        })}
         id="keyword"
         className="h-18 w-full bg-transparent focus:outline-none"
         onFocus={onFocus}
+        {...register("keyword", {
+          onChange: handleInputChange,
+        })}
       />
       {keyword ? (
         <button type="button" onClick={onClear} className="flex items-center justify-center">
