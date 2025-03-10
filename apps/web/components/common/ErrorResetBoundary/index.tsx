@@ -1,6 +1,7 @@
 "use client";
 
 import { type ReactNode, type ComponentType } from "react";
+import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import { ErrorBoundary, type FallbackProps } from "react-error-boundary";
 
 interface ErrorResetBoundaryProps {
@@ -12,5 +13,13 @@ export default function ErrorResetBoundary({
   children,
   fallbackComponent: FallbackComponent,
 }: ErrorResetBoundaryProps): JSX.Element {
-  return <ErrorBoundary FallbackComponent={FallbackComponent}>{children}</ErrorBoundary>;
+  return (
+    <QueryErrorResetBoundary>
+      {({ reset }) => (
+        <ErrorBoundary onReset={reset} FallbackComponent={FallbackComponent}>
+          {children}
+        </ErrorBoundary>
+      )}
+    </QueryErrorResetBoundary>
+  );
 }
