@@ -16,10 +16,15 @@ jobs:
           username: ${{ secrets.AWS_EC2_USER }}
           key: ${{ secrets.AWS_PRIVATE_KEY }}
           port: ${{secrets.SERVER_PORT}}
-          script-stop: true
           script: |
+            set -e
             cd /home/ubuntu/codeit-resources
             git pull origin develop
             pnpm install
             pnpm --filter=api build
             pm2 restart codeit-server
+
+#           pm2 명령어
+#           pm2 delete all
+#           cd /home/ubuntu/codeit-resources/apps/api
+#           pm2 start pnpm --name "codeit-server" -- start
