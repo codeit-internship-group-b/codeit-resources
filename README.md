@@ -26,7 +26,6 @@
 - [<code>👥 Team</code>](#-team)
 - [<code>🛠️ Tech stack</code>](#️-tech-stack)
 - [<code>📁 Project structure</code>](#-project-structure)
-- [<code>🌟 Challenges</code>](#-challenges)
 - [<code>✨ Features</code>](#-features)
 - [<code>🚀 Installation</code>](#-installation)
 
@@ -161,6 +160,29 @@
 <br />
 <br />
 
+# 🚀 Installation
+
+### 패키지 설치
+
+```bash
+pnpm install
+```
+
+### 개발 모드
+
+```bash
+pnpm run dev
+```
+
+### 프로덕션 모드
+
+```bash
+pnpm run build
+```
+
+<br />
+<br />
+
 # 📁 Project Structure
 
 ## MonoRepo
@@ -228,150 +250,6 @@ codeit-resources/              # Project Root
 <div align="center">
   <img src="https://github.com/user-attachments/assets/0a76d65a-1662-4843-a3a2-37791ac55a53" width="800px" />
 </div>
-
-<br />
-<br />
-
-# 🌟 Challenges
-
-프로젝트를 진행하며 마주한 다양한 기술적 문제들과 해결 과정을 기록했습니다.
-
-## 1. 정적 배포를 선택한 이유
-
-### 서버 비용 절감
-
-동적 배포의 경우 모든 페이지 요청마다 서버의 리소스를 사용하게 되어 트래픽에 따른 서버 비용이 증가합니다.
-
-반면 AWS S3와 CloudFront를 이용한 정적 배포는 **CDN**을 통해 효율적으로 트래픽을 처리할 수 있어 비용 효율적인 운영이 가능했습니다.
-
-## 2. Mongo DB 해킹
-
-AWS EC2에 배포된 MongoDB 서버에서 주기적인 데이터 초기화 현상이 발생했습니다.
-![스크린샷 2025-01-31 132651](https://github.com/user-attachments/assets/44d0273e-c267-430d-87f3-3bcbff3b009c)
-
-이는 외부로부터 무단 접근 시도로 인한 것으로 판단되어 EC2의 /etc/mongod.conf 설정 파일에 보안 설정을 추가하여 인증된 사용자만 데이터베이스에 접근할 수 있도록 제한했습니다.
-
-```
-security:
-  authorization: enabled
-```
-
-### 추가 개선 방안
-
-TODO: 추가 개선 방안 작성
-
-## 3. CI/CD 트러블 슈팅
-
-### Shell 관련 이슈
-
-Github Actions에서 배포 스크립트 실행 시 **command not found** 오류가 발생했습니다.
-
-![스크린샷 2025-01-14 162317](https://github.com/user-attachments/assets/e3956e2b-e7b7-4146-847d-c6edbd27b4ed)
-
-원인은 shell의 환경 설정 문제였습니다. Github Actions의 SSH 실행은 **non-interactive, non-login shell** 환경에서 실행되는데 `.bashrc` 파일은 기본적으로 **non-interactive shell**에서 아무 작업도 수행하지 않도록 설정되어 있었습니다.
-
-이를 해결하기 위해 .bashrc 파일의 interactive shell 여부를 확인하는 조건문 이전에 pnpm 실행 경로를 추가하여 배포 스크립트가 정상적으로 실행되도록 수정했습니다.
-
-```bash
-# Add pnpm and pm2 to PATH
-export PATH="$PATH:/home/ubuntu/.local/share/pnpm"
-
-# If not running interactively, don't do anything
-case $- in
-    *i*) ;;
-      *) return;;
-esac
-```
-
-<br />
-
-### 메모리 부족
-
-EC2 프리티어 인스턴스(1GiB RAM)에서 모노레포의 여러 패키지를 동시에 설치하는 과정에서 메모리 사용량이 급격히 증가하여 시스템에 의해 **프로세스가 강제 종료**되었습니다.
-
-![스크린샷 2025-01-14 163305](https://github.com/user-attachments/assets/47589f66-fe72-4558-b666-4981ea18744b)
-
-이를 해결하기 위해 **Swap Memory를 2G로 설정**하여 **제한된 메모리 환경에서도 안정적으로 빌드 프로세스를 완료**할 수 있었습니다.
-
-![스크린샷 2025-01-17 155425](https://github.com/user-attachments/assets/f1f575e5-fe5f-4d62-a532-8e6cc4e32c1d)
-
-<br />
-
-### SSH 연결 끊김
-
-배포 과정에서 **client_loop: send disconnect: Broken pipe** 오류가 발생하여 배포가 중단되는 현상이 발생했습니다.
-
-![스크린샷 2025-01-14 162535](https://github.com/user-attachments/assets/f476e1e7-46c7-4e6b-b520-4ff3f79a1e80)
-
-이는 GitHub Actions에서 EC2로의 SSH 연결이 일정 시간 동안 데이터 전송이 없으면 자동으로 종료되는 문제였고, 특히 패키지 설치 과정이 길어지면서 SSH 연결이 타임아웃되어 발생한 문제였습니다.
-
-이를 해결하기 위해 EC2 인스턴스의 SSH 설정 파일(/etc/ssh/sshd_config)에 다음 설정을 추가했습니다.
-
-```
-ClientAliveInterval 60    # 60초마다 클라이언트에게 응답 요청
-ClientAliveCountMax 3     # 최대 3번까지 재시도
-```
-
-따라서 SSH 연결이 안정적으로 유지되어 배포가 정상적으로 완료될 수 있었습니다.
-
-<br />
-
-## 4. Suspense, ErrorBoundary
-
-컴포넌트 내에서 **isLoading**이나 **isError** 처리를 한 경우 컴포넌트의 의도나 동작을 한눈에 파악하기 어려웠습니다.
-
-```
-import { useQuery } from 'react-query';
-
-const ResponsiveTeamsPage = () => {
-  const { data, isLoading, isError, error } = useQuery('teams', fetchTeams);
-
-  if (isLoading) {
-    return (
-      <>
-        <TeamListHeader />
-        <TeamListSkeletonGroup />
-      </>
-    );
-  }
-
-  if (isError) {
-    return (
-      <>
-        <TeamListHeader />
-        <div>Error occurred: {error.message}</div>
-      </>
-    );
-  }
-
-  return (
-    <>
-      <TeamListHeader />
-      <TeamList data={data} />
-    </>
-  );
-};
-```
-
-<br />
-
-따라서 **Suspense**와 **ErrorBoundary**를 사용하여 상태를 UI 레벨에서 선언적으로 처리하여 코드를 읽기 쉽고 유지보수 하기 쉬운 구조로 변경하였습니다.
-
-```
-export default function ResponsiveTeamsPage(): JSX.Element | null {
-
-  return (
-    <>
-      <TeamListHeader />
-      <ErrorResetBoundary fallbackComponent={ErrorFallback}>
-        <Suspense fallback={<TeamListSkeletonGroup />}>
-          <TeamList />
-        </Suspense>
-      </ErrorResetBoundary>
-    </>
-  );
-}
-```
 
 <br />
 <br />
@@ -470,23 +348,3 @@ export default function ResponsiveTeamsPage(): JSX.Element | null {
 
 <br />
 <br />
-
-# 🚀 Installation
-
-### 패키지 설치
-
-```bash
-pnpm install
-```
-
-### 개발 모드
-
-```bash
-pnpm run dev
-```
-
-### 프로덕션 모드
-
-```bash
-pnpm run build
-```
